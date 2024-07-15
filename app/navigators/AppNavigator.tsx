@@ -35,7 +35,8 @@ export type AppStackParamList = {
   Welcome: undefined;
   // 🔥 Your screens go here
   Login: undefined
-	// IGNITE_GENERATOR_ANCHOR_APP_STACK_PARAM_LIST
+  ChatScreen: undefined
+  // IGNITE_GENERATOR_ANCHOR_APP_STACK_PARAM_LIST
 }
 
 /**
@@ -57,15 +58,16 @@ const AppStack = observer(function AppStack() {
     <Stack.Navigator
       screenOptions={{ headerShown: false, navigationBarColor: colors.background }}
     >
-          <Stack.Screen name="Welcome" component={Screens.WelcomeScreen} />
-      {/** 🔥 Your screens go here */}
+      <Stack.Screen name="ChatScreen" component={Screens.ChatScreen} />
+      <Stack.Screen name="Welcome" component={Screens.WelcomeScreen} />
       <Stack.Screen name="Login" component={Screens.LoginScreen} />
-			{/* IGNITE_GENERATOR_ANCHOR_APP_STACK_SCREENS */}
+      {/** 🔥 Your screens go here */}
+      {/* IGNITE_GENERATOR_ANCHOR_APP_STACK_SCREENS */}
     </Stack.Navigator>
   )
 })
 
-export interface NavigationProps extends Partial<React.ComponentProps<AppStackScreenProps>> {}
+export interface NavigationProps extends Partial<React.ComponentProps<AppStackScreenProps>> { }
 
 export const AppNavigator = observer(function AppNavigator(props: NavigationProps) {
   const colorScheme = useColorScheme()

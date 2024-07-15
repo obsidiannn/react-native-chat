@@ -29,7 +29,7 @@ export const WelcomeScreen: FC<WelcomeScreenProps> = observer(function WelcomeSc
     }]}>
       <Image style={$bg} source={require("assets/images/welcomeBg.webp")} cachePolicy="disk"/>
       <View style={$topContainer}>
-        <Text>hello{colorScheme}</Text>
+        <Text>hello {colorScheme}</Text>
         
         {/* <Image style={$welcomeLogo} source={welcomeLogo} />
         <Text

@@ -31,7 +31,7 @@ import Config from "./config"
 import { GestureHandlerRootView } from "react-native-gesture-handler"
 import { ViewStyle } from "react-native"
 
-export const NAVIGATION_PERSISTENCE_KEY = "NAVIGATION_STATE"
+export const NAVIGATION_PERSISTENCE_KEY = "Login"
 
 // Web linking configuration
 const prefix = Linking.createURL("/")
@@ -41,6 +41,9 @@ const config = {
       path: "",
     },
     Welcome: "welcome",
+    ChatScreen: {
+      
+    },
     Demo: {
       screens: {
         DemoShowroom: {
