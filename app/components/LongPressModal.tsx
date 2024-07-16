@@ -1,89 +1,129 @@
 
-import { Pressable, Modal, StyleSheet, Text, Animated, View, Dimensions } from "react-native"
+import { Pressable, Modal, StyleSheet, Text, Animated, View, Dimensions, GestureResponderEvent, Platform } from "react-native"
 import { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import { MessageType } from "./chat-ui";
 import { scale } from "app/utils/size";
+import { Image } from "expo-image";
 
 export interface LongPressModalType {
     open: (params: {
-        message: MessageType.Any
+        message: MessageType.Any,
+        e: GestureResponderEvent
     }) => void;
 }
 
 export default forwardRef((props, ref) => {
     const [visible, setVisible] = useState(false)
-
-    const screenHeight = Dimensions.get('window').height
-    const slideAnim = new Animated.Value(screenHeight)
-
+    const [layout, setLayout] = useState<number[]>([])
     const openModal = () => {
         setVisible(true)
-        // Animated.timing(slideAnim, {
-        //     toValue: screenHeight / 2,
-        //     duration: 300,
-        //     useNativeDriver: false
-        // }).start()
     }
 
     const closeModal = () => {
-        Animated.timing(slideAnim, {
-            toValue: screenHeight,
-            duration: 300,
-            useNativeDriver: false
-        }).start(() => { setVisible(false) })
+        setVisible(false)
     }
 
 
     useImperativeHandle(ref, () => ({
         open: (params: {
-            message: MessageType.Any
+            message: MessageType.Any,
+            e: GestureResponderEvent
         }) => {
-            console.log('open');
+            params.e.target.measureInWindow((x, y, w, h) => {
+                console.log('layout', x, y, w, h);
+                setLayout([x, y, w, h])
+            })
             openModal()
-
         }
     }));
 
 
-    return <Modal visible={visible}
-        animationType="slide"
-        transparent={true}
-        onRequestClose={closeModal}
-        onStartShouldSetResponder={() => {
-            closeModal()
-            return true;
-        }}
-        style={{
-            display: 'flex',
-            flexDirection: 'column'
+    return <>
+        {visible ? (
+            <Pressable style={{
+                display: 'flex',
+                flexDirection: 'column',
+                position: 'absolute',
+                top: 0, left: 0, right: 0, bottom: 0,
+            }}
+                onPress={() => {
+                    console.log('close');
+                    closeModal()
+                }}
+            >
+                <Pressable onStartShouldSetResponderCapture={(ev) => { return true }}
+                    style={{
+                        ...styles.modal_container,
+                        ...(layout.length > 0 ? {
+                            top: layout[1] - layout[3],
+                        } : {})
+                    }}
+                >
+                    <View style={styles.line_button_style}>
+                        <Image source={require('assets/icons/plus.svg')} style={styles.icon_btn} />
+                        <Text>醋汁</Text>
+                    </View>
+                    <View style={styles.line_button_style}>
+                        <Image source={require('assets/icons/plus.svg')} style={styles.icon_btn} />
+                        <Text>醋汁</Text>
+                    </View>
+                    <View style={styles.line_button_style}>
+                        <Image source={require('assets/icons/plus.svg')} style={styles.icon_btn} />
+                        <Text>醋汁</Text>
+                    </View>
+                    <View style={styles.line_button_style}>
+                        <Image source={require('assets/icons/plus.svg')} style={styles.icon_btn} />
+                        <Text>醋汁</Text>
+                    </View>
+                    <View style={styles.line_button_style}>
+                        <Image source={require('assets/icons/plus.svg')} style={styles.icon_btn} />
+                        <Text>醋汁</Text>
+                    </View>
 
-        }}
-    >
-        <Pressable style={{ height: '50%' }} onPress={closeModal}>
 
-        </Pressable>
-        <View style={{
-            height: '50%',
-            backgroundColor: 'pink',
-            display: 'flex',
-            flexDirection: 'column'
-        }}>
-            <View>
-                <Text>刪除</Text>
-            </View>
-        </View>
-    </Modal>
+                </Pressable>
+
+            </Pressable>
+        ) : null}
+
+    </>
+
+
 })
 
 
 const styles = StyleSheet.create({
-    main_style: {
-        height: '50%',
-        width: '100%',
-        backgroundColor: '#FF4B4B',
-        borderRadius: scale(8)
+    modal_container: {
+        backgroundColor: '#ffffff',
+        position: 'absolute',
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-around',
+        padding: scale(8),
+        borderRadius: scale(16),
+        borderBottomEndRadius: 0,
+        right: 32,
+        ...Platform.select({
+            ios: {
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.8,
+                shadowRadius: 10,
+            },
+            android: {
+                elevation: 10,
+            },
+        }),
+
     },
     line_button_style: {
-        padding: scale(8)
+        padding: scale(8),
+        alignItems: 'center',
+        marginRight: scale(6)
+    },
+    icon_btn: {
+        width: 32, height: 32,
+        tintColor: 'black',
     }
 })

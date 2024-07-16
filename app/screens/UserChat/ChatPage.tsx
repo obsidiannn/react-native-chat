@@ -3,6 +3,7 @@ import tools from "./tools"
 import { useRef, useState } from "react"
 import generateUtil from "app/utils/generateUtil"
 import LongPressModal, { LongPressModalType } from "app/components/LongPressModal"
+import { View } from "react-native"
 
 const ChatPage = () => {
     const [messages, setMessages] = useState<MessageType.Any[]>([])
@@ -45,7 +46,6 @@ const ChatPage = () => {
         //     })
     }
 
-
     return <>
         <Chat
             tools={tools}
@@ -54,8 +54,8 @@ const ChatPage = () => {
                 // loadMessages('up')
             }}
             showUserAvatars
-            onMessageLongPress={(m)=>{
-                longPressModalRef.current?.open({message: m})
+            onMessageLongPress={(m, e) => {
+                longPressModalRef.current?.open({ message: m, e })
             }}
             // onMessageLongPress={handleLongPress}
             usePreviewData={false}
@@ -71,6 +71,7 @@ const ChatPage = () => {
         <VideoPlayModal ref={encVideoPreviewRef} />
         <FilePreviewModal ref={fileModalRef} />
         <LoadingModal ref={loadingModalRef} /> */}
+
         <LongPressModal ref={longPressModalRef} />
     </>
 }

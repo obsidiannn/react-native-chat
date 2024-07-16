@@ -1,6 +1,6 @@
 import { oneOf } from '@flyerhq/react-native-link-preview'
 import * as React from 'react'
-import { Pressable, Text, View } from 'react-native'
+import { GestureResponderEvent, Pressable, Text, View } from 'react-native'
 
 import { MessageType } from '../../types'
 import {
@@ -18,7 +18,7 @@ import { VideoMessage } from '../VideoMessage'
 
 export interface MessageTopLevelProps extends TextMessageTopLevelProps {
   /** Called when user makes a long press on any message */
-  onMessageLongPress?: (message: MessageType.Any) => void
+  onMessageLongPress?: (message: MessageType.Any, e: GestureResponderEvent) => void
   /** Called when user taps on any message */
   onMessagePress?: (message: MessageType.Any) => void
   /** Customize the default bubble using this function. `child` is a content
@@ -116,7 +116,7 @@ export const Message = React.memo(
 
       return oneOf(
         renderBubble,
-        <View style={contentContainer} testID='ContentContainer'>
+        <View style={contentContainer} testID='ContentContainer' pointerEvents="none">
           {child}
         </View>
       )({
@@ -207,15 +207,10 @@ export const Message = React.memo(
           }}
         />
         <Pressable
-          onLongPress={(e) =>
-           {
-            console.log('long press====================================');
-            console.log(e.nativeEvent);
-            console.log(e.target);
-            
-            console.log('====================================');
-            onMessageLongPress?.(excludeDerivedMessageProps(message))
-           }
+          onStartShouldSetResponderCapture={(ev) => { return true }}
+          onLongPress={(e) => {
+            onMessageLongPress?.(excludeDerivedMessageProps(message), e)
+          }
           }
           onPress={() => onMessagePress?.(excludeDerivedMessageProps(message))}
           style={pressable}
