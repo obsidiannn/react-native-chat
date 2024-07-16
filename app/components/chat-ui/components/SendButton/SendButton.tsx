@@ -6,11 +6,11 @@ import {
   Text,
   TouchableOpacity,
   TouchableOpacityProps,
+  View,
 } from 'react-native'
 
-import { L10nContext, ThemeContext } from '../../utils'
-import { View } from 'react-native-ui-lib'
-import { useTranslation } from 'react-i18next'
+import {  ThemeContext } from '../../utils'
+import { translate } from 'app/i18n'
 
 export interface SendButtonPropsAdditionalProps {
   touchableOpacityProps?: TouchableOpacityProps
@@ -26,7 +26,7 @@ export const SendButton = ({
   touchableOpacityProps,
 }: SendButtonProps) => {
   const theme = React.useContext(ThemeContext)
-  const {t} = useTranslation('chat-ui')
+
   const handlePress = (event: GestureResponderEvent) => {
     onPress()
     touchableOpacityProps?.onPress?.(event)
@@ -34,23 +34,23 @@ export const SendButton = ({
 
   return (
     <TouchableOpacity
-      accessibilityLabel={t('btn_send')}
+      accessibilityLabel={translate('chat.btn_send')}
       accessibilityRole='button'
       {...touchableOpacityProps}
       onPress={handlePress}
       style={styles.sendButton}
     >
       <View style={{
-          backgroundColor: theme.colors.primary,
-          padding: 6,
-          paddingHorizontal: 14,
-          borderRadius: 16,
+        backgroundColor: theme.colors.primary,
+        padding: 6,
+        paddingHorizontal: 14,
+        borderRadius: 16,
       }}>
-      <Text style={{
-        color: theme.colors.inputBackground,
-      }}>{
-        t('btn_send')
-      }</Text>
+        <Text style={{
+          color: theme.colors.inputBackground,
+        }}>{
+            translate('chat.btn_send')
+          }</Text>
       </View>
       {/* {theme.icons?.sendButtonIcon?.() ?? (
         <Image

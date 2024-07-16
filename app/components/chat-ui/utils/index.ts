@@ -7,7 +7,6 @@ import { l10n } from '../l10n'
 import { defaultTheme } from '../theme'
 import { MessageType, PreviewImage, Theme, User } from '../types'
 import fileService from '@/service/file.service'
-import i18next from 'i18next'
 
 export const L10nContext = React.createContext<typeof l10n[keyof typeof l10n]>(
   l10n.en

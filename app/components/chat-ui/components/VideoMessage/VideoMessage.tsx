@@ -4,7 +4,7 @@ import { Image } from 'expo-image'
 import { MessageType, Size } from '../../types'
 import { formatBytes, formatDuration, ThemeContext, UserContext } from '../../utils'
 import styles from './styles'
-import { scale } from 'react-native-size-matters/extend'
+import { scale } from 'app/utils/size'
 
 export interface VideoMessageProps {
     message: MessageType.DerivedVideo

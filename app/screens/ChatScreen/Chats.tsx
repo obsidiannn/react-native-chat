@@ -4,7 +4,6 @@ import { EmptyComponent } from "app/components/EmptyComponent"
 import LoadingComponent from "app/components/Loading"
 import { formatDate } from "app/utils/formatDate"
 import { scale } from "app/utils/size"
-import { Image } from "expo-image"
 import { useEffect, useState } from "react"
 import { StyleSheet, Text, View, ActivityIndicator } from "react-native"
 import dayjs from 'dayjs'

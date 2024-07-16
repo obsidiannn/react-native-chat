@@ -1,7 +1,6 @@
 import { ColorValue } from 'react-native'
 
 import { Theme } from './types'
-import colors from '@/config/colors'
 import { Image } from 'expo-image'
 
 // For internal usage only. Use values from theme itself.

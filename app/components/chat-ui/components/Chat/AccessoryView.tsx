@@ -1,8 +1,8 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
-import { scale, verticalScale } from "react-native-size-matters/extend";
 import { ChatUiToolsKitProps } from "../../types";
 import { Image } from "expo-image";
+import { scale, verticalScale } from "app/utils/size";
 
 export interface InputToolsProps {
     tools?: ChatUiToolsKitProps[];

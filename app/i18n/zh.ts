@@ -1,6 +1,6 @@
 const en = {
   chat: {
-    btn_send: "Send"
+    btn_send: "发送"
   },
   common: {
     ok: "OK!",

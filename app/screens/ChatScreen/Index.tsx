@@ -12,6 +12,8 @@ import theme, { colors } from "../../theme/colors";
 import { useSafeAreaInsetsStyle } from "app/utils/useSafeAreaInsetsStyle";
 import { Button } from "app/components";
 import { scale } from "app/utils/size";
+import BannerComponent from "app/components/Banner";
+import HomeTitle from "app/components/HomeTitle";
 interface ChatScreenProps extends AppStackScreenProps<"ChatScreen"> { }
 
 export const ChatScreen: FC<ChatScreenProps> = observer(function () {
@@ -33,9 +35,12 @@ export const ChatScreen: FC<ChatScreenProps> = observer(function () {
     }
 
     return <View style={[styles.container, $topContainerInsets, {
-        // backgroundColor: $colors.$backgroundColor,
         backgroundColor: '#ffffff'
     }]}>
+
+        <HomeTitle title="信息" />
+        <BannerComponent label="邀请好友" describe="分享一个链接" onPress={() => { }} />
+
         <View style={styles.topContainer}>
             <Button text="最近" onPress={() => changeTab(0)}
                 style={[styles.tabButton, btnStyle(0)]}
@@ -72,13 +77,14 @@ const styles = StyleSheet.create({
         flex: 1,
         display: 'flex',
         flexDirection: 'column',
-        padding: scale(12)
+        padding: scale(18),
     },
     topContainer: {
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
         padding: scale(18),
+        paddingLeft: 0
     },
     tabButton: {
         fontSize: scale(10),
