@@ -14,6 +14,7 @@ import * as storage from "../utils/storage"
 
 type Storage = typeof storage
 
+
 /**
  * Reference to the root App Navigator.
  *

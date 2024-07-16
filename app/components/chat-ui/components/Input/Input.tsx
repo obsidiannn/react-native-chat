@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { TextInput, TextInputProps, View } from 'react-native'
+import { Pressable, TextInput, TextInputProps, TouchableOpacity, View } from 'react-native'
 
 import { MessageType } from '../../types'
 import { L10nContext, ThemeContext, unwrap, UserContext } from '../../utils'
@@ -13,6 +13,7 @@ import {
 } from '../CircularActivityIndicator'
 import { SendButton } from '../SendButton'
 import styles from './styles'
+import { Image } from 'expo-image'
 
 export interface InputTopLevelProps {
   /** Whether attachment is uploading. Will replace attachment button with a
@@ -89,9 +90,15 @@ export const Input = ({
             }}
           />
         ) : null)}
+      {/* <TouchableOpacity>
+        <Image source={require('../../assets/emoji.svg')} style={{
+              width: 36,
+              height: 36
+        }}/>
+      </TouchableOpacity> */}
       <TextInput
         multiline
-        // placeholder={l10n.inputPlaceholder}
+        placeholder={l10n.inputPlaceholder}
         placeholderTextColor={`${String(theme.colors.inputText)}80`}
         underlineColorAndroid='transparent'
         {...textInputProps}
@@ -102,7 +109,7 @@ export const Input = ({
         value={value}
       />
       {sendButtonVisibilityMode === 'always' ||
-      (sendButtonVisibilityMode === 'editing' && user && value.trim()) ? (
+        (sendButtonVisibilityMode === 'editing' && user && value.trim()) ? (
         <SendButton onPress={handleSend} />
       ) : (
         !!onAttachmentPress && (

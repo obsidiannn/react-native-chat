@@ -2,6 +2,7 @@ import { ColorValue } from 'react-native'
 
 import { Theme } from './types'
 import { Image } from 'expo-image'
+import { colors } from 'app/theme'
 
 // For internal usage only. Use values from theme itself.
 
@@ -156,13 +157,13 @@ export const boboTheme: Theme = {
     messageBorderRadius: 20,
   },
   colors: {
-    background: colors.gray100,
+    background: colors.palette.gray200,
     error: ERROR,
     inputBackground: 'white',
-    inputValueBackground: colors.gray200,
-    inputCursorColor: colors.gray950,
-    inputText: colors.gray950,
-    primary: colors.primary,
+    inputValueBackground:  colors.palette.gray200,
+    inputCursorColor: 'black',
+    inputText: 'black',
+    primary: 'black',
     receivedMessageDocumentIcon: PRIMARY,
     secondary: 'white',
     sentMessageDocumentIcon: NEUTRAL_7,
@@ -178,7 +179,7 @@ export const boboTheme: Theme = {
     },
     emptyChatPlaceholderTextStyle: {
       // color: NEUTRAL_2,
-      color: colors.gray200,
+      color:  colors.palette.gray200,
       fontSize: 12,
       fontWeight: '400',
       lineHeight: 20,

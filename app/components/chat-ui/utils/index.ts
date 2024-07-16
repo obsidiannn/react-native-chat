@@ -6,7 +6,6 @@ import Blob from 'react-native/Libraries/Blob/Blob'
 import { l10n } from '../l10n'
 import { defaultTheme } from '../theme'
 import { MessageType, PreviewImage, Theme, User } from '../types'
-import fileService from '@/service/file.service'
 
 export const L10nContext = React.createContext<typeof l10n[keyof typeof l10n]>(
   l10n.en
@@ -33,12 +32,12 @@ export const formatDuration = (mills: number): string => {
   let minute = totalMinute % 60
   let hours = totalHours
 
-  let secStr =second.toString().padStart(2,'0')
-  let minStr =minute.toString().padStart(2,'0')
-  let hourStr =hours.toString().padStart(2,'0')
-  if(totalHours >= 1){
+  let secStr = second.toString().padStart(2, '0')
+  let minStr = minute.toString().padStart(2, '0')
+  let hourStr = hours.toString().padStart(2, '0')
+  if (totalHours >= 1) {
     return `${hourStr}:${minStr}:${secStr}`
-  }else{
+  } else {
     return `${minStr}:${secStr}`
   }
 }
@@ -78,17 +77,17 @@ export const hashCode = (text = '') => {
 
 /** Inits dayjs locale */
 export const initLocale = (locale?: keyof typeof l10n) => {
-  if (i18next.language) {
-    if (i18next.language.startsWith('zh')) {
-        if (i18next.language.includes('TW')) {
-            dayjs.locale('zh-tw')
-        } else {
-            dayjs.locale('zh-cn')
-        }
-    } else {
-        dayjs.locale('en')
-    }
-}
+  // if (i18next.language) {
+  //   if (i18next.language.startsWith('zh')) {
+  //     if (i18next.language.includes('TW')) {
+  //       dayjs.locale('zh-tw')
+  //     } else {
+  //       dayjs.locale('zh-cn')
+  //     }
+  //   } else {
+  //     dayjs.locale('en')
+  //   }
+  }
   // const locales: { [key in keyof typeof l10n]: unknown } = {
   //   en: require('dayjs/locale/en'),
   //   es: require('dayjs/locale/es'),
@@ -102,7 +101,7 @@ export const initLocale = (locale?: keyof typeof l10n) => {
 
   // locale ? locales[locale] : locales.en
   // dayjs.locale(locale)
-}
+// }
 
 /** Returns either prop or empty object if null or undefined */
 export const unwrap = <T>(prop: T) => prop ?? {}
@@ -260,7 +259,8 @@ export const calculateChatMessages = (
     }
 
     if (message.type === 'image') {
-      gallery = [...gallery, { id: message.id, uri: fileService.getFullUrl(message.uri) }]
+      // gallery = [...gallery, { id: message.id, uri: fileService.getFullUrl(message.uri) }]
+      gallery = [...gallery, { id: message.id, uri: message.uri }]
     }
   }
 

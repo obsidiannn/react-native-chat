@@ -1,15 +1,16 @@
 import * as React from 'react'
 import {
   GestureResponderEvent,
-  
+
   StyleSheet,
   TouchableOpacity,
   TouchableOpacityProps,
+  View,
 } from 'react-native'
 
-import {Image} from 'expo-image'
-
+import { Image } from 'expo-image'
 import { L10nContext, ThemeContext } from '../../utils'
+import { scale } from 'app/utils/size'
 
 export interface AttachmentButtonAdditionalProps {
   touchableOpacityProps?: TouchableOpacityProps
@@ -40,11 +41,18 @@ export const AttachmentButton = ({
       onPress={handlePress}
     >
       {theme.icons?.attachmentButtonIcon?.() ?? (
-        <Image
-          source={require('@/assets/icons/circle-plus.svg')}
-          // source={require('../../assets/icon-attachment.png')}
-          style={[styles.image, { tintColor: theme.colors.primary }]}
-        />
+        <View style={{
+          backgroundColor: theme.colors.primary,
+          padding: scale(8),
+          borderRadius: scale(24)
+        }}>
+
+          <Image
+            source={require('../../assets/plus.svg')}
+            // source={require('../../assets/icon-attachment.png')}
+            style={[styles.image, { tintColor: theme.colors.background }]}
+          />
+        </View>
       )}
     </TouchableOpacity>
   )
@@ -52,8 +60,7 @@ export const AttachmentButton = ({
 
 const styles = StyleSheet.create({
   image: {
-    marginLeft: 12,
-    width: 36,
-    height: 36
+    width: 24,
+    height: 24
   },
 })

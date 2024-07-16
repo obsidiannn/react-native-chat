@@ -2,7 +2,6 @@
 import { AppStackScreenProps } from "app/navigators";
 import { FC, useRef, useState } from "react";
 import PagerView from "react-native-pager-view";
-import { Image } from 'expo-image'
 import { observer } from "mobx-react-lite"
 import { StyleSheet, View, useColorScheme } from "react-native";
 import ChatView from "./Chats";

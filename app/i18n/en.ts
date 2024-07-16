@@ -6,6 +6,7 @@ const en = {
     ok: "OK!",
     cancel: "Cancel",
     back: "Back",
+    btn_download: 'Download'
   },
   welcomeScreen: {
     postscript:

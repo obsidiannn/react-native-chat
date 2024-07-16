@@ -207,8 +207,15 @@ export const Message = React.memo(
           }}
         />
         <Pressable
-          onLongPress={() =>
+          onLongPress={(e) =>
+           {
+            console.log('long press====================================');
+            console.log(e.nativeEvent);
+            console.log(e.target);
+            
+            console.log('====================================');
             onMessageLongPress?.(excludeDerivedMessageProps(message))
+           }
           }
           onPress={() => onMessagePress?.(excludeDerivedMessageProps(message))}
           style={pressable}

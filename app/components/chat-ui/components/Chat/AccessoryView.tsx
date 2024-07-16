@@ -3,6 +3,7 @@ import React from "react";
 import { ChatUiToolsKitProps } from "../../types";
 import { Image } from "expo-image";
 import { scale, verticalScale } from "app/utils/size";
+import { colors } from "app/theme";
 
 export interface InputToolsProps {
     tools?: ChatUiToolsKitProps[];
@@ -26,7 +27,7 @@ const styles = StyleSheet.create({
     container: {
         paddingHorizontal: 10,
         paddingVertical: 20,
-        backgroundColor: colors.gray100,
+        backgroundColor: colors.palette.gray200,
         width: '100%',
         display: 'flex',
         flexDirection: 'row',

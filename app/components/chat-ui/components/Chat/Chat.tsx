@@ -1,7 +1,7 @@
 import {
   KeyboardAccessoryView,
   useComponentSize,
-} from '@/components/keyboard'
+} from 'app/components/keyboard'
 import { oneOf } from '@flyerhq/react-native-link-preview'
 import dayjs from 'dayjs'
 import calendar from 'dayjs/plugin/calendar'
@@ -19,7 +19,6 @@ import {
   View,
 } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import KeyboardManager from 'react-native-keyboard-manager';
 import { usePrevious } from '../../hooks'
 import { l10n } from '../../l10n'
 import { defaultTheme } from '../../theme'
@@ -37,14 +36,11 @@ import { Input, InputAdditionalProps, InputTopLevelProps } from '../Input'
 import { Message, MessageTopLevelProps } from '../Message'
 import ImageView from './ImageView'
 import styles from './styles'
-import Accessory from '@/components/chat/input-toolkit/accessory'
 import AccessoryView from './AccessoryView'
 import { ImageSource } from 'react-native-image-viewing/dist/@types'
-import { Button } from 'react-native-ui-lib'
-import { scale } from 'react-native-size-matters/extend'
-import { useTranslation } from 'react-i18next'
-import fileService from '@/service/file.service'
-import toast from '@/lib/toast'
+import { Button } from 'app/components/Button'
+import { scale } from 'app/utils/size'
+import { translate } from 'app/i18n'
 // import { KeyboardAwareScrollView,KeyboardProvider } from 'react-native-keyboard-controller'
 
 // Untestable
@@ -168,7 +164,6 @@ export const Chat = ({
   const [imageViewIndex, setImageViewIndex] = React.useState(0)
   const [stackEntry, setStackEntry] = React.useState<StatusBarProps>({})
   const [toolOpen, setToolOpen] = React.useState<boolean>(false)
-  const { t } = useTranslation('chat-ui')
 
   const l10nValue = React.useMemo(
     () => ({ ...l10n[locale], ...unwrap(l10nOverride) }),
@@ -304,15 +299,16 @@ export const Chat = ({
       console.log('index', imageIndex);
       const url = gallery[imageIndex].uri ?? ''
       if (url !== '') {
-        const localPath = await fileService.downloadFile(url)
-        fileService.saveToAlbum(localPath, 'png').then(res => {
-          if (res) {
-            toast(t('success'))
-          }
-        })
+        // todo
+        // const localPath = await fileService.downloadFile(url)
+        // fileService.saveToAlbum(localPath, 'png').then(res => {
+        //   if (res) {
+        //     toast(t('success'))
+        //   }
+        // })
       }
     }}>
-      <Text style={{ color: 'white' }}>{t('btn_download')} </Text>
+      <Text style={{ color: 'white' }}>{translate('common.btn_download')} </Text>
     </Button>
   }
 

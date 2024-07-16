@@ -4,3 +4,4 @@ export * from "./ErrorScreen/ErrorBoundary"
 export * from "./SignInScreen"
 
 export * from './ChatScreen/Index'
+export * from './UserChat/Index'

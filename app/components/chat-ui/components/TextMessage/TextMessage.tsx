@@ -5,7 +5,7 @@ import {
 } from '@flyerhq/react-native-link-preview'
 import * as React from 'react'
 import { Linking, Text, View } from 'react-native'
-import ParsedText from 'react-native-parsed-text'
+// import ParsedText from 'react-native-parsed-text'
 
 import { MessageType } from '../../types'
 import {
@@ -94,24 +94,25 @@ export const TextMessage = ({
 
   const renderPreviewText = (previewText: string) => {
     return (
-      <ParsedText
-        accessibilityRole='link'
-        parse={[
-          {
-            onPress: handleEmailPress,
-            style: [text, { textDecorationLine: 'underline' }],
-            type: 'email',
-          },
-          {
-            onPress: handleUrlPress,
-            pattern: REGEX_LINK,
-            style: [text, { textDecorationLine: 'underline' }],
-          },
-        ]}
-        style={text}
-      >
-        {previewText}
-      </ParsedText>
+      // <ParsedText
+      //   accessibilityRole='link'
+      //   parse={[
+      //     {
+      //       onPress: handleEmailPress,
+      //       style: [text, { textDecorationLine: 'underline' }],
+      //       type: 'email',
+      //     },
+      //     {
+      //       onPress: handleUrlPress,
+      //       pattern: REGEX_LINK,
+      //       style: [text, { textDecorationLine: 'underline' }],
+      //     },
+      //   ]}
+      //   style={text}
+      // >
+      //   {previewText}
+      // </ParsedText>
+      <Text accessibilityRole='link' style={text} >{previewText}</Text>
     )
   }
 
