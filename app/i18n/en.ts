@@ -1,12 +1,15 @@
 const en = {
   chat: {
-    btn_send: "Send"
+    btn_send: "Send",
+    fileDetail: "文件详情",
+    videoDetail: "视频详情"
   },
   common: {
     ok: "OK!",
     cancel: "Cancel",
     back: "Back",
-    btn_download: 'Download'
+    btn_download: 'Download',
+    loading: 'loading'
   },
   welcomeScreen: {
     postscript:

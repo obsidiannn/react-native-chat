@@ -1,5 +1,5 @@
 
-import { Pressable, Modal, StyleSheet, Text, Animated, View, Dimensions, GestureResponderEvent, Platform } from "react-native"
+import { Pressable, TouchableOpacity, StyleSheet, Text, Animated, View, Dimensions, GestureResponderEvent, Platform } from "react-native"
 import { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import { MessageType } from "./chat-ui";
 import { scale } from "app/utils/size";
@@ -51,37 +51,37 @@ export default forwardRef((props, ref) => {
                     closeModal()
                 }}
             >
-                <Pressable onStartShouldSetResponderCapture={(ev) => { return true }}
+                <View
+                    // onStartShouldSetResponderCapture={(ev) => { return true }}
                     style={{
                         ...styles.modal_container,
                         ...(layout.length > 0 ? {
-                            top: layout[1] - layout[3],
+                            top: layout[1] - (layout[3] + (layout[3]/2)),
+                            right: layout[0] - (layout[0] - layout[2]) - 16
                         } : {})
                     }}
                 >
-                    <View style={styles.line_button_style}>
-                        <Image source={require('assets/icons/plus.svg')} style={styles.icon_btn} />
-                        <Text>醋汁</Text>
-                    </View>
-                    <View style={styles.line_button_style}>
-                        <Image source={require('assets/icons/plus.svg')} style={styles.icon_btn} />
-                        <Text>醋汁</Text>
-                    </View>
-                    <View style={styles.line_button_style}>
-                        <Image source={require('assets/icons/plus.svg')} style={styles.icon_btn} />
-                        <Text>醋汁</Text>
-                    </View>
-                    <View style={styles.line_button_style}>
-                        <Image source={require('assets/icons/plus.svg')} style={styles.icon_btn} />
-                        <Text>醋汁</Text>
-                    </View>
-                    <View style={styles.line_button_style}>
-                        <Image source={require('assets/icons/plus.svg')} style={styles.icon_btn} />
-                        <Text>醋汁</Text>
-                    </View>
-
-
-                </Pressable>
+                    <TouchableOpacity style={styles.line_button_style}>
+                        <Image source={require('assets/icons/copy.svg')} style={styles.icon_btn} />
+                        <Text>复制</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.line_button_style}>
+                        <Image source={require('assets/icons/share.svg')} style={styles.icon_btn} />
+                        <Text>分享</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.line_button_style}>
+                        <Image source={require('assets/icons/reference.svg')} style={styles.icon_btn} />
+                        <Text>引用</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.line_button_style}>
+                        <Image source={require('assets/icons/multi_select.svg')} style={styles.icon_btn} />
+                        <Text>多选</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={[styles.line_button_style, { marginRight: 0 }]}>
+                        <Image source={require('assets/icons/delete.svg')} style={styles.icon_btn} />
+                        <Text>删除</Text>
+                    </TouchableOpacity>
+                </View>
 
             </Pressable>
         ) : null}
@@ -103,7 +103,6 @@ const styles = StyleSheet.create({
         padding: scale(8),
         borderRadius: scale(16),
         borderBottomEndRadius: 0,
-        right: 32,
         ...Platform.select({
             ios: {
                 shadowColor: '#000',
@@ -124,6 +123,6 @@ const styles = StyleSheet.create({
     },
     icon_btn: {
         width: 32, height: 32,
-        tintColor: 'black',
+        tintColor: '#4b5563',
     }
 })

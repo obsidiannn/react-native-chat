@@ -6,6 +6,7 @@ import Blob from 'react-native/Libraries/Blob/Blob'
 import { l10n } from '../l10n'
 import { defaultTheme } from '../theme'
 import { MessageType, PreviewImage, Theme, User } from '../types'
+import { da } from 'date-fns/locale'
 
 export const L10nContext = React.createContext<typeof l10n[keyof typeof l10n]>(
   l10n.en
@@ -22,6 +23,18 @@ export const formatBytes = (size: number, fractionDigits = 2) => {
     ' ' +
     ['B', 'kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'][multiple]
   )
+}
+
+export const formatDate = (mills: number): string => {
+  if (mills <= 0) {
+    return ''
+  }
+  const date = dayjs(mills);
+  if (dayjs().isSame(date, 'day')) {
+    return date.format('hh:mm A'); // 格式化当天时间，例如 09:30 AM
+  } else {
+    return date.format('YYYY-MM-DD hh:mm A'); // 格式化非当天时间，例如 2024-09-09 03:03 AM
+  }
 }
 
 export const formatDuration = (mills: number): string => {
@@ -41,6 +54,7 @@ export const formatDuration = (mills: number): string => {
     return `${minStr}:${secStr}`
   }
 }
+
 
 /** Returns size in bytes of the provided text */
 export const getTextSizeInBytes = (text: string) => new Blob([text]).size
@@ -87,20 +101,20 @@ export const initLocale = (locale?: keyof typeof l10n) => {
   //   } else {
   //     dayjs.locale('en')
   //   }
-  }
-  // const locales: { [key in keyof typeof l10n]: unknown } = {
-  //   en: require('dayjs/locale/en'),
-  //   es: require('dayjs/locale/es'),
-  //   ko: require('dayjs/locale/ko'),
-  //   pl: require('dayjs/locale/pl'),
-  //   pt: require('dayjs/locale/pt'),
-  //   ru: require('dayjs/locale/ru'),
-  //   tr: require('dayjs/locale/tr'),
-  //   uk: require('dayjs/locale/uk'),
-  // }
+}
+// const locales: { [key in keyof typeof l10n]: unknown } = {
+//   en: require('dayjs/locale/en'),
+//   es: require('dayjs/locale/es'),
+//   ko: require('dayjs/locale/ko'),
+//   pl: require('dayjs/locale/pl'),
+//   pt: require('dayjs/locale/pt'),
+//   ru: require('dayjs/locale/ru'),
+//   tr: require('dayjs/locale/tr'),
+//   uk: require('dayjs/locale/uk'),
+// }
 
-  // locale ? locales[locale] : locales.en
-  // dayjs.locale(locale)
+// locale ? locales[locale] : locales.en
+// dayjs.locale(locale)
 // }
 
 /** Returns either prop or empty object if null or undefined */

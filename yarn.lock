@@ -1744,6 +1744,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@config-plugins/ffmpeg-kit-react-native@npm:^8.0.0":
+  version: 8.0.0
+  resolution: "@config-plugins/ffmpeg-kit-react-native@npm:8.0.0"
+  dependencies:
+    semver: ^7.3.5
+  peerDependencies:
+    expo: ^51
+  checksum: bc7053576849c61df55ffd649b0899917603026a237ec8f720036038e5bb3bf47fb9b0eac2bb858cfe01ebdb4a41212877c73626fea415639b9f1d23eb3eec4c
+  languageName: node
+  linkType: hard
+
 "@craftzdog/react-native-buffer@npm:^6.0.5":
   version: 6.0.5
   resolution: "@craftzdog/react-native-buffer@npm:6.0.5"
@@ -1760,6 +1771,20 @@ __metadata:
   dependencies:
     "@jridgewell/trace-mapping": "npm:0.3.9"
   checksum: 5718f267085ed8edb3e7ef210137241775e607ee18b77d95aa5bd7514f47f5019aa2d82d96b3bf342ef7aa890a346fa1044532ff7cc3009e7d24fce3ce6200fa
+  languageName: node
+  linkType: hard
+
+"@dr.pogodin/react-native-fs@npm:^2.24.5":
+  version: 2.27.1
+  resolution: "@dr.pogodin/react-native-fs@npm:2.27.1"
+  dependencies:
+    buffer: ^6.0.3
+    http-status-codes: ^2.3.0
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+    react-native-windows: "*"
+  checksum: a69fcd56a14c2b721d88356765017b80a4abcfe92fb683254583c4cb079ef620a5b5e84f3a58aa33ab4c3bf5b05565d44885c2b4141abe8867287d94e7a66b65
   languageName: node
   linkType: hard
 
@@ -4565,6 +4590,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"burnt@npm:^0.12.2":
+  version: 0.12.2
+  resolution: "burnt@npm:0.12.2"
+  dependencies:
+    sf-symbols-typescript: ^1.0.0
+    sonner: ^0.3.5
+  peerDependencies:
+    expo: "*"
+    react: "*"
+    react-native: "*"
+  checksum: ed4ee9a058a05720c332e28cb69239ad679f131e038281e8593213ff038fb0e48750fe0bfcd163893b0f704fb27781c06c839bef5e87add83fa666e38d9d70d6
+  languageName: node
+  linkType: hard
+
 "bytes@npm:3.0.0":
   version: 3.0.0
   resolution: "bytes@npm:3.0.0"
@@ -6214,6 +6253,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"expo-av@npm:~14.0.6":
+  version: 14.0.6
+  resolution: "expo-av@npm:14.0.6"
+  peerDependencies:
+    expo: "*"
+  checksum: 3f8c7525ef451b26b24bcfc59fceb66d490151d9c4a836e4a4141de739b89ee88fd2b78461f398aed15e26e0abb221f0b5ae5921ad2c801dc1ca564a31c2a8dc
+  languageName: node
+  linkType: hard
+
 "expo-build-properties@npm:~0.12.1":
   version: 0.12.3
   resolution: "expo-build-properties@npm:0.12.3"
@@ -6289,6 +6337,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"expo-document-picker@npm:~12.0.2":
+  version: 12.0.2
+  resolution: "expo-document-picker@npm:12.0.2"
+  peerDependencies:
+    expo: "*"
+  checksum: fe358e535e7b3a5466817b55178981fc8d6632c91bef07c9292538e83a6724879cd2a03f059f4d376445545e98296aaea7daffe6129ccd84a4f7dd98a8d18c6e
+  languageName: node
+  linkType: hard
+
 "expo-file-system@npm:~17.0.1":
   version: 17.0.1
   resolution: "expo-file-system@npm:17.0.1"
@@ -6306,6 +6363,37 @@ __metadata:
   peerDependencies:
     expo: "*"
   checksum: 42968cceb60b9f5d1ef4fd29b243819e738588c8f51a8eb63750e21656f93be13d925982d8ef3b874da9145ebe4cd789da4d9d32bbd6577519ca0bfb214daa4b
+  languageName: node
+  linkType: hard
+
+"expo-image-loader@npm:~4.7.0":
+  version: 4.7.0
+  resolution: "expo-image-loader@npm:4.7.0"
+  peerDependencies:
+    expo: "*"
+  checksum: 1630e988443f87fe86761fb2909e3de88978004a55f769cce7d7965c3ff6e4497e73e9607e826d9a1d5588361b92350e8d4ec0111c9a3243d04a565eddfcf346
+  languageName: node
+  linkType: hard
+
+"expo-image-manipulator@npm:~12.0.5":
+  version: 12.0.5
+  resolution: "expo-image-manipulator@npm:12.0.5"
+  dependencies:
+    expo-image-loader: ~4.7.0
+  peerDependencies:
+    expo: "*"
+  checksum: f5dbc6b176d90c9cbfcce07a584c5d8e27655f75dd2db21c0d479255e5bf1e8507d118fbcf49e79881816365f81bb8dde433c22c47d2fa8b8e3e31452e63d6d5
+  languageName: node
+  linkType: hard
+
+"expo-image-picker@npm:~15.0.7":
+  version: 15.0.7
+  resolution: "expo-image-picker@npm:15.0.7"
+  dependencies:
+    expo-image-loader: ~4.7.0
+  peerDependencies:
+    expo: "*"
+  checksum: 569f9479eed8f0d2667c70f6d790b2a8dd6647a1c416eb5b9f573ce6bf4ff18d0fa45654f71bfa7d7579844a7a11334c6ceca6929c8e3d87ee32c52ba6b76bbb
   languageName: node
   linkType: hard
 
@@ -6367,6 +6455,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"expo-media-library@npm:~16.0.4":
+  version: 16.0.4
+  resolution: "expo-media-library@npm:16.0.4"
+  peerDependencies:
+    expo: "*"
+  checksum: fd79cea8437b8b57fadc5bb7352eca53760ae560a07a19d07036b89a1924443131436678f914b9c4b1a372acfecbe9c12aceb38943a4925299ba760ffb8c34de
+  languageName: node
+  linkType: hard
+
 "expo-modules-autolinking@npm:1.11.1":
   version: 1.11.1
   resolution: "expo-modules-autolinking@npm:1.11.1"
@@ -6388,6 +6485,15 @@ __metadata:
   dependencies:
     invariant: "npm:^2.2.4"
   checksum: f634bafecc9cd3fa508ea5c6ae7b1dd19ee23471636a92f90c8cec009dabb60ed687811414112379f19033487e0d0990f88007d481cf9da178dcb5ac284c25e3
+  languageName: node
+  linkType: hard
+
+"expo-sharing@npm:~12.0.1":
+  version: 12.0.1
+  resolution: "expo-sharing@npm:12.0.1"
+  peerDependencies:
+    expo: "*"
+  checksum: d091e5efe30699705c33c141aa64b9cfb0a14adecb737fd5f39d58a2fb1e6a44411d342ede897ebb4e15ca117f078aecac94d59734d465cc6919011d51a253b4
   languageName: node
   linkType: hard
 
@@ -6562,6 +6668,16 @@ __metadata:
   version: 4.1.1
   resolution: "fetch-retry@npm:4.1.1"
   checksum: a06b6a0201efeb5082794713bcdc8dd2c8f1fd4ad5660de860b9c4e51738aa369be58ba7cfa67aa7aa4a3bf9d9b5a4cd2d2fdea88868856483fb81bacd70455b
+  languageName: node
+  linkType: hard
+
+"ffmpeg-kit-react-native@npm:^6.0.2":
+  version: 6.0.2
+  resolution: "ffmpeg-kit-react-native@npm:6.0.2"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: 4175aa6d5cb78cffeb0a833d863b39d1cd7818780d36a02e2c3ba72be0b6e131b93c2dfb219f252148863d509bf6671eaa27e9f77ba59ef22debd955fcfb42e2
   languageName: node
   linkType: hard
 
@@ -7310,6 +7426,13 @@ __metadata:
     agent-base: "npm:^7.1.0"
     debug: "npm:^4.3.4"
   checksum: 670858c8f8f3146db5889e1fa117630910101db601fff7d5a8aa637da0abedf68c899f03d3451cac2f83bcc4c3d2dabf339b3aa00ff8080571cceb02c3ce02f3
+  languageName: node
+  linkType: hard
+
+"http-status-codes@npm:^2.3.0":
+  version: 2.3.0
+  resolution: "http-status-codes@npm:2.3.0"
+  checksum: dae3b99e0155441b6df28e8265ff27c56a45f82c6092f736414233e9ccf063d5ea93c1e1279e8b499c4642e2538b37995c76b1640ed3f615d0e2883d3a1dcfd5
   languageName: node
   linkType: hard
 
@@ -9509,6 +9632,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"mime@npm:^4.0.1":
+  version: 4.0.4
+  resolution: "mime@npm:4.0.4"
+  bin:
+    mime: bin/cli.js
+  checksum: 729904cd8b3913062017970ffa25c4303356f80dad33d472b47244e3baa35ab748ce005fb9a66ae854266fa73396ef219287bf6db311c8376ea3d9cfc5dda107
+  languageName: node
+  linkType: hard
+
 "mimic-fn@npm:^1.0.0":
   version: 1.2.0
   resolution: "mimic-fn@npm:1.2.0"
@@ -9810,7 +9942,9 @@ __metadata:
     "@babel/plugin-transform-template-literals": ^7.0.0
     "@babel/preset-env": ^7.20.0
     "@babel/runtime": ^7.20.0
+    "@config-plugins/ffmpeg-kit-react-native": ^8.0.0
     "@craftzdog/react-native-buffer": ^6.0.5
+    "@dr.pogodin/react-native-fs": ^2.24.5
     "@expo-google-fonts/space-grotesk": ^0.2.2
     "@expo/metro-runtime": ~3.2.1
     "@flyerhq/react-native-link-preview": ^1.5.2
@@ -9826,6 +9960,7 @@ __metadata:
     "@typescript-eslint/parser": ^5.59.0
     apisauce: 3.0.1
     babel-jest: ^29.2.1
+    burnt: ^0.12.2
     date-fns: ^2.30.0
     eslint: 8.17.0
     eslint-config-prettier: 8.5.0
@@ -9837,17 +9972,26 @@ __metadata:
     eslint-plugin-react-native: 4.0.0
     eslint-plugin-reactotron: ^0.1.2
     expo: ~51.0.8
+    expo-av: ~14.0.6
     expo-build-properties: ~0.12.1
     expo-dev-client: ~4.0.20
+    expo-document-picker: ~12.0.2
+    expo-file-system: ~17.0.1
     expo-font: ~12.0.5
     expo-image: ~1.12.12
+    expo-image-manipulator: ~12.0.5
+    expo-image-picker: ~15.0.7
     expo-linking: ~6.3.1
     expo-localization: ~15.0.3
+    expo-media-library: ~16.0.4
+    expo-sharing: ~12.0.1
     expo-splash-screen: ~0.27.4
     expo-status-bar: ~1.12.1
+    ffmpeg-kit-react-native: ^6.0.2
     i18n-js: 3.9.2
     jest: ^29.2.1
     jest-expo: ~51.0.2
+    mime: ^4.0.1
     mobx: 6.10.2
     mobx-react-lite: 4.0.5
     mobx-state-tree: 5.3.0
@@ -9860,6 +10004,7 @@ __metadata:
     react-native-gesture-handler: ~2.16.1
     react-native-image-viewing: ^0.2.2
     react-native-pager-view: 6.3.0
+    react-native-permissions: ^4.1.5
     react-native-quick-crypto: ^0.7.1
     react-native-reanimated: ~3.10.1
     react-native-safe-area-context: 4.10.1
@@ -10930,6 +11075,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-native-permissions@npm:^4.1.5":
+  version: 4.1.5
+  resolution: "react-native-permissions@npm:4.1.5"
+  peerDependencies:
+    react: ">=18.1.0"
+    react-native: ">=0.70.0"
+    react-native-windows: ">=0.70.0"
+  peerDependenciesMeta:
+    react-native-windows:
+      optional: true
+  checksum: dc4b366a0f561a47f032c027eb703a2be45e801788b915ed583e38f617eea23656eb63a77b17fb3a663fe3199b2ec25788f799e751421634e35a64f5258feed9
+  languageName: node
+  linkType: hard
+
 "react-native-quick-base64@npm:^2.0.5":
   version: 2.1.2
   resolution: "react-native-quick-base64@npm:2.1.2"
@@ -11777,6 +11936,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"sf-symbols-typescript@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "sf-symbols-typescript@npm:1.0.0"
+  checksum: ab7f427b6145ba308e9ab0357e86a8b32c4bd2ed7d5bba983812483b6f8320097121a7dac1855d344cf8b5a6e45ef9b7e8f121ad640fc7821f3fd433a8280567
+  languageName: node
+  linkType: hard
+
 "shallow-clone@npm:^3.0.0":
   version: 3.0.1
   resolution: "shallow-clone@npm:3.0.1"
@@ -11942,6 +12108,16 @@ __metadata:
     ip-address: "npm:^9.0.5"
     smart-buffer: "npm:^4.2.0"
   checksum: 7a6b7f6eedf7482b9e4597d9a20e09505824208006ea8f2c49b71657427f3c137ca2ae662089baa73e1971c62322d535d9d0cf1c9235cf6f55e315c18203eadd
+  languageName: node
+  linkType: hard
+
+"sonner@npm:^0.3.5":
+  version: 0.3.5
+  resolution: "sonner@npm:0.3.5"
+  peerDependencies:
+    react: ^18.0.0
+    react-dom: ^18.0.0
+  checksum: c0c564eddef03edb61d5a9ba4993d2a2d05a1e24e7ac9bdd4fa461e8b1fceeef69b99d4da0ffa23b3e8cbffdb660eb54327d583a9131aca34eb436a88a063691
   languageName: node
   linkType: hard
 

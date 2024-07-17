@@ -1,6 +1,6 @@
 import * as React from 'react'
-import {  StyleSheet, Text, View} from 'react-native'
-import {Image} from 'expo-image'
+import { StyleSheet, Text, View } from 'react-native'
+import { Image } from 'expo-image'
 import { MessageType, Theme } from '../../types'
 import { getUserAvatarNameColor, getUserInitials } from '../../utils'
 
@@ -26,11 +26,10 @@ export const Avatar = React.memo(
       const initials = getUserInitials(author)
 
       if (author.imageUrl) {
-        
+
         return (
           <Image
             accessibilityRole='image'
-            resizeMode='cover'
             source={{ uri: author.imageUrl }}
             style={
               {
@@ -39,19 +38,21 @@ export const Avatar = React.memo(
               }}
           />
         )
-      }else{
-        console.log('miss: ',author);
+      } else {
+        console.log('miss avatar: ', author);
       }
 
       return (
-        <View style={[styles.avatarBackground, { backgroundColor: 'blue' }]}>
+        <View style={[styles.avatarBackground, { backgroundColor: 'gray' }]}>
           <Text style={theme.fonts.userAvatarTextStyle}>{initials}</Text>
         </View>
       )
     }
 
-    return !currentUserIsAuthor && showUserAvatars ? (
-      <View testID='AvatarContainer'>
+    return showUserAvatars ? (
+      <View testID='AvatarContainer' style={{
+        ...(currentUserIsAuthor ? { marginLeft: 16 } : { marginRight: 16 })
+      }}>
         {showAvatar ? renderAvatar() : <View style={styles.placeholder} />}
       </View>
     ) : null
@@ -61,19 +62,17 @@ export const Avatar = React.memo(
 const styles = StyleSheet.create({
   avatarBackground: {
     alignItems: 'center',
-    borderRadius: 16,
-    height: 32,
+    borderRadius: 24,
+    height: 48,
+    width: 48,
     justifyContent: 'center',
-    marginRight: 8,
-    width: 32,
   },
   image: {
     alignItems: 'center',
-    borderRadius: 16,
-    height: 32,
+    borderRadius: 24,
+    width: 48,
+    height: 48,
     justifyContent: 'center',
-    marginRight: 8,
-    width: 32,
   },
   placeholder: {
     width: 40,

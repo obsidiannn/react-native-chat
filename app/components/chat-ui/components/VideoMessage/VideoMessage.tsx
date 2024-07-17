@@ -63,10 +63,9 @@ export const VideoMessage = ({ message, messageWidth }: VideoMessageProps) => {
                     }
                 }
             >
-                <Image source={require('../../assets/play-circle.svg')}
+                <Image source={require('../../assets/play.svg')}
                     style={{
                         alignSelf: 'center',
-                        tintColor: 'white',
                         width: scale(64),
                         height: scale(64)
                     }} />

@@ -12,14 +12,16 @@ import styles from './styles'
 
 export interface FileMessageProps {
   message: MessageType.DerivedFile
+  messageWidth: number
 }
 
-export const FileMessage = ({ message }: FileMessageProps) => {
+export const FileMessage = ({ message, messageWidth }: FileMessageProps) => {
   const l10n = React.useContext(L10nContext)
   const theme = React.useContext(ThemeContext)
   const user = React.useContext(UserContext)
   const { container, icon, iconContainer, name, size, textContainer } = styles({
     message,
+    messageWidth,
     theme,
     user,
   })

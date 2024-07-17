@@ -5,11 +5,13 @@ import { MessageType, Theme, User } from '../../types'
 const styles = ({
   message,
   theme,
+  messageWidth,
   user,
 }: {
   message: MessageType.DerivedFile
   theme: Theme
   user?: User
+  messageWidth: number
 }) =>
   StyleSheet.create({
     container: {
@@ -35,10 +37,15 @@ const styles = ({
       justifyContent: 'center',
       width: 42,
     },
-    name:
-      user?.id === message.author.id
+    name: {
+      ...(user?.id === message.author.id
         ? theme.fonts.sentMessageBodyTextStyle
-        : theme.fonts.receivedMessageBodyTextStyle,
+        : theme.fonts.receivedMessageBodyTextStyle),
+        flexWrap:"wrap",
+        maxWidth: messageWidth
+
+    }
+    ,
     size: {
       ...(user?.id === message.author.id
         ? theme.fonts.sentMessageCaptionTextStyle

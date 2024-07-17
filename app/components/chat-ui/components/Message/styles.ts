@@ -17,24 +17,24 @@ const styles = ({
 }) =>
   StyleSheet.create({
     container: {
-      alignItems: 'flex-end',
+      alignItems: 'flex-start',
       alignSelf: currentUserIsAuthor ? 'flex-end' : 'flex-start',
       justifyContent: !currentUserIsAuthor ? 'flex-end' : 'flex-start',
       flex: 1,
-      flexDirection: 'row',
       marginBottom: message.type === 'dateHeader' ? 0 : 8 + message.offset,
       marginLeft: 20,
+      flexDirection: 'row',
     },
     contentContainer: {
       backgroundColor:
         !currentUserIsAuthor || message.type === 'image'
           ? theme.colors.secondary
           : theme.colors.primary,
-      borderBottomLeftRadius:
+      borderTopLeftRadius:
         currentUserIsAuthor || roundBorder
           ? theme.borders.messageBorderRadius
           : 0,
-      borderBottomRightRadius: currentUserIsAuthor
+      borderTopRightRadius: currentUserIsAuthor
         ? roundBorder
           ? theme.borders.messageBorderRadius
           : 0
@@ -42,6 +42,7 @@ const styles = ({
       borderColor: 'transparent',
       borderRadius: theme.borders.messageBorderRadius,
       overflow: 'hidden',
+      alignSelf: currentUserIsAuthor ? 'flex-end' : 'flex-start',
     },
     dateHeader: {
       alignItems: 'center',
@@ -52,6 +53,16 @@ const styles = ({
     pressable: {
       maxWidth: messageWidth,
     },
+    messageBody: {
+      
+    },
+    messageHeader: {
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'flex-end',
+      padding: 4
+    }
   })
 
 export default styles

@@ -31,7 +31,11 @@
         "image": "./assets/images/splash-logo-android-universal.png",
         "resizeMode": "contain",
         "backgroundColor": "#191015"
-      }
+      },
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO"
+      ]
     },
     "ios": {
       "icon": "./assets/images/app-icon-ios.png",
@@ -42,6 +46,10 @@
         "tabletImage": "./assets/images/splash-logo-ios-tablet.png",
         "resizeMode": "contain",
         "backgroundColor": "#191015"
+      },
+      "infoPlist": {
+        "NSCameraUsageDescription": "[REASON]",
+        "NSMicrophoneUsageDescription": "[REASON]"
       }
     },
     "web": {
@@ -66,7 +74,23 @@
           }
         }
       ],
-      "expo-font"
+      "expo-font",
+      [
+        "expo-av",
+        {
+          "microphonePermission": "Allow $(PRODUCT_NAME) to access your microphone."
+        }
+      ],
+      [
+        "react-native-permissions",
+        { 
+          "iosPermissions": [
+            "Camera",
+            "Microphone"
+          ]
+        }
+      ],
+      "@config-plugins/ffmpeg-kit-react-native"
     ],
     "experiments": {
       "tsconfigPaths": true

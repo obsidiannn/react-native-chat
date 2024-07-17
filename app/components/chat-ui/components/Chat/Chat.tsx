@@ -329,10 +329,10 @@ export const Chat = ({
     ({ item: message }: { item: MessageType.DerivedAny; index: number }) => {
       const messageWidth =
         showUserAvatars &&
-          message.type !== 'dateHeader' &&
-          message.author.id !== user.id
-          ? Math.floor(Math.min(size.width * 0.72, 440))
-          : Math.floor(Math.min(size.width * 0.77, 440))
+          message.type !== 'dateHeader' 
+          // && message.author.id !== user.id
+          ? Math.floor(Math.min(size.width * 0.70, 440))
+          : Math.floor(Math.min(size.width * 0.72, 440))
 
       const roundBorder =
         message.type !== 'dateHeader' && message.nextMessageInGroup

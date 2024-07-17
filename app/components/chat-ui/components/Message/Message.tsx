@@ -5,6 +5,7 @@ import { GestureResponderEvent, Pressable, Text, View } from 'react-native'
 import { MessageType } from '../../types'
 import {
   excludeDerivedMessageProps,
+  formatDate,
   ThemeContext,
   UserContext,
 } from '../../utils'
@@ -95,22 +96,25 @@ export const Message = React.memo(
     const currentUserIsAuthor =
       message.type !== 'dateHeader' && user?.id === message.author.id
 
-    const { container, contentContainer, dateHeader, pressable } = styles({
+    const { container, contentContainer, dateHeader, pressable, messageBody, messageHeader } = styles({
       currentUserIsAuthor,
       message,
       messageWidth,
       roundBorder,
       theme,
     })
-
+    // 日期拆分不用了
+    // if (message.type === 'dateHeader') {
+    //   return (
+    //     <View style={dateHeader}>
+    //       <Text style={theme.fonts.dateDividerTextStyle}>{message.text}</Text>
+    //     </View>
+    //   )
+    // }
     if (message.type === 'dateHeader') {
-      return (
-        <View style={dateHeader}>
-          <Text style={theme.fonts.dateDividerTextStyle}>{message.text}</Text>
-        </View>
-      )
+      return null
     }
-
+    message = message as MessageType.DerivedMessage
     const renderBubbleContainer = () => {
       const child = renderMessage()
 
@@ -138,7 +142,11 @@ export const Message = React.memo(
             ) ?? null
           )
         case 'file':
-          return oneOf(renderFileMessage, <FileMessage message={message} />)(
+          return oneOf(renderFileMessage, <FileMessage {...{
+            messageWidth,
+            message
+
+          }}  />)(
             // type-coverage:ignore-next-line
             excludeDerivedMessageProps(message) as MessageType.File,
             messageWidth
@@ -197,26 +205,70 @@ export const Message = React.memo(
 
     return (
       <View style={container}>
-        <Avatar
-          {...{
-            author: message.author,
-            currentUserIsAuthor,
-            showAvatar,
-            showUserAvatars,
-            theme,
-          }}
-        />
-        <Pressable
-          onStartShouldSetResponderCapture={(ev) => { return true }}
-          onLongPress={(e) => {
-            onMessageLongPress?.(excludeDerivedMessageProps(message), e)
-          }
-          }
-          onPress={() => onMessagePress?.(excludeDerivedMessageProps(message))}
-          style={pressable}
-        >
-          {renderBubbleContainer()}
-        </Pressable>
+        {
+          currentUserIsAuthor ?
+            <>
+              <View style={messageBody}>
+                <View style={messageHeader}>
+                  <Text style={[theme.fonts.dateDividerTextStyle, { marginRight: 8 }]}>{formatDate(message.createdAt ?? 0)}</Text>
+                  <Text style={theme.fonts.userNameTextStyle}>{message.author.firstName}</Text>
+                </View>
+                <View>
+                  <Pressable
+                    onStartShouldSetResponderCapture={(ev) => { return true }}
+                    onLongPress={(e) => {
+                      onMessageLongPress?.(excludeDerivedMessageProps(message), e)
+                    }}
+                    onPress={() => onMessagePress?.(excludeDerivedMessageProps(message))}
+                    style={pressable}
+                  >
+                    {renderBubbleContainer()}
+                  </Pressable>
+                </View>
+              </View>
+              <Avatar
+                {...{
+                  author: message.author,
+                  currentUserIsAuthor,
+                  showAvatar,
+                  showUserAvatars,
+                  theme,
+                }}
+              />
+            </>
+            :
+            (
+              <>
+                <Avatar
+                  {...{
+                    author: message.author,
+                    currentUserIsAuthor,
+                    showAvatar,
+                    showUserAvatars,
+                    theme,
+                  }}
+                />
+                <View style={messageBody}>
+                  <View style={messageHeader}>
+                    <Text style={[theme.fonts.dateDividerTextStyle, { marginRight: 8 }]}>{formatDate(message.createdAt ?? 0)}</Text>
+                    <Text style={theme.fonts.userNameTextStyle}>{message.author.firstName}</Text>
+                  </View>
+                  <Pressable
+                    onStartShouldSetResponderCapture={(ev) => { return true }}
+                    onLongPress={(e) => {
+                      onMessageLongPress?.(excludeDerivedMessageProps(message), e)
+                    }
+                    }
+                    onPress={() => onMessagePress?.(excludeDerivedMessageProps(message))}
+                    style={pressable}
+                  >
+                    {renderBubbleContainer()}
+                  </Pressable>
+                </View>
+              </>
+            )
+        }
+
         <StatusIcon
           {...{
             currentUserIsAuthor,
