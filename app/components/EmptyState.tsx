@@ -1,9 +1,8 @@
 import React from "react"
-import { Image, ImageProps, ImageStyle, StyleProp, TextStyle, View, ViewStyle } from "react-native"
-import { translate } from "../i18n"
+import { Image, ImageProps, ImageStyle, StyleProp, TextProps, TextStyle, View, ViewStyle } from "react-native"
 import { spacing } from "../theme"
 import { Button, ButtonProps } from "./Button"
-import { Text, TextProps } from "./Text"
+import { Text } from "./Text"
 
 const sadFace = require("../../assets/images/sad-face.png")
 
@@ -31,11 +30,11 @@ interface EmptyStateProps {
   /**
    * The heading text to display if not using `headingTx`.
    */
-  heading?: TextProps["text"]
+  heading?: TextProps
   /**
    * Heading text which is looked up via i18n.
    */
-  headingTx?: TextProps["tx"]
+  headingTx?: TextProps
   /**
    * Optional heading options to pass to i18n. Useful for interpolation
    * as well as explicitly setting locale or translation fallbacks.

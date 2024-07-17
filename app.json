@@ -22,6 +22,7 @@
     ],
     "android": {
       "icon": "./assets/images/app-icon-android-legacy.png",
+      "googleServicesFile": "./google-services.json",
       "package": "ooo.bobobo.chat",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/app-icon-android-adaptive-foreground.png",
@@ -40,7 +41,11 @@
     "ios": {
       "icon": "./assets/images/app-icon-ios.png",
       "supportsTablet": true,
+      "googleServicesFile": "./GoogleService-Info.plist",
       "bundleIdentifier": "ooo.bobobo.chat",
+      "entitlements": {
+        "aps-environment": "production"
+      },
       "splash": {
         "image": "./assets/images/splash-logo-ios-mobile.png",
         "tabletImage": "./assets/images/splash-logo-ios-tablet.png",
@@ -62,12 +67,14 @@
       "bundler": "metro"
     },
     "plugins": [
+      "@react-native-firebase/app",
       "expo-localization",
       [
         "expo-build-properties",
         {
           "ios": {
-            "newArchEnabled": false
+            "newArchEnabled": false,
+            "useFrameworks": "static"
           },
           "android": {
             "newArchEnabled": false

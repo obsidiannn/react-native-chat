@@ -1,55 +1,51 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Pressable, Text, TextStyle, View, ViewStyle } from "react-native";
 import React from "react";
-import { Image } from "expo-image";
+import { Image, ImageStyle } from "expo-image";
 import { goBack } from "app/navigators";
-import { scale, verticalScale } from "app/utils/size";
+import { s, scale } from "app/utils/size";
+import { ColorsState, ThemeState } from "app/stores/system";
+import { useRecoilValue } from "recoil";
 const Navbar = (props: {
     onLeftPress?: () => void;
     renderRight?: () => React.ReactNode;
     renderLeft?: () => React.ReactNode;
     renderCenter?: () => React.ReactNode;
-    theme?: 'light' | 'dark';
     title?: string;
-    backgroundColor?: string;
 }) => {
     const {
         title = '',
         onLeftPress = () => goBack(),
         renderLeft,
         renderCenter,
-        renderRight,
-        theme = 'light',
+        renderRight
     } = props;
-    return <View style={[
-        styles.container,
-        theme === 'dark' ? {
-            backgroundColor: 'black',
-        } : null,
-        {
-           ...(props.backgroundColor ? {backgroundColor: props.backgroundColor} : null),
-        }
-    ]}>
-        {<View style={styles.leftContainer}>
+    const $theme =  useRecoilValue(ThemeState)
+    const $colors = useRecoilValue(ColorsState)
+    return <View style={$container}>
+        {<View style={$leftContainer}>
             {
-                renderLeft ? renderLeft() : <TouchableOpacity style={styles.leftIconContainer} onPress={() => onLeftPress()}>
-                    <Image 
-                    source={theme == "dark" ? require('assets/icons/back.svg') : require('assets/icons/back.svg')} 
-                    style={styles.leftIcon} />
-                </TouchableOpacity>
+                renderLeft ? renderLeft() : <Pressable style={[
+                    $leftIconContainer,
+                    {
+                        backgroundColor: $theme == "dark" ? "#F0F2F525" : "#ffffff99"
+                    }
+                ]} onPress={() => onLeftPress()}>
+                    <Image source={$theme == "dark" ? require('assets/icons/back-white.svg') : require('assets/icons/back.svg')} style={$leftIcon} />
+                </Pressable>
             }
         </View>}
         {
-            renderCenter ? renderCenter() : <View style={styles.centerContainer}>
+            renderCenter ? renderCenter() : <View style={[$centerContainer]}>
                 <Text style={[
-                    styles.centerText,
-                    theme === 'dark' ? {
-                        color: 'white',
-                    } : null,
+                    $centerText,
+                    {
+                        color: $colors.text,
+                    },
                 ]}>{title}</Text>
             </View>
         }
         {
-            <View style={styles.rightContainer}>
+            <View style={$rightContainer}>
                 {renderRight ? renderRight() : null}
             </View>
         }
@@ -68,48 +64,46 @@ const Navbar = (props: {
         } */}
     </View>
 }
-
-const styles = StyleSheet.create({
-    container: {
-        height: verticalScale(44),
-        backgroundColor: 'white',
-        display: 'flex',
-        flexDirection: 'row',
-        width: '100%',
-    },
-    leftContainer: {
-        height: verticalScale(50),
-        width: '20%',
-        display: 'flex',
-        alignItems: 'flex-start',
-        justifyContent: 'center',
-        paddingLeft: scale(16),
-    },
-    leftIconContainer: {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    leftIcon: {
-        width: scale(8),
-        height: scale(8),
-    },
-    centerContainer: {
-        height: verticalScale(44),
-        width: '60%',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    centerText: {
-        fontSize: 16,
-        fontWeight: '500',
-        color: 'black',
-    },
-    rightContainer: {
-        height: verticalScale(44),
-        width: '20%',
-    },
-});
+const $container: ViewStyle = {
+    height: scale(45),
+    display: 'flex',
+    flexDirection: 'row',
+    width: '100%',
+}
+const $leftContainer: ViewStyle = {
+    height: scale(45),
+    width: '20%',
+    display: 'flex',
+    alignItems: 'flex-start',
+    justifyContent: 'center',
+    paddingLeft: scale(16),
+}
+const $leftIconContainer: ViewStyle = {
+    width: scale(32),
+    height: scale(32),
+    borderRadius: s(10),
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+}
+const $centerContainer: ViewStyle = {
+    height: s(44),
+    width: '60%',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+};
+const $centerText: TextStyle = {
+    fontSize: 16,
+    fontWeight: '500',
+}
+const $rightContainer: ViewStyle = {
+    height: s(44),
+    width: '20%',
+}
+const $leftIcon: ImageStyle = {
+    width: s(4),
+    height: s(8),
+}
 
 export default Navbar

@@ -8,7 +8,7 @@ import {
 import Config from "../config"
 import type { PersistNavigationConfig } from "../config/config.base"
 import { useIsMounted } from "../utils/useIsMounted"
-import type { AppStackParamList, NavigationProps } from "./AppNavigator"
+import type { AppStackParamList } from "./AppNavigator"
 
 import * as storage from "../utils/storage"
 
@@ -117,8 +117,7 @@ function navigationRestoredDefaultState(persistNavigation: PersistNavigationConf
  * @returns {object} - The navigation state and persistence functions.
  */
 export function useNavigationPersistence(storage: Storage, persistenceKey: string) {
-  const [initialNavigationState, setInitialNavigationState] =
-    useState<NavigationProps["initialState"]>()
+  const [initialNavigationState, setInitialNavigationState] = useState<NavigationProps["initialState"]>()
   const isMounted = useIsMounted()
 
   const initNavState = navigationRestoredDefaultState(Config.persistNavigation)
