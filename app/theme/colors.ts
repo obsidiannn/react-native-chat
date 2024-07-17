@@ -1,6 +1,5 @@
 // TODO: write documentation for colors and palette in own markdown file and add links from here
 
-import { useColorScheme } from "react-native"
 
 const palette = {
   neutral100: "#FFFFFF",
@@ -97,15 +96,21 @@ export const colors = {
   errorBackground: palette.angry100,
 }
 
-const $dark = {
-  $backgroundColor: "black",
-  $textColor: "black",
-  $borderColor: "black",
+export const $dark: IColors = {
+  background: "#1F2937",
+  secondaryBackground: "#1F2937",
+  text: "white",
+  border: "#4B5563",
+  primary: "#294AF5",
+  secondaryText: '#9CA3AF'
 }
-const $light = {
-  $backgroundColor: "white",
-  $textColor: "white",
-  $borderColor: "white",
+export const $light: IColors = {
+  background: "white",
+  secondaryBackground: "#F3F4F6",
+  text: "black",
+  border: "#D1D5DB",
+  primary: "#4B5563",
+  secondaryText: '#9CA3AF',
 }
 export default {
   $dark,

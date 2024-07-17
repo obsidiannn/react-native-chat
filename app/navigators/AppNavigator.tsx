@@ -5,38 +5,32 @@
  * and a "main" flow which the user will use once logged in.
  */
 import {
-  DarkTheme,
-  DefaultTheme,
+  LinkingOptions,
   NavigationContainer,
 } from "@react-navigation/native"
 import { createNativeStackNavigator, NativeStackScreenProps } from "@react-navigation/native-stack"
-import { observer } from "mobx-react-lite"
+import messaging from '@react-native-firebase/messaging';
 import React from "react"
-import { useColorScheme } from "react-native"
+import { Linking } from "react-native"
 import * as Screens from "app/screens"
 import Config from "../config"
 import { navigationRef, useBackButtonHandler } from "./navigationUtilities"
 import { colors } from "app/theme"
-
-/**
- * This type allows TypeScript to know what routes are defined in this navigator
- * as well as what properties (if any) they might take when navigating to them.
- *
- * If no params are allowed, pass through `undefined`. Generally speaking, we
- * recommend using your MobX-State-Tree store(s) to keep application state
- * rather than passing state through navigation params.
- *
- * For more information, see this documentation:
- *   https://reactnavigation.org/docs/params/
- *   https://reactnavigation.org/docs/typescript#type-checking-the-navigator
- *   https://reactnavigation.org/docs/typescript/#organizing-types
- */
 export type AppStackParamList = {
-  Welcome: undefined;
+  WelcomeScreen: undefined;
   // 🔥 Your screens go here
-  Login: undefined
-  ChatScreen: undefined
-  UserChatScreen: undefined
+  Login: undefined;
+  GroupScreen: undefined;
+  ChatScreen: undefined;
+  UserScreen: undefined;
+  UserChatScreen: undefined;
+  WebViewScreen: {
+    title: string;
+    url: string;
+  };
+  SignInScreen: undefined;
+  SignUpScreen: undefined;
+  UnlockScreen: undefined;
   // IGNITE_GENERATOR_ANCHOR_APP_STACK_PARAM_LIST
 }
 
@@ -46,41 +40,81 @@ export type AppStackParamList = {
  */
 const exitRoutes = Config.exitRoutes
 
-export type AppStackScreenProps<T extends keyof AppStackParamList> = NativeStackScreenProps<
-  AppStackParamList,
-  T
->
+export type AppStackScreenProps<T extends keyof AppStackParamList> = NativeStackScreenProps<AppStackParamList, T>
 
 // Documentation: https://reactnavigation.org/docs/stack-navigator/
 const Stack = createNativeStackNavigator<AppStackParamList>()
 
-const AppStack = observer(function AppStack() {
+const AppStack = () => {
   return (
     <Stack.Navigator
+      initialRouteName="SignUpScreen"
       screenOptions={{ headerShown: false, navigationBarColor: colors.background }}
     >
       <Stack.Screen name="UserChatScreen" component={Screens.UserChatScreen} />
       <Stack.Screen name="ChatScreen" component={Screens.ChatScreen} />
-      <Stack.Screen name="Welcome" component={Screens.WelcomeScreen} />
-      <Stack.Screen name="Login" component={Screens.LoginScreen} />
+      <Stack.Screen name="WelcomeScreen" component={Screens.WelcomeScreen} />
+      <Stack.Screen name="WebViewScreen" options={{presentation: "modal" }} component={Screens.WebViewScreen} />
+      <Stack.Screen name="SignInScreen" component={Screens.SignInScreen} />
+      <Stack.Screen name="SignUpScreen" component={Screens.SignUpScreen} />
     </Stack.Navigator>
   )
-})
+}
 
-export interface NavigationProps extends Partial<React.ComponentProps<AppStackScreenProps>> { }
 
-export const AppNavigator = observer(function AppNavigator(props: NavigationProps) {
-  const colorScheme = useColorScheme()
-
+export const AppNavigator = () => {
+  // const setThemeState = useSetRecoilState(ThemeState);
+  // useEffect(() => {
+  //   const v = Appearance.getColorScheme()
+  //   setThemeState(v === "dark" ? 'dark' : 'light');
+  //   const subscription = Appearance.addChangeListener(({ colorScheme }) => setThemeState(colorScheme === "dark" ? 'dark' : 'light'));
+  //   return () => subscription.remove();
+  // }, []);
   useBackButtonHandler((routeName) => exitRoutes.includes(routeName))
+  const linking: LinkingOptions<AppStackParamList> = {
+    enabled: true,
+    prefixes: ['https://mychat.com', 'next-chat://'],
+    config: {
+      screens: {
+        ChatScreen: 'chat/:id',
+        GroupScreen: 'group/:id',
+        UserScreen: 'user/:user_name',
+      },
+    },
+    async getInitialURL() {
+      const url = await Linking.getInitialURL();
 
+      if (url != null) {
+        return url;
+      }
+      const message = await messaging().getInitialNotification();
+      return message?.data?.url as string;
+    },
+    subscribe(listener) {
+      const onReceiveURL = ({ url }: { url: string }) => listener(url);
+      const subscription = Linking.addEventListener('url', onReceiveURL);
+      const unsubscribeNotification = messaging().onNotificationOpenedApp(
+        (message: any) => {
+          const url = message.data?.url;
+          if (url) {
+            listener(url);
+          }
+        }
+      );
+
+      return () => {
+        subscription.remove();
+        unsubscribeNotification();
+      };
+    },
+  };
   return (
     <NavigationContainer
       ref={navigationRef}
-      theme={colorScheme === "dark" ? DarkTheme : DefaultTheme}
-      {...props}
+      linking={linking}
+      onReady={() => console.log('Navigation container is ready')}
     >
       <AppStack />
     </NavigationContainer>
   )
-})
+}
