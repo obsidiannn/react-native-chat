@@ -12,10 +12,10 @@ import { scale } from "app/utils/size";
 import Navbar from "app/components/Navbar";
 import { useRoute } from "@react-navigation/native";
 import { colors } from "app/theme";
-import { translate } from "app/i18n";
 import { Image } from "expo-image";
 import toast from "app/utils/toast";
 import { UserChatUIContext } from "./context";
+import { useTranslation } from "react-i18next";
 
 export default function ({ navigation }) {
     const route = useRoute()
@@ -26,6 +26,7 @@ export default function ({ navigation }) {
     const onClose = () => {
         navigation.goBack()
     }
+    const {t} = useTranslation()
 
     return (
         <View style={{

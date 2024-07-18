@@ -1,6 +1,7 @@
-import { createInstance } from "@/lib/request-instance";
-import { BaseIdsArrayReq, BaseArrayResp } from "../types/common";
+import { createInstance } from '../req';
 import {
+  BaseIdsArrayReq, BaseArrayResp,
+
   MessageSendReq,
   MessageListItem,
   MessageDetailItem,
@@ -8,7 +9,7 @@ import {
   MessageSendResp,
   MessageListReq,
   MessageDetailReq
-} from '../types/message'
+} from "@repo/types";
 
 // 发送消息
 const sendMessage = async (param: MessageSendReq): Promise<MessageSendResp> => await createInstance(true).post('/chats/messages/send', param);
@@ -29,13 +30,13 @@ const deleteSelfMsg = async (param: BaseIdsArrayReq) => await createInstance(tru
 const deleteChatByIds = async (param: MessageDeleteByIdReq) => await createInstance(true).post('/chats/messages/delete-chat-ids', param);
 
 // （单向）删除所有消息-根据会话IDs 解除自己与会话消息的关系
-const deleteSelfChatByIds = async (param: MessageDeleteByIdReq) =>  await createInstance(true).post('/chats/messages/delete-self-chat-ids', param);
+const deleteSelfChatByIds = async (param: MessageDeleteByIdReq) => await createInstance(true).post('/chats/messages/delete-self-chat-ids', param);
 
 // 撤回消息 根据会话IDs 所有发送者的消息物理删除
-const pullBackByChatIds =async (param: MessageDeleteByIdReq) => await createInstance(true).post('/chats/messages/revoke-chat-ids', param);
+const pullBackByChatIds = async (param: MessageDeleteByIdReq) => await createInstance(true).post('/chats/messages/revoke-chat-ids', param);
 
 // 清空所有端消息 物理删除 (不可恢复,只有拥有管理员权限的用户才能调用)
-const clearGroupMessageByChatIds =async (param: MessageDeleteByIdReq) => await createInstance(true).post('/chats/messages/clear-chat-ids', param);
+const clearGroupMessageByChatIds = async (param: MessageDeleteByIdReq) => await createInstance(true).post('/chats/messages/clear-chat-ids', param);
 
 /**
  * 清除我的消息，其他人的消息不受影響

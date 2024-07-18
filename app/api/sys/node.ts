@@ -1,5 +1,5 @@
-import { createInstance } from "@/lib/request-instance"
-import { IServer } from "types/server";
+import { createInstance } from '../req'
+import { IServer } from "@repo/types";
 
 
 export const getLists = async (): Promise<{

@@ -1,4 +1,4 @@
-import { createInstance } from "@/lib/request-instance";
+import { createInstance } from '../req';
 const getUploadPreSignUrl = async (): Promise<{
     uploadUrl: string;
     key: string;

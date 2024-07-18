@@ -97,7 +97,7 @@
           ]
         }
       ],
-      "@config-plugins/ffmpeg-kit-react-native"
+      "react-native-compressor"
     ],
     "experiments": {
       "tsconfigPaths": true

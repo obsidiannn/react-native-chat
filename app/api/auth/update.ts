@@ -1,4 +1,4 @@
-import { createInstance } from "@/lib/request-instance";
+import { createInstance } from "../req";
 // 修改昵称
 const updateUserName = async (userName: string): Promise<null> => await createInstance(true).post('/auth/update/userName', {userName});
 

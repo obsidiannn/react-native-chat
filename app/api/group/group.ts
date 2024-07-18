@@ -18,8 +18,8 @@ import {
   GroupTagReq,
   GroupApplyListReq,
   GroupSingleItem
-} from "../types/group";
-import { createInstance } from "@/lib/request-instance";
+} from "@repo/types";
+import { createInstance } from '../req';
 import { BaseIdReq,BaseIdArrayReq, BaseIdsArrayReq, BaseArrayResp, BaseIdsNumberReq } from "../types/common";
 
 const create =async (param: GroupCreateReq):Promise<{id: number}> => await createInstance(true).post('/groups/create', param);

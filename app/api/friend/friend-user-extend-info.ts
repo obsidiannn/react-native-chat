@@ -1,4 +1,4 @@
-import { createInstance } from "@/lib/request-instance";
+import { createInstance } from '../req';
 
 const getInfo = async () => await createInstance(true).post('/friendUserExtendInfo/getInfo');
 

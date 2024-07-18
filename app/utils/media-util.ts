@@ -2,6 +2,10 @@ import * as ImagePicker from 'expo-image-picker';
 // import PhotoEditor from "@baronha/react-native-photo-editor";
 import * as DocumentPicker from 'expo-document-picker';
 import { requestCameraPermission, requestPhotoPermission } from 'app/services/permissions';
+
+import { Video, createVideoThumbnail ,Image} from 'react-native-compressor';
+
+
 export const pickerDocument = async () => {
     const result = await DocumentPicker.getDocumentAsync({
         type: '*/*',
@@ -53,7 +57,7 @@ export const captureVideo = async (): Promise<ImagePicker.ImagePickerAsset | nul
     await requestCameraPermission();
     console.log('1');
     // await requestMicrophonePermission();
-    
+
     await ImagePicker.requestCameraPermissionsAsync();
     let result = await ImagePicker.launchCameraAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Videos,
@@ -67,22 +71,49 @@ export const captureVideo = async (): Promise<ImagePicker.ImagePickerAsset | nul
     return null;
 };
 
-export const videoFormat = async (asset: ImagePicker.ImagePickerAsset) :Promise<ImagePicker.ImagePickerAsset | null>=> {
-    const input = asset.uri
+export const imageFormat = async (input: string) => {
+    const result = await Image.compress(input);
+    return result
+}
+
+export const videoFormat = async (asset: ImagePicker.ImagePickerAsset): Promise<ImagePicker.ImagePickerAsset | null> => {
+    // const input = asset.uri
     // const output = input.replace(/(.*)(\..*$)/, '$1_output.mp4');
-    // //    const cmd = `-i ${input} -c:v mpeg4 ${output}`;
+    //    const cmd = `-i ${input} -c:v mpeg4 ${output}`;
     // const cmd = `-i ${input} -c:v libx264 ${output}`;
     // //    const session = await FFmpegKit.execute(cmd);
     // const session = await FFmpegKit.execute(cmd)
     // const returnCode = await session.getReturnCode()
-    // if (ReturnCode.isSuccess(returnCode)) {
-    //     // SUCCESS
-    //     asset.uri = output
-    //     return asset
-    // } else if (ReturnCode.isCancel(returnCode)) {
-    //     // CANCEL
-    // } else {
-    //     // ERROR
-    // }
+
+    const result = await Video.compress(
+        asset.uri,
+        {},
+        (progress) => {
+            console.log('Compression Progress: ', progress);
+        }
+    );
+    if (result) {
+        // SUCCESS
+        asset.uri = result
+        return asset
+    }
     return null;
+}
+
+/**
+ * 生成視頻縮略圖
+ * @param videoPath 視頻地址
+ * @param mid 消息主鍵
+ * @returns 
+ */
+export const generateVideoThumbnail = async (videoPath: string, mid: string) => {
+    const thumbnail = await createVideoThumbnail(videoPath)
+    return thumbnail.path
+    // const thumbnailPath = FileSystem.cacheDirectory + mid + '_thumbnail.jpg'
+    // const cmd = `-i ${videoPath} -ss 00:00:01 -vframes 1 ${thumbnailPath}`
+    // const session = await FFmpegKit.execute(cmd)
+    // if (ReturnCode.isSuccess(await session.getReturnCode())) {
+    //     return thumbnailPath;
+    // }
+    // return null
 }

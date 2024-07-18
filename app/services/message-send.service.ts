@@ -1,21 +1,17 @@
-import messageApi from "../api/chat/message"
+import messageApi from "app/api/chat/message"
 import ToastException from "../exception/toast-exception";
-import quickAes from "../lib/quick-aes";
-import userService from "./user.service";
+import quickAes from "app/utils/quick-crypto";
 import { manipulateAsync, SaveFormat } from 'expo-image-manipulator';
-import { format, uploadFile } from "./file.service";
-import { IMessageRedPacket, IMessageSwap } from "@/components/chat/input-toolkit/types";
-import { MessageTypeEnum } from "@/api/types/enums";
-import { MessageDetailItem, MessageExtra } from "@/api/types/message";
-import { WalletRemitReq, WalletRemitResp } from "@/api/types/wallet";
-import walletApi from '@/api/v2/wallet'
-import { RedPacketCreateReq, RedPacketInfo } from "@/api/types/red-packet";
-import redPacketApi from "@/api/v2/red-packet";
+import { uploadFile } from "./file.service";
+import { IModel } from "@repo/enums";
+import { MessageDetailItem, MessageExtra } from "@repo/types";
+import userService from "./user.service";
 import MessagesModel from "@/service/message.model";
-import { MessageType } from "@/components/chat-ui";
-import chatUiAdapter from "@/helpers/chat-ui.adapter";
+import { MessageType } from "app/components/chat-ui";
+import chatUiAdapter from "./chat-ui.adapter";
+import { imageFormat } from "app/utils/media-util";
 
-const _send = async (chatId: string, key: string, mid: string, type: MessageTypeEnum, data: {
+const _send = async (chatId: string, key: string, mid: string, type: IModel.IChat.IMessageTypeEnum, data: {
     t: string;
     d: any;
 }) => {
@@ -33,40 +29,6 @@ const _send = async (chatId: string, key: string, mid: string, type: MessageType
         content: quickAes.En(JSON.stringify(data), key),
     });
 }
-
-const doRemit = async (req: WalletRemitReq, key: string, swapType: 'swap' | 'gswap'): Promise<WalletRemitResp> => {
-    const data: IMessageSwap = {
-        remark: req.remark ?? '',
-        amount: req.amount,
-        uid: req.objUId
-    }
-    const remitReq: WalletRemitReq = {
-        ...req,
-        content: quickAes.En(JSON.stringify({ t: swapType, d: data }), key),
-    }
-    return await walletApi.doRemit(remitReq)
-}
-
-// 發紅包消息
-const doRedPacket = async (req: RedPacketCreateReq, key: string, packetType: 'packet' | 'gpacket'): Promise<RedPacketInfo> => {
-    let objUId
-    if (req.objUIds && req.objUIds.length > 0) {
-        objUId = req.objUIds[0]
-    }
-    const data: IMessageRedPacket = {
-        remark: req.remark,
-        sender: req.sender ?? '',
-        packetId: '',
-        type: req.type,
-        objUId: objUId
-    }
-    const rpReq: RedPacketCreateReq = {
-        ...req,
-        content: quickAes.En(JSON.stringify({ t: packetType, d: data }), key),
-    }
-    return await redPacketApi.doRedPacket(rpReq)
-}
-
 
 const send = async (chatId: string, key: string, message: MessageType.Any): Promise<MessageType.Any> => {
     console.log('sendkey=', key);
@@ -92,25 +54,25 @@ const sendText = async (chatId: string, key: string, message: MessageType.Text) 
         t: 'text',
         d: message.text,
     }
-    const res = await _send(chatId, key, message.id, MessageTypeEnum.NORMAL, data);
+    const res = await _send(chatId, key, message.id, IModel.IChat.IMessageTypeEnum.NORMAL, data);
     message.sequence = res.sequence;
     return message
 }
 const sendImage = async (chatId: string, key: string, message: MessageType.Image) => {
     const originalPath = message.uri
-    const thumbnail = await manipulateAsync(originalPath, [{ resize: { width: 200 } }], {
-        compress: 0.5,
-        format: SaveFormat.JPEG,
-    });
+    // const thumbnail = await manipulateAsync(originalPath, [{ resize: { width: 200 } }], {
+    //     compress: 0.5,
+    //     format: SaveFormat.JPEG,
+    // });
     const original = await manipulateAsync(originalPath, [], {
         compress: 1,
         format: SaveFormat.PNG,
     });
-    const originalExt = originalPath.split('.').pop() ?? '';
-    const thumbnailExt = thumbnail.uri.split('.').pop() ?? '';
-    const originalWebp = originalPath.replace(originalExt, 'webp');
+    // const originalExt = originalPath.split('.').pop() ?? '';
+    // const thumbnailExt = thumbnail.uri.split('.').pop() ?? '';
+    // const originalWebp = originalPath.replace(originalExt, 'webp');
     console.log('original', original)
-    await format(original.uri, originalWebp);
+    const originalWebp = await imageFormat(original.uri);
     const originKey = await uploadFile(originalWebp);
 
     // const thumbnailWebp = thumbnail.uri.replace(thumbnailExt, 'webp');
@@ -122,7 +84,7 @@ const sendImage = async (chatId: string, key: string, message: MessageType.Image
     // message.metadata = {
     //     thumbnail: thumbKey.key
     // }
-    const result = await _send(chatId, key, message.id, MessageTypeEnum.NORMAL, {
+    const result = await _send(chatId, key, message.id, IModel.IChat.IMessageTypeEnum.NORMAL, {
         t: 'image',
         d: chatUiAdapter.convertPartialContent(message)
     });
@@ -148,7 +110,7 @@ const sendVideo = async (chatId: string, key: string, message: MessageType.Video
     message.thumbnail = thumbailResult.key
     message.metadata = { 'original': transFilePath }
 
-    const result = await _send(chatId, key, message.id, MessageTypeEnum.NORMAL, {
+    const result = await _send(chatId, key, message.id, IModel.IChat.IMessageTypeEnum.NORMAL, {
         t: 'video',
         d: chatUiAdapter.convertPartialContent(message)
     });
@@ -169,7 +131,7 @@ const sendFile = async (chatId: string, key: string, message: MessageType.File) 
     // const fileInfo = await fileService.getFileInfo(file);
     // fileInfo?.exists && (file.md5 = fileInfo.md5 ?? '');
     console.log('處理完成準備發送', file);
-    const result = await _send(chatId, key, message.id, MessageTypeEnum.NORMAL, {
+    const result = await _send(chatId, key, message.id, IModel.IChat.IMessageTypeEnum.NORMAL, {
         t: 'file',
         d: chatUiAdapter.convertPartialContent(message)
     });
@@ -178,17 +140,6 @@ const sendFile = async (chatId: string, key: string, message: MessageType.File) 
     return message
 }
 
-const decrypt = (key: string, content: string) => {
-    try {
-        const data = quickAes.De(content, key);
-        return JSON.parse(data) as { t: string, d: any };
-    } catch (error) {
-    }
-    return {
-        t: 'text',
-        d: '解密失敗'
-    }
-}
 
 const getListFromDb = async (
     chatId: string,

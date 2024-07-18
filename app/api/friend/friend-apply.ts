@@ -1,7 +1,6 @@
-import { createInstance } from "@/lib/request-instance";
-import { IServer } from "types/server";
-import { FriendInviteApplyItem } from "../types/friend";
-import { BaseArrayResp } from "../types/common";
+import { createInstance } from '../req';
+import { IServer } from "@repo/types";
+import { FriendInviteApplyItem, BaseArrayResp } from "@repo/types";
 
 
 const create = async (userId: number, remark: string): Promise<null> => await createInstance(true).post('/friend-applies/create', { friendId: userId, remark });

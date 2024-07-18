@@ -1,6 +1,5 @@
-import { createInstance } from "@/lib/request-instance";
-import { IServer } from "types/server";
-import { UserInfoItem } from "../types/user";
+import { createInstance } from "../req";
+import { UserInfoItem, IServer } from "@repo/types";
 // 注册
 const signup = async (): Promise<UserInfoItem> => await createInstance(true).post('/auth/signup')
 

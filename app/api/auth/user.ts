@@ -1,8 +1,6 @@
-import { createInstance } from "@/lib/request-instance";
+import { createInstance } from '../req';
 
-import type { IServer } from "types/server";
-import { BaseArrayResp, BaseIdsNumberReq } from "../types/common";
-import { OfficialUserItem } from "../types/user";
+import { BaseArrayResp, BaseIdsNumberReq, IServer, OfficialUserItem } from "@repo/types";
 
 const getBatchInfo = async (ids: number[]): Promise<{
   users: IServer.IUser[]

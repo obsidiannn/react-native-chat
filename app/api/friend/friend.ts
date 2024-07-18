@@ -1,8 +1,7 @@
 
 
-import { createInstance } from "@/lib/request-instance";
-import { BaseArrayResp } from "../types/common";
-import { IServer } from "types/server";
+import { createInstance } from '../req';
+import { BaseArrayResp, IServer } from "@repo/types";
 
 const getRelationList = async (userIds: number[]) => await createInstance(true).post('/friends/getRelationList', { userIds }) as {
   items: {

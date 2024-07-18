@@ -1,9 +1,8 @@
 
 import * as ImagePicker from 'expo-image-picker';
 import { requestCameraPermission, requestDirectoryPermission, requestPhotoPermission } from './permissions';
-import s3Api from './api/sys/s3';
+import s3Api from '../api/sys/s3';
 
-// import { FFmpegKit, ReturnCode } from 'ffmpeg-kit-react-native';
 import * as FileSystem from 'expo-file-system';
 import mime from 'mime/dist/src/index_lite';
 import crypto from 'react-native-quick-crypto';
@@ -11,6 +10,7 @@ import * as MediaLibrary from 'expo-media-library';
 import { Platform } from 'react-native';
 import * as RNFS from '@dr.pogodin/react-native-fs';
 import { SaveFormat, manipulateAsync } from 'expo-image-manipulator';
+import { imageFormat } from 'app/utils/media-util';
 
 
 export interface ChooseImageOption {
@@ -107,8 +107,8 @@ export const uploadImage = async (localImage: string) => {
             ],
             { compress: 1, format: SaveFormat.JPEG }
         );
-        const webpOutput = manipResult.uri.replace(/\.jpg$/, '.webp');
-        if (await format(manipResult.uri, webpOutput)) {
+        const webpOutput = await imageFormat(manipResult.uri)
+        if (webpOutput) {
             FileSystem.deleteAsync(localImage);
             localImage = webpOutput;
         }
@@ -118,40 +118,6 @@ export const uploadImage = async (localImage: string) => {
         return result.key;
     }
     return null
-}
-
-export const format = async (input: string, output: string): Promise<boolean> => {
-    // const cmd = `-i ${input} ${output}`;
-    // const session = await FFmpegKit.execute(cmd);
-    // const returnCode = await session.getReturnCode();
-    // if (ReturnCode.isSuccess(returnCode)) {
-    //     return true;
-    // } else if (ReturnCode.isCancel(returnCode)) {
-    //     throw new Error('轉碼取消');
-    // } else {
-    //     throw new Error('轉碼失敗');
-    // }
-}
-
-/**
- * 視頻的轉碼
- * @param input 
- * @param output 
- * @returns 
- */
-export const formatVideo = async (input: string, output: string): Promise<boolean> => {
-    // const cmd = `-i ${input} -c:v libx264 ${output}`;
-    // const session = await FFmpegKit.execute(cmd);
-    // const returnCode = await session.getReturnCode();
-    // if (ReturnCode.isSuccess(returnCode)) {
-    //     return true;
-    // } else if (ReturnCode.isCancel(returnCode)) {
-    //     throw new Error('轉碼取消');
-    // } else {
-    //     console.log(cmd);
-    //     throw new Error('轉碼失敗');
-    // }
-    return true;
 }
 
 let baseUrl: string | undefined;
@@ -219,22 +185,6 @@ const readFile = async (path: string): Promise<string> => {
         encoding: FileSystem.EncodingType.Base64,
     });
 }
-/**
- * 生成視頻縮略圖
- * @param videoPath 視頻地址
- * @param mid 消息主鍵
- * @returns 
- */
-const generateVideoThumbnail = async (videoPath: string, mid: string) => {
-    // const thumbnailPath = FileSystem.cacheDirectory + mid + '_thumbnail.jpg'
-    // const cmd = `-i ${videoPath} -ss 00:00:01 -vframes 1 ${thumbnailPath}`
-    // const session = await FFmpegKit.execute(cmd)
-    // if (ReturnCode.isSuccess(await session.getReturnCode())) {
-    //     return thumbnailPath;
-    // }
-    return null
-}
-
 
 
 const getFileNameSign = (key: string) => {
@@ -266,8 +216,8 @@ const saveToAlbum = async (uri: string, extType = ''): Promise<boolean> => {
         const ext = extType === '' ? mime.getExtension(mime.getType(uri) ?? '') : extType;
         console.log('ext=', ext);
         if (ext == 'webp') {
-            const output = uri.replace(`.${ext}`, '.jpg');
-            await format(uri, output);
+            // const output = uri.replace(`.${ext}`, '.jpg');
+            const output = await imageFormat(uri);
             uri = output;
         } else {
             if (uri.indexOf('.' + ext) === -1) {

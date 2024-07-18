@@ -1,9 +1,9 @@
-import { createInstance } from "@/lib/request-instance";
-import { BaseIdsArrayReq, BaseArrayResp } from "../types/common";
+import { createInstance } from '../req';
 import {
+  BaseIdsArrayReq, BaseArrayResp,
   ChatListItem, ChatDetailItem, ChatRaiseTopReq,
+} from "@repo/types";
 
-} from '../types/chat'
 // 获取我的会话列表
 const mineChatList = async (): Promise<BaseArrayResp<ChatListItem>> => await createInstance(true).post('/chats/mine-list');
 const findChatIdByUserId = async (userId: number): Promise<{ id: string }> => await createInstance(true).post('/chats/id-by-user', { userId })
@@ -17,7 +17,7 @@ const chatDetail = async (param: BaseIdsArrayReq): Promise<BaseArrayResp<ChatDet
 const deleteChat = async (param: BaseIdsArrayReq) => await createInstance(true).post('/chats/delete', param);
 
 // 置顶
-const raiseTop =async (param: ChatRaiseTopReq): Promise<{ isTop: number }> => await createInstance(true).post('/chats/raise-top', param);
+const raiseTop = async (param: ChatRaiseTopReq): Promise<{ isTop: number }> => await createInstance(true).post('/chats/raise-top', param);
 
 const tokenRegister = async (param: { token: string }): Promise<void> => await createInstance(true).post('/chats/tokenRegister', param);
 
