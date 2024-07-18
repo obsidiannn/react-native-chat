@@ -8,14 +8,16 @@ import {
   LinkingOptions,
   NavigationContainer,
 } from "@react-navigation/native"
-import { createNativeStackNavigator, NativeStackScreenProps } from "@react-navigation/native-stack"
+import { createNativeStackNavigator, NativeStackScreenProps } from "@react-navigation/native-stack";
 import messaging from '@react-native-firebase/messaging';
-import React from "react"
-import { Linking } from "react-native"
+import React, { useEffect } from "react"
+import { Appearance, Linking } from "react-native"
 import * as Screens from "app/screens"
 import Config from "../config"
 import { navigationRef, useBackButtonHandler } from "./navigationUtilities"
 import { colors } from "app/theme"
+import { useSetRecoilState } from "recoil";
+import { ThemeState } from "app/stores/system";
 export type AppStackParamList = {
   WelcomeScreen: undefined;
   // 🔥 Your screens go here
@@ -48,7 +50,7 @@ const Stack = createNativeStackNavigator<AppStackParamList>()
 const AppStack = () => {
   return (
     <Stack.Navigator
-      initialRouteName="SignUpScreen"
+      initialRouteName="WelcomeScreen"
       screenOptions={{ headerShown: false, navigationBarColor: colors.background }}
     >
       <Stack.Screen name="UserChatScreen" component={Screens.UserChatScreen} />
@@ -63,13 +65,13 @@ const AppStack = () => {
 
 
 export const AppNavigator = () => {
-  // const setThemeState = useSetRecoilState(ThemeState);
-  // useEffect(() => {
-  //   const v = Appearance.getColorScheme()
-  //   setThemeState(v === "dark" ? 'dark' : 'light');
-  //   const subscription = Appearance.addChangeListener(({ colorScheme }) => setThemeState(colorScheme === "dark" ? 'dark' : 'light'));
-  //   return () => subscription.remove();
-  // }, []);
+  const setThemeState = useSetRecoilState(ThemeState);
+  useEffect(() => {
+    const v = Appearance.getColorScheme()
+    setThemeState(v === "dark" ? 'dark' : 'light');
+    const subscription = Appearance.addChangeListener(({ colorScheme }) => setThemeState(colorScheme === "dark" ? 'dark' : 'light'));
+    return () => subscription.remove();
+  }, []);
   useBackButtonHandler((routeName) => exitRoutes.includes(routeName))
   const linking: LinkingOptions<AppStackParamList> = {
     enabled: true,

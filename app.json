@@ -96,8 +96,7 @@
             "Microphone"
           ]
         }
-      ],
-      "@config-plugins/ffmpeg-kit-react-native"
+      ]
     ],
     "experiments": {
       "tsconfigPaths": true
