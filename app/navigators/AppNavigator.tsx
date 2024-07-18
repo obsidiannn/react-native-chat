@@ -8,31 +8,18 @@ import {
   LinkingOptions,
   NavigationContainer,
 } from "@react-navigation/native"
-import { createNativeStackNavigator, NativeStackScreenProps } from "@react-navigation/native-stack"
+import { createNativeStackNavigator, NativeStackScreenProps } from "@react-navigation/native-stack";
 import messaging from '@react-native-firebase/messaging';
-import React from "react"
-import { Linking } from "react-native"
+import React, { useEffect } from "react"
+import { Appearance, Linking } from "react-native"
 import * as Screens from "app/screens"
 import Config from "../config"
 import { navigationRef, useBackButtonHandler } from "./navigationUtilities"
 import { colors } from "app/theme"
-
-
+import { useSetRecoilState } from "recoil";
+import { ThemeState } from "app/stores/system";
 import UserChatInfoModal from 'app/screens/UserChat/UserChatInfoModal'
 
-/**
- * This type allows TypeScript to know what routes are defined in this navigator
- * as well as what properties (if any) they might take when navigating to them.
- *
- * If no params are allowed, pass through `undefined`. Generally speaking, we
- * recommend using your MobX-State-Tree store(s) to keep application state
- * rather than passing state through navigation params.
- *
- * For more information, see this documentation:
- *   https://reactnavigation.org/docs/params/
- *   https://reactnavigation.org/docs/typescript#type-checking-the-navigator
- *   https://reactnavigation.org/docs/typescript/#organizing-types
- */
 export type AppStackParamList = {
   WelcomeScreen: undefined;
   // 🔥 Your screens go here
@@ -69,7 +56,7 @@ const Stack = createNativeStackNavigator<AppStackParamList>()
 const AppStack = () => {
   return (
     <Stack.Navigator
-      initialRouteName="SignUpScreen"
+      initialRouteName="WelcomeScreen"
       screenOptions={{ headerShown: false, navigationBarColor: colors.background }}
     >
       <Stack.Screen name="UserChatScreen" component={Screens.UserChatScreen} />
@@ -87,13 +74,13 @@ const AppStack = () => {
 
 
 export const AppNavigator = () => {
-  // const setThemeState = useSetRecoilState(ThemeState);
-  // useEffect(() => {
-  //   const v = Appearance.getColorScheme()
-  //   setThemeState(v === "dark" ? 'dark' : 'light');
-  //   const subscription = Appearance.addChangeListener(({ colorScheme }) => setThemeState(colorScheme === "dark" ? 'dark' : 'light'));
-  //   return () => subscription.remove();
-  // }, []);
+  const setThemeState = useSetRecoilState(ThemeState);
+  useEffect(() => {
+    const v = Appearance.getColorScheme()
+    setThemeState(v === "dark" ? 'dark' : 'light');
+    const subscription = Appearance.addChangeListener(({ colorScheme }) => setThemeState(colorScheme === "dark" ? 'dark' : 'light'));
+    return () => subscription.remove();
+  }, []);
   useBackButtonHandler((routeName) => exitRoutes.includes(routeName))
   const linking: LinkingOptions<AppStackParamList> = {
     enabled: true,
