@@ -23,7 +23,7 @@ const palette = {
   gray800: '#1f2937',
   gray900: '#111827',
   gray950: '#030712',
-  
+
   primary100: "#F4E0D9",
   primary200: "#E8C1B4",
   primary300: "#DDA28E",
@@ -101,6 +101,8 @@ export const $dark: IColors = {
   secondaryBackground: "#1F2937",
   text: "white",
   textChoosed: '#FFFFFF',
+  btnChoosed: '#294AF5',
+  btnDefault: colors.palette.gray800,
   border: "#4B5563",
   primary: "#294AF5",
   secondaryText: '#9CA3AF'
@@ -110,6 +112,8 @@ export const $light: IColors = {
   secondaryBackground: "#F3F4F6",
   text: "black",
   textChoosed: '#FFFFFF',
+  btnChoosed: colors.palette.gray800,
+  btnDefault: colors.palette.gray100,
   border: "#D1D5DB",
   primary: "#4B5563",
   secondaryText: '#9CA3AF',
