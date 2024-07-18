@@ -21,6 +21,7 @@ const encodeInterceptor = async (wallet: Wallet, config: InternalAxiosRequestCon
   config.headers.set('X-Req-OS', Platform.OS);
   config.headers.set('X-Req-Pub-Key', wallet.getPublicKey());
   const data = quickCrypto.En(sharedSecret, Buffer.from(content,"utf8"))
+  console.log("加密后的数据",Buffer.from(data).toString("hex"));
   config.data = Buffer.from(data).toString("hex");
   return config;
 }

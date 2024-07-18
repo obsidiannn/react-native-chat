@@ -35,12 +35,18 @@ export const generatePrivateKey = () => ethers.Wallet.createRandom().privateKey
 export const computeDataHash = (data: string) => hashMessage(Crypto.createHash('sha256').update(data).digest('hex').substring(0, 16))
 export class Wallet {
   private wallet: EWallet;
+  private privateKey: string;
   constructor(privateKey: string) {
+    this.privateKey = privateKey;
     this.wallet = new ethers.Wallet(privateKey)
   }
   static recoverAddress(data: ethers.BytesLike, sign: SignatureLike) {
     return verifyMessage(data, sign).toLowerCase();
   }
+
+  priKey(){
+    return this.privateKey;
+  };
   signMessage(data: string) {
     return this.wallet.signMessageSync(data)
   }
