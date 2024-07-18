@@ -30,7 +30,6 @@
     "prebuild:clean": "npx expo prebuild --clean"
   },
   "dependencies": {
-    "@config-plugins/ffmpeg-kit-react-native": "^8.0.0",
     "@craftzdog/react-native-buffer": "^6.0.5",
     "@dr.pogodin/react-native-fs": "^2.24.5",
     "@expo-google-fonts/space-grotesk": "^0.2.2",
