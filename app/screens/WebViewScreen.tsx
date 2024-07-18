@@ -3,7 +3,6 @@ import { StackScreenProps } from "@react-navigation/stack";
 import WebView from "react-native-webview";
 import Navbar from "app/components/Navbar";
 import { AppStackParamList } from "app/navigators";
-import { Screen } from "app/components";
 import { ColorsState } from "app/stores/system";
 import { useRecoilValue } from "recoil";
 import { useSafeAreaInsets } from "react-native-safe-area-context";

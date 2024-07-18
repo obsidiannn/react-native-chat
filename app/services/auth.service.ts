@@ -18,8 +18,6 @@ export class AuthService {
     }
 
     static signUp = async () => {
-        const priKey = generatePrivateKey();
-        global.wallet = new Wallet(priKey);
         return await authApi.signUp();
     }
 }

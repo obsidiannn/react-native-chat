@@ -20,24 +20,25 @@ const encodeInterceptor = async (wallet: Wallet, config: InternalAxiosRequestCon
   config.headers.set('X-Req-Time', time);
   config.headers.set('X-Req-OS', Platform.OS);
   config.headers.set('X-Req-Pub-Key', wallet.getPublicKey());
-  const data = quickCrypto.En(sharedSecret, Buffer.from(content,"utf8"))
-  console.log("加密后的数据",Buffer.from(data).toString("hex"));
+  const data = quickCrypto.En(sharedSecret, Buffer.from(content, "utf8"))
+  console.log("加密后的数据", Buffer.from(data).toString("hex"));
   config.data = Buffer.from(data).toString("hex");
   return config;
 }
 const decodeInterceptor = async (wallet: Wallet, rep: AxiosResponse<any, any>): Promise<AxiosResponse<any, any>> => {
   let data = rep.data ?? ""
-  console.log('[original response]',data);
-  
+  console.log('[original response]', data);
+
   if (data.substring(0, 2) == '0x') {
     data = data.substring(2)
   }
   const sharedSecret = wallet.computeSharedSecret(process.env.EXPO_PUBLIC_SYSTEM_PUBLIC_KEY)
   let rel: any = {}
   if (data != "") {
-    const decrypted = quickCrypto.De(sharedSecret, Buffer.from(data,'hex'))
+    const decrypted = quickCrypto.De(sharedSecret, Buffer.from(data, 'hex'))
     console.log("quickAes.De(data, sharedSecret)", decrypted)
     const text = Buffer.from(decrypted).toString('utf8');
+    console.log("quickAes.De(data, sharedSecret)", text)
     rel = JSON.parse(text ?? '{}');
   }
   if (rel?.code && Number(rel?.code) != 200) {
@@ -51,7 +52,7 @@ const decodeInterceptor = async (wallet: Wallet, rep: AxiosResponse<any, any>): 
 
 export const createInstance = (en = true) => {
   const baseURL = SystemService.GetApiUrlByCache();
-  console.log("请求的api url",baseURL)
+  console.log("请求的api url", baseURL)
   const startTime = new Date().valueOf()
   const instance: AxiosInstance = axios.create({
     baseURL,
@@ -84,7 +85,7 @@ export const createInstance = (en = true) => {
       } else {
         const wallet = AuthService.GetWallet();
         const sharedSecret = wallet.computeSharedSecret(process.env.EXPO_PUBLIC_SYSTEM_PUBLIC_KEY)
-        const decrypted = quickCrypto.De(sharedSecret, Buffer.from(err.response?.data,'hex'))
+        const decrypted = quickCrypto.De(sharedSecret, Buffer.from(err.response?.data, 'hex'))
         const text = Buffer.from(decrypted).toString('utf8');
         const rel: any = JSON.parse(text ?? '{}');
         toast(rel.message ?? '未知的錯誤');

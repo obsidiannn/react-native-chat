@@ -28,7 +28,7 @@ const De = (password: string, data: Uint8Array): Uint8Array => {
 
 (async () => {
     const password = "1234561111111111";
-    const data = "中国人";
+    const data = "helloworld";
     const encrypted = En(password, new Uint8Array(Buffer.from(data)));
     console.log(Buffer.from(De(password, encrypted)).toString('utf8'));
 

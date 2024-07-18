@@ -11,7 +11,7 @@ import {
 import { createNativeStackNavigator, NativeStackScreenProps } from "@react-navigation/native-stack";
 import messaging from '@react-native-firebase/messaging';
 import React, { useEffect } from "react"
-import { Appearance, Linking } from "react-native"
+import { Appearance, Linking,StatusBar } from "react-native"
 import * as Screens from "app/screens"
 import Config from "../config"
 import { navigationRef, useBackButtonHandler } from "./navigationUtilities"
@@ -20,8 +20,14 @@ import { useSetRecoilState } from "recoil";
 import { ThemeState } from "app/stores/system";
 import UserChatInfoModal from 'app/screens/UserChat/UserChatInfoModal'
 
+import { init } from "app/utils/kv-tool";
+import { getNow } from "app/utils/account";
+import { Wallet } from "app/utils/wallet";
+import { AuthWallet } from "app/stores/auth-user";
+import TabStack from "./TabStack/TabStack";
 export type AppStackParamList = {
   WelcomeScreen: undefined;
+  HomeScreen: undefined;
   // 🔥 Your screens go here
   Login: undefined;
   GroupScreen: undefined;
@@ -35,6 +41,10 @@ export type AppStackParamList = {
   SignInScreen: undefined;
   SignUpScreen: undefined;
   UnlockScreen: undefined;
+  TabStack: undefined;
+  ContactScreen: undefined;
+  PlazaScreen: undefined;
+  WalletScreen: undefined;
   // IGNITE_GENERATOR_ANCHOR_APP_STACK_PARAM_LIST
   UserChatInfoModal: {
 
@@ -56,9 +66,10 @@ const Stack = createNativeStackNavigator<AppStackParamList>()
 const AppStack = () => {
   return (
     <Stack.Navigator
-      initialRouteName="ChatScreen"
+      initialRouteName="WelcomeScreen"
       screenOptions={{ headerShown: false, navigationBarColor: colors.background }}
     >
+      <Stack.Screen name="TabStack" component={TabStack} />
       <Stack.Screen name="UserChatScreen" component={Screens.UserChatScreen} />
       <Stack.Screen name="ChatScreen" component={Screens.ChatScreen} />
       <Stack.Screen name="WelcomeScreen" component={Screens.WelcomeScreen} />
@@ -75,9 +86,11 @@ const AppStack = () => {
 
 export const AppNavigator = () => {
   const setThemeState = useSetRecoilState(ThemeState);
+  const setAuthWallet = useSetRecoilState(AuthWallet)
   useEffect(() => {
     const v = Appearance.getColorScheme()
     setThemeState(v === "dark" ? 'dark' : 'light');
+    StatusBar.setBarStyle(v === "dark"? 'dark-content' : 'light-content');
     const subscription = Appearance.addChangeListener(({ colorScheme }) => setThemeState(colorScheme === "dark" ? 'dark' : 'light'));
     return () => subscription.remove();
   }, []);
@@ -123,7 +136,18 @@ export const AppNavigator = () => {
     <NavigationContainer
       ref={navigationRef}
       linking={linking}
-      onReady={() => console.log('Navigation container is ready')}
+      onReady={async () => {
+        await init();
+        const now = getNow()
+        if (now) {
+          global.wallet = new Wallet(now);
+          setAuthWallet(global.wallet);
+          navigationRef.current?.reset({
+            index: 0,
+            routes: [{ name: 'TabStack' }],
+          })
+        }
+      }}
     >
       <AppStack />
     </NavigationContainer>

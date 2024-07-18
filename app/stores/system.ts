@@ -4,7 +4,7 @@ import { atom, selector } from "recoil";
 
 export const ThemeState = atom<'dark' | 'light'>({
     key: "Theme",
-    default: "dark",
+    default: "light",
 });
 export const LangState = atom<string>({
     key: "Lang",

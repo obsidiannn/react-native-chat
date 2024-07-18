@@ -1,6 +1,6 @@
 import { ColorsState, ThemeState } from "app/stores/system";
 import { s } from "app/utils/size"
-import { Text, TextStyle, TouchableOpacity, ViewStyle } from "react-native"
+import { ActivityIndicator, Text, TextStyle, TouchableOpacity, ViewStyle } from "react-native"
 import { useRecoilValue } from "recoil";
 
 export interface BlockButtonProps {
@@ -8,10 +8,13 @@ export interface BlockButtonProps {
     label: string;
     type?: "primary" | "secondary";
     disabled?: boolean;
+    loading?: boolean;
 }
 export default (props: BlockButtonProps) => {
     const $colors = useRecoilValue(ColorsState);
     const $theme = useRecoilValue(ThemeState);
+
+    const { label, type="primary",disabled = false,loading=false} = props;
     const $primaryContainer: ViewStyle = {
         backgroundColor: $colors.primary,
         borderRadius: s(12),
@@ -27,8 +30,11 @@ export default (props: BlockButtonProps) => {
     const $secondaryText: TextStyle = {
         color: $theme == "dark" ? "white": $colors.primary
     }
-    const { label, type="primary",disabled=false } = props;
-    return <TouchableOpacity disabled={disabled} onPress={props.onPress} style={[$container, type == "primary" ? $primaryContainer :$secondaryContainer]}>
+    return <TouchableOpacity disabled={disabled || loading} onPress={props.onPress} style={[
+            $container, 
+            type == "primary" ? $primaryContainer :$secondaryContainer
+        ]}>
+        {loading?<ActivityIndicator style={{marginRight:s(5)}} size="small" color="#fff" />:null}
         <Text style={[
             $text,
             type == "primary" ? $primaryText :$secondaryText
@@ -42,6 +48,7 @@ const $container: ViewStyle = {
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: s(12),
+    flexDirection: "row"
 }
 const $text: TextStyle = {
     fontWeight: "400",

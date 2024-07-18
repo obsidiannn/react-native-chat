@@ -9,7 +9,7 @@ export const init = async ():Promise<KV> => {
         console.log("global key:" + key)
         globalKV = new KV('global', key);
     }
-    // globalKV.flushAll()
+    globalKV.flushAll()
     return globalKV
 }
 export const getKV = (id: string, key?: string) => {

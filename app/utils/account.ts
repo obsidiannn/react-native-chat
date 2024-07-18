@@ -41,6 +41,12 @@ export const loadContainer = () => {
     }
     return items;
 }
+export const setNow = (priKey: string) => {
+    return globalKV.set("now-pri-key",priKey)
+}
+export const getNow = () => {
+    return globalKV.get("string","now-pri-key") as string | undefined;
+}
 export const dump = () => {
     const items = loadContainer();
     return Buffer.concat(items).toString('hex');

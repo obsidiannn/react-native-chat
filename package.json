@@ -39,6 +39,7 @@
     "@react-native-firebase/app": "^20.2.0",
     "@react-native-firebase/auth": "^20.2.0",
     "@react-native-firebase/messaging": "^20.2.0",
+    "@react-navigation/bottom-tabs": "next",
     "@react-navigation/native": "next",
     "@react-navigation/native-stack": "next",
     "@react-navigation/stack": "^6.4.1",
