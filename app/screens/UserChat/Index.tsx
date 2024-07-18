@@ -1,23 +1,21 @@
 import Navbar from "app/components/Navbar";
-import { AppStackScreenProps } from "app/navigators";
+import { AppStackScreenProps, navigate } from "app/navigators";
 import { colors } from "app/theme";
 import { scale } from "app/utils/size";
 import { useSafeAreaInsetsStyle } from "app/utils/useSafeAreaInsetsStyle";
 import { Image } from "expo-image";
 import { observer } from "mobx-react-lite";
-import { FC, useRef } from "react";
-import { StyleSheet, TouchableOpacity,View } from "react-native";
+import { FC, useEffect, useRef } from "react";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 import ChatPage from "./ChatPage";
 
 interface UserChatScreenProps extends AppStackScreenProps<"UserChatScreen"> { }
 
 export const UserChatScreen: FC<UserChatScreenProps> = observer(function () {
     const $topContainerInsets = useSafeAreaInsetsStyle(["top"])
-
     return <View style={[styles.container, $topContainerInsets, {
         backgroundColor: '#ffffff'
     }]}>
-
         <Navbar title={"user name"}
             renderRight={() => {
                 return <View style={{
@@ -28,6 +26,7 @@ export const UserChatScreen: FC<UserChatScreenProps> = observer(function () {
                     flexDirection: 'row'
                 }}>
                     <TouchableOpacity onPress={() => {
+                        navigate('UserChatInfoModal')
                     }}>
                         <Image source={require('assets/icons/more.svg')} style={{
                             width: scale(32),
@@ -36,7 +35,7 @@ export const UserChatScreen: FC<UserChatScreenProps> = observer(function () {
                     </TouchableOpacity>
                 </View>
             }} />
-            <ChatPage />
+        <ChatPage />
     </View>
 })
 

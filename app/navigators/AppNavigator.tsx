@@ -18,6 +18,9 @@ import Config from "../config"
 import { navigationRef, useBackButtonHandler } from "./navigationUtilities"
 import { colors } from "app/theme"
 
+
+import UserChatInfoModal from 'app/screens/UserChat/UserChatInfoModal'
+
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
  * as well as what properties (if any) they might take when navigating to them.
@@ -37,7 +40,13 @@ export type AppStackParamList = {
   Login: undefined
   ChatScreen: undefined
   UserChatScreen: undefined
+
+
   // IGNITE_GENERATOR_ANCHOR_APP_STACK_PARAM_LIST
+  UserChatInfoModal: {
+
+  }
+
 }
 
 /**
@@ -63,6 +72,10 @@ const AppStack = observer(function AppStack() {
       <Stack.Screen name="ChatScreen" component={Screens.ChatScreen} />
       <Stack.Screen name="Welcome" component={Screens.WelcomeScreen} />
       <Stack.Screen name="Login" component={Screens.LoginScreen} />
+
+      <Stack.Group screenOptions={{ presentation: 'modal' }}>
+        <Stack.Screen name="UserChatInfoModal" component={UserChatInfoModal} />
+      </Stack.Group>
     </Stack.Navigator>
   )
 })
