@@ -1,8 +1,7 @@
 import * as ImagePicker from 'expo-image-picker';
 // import PhotoEditor from "@baronha/react-native-photo-editor";
-import { FFmpegKit, ReturnCode } from 'ffmpeg-kit-react-native';
 import * as DocumentPicker from 'expo-document-picker';
-import { requestCameraPermission, requestMicrophonePermission, requestPhotoPermission } from 'app/services/permissions';
+import { requestCameraPermission, requestPhotoPermission } from 'app/services/permissions';
 export const pickerDocument = async () => {
     const result = await DocumentPicker.getDocumentAsync({
         type: '*/*',
@@ -70,20 +69,20 @@ export const captureVideo = async (): Promise<ImagePicker.ImagePickerAsset | nul
 
 export const videoFormat = async (asset: ImagePicker.ImagePickerAsset) :Promise<ImagePicker.ImagePickerAsset | null>=> {
     const input = asset.uri
-    const output = input.replace(/(.*)(\..*$)/, '$1_output.mp4');
-    //    const cmd = `-i ${input} -c:v mpeg4 ${output}`;
-    const cmd = `-i ${input} -c:v libx264 ${output}`;
-    //    const session = await FFmpegKit.execute(cmd);
-    const session = await FFmpegKit.execute(cmd)
-    const returnCode = await session.getReturnCode()
-    if (ReturnCode.isSuccess(returnCode)) {
-        // SUCCESS
-        asset.uri = output
-        return asset
-    } else if (ReturnCode.isCancel(returnCode)) {
-        // CANCEL
-    } else {
-        // ERROR
-    }
+    // const output = input.replace(/(.*)(\..*$)/, '$1_output.mp4');
+    // //    const cmd = `-i ${input} -c:v mpeg4 ${output}`;
+    // const cmd = `-i ${input} -c:v libx264 ${output}`;
+    // //    const session = await FFmpegKit.execute(cmd);
+    // const session = await FFmpegKit.execute(cmd)
+    // const returnCode = await session.getReturnCode()
+    // if (ReturnCode.isSuccess(returnCode)) {
+    //     // SUCCESS
+    //     asset.uri = output
+    //     return asset
+    // } else if (ReturnCode.isCancel(returnCode)) {
+    //     // CANCEL
+    // } else {
+    //     // ERROR
+    // }
     return null;
 }
