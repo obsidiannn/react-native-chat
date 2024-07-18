@@ -21,6 +21,8 @@ export const ColorsState = selector({
     key: 'ColorsState',
     get: ({ get }) => {
         const themeState = get(ThemeState);
+        console.log('themestate=',themeState);
+        
         return themeState == "dark" ? $dark : $light;
     },
 });

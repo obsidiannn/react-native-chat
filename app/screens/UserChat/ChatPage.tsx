@@ -11,7 +11,8 @@ import FilePreviewModal, { ChatUIFileModalRef } from "app/components/FileModal"
 import { captureVideo, videoFormat } from "app/utils/media-util"
 import LoadingModal, { LoadingModalType } from "app/components/loading-modal"
 import fileService from "app/services/file.service"
-import { translate } from "app/i18n"
+// import { translate } from "app/i18n"
+import {generateVideoThumbnail} from 'app/utils/media-util'
 
 
 
@@ -21,6 +22,7 @@ const ChatPage = () => {
     const encVideoPreviewRef = useRef<IVideoPreviewModal>();
     const fileModalRef = useRef<ChatUIFileModalRef>(null)
     const loadingModalRef = useRef<LoadingModalType>(null)
+    
     const author: User = {
         id: "1",
         createdAt: 0,
@@ -188,7 +190,7 @@ const ChatPage = () => {
                 const formatVideo = await videoFormat(video)
                 if (formatVideo !== null) {
                     const mid = generateUtil.generateId()
-                    const thumbnailPath = await fileService.generateVideoThumbnail(formatVideo.uri, mid)
+                    const thumbnailPath = await generateVideoThumbnail(formatVideo.uri, mid)
                     const message: MessageType.Video = {
                         id: generateUtil.generateId(),
                         // author: chatUiAdapter.userTransfer(author),

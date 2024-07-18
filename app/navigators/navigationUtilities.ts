@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react"
 import { BackHandler, Linking, Platform } from "react-native"
 import {
+  NavigationContainerProps,
   NavigationState,
   PartialState,
   createNavigationContainerRef,
@@ -117,7 +118,7 @@ function navigationRestoredDefaultState(persistNavigation: PersistNavigationConf
  * @returns {object} - The navigation state and persistence functions.
  */
 export function useNavigationPersistence(storage: Storage, persistenceKey: string) {
-  const [initialNavigationState, setInitialNavigationState] = useState<NavigationProps["initialState"]>()
+  const [initialNavigationState, setInitialNavigationState] = useState<NavigationContainerProps["initialState"]>()
   const isMounted = useIsMounted()
 
   const initNavState = navigationRestoredDefaultState(Config.persistNavigation)

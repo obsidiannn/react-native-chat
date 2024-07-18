@@ -8,7 +8,7 @@ import {
   ViewStyle,
 } from "react-native"
 import { colors, spacing, typography } from "../theme"
-import { Text, TextProps } from "./Text"
+import { Text,  } from "./Text"
 
 type Presets = keyof typeof $viewPresets
 
@@ -19,10 +19,6 @@ export interface ButtonAccessoryProps {
 }
 
 export interface ButtonProps extends PressableProps {
-  /**
-   * Text which is looked up via i18n.
-   */
-  tx?: TextProps["tx"]
   /**
    * The text to display if not using `tx` or nested components.
    */
@@ -97,7 +93,6 @@ export interface ButtonProps extends PressableProps {
  */
 export function Button(props: ButtonProps) {
   const {
-    tx,
     text,
     txOptions,
     style: $viewStyleOverride,
@@ -155,7 +150,7 @@ export function Button(props: ButtonProps) {
             <LeftAccessory style={$leftAccessoryStyle} pressableState={state} disabled={disabled} />
           )}
 
-          <Text tx={tx} text={text} txOptions={txOptions} style={$textStyle(state)}>
+          <Text text={text} txOptions={txOptions} style={$textStyle(state)}>
             {children}
           </Text>
 

@@ -1,7 +1,9 @@
 import Crypto from 'react-native-quick-crypto';
 const En = (password: string, data: Uint8Array) => {
     const key = Crypto.createHash('sha256').update(password).digest();
-    const iv = Crypto.randomBytes(32);
+    const iv = Crypto.randomBytes(12);
+    console.log("iv=",Buffer.from(iv).toString('hex'));
+    console.log("key=",Buffer.from(key).toString('hex'));
     const cipher = Crypto.createCipheriv('aes-256-gcm', key, iv,{
         authTagLength: 16
     });

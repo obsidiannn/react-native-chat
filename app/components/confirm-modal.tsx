@@ -1,6 +1,6 @@
-import { translate } from "app/i18n";
 import { scale, verticalScale } from "app/utils/size";
 import { forwardRef, useImperativeHandle, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Modal, Text, TouchableOpacity, View } from "react-native";
 export interface ConfirmOption {
     title: string;
@@ -13,6 +13,7 @@ export interface ConfirmModalType {
 }
 export default forwardRef((_, ref) => {
     const [visible, setVisible] = useState(false);
+    const {t} = useTranslation()
     const [option, setOption] = useState<ConfirmOption>({
         title: '',
         desc: '',
@@ -69,7 +70,7 @@ export default forwardRef((_, ref) => {
                         color: '#D90000',
                         fontSize: scale(16),
                         fontWeight: '500',
-                    }}>{translate('common.btn_submit')}</Text>
+                    }}>{t('common.btn_submit')}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => {
                     setVisible(false)
@@ -84,7 +85,7 @@ export default forwardRef((_, ref) => {
                     <Text style={{
                         fontSize: scale(16),
                         fontWeight: '500',
-                    }}>{translate('common.btn_cancel')}</Text>
+                    }}>{t('common.btn_cancel')}</Text>
                 </TouchableOpacity>
             </View>
         </View>

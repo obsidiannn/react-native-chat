@@ -6,7 +6,6 @@ import BaseModal from "./base-modal";
 import fileService from "app/services/file.service";
 import { scale } from "app/utils/size";
 import toast from "app/utils/toast";
-import { translate } from "app/i18n";
 
 export interface IVideoPreviewModal {
     open: (params: {
@@ -69,7 +68,7 @@ export default forwardRef((_, ref) => {
     }
 
 
-    return <BaseModal visible={visible} onClose={close} title={translate('chat.videoDetail')}>
+    return <BaseModal visible={visible} onClose={close} title={'todo'}>
         <Video
             ref={videoRef}
             resizeMode={'cover'}

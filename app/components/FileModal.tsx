@@ -3,7 +3,6 @@ import { ActivityIndicator, View, Platform, StatusBar, Text } from "react-native
 import mime from 'mime/dist/src/index_lite';
 import * as Sharing from 'expo-sharing';
 import BaseModal from "./base-modal";
-import { translate } from "app/i18n";
 import { MessageType } from "./chat-ui";
 import { colors } from "app/theme";
 import { bytesToSize, scale } from "app/utils/size";
@@ -11,6 +10,7 @@ import toast from "app/utils/toast";
 import { Image } from "expo-image";
 import { Button } from "./Button";
 import fileService from "app/services/file.service";
+import { useTranslation } from "react-i18next";
 
 export interface ChatUIFileModalRef {
     open: (params: {
@@ -25,6 +25,7 @@ export default forwardRef((_, ref) => {
     const [localPath, setLocalPath] = useState('')
     const [loading, setLoading] = useState(false);
     const [downloaded, setDownloaded] = useState(false);
+    const {t} = useTranslation()
     const downloadFile = useCallback(async (f: MessageType.File) => {
         const uri = f.uri
         const _localPath = await fileService.downloadFile(fileService.getFullUrl(uri));
@@ -80,7 +81,7 @@ export default forwardRef((_, ref) => {
     const onClose = () => {
         setVisible(false)
     }
-    return <BaseModal visible={visible} onClose={onClose} title={translate('chat.videoDetail')}>
+    return <BaseModal visible={visible} onClose={onClose} title={t('chat.videoDetail')}>
         <View style={{
             flex: 1,
             alignItems: 'center',

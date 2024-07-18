@@ -7,7 +7,7 @@ import ActionItem from "./action-item";
 import { ClearChatMessageEvent } from "@repo/types";
 import { IModel } from "@repo/enums";
 import EventManager from 'app/services/events'
-import chatApi from "@/api/chat/chat";
+import chatApi from "app/api/chat/chat";
 import { scale } from "app/utils/size";
 import Navbar from "app/components/Navbar";
 import { useRoute } from "@react-navigation/native";
@@ -19,6 +19,7 @@ import { useTranslation } from "react-i18next";
 
 export default function ({ navigation }) {
     const route = useRoute()
+    const { t } = useTranslation()
     const userChatContext = useContext(UserChatUIContext)
     const confirmModalRef = useRef<ConfirmModalType>(null);
     const [disturb, setDisturb] = useState(false)
@@ -26,7 +27,6 @@ export default function ({ navigation }) {
     const onClose = () => {
         navigation.goBack()
     }
-    const {t} = useTranslation()
 
     return (
         <View style={{
@@ -42,7 +42,7 @@ export default function ({ navigation }) {
                 <View style={{
                     marginTop: scale(15),
                 }}>
-                    <ActionItem title={translate('chat.btn_bother_ignore')}
+                    <ActionItem title={'免打扰'}
                         rightComponent={<Switch height={scale(24)}
                             onColor={colors.palette.primary} value={disturb} onValueChange={(v) => {
                                 setDisturb(v)
@@ -52,7 +52,7 @@ export default function ({ navigation }) {
                     marginTop: scale(15),
                 }}>
                     <ActionItem title={t('chat.btn_chat_top')}
-                        rightComponent={<Switch height={scale(24)} onColor={colors.primary}
+                        rightComponent={<Switch height={scale(24)} onColor={colors.palette.primary}
                             value={(userChatContext.chatItem?.isTop ?? IModel.ICommon.ICommonBoolEnum.NO) === IModel.ICommon.ICommonBoolEnum.NO}
                             onValueChange={(v) => {
                                 if (userChatContext.chatItem) {
@@ -70,14 +70,14 @@ export default function ({ navigation }) {
                 }}>
                     <ActionItem onPress={() => {
                         confirmModalRef.current?.open({
-                            title: translate('chat.btn_message_delete'),
-                            desc: translate('chat.btn_message_delete_desc'),
+                            title: t('chat.btn_message_delete'),
+                            desc: t('chat.btn_message_delete_desc'),
                             onSubmit: () => {
                                 messageSenderService.clearMineMessage([userChatContext.chatItem.id]).then(() => {
                                     const event: ClearChatMessageEvent = { chatId: userChatContext.chatItem.id, type: IModel.IClient.SocketTypeEnum.CLEAR_ALL_MESSAGE }
                                     const eventKey = EventManager.generateChatTopic(userChatContext.chatItem.id)
                                     EventManager.emit(eventKey, event)
-                                    toast(translate('chat.success_cleaned'))
+                                    toast(t('chat.success_cleaned'))
                                 })
                             }
                         })

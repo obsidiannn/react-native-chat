@@ -100,6 +100,7 @@ export const $dark: IColors = {
   background: "#1F2937",
   secondaryBackground: "#1F2937",
   text: "white",
+  textChoosed: '#FFFFFF',
   border: "#4B5563",
   primary: "#294AF5",
   secondaryText: '#9CA3AF'
@@ -108,6 +109,7 @@ export const $light: IColors = {
   background: "white",
   secondaryBackground: "#F3F4F6",
   text: "black",
+  textChoosed: '#FFFFFF',
   border: "#D1D5DB",
   primary: "#4B5563",
   secondaryText: '#9CA3AF',

@@ -295,7 +295,6 @@ export default {
     checkDownloadFileExists,
     urlToPath,
     getFileNameSign,
-    generateVideoThumbnail,
     checkExist,
     uploadImage
 }

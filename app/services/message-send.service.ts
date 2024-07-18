@@ -6,7 +6,7 @@ import { uploadFile } from "./file.service";
 import { IModel } from "@repo/enums";
 import { MessageDetailItem, MessageExtra } from "@repo/types";
 import userService from "./user.service";
-import MessagesModel from "@/service/message.model";
+// import MessagesModel from "@/service/message.model";
 import { MessageType } from "app/components/chat-ui";
 import chatUiAdapter from "./chat-ui.adapter";
 import { imageFormat } from "app/utils/media-util";
@@ -155,10 +155,11 @@ const getListFromDb = async (
         direction: direction,
         limit: limit
     }
-    const list = await MessagesModel.queryEntity(queryParam)
-    console.log('----', list);
+    // const list = await MessagesModel.queryEntity(queryParam)
+    // console.log('----', list);
 
-    return chatUiAdapter.messageEntityToItems(list, key, false)
+    // return chatUiAdapter.messageEntityToItems(list, key, false)
+    return []
 }
 
 const checkDiffFromWb = (
@@ -311,15 +312,14 @@ const getMessageDetails = async (
         console.log('remote data', remoteData);
         console.log('list data', list);
         if (list.length <= 0) {
-            // messageRepository.saveBatch(remoteData, chatId)
-            void MessagesModel.saveBatchEntity(chatUiAdapter.messageEntityConverts(remoteData))
+            // void MessagesModel.saveBatchEntity(chatUiAdapter.messageEntityConverts(remoteData))
             return remoteData
         }
 
         const localSequence = new Set(list.map(r => r.sequence))
         const saveData = remoteData.filter(r => !localSequence.has(r.sequence))
 
-        MessagesModel.saveBatchEntity(chatUiAdapter.messageEntityConverts(saveData))
+        // MessagesModel.saveBatchEntity(chatUiAdapter.messageEntityConverts(saveData))
         const result = list.concat(saveData).sort((a, b) => { return (b.sequence ?? 0) - (a.sequence ?? 0) })
         console.log('[msg result]', result);
 
@@ -337,7 +337,7 @@ const removeBatch = async (chatId: string, mids: string[]) => {
 // 清除所有消息
 // 發起更新chatItem的事件
 const clearMineMessage = async (chatIds: string[]) => {
-    await MessagesModel.deleteMessageByChatIdIn(chatIds)
+    // await MessagesModel.deleteMessageByChatIdIn(chatIds)
     return messageApi.clearMineMessage({ chatIds: chatIds })
 }
 
@@ -345,17 +345,17 @@ const clearMineMessage = async (chatIds: string[]) => {
  * 刪除羣消息
  */
 const dropGroupMessage = async (chatIds: string[]) => {
-    await MessagesModel.deleteMessageByChatIdIn(chatIds)
+    // await MessagesModel.deleteMessageByChatIdIn(chatIds)
     return messageApi.clearGroupMessageByChatIds({ chatIds: chatIds })
 }
 
 const deleteMessage = async (chatId: string, ids: string[]) => {
-    await MessagesModel.deleteMessageByMsgIds(chatId, ids)
+    // await MessagesModel.deleteMessageByMsgIds(chatId, ids)
     return messageApi.deleteSelfMsg({ ids: ids })
 }
 
 const clearMineMessageAll = async () => {
-    await MessagesModel.deleteAll()
+    // await MessagesModel.deleteAll()
     return messageApi.clearMineMessageAll()
 }
 
@@ -363,8 +363,6 @@ export default {
     getList,
     removeBatch,
     send,
-    doRemit,
-    doRedPacket,
     clearMineMessage,
     clearMineMessageAll,
     dropGroupMessage,

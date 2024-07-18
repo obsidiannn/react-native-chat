@@ -56,7 +56,7 @@ const Stack = createNativeStackNavigator<AppStackParamList>()
 const AppStack = () => {
   return (
     <Stack.Navigator
-      initialRouteName="WelcomeScreen"
+      initialRouteName="ChatScreen"
       screenOptions={{ headerShown: false, navigationBarColor: colors.background }}
     >
       <Stack.Screen name="UserChatScreen" component={Screens.UserChatScreen} />

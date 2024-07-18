@@ -1,3 +1,4 @@
+import { colors } from "app/theme";
 import { scale } from "app/utils/size";
 import { Image } from "expo-image";
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
@@ -13,7 +14,7 @@ export default (props: {
             <Text numberOfLines={1} style={styles.name}>{props.name}</Text>
         </View>
         <TouchableOpacity>
-            <Image source={require('@/assets/icons/circle-plus-big-white.svg')} style={styles.icon} />
+            <Image source={require('assets/icons/circle-plus-big-white.svg')} style={styles.icon} />
         </TouchableOpacity>
     </View>
 };
@@ -45,7 +46,7 @@ const styles = StyleSheet.create({
     name: {
         textAlign: 'center',
         marginTop: scale(4),
-        color: colors.gray600,
+        color: colors.palette.gray600,
         fontSize: scale(12)
     },
     icon: {
