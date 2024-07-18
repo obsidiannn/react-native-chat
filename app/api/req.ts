@@ -82,7 +82,7 @@ export const createInstance = (en = true) => {
       if (!err.response) {
         // toast('網絡錯誤,請稍後重試!');
       } else {
-        const wallet = globalThis.wallet || globalThis.tmpWallet;
+        const wallet = AuthService.GetWallet();
         const sharedSecret = wallet.computeSharedSecret(process.env.EXPO_PUBLIC_SYSTEM_PUBLIC_KEY)
         const decrypted = quickCrypto.De(sharedSecret, Buffer.from(err.response?.data,'hex'))
         const text = Buffer.from(decrypted).toString('utf8');
