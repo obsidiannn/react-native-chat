@@ -164,6 +164,7 @@ export interface Theme {
 export interface ThemeBorders {
   inputBorderRadius: number
   messageBorderRadius: number
+  chatTopRadius: number
 }
 
 export interface ThemeColors {
@@ -176,6 +177,7 @@ export interface ThemeColors {
   primary: ColorValue
   secondary: ColorValue
   receivedMessageDocumentIcon: ColorValue
+  
   sentMessageDocumentIcon: ColorValue
   userAvatarImageBackground: ColorValue
   userAvatarNameColors: ColorValue[]

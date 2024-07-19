@@ -1,7 +1,7 @@
 import { ColorValue } from 'react-native'
 
 import { Theme } from './types'
-import { colors } from 'app/theme'
+import { $dark, colors } from 'app/theme'
 
 // For internal usage only. Use values from theme itself.
 
@@ -51,6 +51,7 @@ export const defaultTheme: Theme = {
   borders: {
     inputBorderRadius: 10,
     messageBorderRadius: 20,
+    chatTopRadius: 0
   },
   colors: {
     background: NEUTRAL_7,
@@ -150,22 +151,23 @@ export const defaultTheme: Theme = {
   },
 }
 
-export const boboTheme: Theme = {
+export const lightTheme: Theme = {
   borders: {
     inputBorderRadius: 5,
     messageBorderRadius: 20,
+    chatTopRadius: 0
   },
   colors: {
-    background: colors.palette.gray200,
+    background: colors.palette.neutral100,
+    secondary: colors.palette.gray600,
     error: ERROR,
     inputBackground: 'white',
-    inputValueBackground:  colors.palette.gray200,
+    inputValueBackground: colors.palette.gray200,
     inputCursorColor: 'black',
     inputText: 'black',
-    primary: 'black',
-    receivedMessageDocumentIcon: PRIMARY,
-    secondary: 'white',
-    sentMessageDocumentIcon: NEUTRAL_7,
+    primary: colors.palette.gray200,
+    receivedMessageDocumentIcon: colors.palette.gray600,
+    sentMessageDocumentIcon: colors.palette.gray600,
     userAvatarImageBackground: 'transparent',
     userAvatarNameColors: COLORS,
   },
@@ -178,7 +180,7 @@ export const boboTheme: Theme = {
     },
     emptyChatPlaceholderTextStyle: {
       // color: NEUTRAL_2,
-      color:  colors.palette.gray200,
+      color: colors.palette.gray200,
       fontSize: 12,
       fontWeight: '400',
       lineHeight: 20,
@@ -207,14 +209,14 @@ export const boboTheme: Theme = {
       lineHeight: 20,
     },
     receivedMessageLinkTitleTextStyle: {
-      color: NEUTRAL_0,
+      color: colors.palette.gray600, color: NEUTRAL_0,
       fontSize: 16,
       fontWeight: '800',
-      lineHeight: 22,
+      lineHeight: 18,
     },
     sentMessageBodyTextStyle: {
-      color: NEUTRAL_7,
-      fontSize: 12,
+      color: colors.palette.gray600,
+      fontSize: 15,
       fontWeight: '400',
       lineHeight: 18,
     },
@@ -256,34 +258,107 @@ export const boboTheme: Theme = {
 
 /** Dark chat theme which implements {@link Theme} */
 export const darkTheme: Theme = {
-  ...defaultTheme,
+  borders: {
+    inputBorderRadius: 10,
+    messageBorderRadius: 20,
+    chatTopRadius: 20
+  },
   colors: {
-    ...defaultTheme.colors,
-    background: DARK,
-    inputBackground: SECONDARY_DARK,
-    secondary: SECONDARY_DARK,
+    background: colors.palette.gray700,
+    secondary: colors.palette.blue600,
+    error: ERROR,
+    inputBackground: colors.palette.gray700,
+    inputValueBackground: colors.palette.gray600,
+    inputCursorColor: 'white',
+    inputText: NEUTRAL_7,
+    primary: colors.palette.gray600,
+    receivedMessageDocumentIcon: PRIMARY,
+    sentMessageDocumentIcon: NEUTRAL_7,
+    userAvatarImageBackground: 'transparent',
+    userAvatarNameColors: COLORS,
   },
   fonts: {
-    ...defaultTheme.fonts,
     dateDividerTextStyle: {
-      ...defaultTheme.fonts.dateDividerTextStyle,
-      color: NEUTRAL_7,
+      color: NEUTRAL_2,
+      fontSize: 12,
+
+      lineHeight: 16,
+    },
+    emptyChatPlaceholderTextStyle: {
+      color: NEUTRAL_2,
+      fontSize: 16,
+      fontWeight: '500',
+      lineHeight: 24,
+    },
+    inputTextStyle: {
+      fontSize: 16,
+      fontWeight: '500',
+      lineHeight: 24,
     },
     receivedMessageBodyTextStyle: {
-      ...defaultTheme.fonts.receivedMessageBodyTextStyle,
-      color: NEUTRAL_7,
+      color: NEUTRAL_0,
+      fontSize: 16,
+      fontWeight: '500',
+      lineHeight: 24,
     },
     receivedMessageCaptionTextStyle: {
-      ...defaultTheme.fonts.receivedMessageCaptionTextStyle,
-      color: NEUTRAL_7_WITH_OPACITY,
+      color: NEUTRAL_2,
+      fontSize: 12,
+      fontWeight: '500',
+      lineHeight: 16,
     },
     receivedMessageLinkDescriptionTextStyle: {
-      ...defaultTheme.fonts.receivedMessageLinkDescriptionTextStyle,
-      color: NEUTRAL_7,
+      color: NEUTRAL_0,
+      fontSize: 14,
+      fontWeight: '400',
+      lineHeight: 20,
     },
     receivedMessageLinkTitleTextStyle: {
-      ...defaultTheme.fonts.receivedMessageLinkTitleTextStyle,
+      color: NEUTRAL_0,
+      fontSize: 16,
+      fontWeight: '800',
+      lineHeight: 18,
+    },
+    sentMessageBodyTextStyle: {
       color: NEUTRAL_7,
+      fontSize: 15,
+      fontWeight: '400',
+      lineHeight: 18,
+    },
+    sentMessageCaptionTextStyle: {
+      color: NEUTRAL_7_WITH_OPACITY,
+      fontSize: 12,
+      fontWeight: '500',
+      lineHeight: 16,
+    },
+    sentMessageLinkDescriptionTextStyle: {
+      color: NEUTRAL_7,
+      fontSize: 14,
+      fontWeight: '400',
+      lineHeight: 20,
+    },
+    sentMessageLinkTitleTextStyle: {
+      color: NEUTRAL_7,
+      fontSize: 16,
+      fontWeight: '800',
+      lineHeight: 22,
+    },
+    userAvatarTextStyle: {
+      color: NEUTRAL_7,
+      fontSize: 12,
+      fontWeight: '800',
+      lineHeight: 16,
+    },
+    userNameTextStyle: {
+      fontSize: 12,
+      fontWeight: '500',
+      lineHeight: 16,
+      color: colors.palette.neutral100
     },
   },
+  insets: {
+    messageInsetsHorizontal: 20,
+    messageInsetsVertical: 16,
+  },
 }
+

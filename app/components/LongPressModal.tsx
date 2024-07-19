@@ -1,26 +1,29 @@
 
-import { Pressable, TouchableOpacity, StyleSheet, Text, Animated, View, Dimensions, GestureResponderEvent, Platform } from "react-native"
+import { Pressable, TouchableOpacity, StyleSheet, Text, Animated, View, Dimensions, GestureResponderEvent, Platform, ViewProps } from "react-native"
 import { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import { MessageType } from "./chat-ui";
 import { scale } from "app/utils/size";
 import { Image } from "expo-image";
 
+
 export interface LongPressModalType {
     open: (params: {
         message: MessageType.Any,
-        e: GestureResponderEvent
+        e: GestureResponderEvent,
     }) => void;
 }
 
 export default forwardRef((props, ref) => {
     const [visible, setVisible] = useState(false)
     const [layout, setLayout] = useState<number[]>([])
+    const [height,setHeight] = useState<number>(0)
     const openModal = () => {
         setVisible(true)
     }
 
     const closeModal = () => {
         setVisible(false)
+        setLayout([])
     }
 
 
@@ -37,7 +40,6 @@ export default forwardRef((props, ref) => {
         }
     }));
 
-
     return <>
         {visible ? (
             <Pressable style={{
@@ -52,12 +54,14 @@ export default forwardRef((props, ref) => {
                 }}
             >
                 <View
+                    onLayout={(e)=>{
+                        setHeight(e.nativeEvent.layout.height)
+                    }}
                     // onStartShouldSetResponderCapture={(ev) => { return true }}
                     style={{
                         ...styles.modal_container,
                         ...(layout.length > 0 ? {
-                            top: layout[1] - (layout[3] + (layout[3]/2)),
-                            right: layout[0] - (layout[0] - layout[2]) - 16
+                            top:  layout[1] - height
                         } : {})
                     }}
                 >
@@ -96,10 +100,12 @@ const styles = StyleSheet.create({
     modal_container: {
         backgroundColor: '#ffffff',
         position: 'absolute',
+
         display: 'flex',
         flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-around',
+        // alignItems: 'center',
+        alignSelf: 'center',
+        // justifyContent: 'space-around',
         padding: scale(8),
         borderRadius: scale(16),
         borderBottomEndRadius: 0,

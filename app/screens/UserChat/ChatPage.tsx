@@ -1,4 +1,4 @@
-import { Chat, MessageType, User, boboTheme } from "app/components/chat-ui"
+import { Chat, MessageType, User, lightTheme, darkTheme } from "app/components/chat-ui"
 import tools from "./tools"
 import { useRef, useState } from "react"
 import generateUtil from "app/utils/generateUtil"
@@ -11,8 +11,8 @@ import FilePreviewModal, { ChatUIFileModalRef } from "app/components/FileModal"
 import { captureVideo, videoFormat } from "app/utils/media-util"
 import LoadingModal, { LoadingModalType } from "app/components/loading-modal"
 import fileService from "app/services/file.service"
-// import { translate } from "app/i18n"
-import {generateVideoThumbnail} from 'app/utils/media-util'
+import { generateVideoThumbnail } from 'app/utils/media-util'
+import { useTranslation } from "react-i18next"
 
 
 
@@ -22,7 +22,7 @@ const ChatPage = () => {
     const encVideoPreviewRef = useRef<IVideoPreviewModal>();
     const fileModalRef = useRef<ChatUIFileModalRef>(null)
     const loadingModalRef = useRef<LoadingModalType>(null)
-    
+    const { t } = useTranslation('screens')
     const author: User = {
         id: "1",
         createdAt: 0,
@@ -185,7 +185,7 @@ const ChatPage = () => {
     const handleVideo = async () => {
         const video = await captureVideo();
         if (video !== undefined && video !== null) {
-            loadingModalRef.current?.open(translate('common.loading'))
+            loadingModalRef.current?.open(t('common.loading'))
             try {
                 const formatVideo = await videoFormat(video)
                 if (formatVideo !== null) {
@@ -269,7 +269,7 @@ const ChatPage = () => {
             }}
             // onMessageLongPress={handleLongPress}
             usePreviewData={false}
-            theme={boboTheme}
+            theme={lightTheme}
             onAttachmentPress={handleAttachmentPress}
             onMessagePress={handleMessagePress}
             onPreviewDataFetched={handlePreviewDataFetched}

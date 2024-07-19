@@ -12,6 +12,7 @@ const palette = {
   neutral800: "#191015",
   neutral900: "#000000",
 
+  blue600: "#294AF5",
   primary: '#5B6979',
   gray100: '#f3f4f6',
   gray200: '#e5e7eb',
@@ -103,7 +104,7 @@ export const $dark: IColors = {
   textChoosed: '#FFFFFF',
   btnChoosed: '#294AF5',
   btnDefault: colors.palette.gray800,
-  border: "#4B5563",
+  border: colors.palette.gray600,
   primary: "#294AF5",
   secondaryText: '#9CA3AF'
 }
@@ -115,7 +116,7 @@ export const $light: IColors = {
   btnChoosed: colors.palette.gray800,
   btnDefault: colors.palette.gray100,
   border: "#D1D5DB",
-  primary: "#4B5563",
+  primary: colors.palette.gray600,
   secondaryText: '#9CA3AF',
 }
 export default {

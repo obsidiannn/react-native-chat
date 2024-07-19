@@ -9,8 +9,7 @@ import {
   View,
 } from 'react-native'
 
-import {  ThemeContext } from '../../utils'
-import { translate } from 'app/i18n'
+import {  ThemeContext, translate } from '../../utils'
 
 export interface SendButtonPropsAdditionalProps {
   touchableOpacityProps?: TouchableOpacityProps
@@ -34,22 +33,22 @@ export const SendButton = ({
 
   return (
     <TouchableOpacity
-      accessibilityLabel={translate('chat.btn_send')}
+      accessibilityLabel={translate('chatUI.btnSend')}
       accessibilityRole='button'
       {...touchableOpacityProps}
       onPress={handlePress}
       style={styles.sendButton}
     >
       <View style={{
-        backgroundColor: theme.colors.primary,
-        padding: 6,
+        backgroundColor: theme.colors.secondary,
+        padding: 8,
         paddingHorizontal: 14,
         borderRadius: 16,
       }}>
         <Text style={{
-          color: theme.colors.inputBackground,
+          color: theme.colors.inputText,
         }}>{
-            translate('chat.btn_send')
+            translate('chatUI.btnSend')
           }</Text>
       </View>
       {/* {theme.icons?.sendButtonIcon?.() ?? (

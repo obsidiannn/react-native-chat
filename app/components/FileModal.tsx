@@ -25,7 +25,7 @@ export default forwardRef((_, ref) => {
     const [localPath, setLocalPath] = useState('')
     const [loading, setLoading] = useState(false);
     const [downloaded, setDownloaded] = useState(false);
-    const {t} = useTranslation()
+    const {t} = useTranslation('screens')
     const downloadFile = useCallback(async (f: MessageType.File) => {
         const uri = f.uri
         const _localPath = await fileService.downloadFile(fileService.getFullUrl(uri));

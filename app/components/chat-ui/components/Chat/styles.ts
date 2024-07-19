@@ -7,6 +7,7 @@ export default ({ theme }: { theme: Theme }) =>
     container: {
       backgroundColor: theme.colors.background,
       flex: 1,
+
     },
     emptyComponentContainer: {
       alignItems: 'center',

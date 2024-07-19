@@ -19,7 +19,7 @@ import { useTranslation } from "react-i18next";
 
 export default function ({ navigation }) {
     const route = useRoute()
-    const { t } = useTranslation()
+    const { t } = useTranslation('screens')
     const userChatContext = useContext(UserChatUIContext)
     const confirmModalRef = useRef<ConfirmModalType>(null);
     const [disturb, setDisturb] = useState(false)
@@ -81,7 +81,7 @@ export default function ({ navigation }) {
                                 })
                             }
                         })
-                    }} title={translate('chat.btn_message_delete')} textColor="#FB3737" rightComponent={<Image source={require('assets/icons/arrow-right-gray.svg')} style={{
+                    }} title={t('chat.btn_message_delete')} textColor="#FB3737" rightComponent={<Image source={require('assets/icons/arrow-right-gray.svg')} style={{
                         width: scale(20),
                         height: scale(20),
                     }} />} />

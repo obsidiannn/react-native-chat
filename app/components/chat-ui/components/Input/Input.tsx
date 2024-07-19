@@ -2,7 +2,7 @@ import * as React from 'react'
 import { Pressable, TextInput, TextInputProps, TouchableOpacity, View } from 'react-native'
 
 import { MessageType } from '../../types'
-import { L10nContext, ThemeContext, unwrap, UserContext } from '../../utils'
+import { ThemeContext, translate, unwrap, UserContext } from '../../utils'
 import {
   AttachmentButton,
   AttachmentButtonAdditionalProps,
@@ -13,7 +13,6 @@ import {
 } from '../CircularActivityIndicator'
 import { SendButton } from '../SendButton'
 import styles from './styles'
-import { Image } from 'expo-image'
 
 export interface InputTopLevelProps {
   /** Whether attachment is uploading. Will replace attachment button with a
@@ -50,7 +49,6 @@ export const Input = ({
   sendButtonVisibilityMode,
   textInputProps,
 }: InputProps) => {
-  const l10n = React.useContext(L10nContext)
   const theme = React.useContext(ThemeContext)
   const user = React.useContext(UserContext)
   const { container, input, marginRight } = styles({ theme })
@@ -98,7 +96,7 @@ export const Input = ({
       </TouchableOpacity> */}
       <TextInput
         multiline
-        placeholder={l10n.inputPlaceholder}
+        placeholder={translate('chatUI.inputPlaceholder')}
         placeholderTextColor={`${String(theme.colors.inputText)}80`}
         underlineColorAndroid='transparent'
         {...textInputProps}

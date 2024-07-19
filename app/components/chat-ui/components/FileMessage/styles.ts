@@ -1,6 +1,7 @@
 import { StyleSheet } from 'react-native'
 
 import { MessageType, Theme, User } from '../../types'
+import { colors } from 'app/theme'
 
 const styles = ({
   message,
@@ -19,6 +20,7 @@ const styles = ({
       flexDirection: 'row',
       padding: theme.insets.messageInsetsVertical,
       paddingRight: theme.insets.messageInsetsHorizontal,
+      maxWidth: messageWidth
     },
     icon: {
       tintColor:
@@ -41,8 +43,8 @@ const styles = ({
       ...(user?.id === message.author.id
         ? theme.fonts.sentMessageBodyTextStyle
         : theme.fonts.receivedMessageBodyTextStyle),
-        flexWrap:"wrap",
-        maxWidth: messageWidth
+      flexWrap: "wrap",
+      maxWidth: messageWidth
 
     }
     ,
@@ -50,6 +52,7 @@ const styles = ({
       ...(user?.id === message.author.id
         ? theme.fonts.sentMessageCaptionTextStyle
         : theme.fonts.receivedMessageCaptionTextStyle),
+      color: colors.palette.gray400,
       marginTop: 4,
     },
     textContainer: {

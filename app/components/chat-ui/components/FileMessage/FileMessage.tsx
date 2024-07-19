@@ -4,8 +4,8 @@ import { Image, Text, View } from 'react-native'
 import { MessageType } from '../../types'
 import {
   formatBytes,
-  L10nContext,
   ThemeContext,
+  translate,
   UserContext,
 } from '../../utils'
 import styles from './styles'
@@ -16,7 +16,6 @@ export interface FileMessageProps {
 }
 
 export const FileMessage = ({ message, messageWidth }: FileMessageProps) => {
-  const l10n = React.useContext(L10nContext)
   const theme = React.useContext(ThemeContext)
   const user = React.useContext(UserContext)
   const { container, icon, iconContainer, name, size, textContainer } = styles({
@@ -28,7 +27,7 @@ export const FileMessage = ({ message, messageWidth }: FileMessageProps) => {
 
   return (
     <View
-      accessibilityLabel={l10n.fileButtonAccessibilityLabel}
+      accessibilityLabel={translate("chatUI.fileButtonAccessibilityLabel")}
       style={container}
     >
       <View style={iconContainer}>

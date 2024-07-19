@@ -15,7 +15,8 @@ export default {
         success_cleaned: "清除成功",
         btn_recent: "最近",
         btn_group: "群组",
-        btn_contract: "联系人"
+        btn_contract: "联系人",
+        videoDetail: "视频详情"
     },
     common: {
         ok: "OK!",

@@ -9,8 +9,9 @@ import {
 } from 'react-native'
 
 import { Image } from 'expo-image'
-import { L10nContext, ThemeContext } from '../../utils'
+import { ThemeContext, translate } from '../../utils'
 import { scale } from 'app/utils/size'
+import { colors } from 'app/theme'
 
 export interface AttachmentButtonAdditionalProps {
   touchableOpacityProps?: TouchableOpacityProps
@@ -25,7 +26,6 @@ export const AttachmentButton = ({
   onPress,
   touchableOpacityProps,
 }: AttachmentButtonProps) => {
-  const l10n = React.useContext(L10nContext)
   const theme = React.useContext(ThemeContext)
 
   const handlePress = (event: GestureResponderEvent) => {
@@ -35,22 +35,21 @@ export const AttachmentButton = ({
 
   return (
     <TouchableOpacity
-      accessibilityLabel={l10n.attachmentButtonAccessibilityLabel}
+      accessibilityLabel={translate('chatUI.attachmentButtonAccessibilityLabel')}
       accessibilityRole='button'
       {...touchableOpacityProps}
       onPress={handlePress}
     >
       {theme.icons?.attachmentButtonIcon?.() ?? (
         <View style={{
-          backgroundColor: theme.colors.primary,
+          backgroundColor: theme.colors.secondary,
           padding: scale(8),
           borderRadius: scale(24)
         }}>
-
           <Image
             source={require('../../assets/plus.svg')}
             // source={require('../../assets/icon-attachment.png')}
-            style={[styles.image, { tintColor: theme.colors.background }]}
+            style={[styles.image, { tintColor: colors.palette.neutral100 }]}
           />
         </View>
       )}

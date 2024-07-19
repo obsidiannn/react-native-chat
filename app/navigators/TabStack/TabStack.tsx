@@ -14,6 +14,7 @@ import { ColorsState, ThemeState } from 'app/stores/system';
 import { useRecoilValue } from 'recoil';
 import { Image } from 'expo-image';
 import { s } from 'app/utils/size';
+import * as Screens from "app/screens"
 import AvatarComponent from 'app/components/Avatar';
 const Header = () => {
     const insets = useSafeAreaInsets();
@@ -27,7 +28,7 @@ const Header = () => {
         flexDirection: 'row',
         justifyContent: 'space-between',
     }}>
-        <AvatarComponent url="https://avatars.githubusercontent.com/u/122279700" online={true}  enableAvatarBorder />
+        <AvatarComponent url="https://avatars.githubusercontent.com/u/122279700" online={true} enableAvatarBorder />
         <View style={{
             flex: 1,
             height: s(45),
@@ -63,7 +64,8 @@ export default () => {
     const Stack = createBottomTabNavigator<AppStackParamList>();
     return <Stack.Navigator screenOptions={{
         headerShown: true,
-        header: () => <Header />
+        header: () => null
+        // header: () => <Header />
     }} initialRouteName="ChatScreen" tabBar={(props) => {
         return <View style={{
             padding: 0,

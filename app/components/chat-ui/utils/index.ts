@@ -3,14 +3,27 @@ import * as React from 'react'
 import { ColorValue } from 'react-native'
 import Blob from 'react-native/Libraries/Blob/Blob'
 
-import { l10n } from '../l10n'
 import { defaultTheme } from '../theme'
 import { MessageType, PreviewImage, Theme, User } from '../types'
-import { da } from 'date-fns/locale'
+import i18n from 'app/i18n'
 
-export const L10nContext = React.createContext<typeof l10n[keyof typeof l10n]>(
-  l10n.en
-)
+
+
+// 获取当前语言
+export function getCurrentLanguage(): string {
+  return i18n.language;
+}
+
+// 翻译函数
+export function translate(key: string, options?: any): string {
+  return i18n.t("components:"+key, {
+  }).toString();
+  // return "xx"
+}
+
+// export const L10nContext = React.createContext<typeof l10n[keyof typeof l10n]>(
+//   l10n.en
+// )
 export const ThemeContext = React.createContext<Theme>(defaultTheme)
 export const UserContext = React.createContext<User | undefined>(undefined)
 
@@ -90,7 +103,7 @@ export const hashCode = (text = '') => {
 }
 
 /** Inits dayjs locale */
-export const initLocale = (locale?: keyof typeof l10n) => {
+export const initLocale = (locale?: string) => {
   // if (i18next.language) {
   //   if (i18next.language.startsWith('zh')) {
   //     if (i18next.language.includes('TW')) {

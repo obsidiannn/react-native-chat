@@ -20,14 +20,13 @@ import {
 } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { usePrevious } from '../../hooks'
-import { l10n } from '../../l10n'
 import { defaultTheme } from '../../theme'
 import { ChatUiToolsKitProps, MessageType, Theme, User } from '../../types'
 import {
   calculateChatMessages,
   initLocale,
-  L10nContext,
   ThemeContext,
+  translate,
   unwrap,
   UserContext,
 } from '../../utils'
@@ -40,7 +39,6 @@ import AccessoryView from './AccessoryView'
 import { ImageSource } from 'react-native-image-viewing/dist/@types'
 import { Button } from 'app/components/Button'
 import { scale } from 'app/utils/size'
-import { translate } from 'app/i18n'
 // import { KeyboardAwareScrollView,KeyboardProvider } from 'react-native-keyboard-controller'
 
 // Untestable
@@ -84,8 +82,6 @@ export interface ChatProps extends ChatTopLevelProps {
    * pagination will not be triggered. */
   isLastPage?: boolean
   /** Override the default localized copy. */
-  l10nOverride?: Partial<Record<keyof typeof l10n[keyof typeof l10n], string>>
-  locale?: keyof typeof l10n
   messages: MessageType.Any[]
   /** Used for pagination (infinite scroll). Called when user scrolls
    * to the very end of the list (minus `onEndReachedThreshold`).
@@ -119,8 +115,6 @@ export const Chat = ({
   inputProps,
   isAttachmentUploading,
   isLastPage,
-  l10nOverride,
-  locale = 'en',
   messages,
   onAttachmentPress,
   onEndReached,
@@ -165,10 +159,6 @@ export const Chat = ({
   const [stackEntry, setStackEntry] = React.useState<StatusBarProps>({})
   const [toolOpen, setToolOpen] = React.useState<boolean>(false)
 
-  const l10nValue = React.useMemo(
-    () => ({ ...l10n[locale], ...unwrap(l10nOverride) }),
-    [l10nOverride, locale]
-  )
 
   const { chatMessages, gallery } = calculateChatMessages(messages, user, {
     customDateHeaderText,
@@ -203,9 +193,9 @@ export const Chat = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chatMessages])
 
-  React.useEffect(() => {
-    initLocale(locale)
-  }, [locale])
+  // React.useEffect(() => {
+  //   initLocale(locale)
+  // }, [locale])
 
   // Untestable
   /* istanbul ignore next */
@@ -308,7 +298,7 @@ export const Chat = ({
         // })
       }
     }}>
-      <Text style={{ color: 'white' }}>{translate('common.btn_download')} </Text>
+      <Text style={{ color: 'white' }}>{translate('chatUI.btnDownload')} </Text>
     </Button>
   }
 
@@ -392,11 +382,12 @@ export const Chat = ({
           emptyState,
           <Text style={emptyComponentTitle}>
             {/* {l10nValue.emptyChatPlaceholder} */}
+            {translate("chatUI.emptyChatPlaceholder")}
           </Text>
         )()}
       </View>
     ),
-    [emptyComponentContainer, emptyComponentTitle, emptyState, l10nValue]
+    [emptyComponentContainer, emptyComponentTitle, emptyState]
   )
 
   const renderListFooterComponent = React.useCallback(
@@ -467,7 +458,6 @@ export const Chat = ({
   return (
     <UserContext.Provider value={user}>
       <ThemeContext.Provider value={theme}>
-        <L10nContext.Provider value={l10nValue}>
           {/* <KeyboardProvider> */}
           <View style={container} onLayout={onLayout}>
             {customBottomComponent ? (
@@ -547,7 +537,6 @@ export const Chat = ({
             />
           </View>
           {/* </KeyboardProvider> */}
-        </L10nContext.Provider>
       </ThemeContext.Provider>
     </UserContext.Provider>
   )
