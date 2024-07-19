@@ -1,33 +1,58 @@
 import { scale } from "app/utils/size";
 import { Image } from "expo-image";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native"
+import AvatarComponent from "./Avatar";
 
 
 export interface IContactListItemProps {
     icon: string | null;
     title: string | null;
+    // 未读数量
     badgeNumber?: number | null;
     describe?: string
     subTitle?: string | null;
     onPress?: () => void;
     bottomLine?: boolean;
-    online: number
+    online?: boolean
+    // 免打扰
+    inhibite?: boolean
 }
 export default (props: IContactListItemProps) => {
+
+
+    const renderPoint = () => {
+        if (props.inhibite) {
+            return <Image source={require('assets/icons/inhibite.svg')} style={{
+                width: scale(20), height: scale(20)
+            }} />
+        }
+        if (props.badgeNumber && props.badgeNumber > 0) {
+            return <Image source={require('assets/icons/red-point.svg')} style={{
+                width: scale(6), height: scale(6)
+            }} />
+        }
+        return null
+    }
+
     return <TouchableOpacity onPress={props.onPress} style={{
         ...styles.container,
         borderBottomColor: props.bottomLine ? '#f4f4f4' : 'white',
         borderBottomWidth: 1,
     }}>
         <View style={styles.iconContainer}>
-            <Image source={props.icon} style={styles.icon} />
-            {
-                props.badgeNumber && props.badgeNumber > 0 ?
-                    <View style={styles.badgeContainer}>
-                        <Text style={styles.badgeText}>{props.badgeNumber > 99 ? 99 : props.badgeNumber}</Text>
-                    </View> : null
-            }
+            <AvatarComponent url={props.icon ?? ''} online={props.online} />
         </View>
+        {/* {
+            props.renderAvatar ? (props.renderAvatar) : (<View style={styles.iconContainer}>
+                <Image source={props.icon} style={styles.icon} />
+                {
+                    props.badgeNumber && props.badgeNumber > 0 ?
+                        <View style={styles.badgeContainer}>
+                            <Text style={styles.badgeText}>{props.badgeNumber > 99 ? 99 : props.badgeNumber}</Text>
+                        </View> : null
+                }
+            </View>)
+        } */}
         <View style={{
             ...styles.rightContainer,
         }}>
@@ -37,6 +62,12 @@ export default (props: IContactListItemProps) => {
             </View>
             <View style={styles.subTitleContainer}>
                 <Text style={styles.subTitle}>{props.subTitle}</Text>
+                <View style={{
+                    ...styles.subTitleContainer,
+                    minWidth: scale(20)
+                }}>
+                    {renderPoint()}
+                </View>
             </View>
         </View>
     </TouchableOpacity>
@@ -106,15 +137,16 @@ const styles = StyleSheet.create({
         color: '#9CA3AF',
     },
     subTitleContainer: {
-        width: '40%',
         display: 'flex',
+        alignItems: 'center',
         justifyContent: 'center',
-        alignItems: 'flex-end'
+        // alignItems: 'flex-end',
+        flexDirection: 'row'
     },
     subTitle: {
         color: '#999',
         fontWeight: '400',
         fontSize: 12,
-        marginRight: scale(6),
+        marginRight: scale(12),
     }
 });

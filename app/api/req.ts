@@ -13,6 +13,9 @@ const encodeInterceptor = async (wallet: Wallet, config: InternalAxiosRequestCon
 
   const time = Date.now();
   const sharedSecret = wallet.computeSharedSecret(process.env.EXPO_PUBLIC_SYSTEM_PUBLIC_KEY)
+  console.log("[syspub]", process.env.EXPO_PUBLIC_SYSTEM_PUBLIC_KEY);
+  console.log("[sharedSecret]", sharedSecret);
+
   const dataHash = computeDataHash(content + ':' + time);
   const sign = wallet.signMessage(dataHash)
   config.headers.set('X-Req-Sign', sign);
@@ -51,7 +54,8 @@ const decodeInterceptor = async (wallet: Wallet, rep: AxiosResponse<any, any>): 
 }
 
 export const createInstance = (en = true) => {
-  const baseURL = SystemService.GetApiUrlByCache();
+  // const baseURL = SystemService.GetApiUrlByCache();
+  const baseURL = 'http://192.168.0.103:5001'
   console.log("请求的api url", baseURL)
   const startTime = new Date().valueOf()
   const instance: AxiosInstance = axios.create({

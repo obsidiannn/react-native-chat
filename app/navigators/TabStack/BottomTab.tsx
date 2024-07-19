@@ -54,7 +54,7 @@ export function BottomTab({ state, descriptors, navigation }: BottomTabBarProps)
                                 width: s(32),
                                 height: s(32),
                             }} source={isFocused ? require('./plaza-selected.png') : require('./plaza.png')} /> : null}
-                            {route.name == 'ContactScreen' ? <Image style={{
+                            {route.name == 'ChatScreen' ? <Image style={{
                                 width: s(32),
                                 height: s(32),
                             }} source={isFocused ? require('./contact-selected.png') : require('./contact.png')} /> : null}

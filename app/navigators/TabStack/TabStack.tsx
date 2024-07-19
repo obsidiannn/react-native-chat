@@ -2,7 +2,8 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import {
     ContactScreen,
     WalletScreen,
-    PlazaScreen
+    PlazaScreen,
+    ChatScreen
 } from '../../screens/index'
 import { TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -13,6 +14,7 @@ import { ColorsState, ThemeState } from 'app/stores/system';
 import { useRecoilValue } from 'recoil';
 import { Image } from 'expo-image';
 import { s } from 'app/utils/size';
+import AvatarComponent from 'app/components/Avatar';
 const Header = () => {
     const insets = useSafeAreaInsets();
     const $colors = useRecoilValue(ColorsState);
@@ -20,13 +22,12 @@ const Header = () => {
     return <View style={{
         marginTop: insets.top,
         backgroundColor: $colors.background,
-        height: s(45),
-        width: s(375),
         paddingHorizontal: s(16),
+        paddingVertical: s(16),
         flexDirection: 'row',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
     }}>
-        <Text>xxx</Text>
+        <AvatarComponent url="https://avatars.githubusercontent.com/u/122279700" online={true}  enableAvatarBorder />
         <View style={{
             flex: 1,
             height: s(45),
@@ -42,7 +43,7 @@ const Header = () => {
                 <Image style={{
                     width: s(32),
                     height: s(32),
-                }} source={$theme == "dark" ?require('./scan-dark.png') : require('./scan-light.png')} />
+                }} source={$theme == "dark" ? require('./scan-dark.png') : require('./scan-light.png')} />
             </TouchableOpacity>
             <TouchableOpacity style={{
                 width: s(32),
@@ -51,9 +52,8 @@ const Header = () => {
                 <Image style={{
                     width: s(32),
                     height: s(32)
-                }} source={$theme == "dark" ?require('./qr-dark.png') : require('./qr-light.png')}  />
+                }} source={$theme == "dark" ? require('./qr-dark.png') : require('./qr-light.png')} />
             </TouchableOpacity>
-
         </View>
     </View>
 }
@@ -64,8 +64,9 @@ export default () => {
     return <Stack.Navigator screenOptions={{
         headerShown: true,
         header: () => <Header />
-    }} initialRouteName="ContactScreen" tabBar={(props) => {
+    }} initialRouteName="ChatScreen" tabBar={(props) => {
         return <View style={{
+            padding: 0,
             paddingBottom: insets.bottom,
             backgroundColor: "#07101D"
         }}>
@@ -73,7 +74,7 @@ export default () => {
         </View>
     }}>
         <Stack.Screen name="PlazaScreen" component={PlazaScreen} />
-        <Stack.Screen name="ContactScreen" component={ContactScreen} />
+        <Stack.Screen name="ChatScreen" component={ChatScreen} />
         <Stack.Screen name="WalletScreen" component={WalletScreen} />
     </Stack.Navigator>
 }

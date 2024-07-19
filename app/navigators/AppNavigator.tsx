@@ -66,12 +66,12 @@ const Stack = createNativeStackNavigator<AppStackParamList>()
 const AppStack = () => {
   return (
     <Stack.Navigator
-      initialRouteName="WelcomeScreen"
+      initialRouteName="TabStack"
       screenOptions={{ headerShown: false, navigationBarColor: colors.background }}
     >
       <Stack.Screen name="TabStack" component={TabStack} />
       <Stack.Screen name="UserChatScreen" component={Screens.UserChatScreen} />
-      <Stack.Screen name="ChatScreen" component={Screens.ChatScreen} />
+      {/* <Stack.Screen name="ChatScreen" component={Screens.ChatScreen} /> */}
       <Stack.Screen name="WelcomeScreen" component={Screens.WelcomeScreen} />
       <Stack.Screen name="WebViewScreen" options={{presentation: "modal" }} component={Screens.WebViewScreen} />
       <Stack.Screen name="SignInScreen" component={Screens.SignInScreen} />

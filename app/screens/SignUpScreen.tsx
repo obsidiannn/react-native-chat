@@ -108,7 +108,7 @@ export const SignUpScreen = ({navigation}:Props) => {
               setAuthWallet(global.wallet);
               // 将user写入缓存
               setNow(priKey);
-              navigation.replace('HomeScreen');
+              navigation.replace('TabStack');
             }
           }).catch(e => {
             console.log(e)

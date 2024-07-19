@@ -93,7 +93,8 @@ const ChatView = () => {
             title={item.chatAlias}
             describe="您有一个新的好友申请"
             subTitle={formatDate(dayjs().toISOString())}
-            online={isLast ? 0 : 1}
+            online={isLast ? true: undefined}
+            inhibite={isLast}
             onPress={() => {
                 itemPress(item)
             }}

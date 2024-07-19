@@ -1,14 +1,12 @@
 
-import { AppStackScreenProps } from "app/navigators";
-import { FC, useEffect, useRef, useState } from "react";
+import { AppStackParamList, AppStackScreenProps } from "app/navigators";
+import { useRef, useState } from "react";
 import PagerView from "react-native-pager-view";
-import { observer } from "mobx-react-lite"
 import { StyleSheet, View, useColorScheme, Text } from "react-native";
 import ChatView from "./Chats";
 import FriendView from "./Friends";
 import GroupView from "./GroupChats";
 import theme, { $dark, $light, colors } from "../../theme/colors";
-import { useSafeAreaInsetsStyle } from "app/utils/useSafeAreaInsetsStyle";
 import { Button } from "app/components";
 import { scale } from "app/utils/size";
 import BannerComponent from "app/components/Banner";
@@ -16,10 +14,9 @@ import HomeTitle from "app/components/HomeTitle";
 import { useTranslation } from "react-i18next";
 import { useRecoilValue } from "recoil";
 import { ColorsState } from "app/stores/system";
-interface ChatScreenProps extends AppStackScreenProps<"ChatScreen"> { }
-
-export const ChatScreen: FC<ChatScreenProps> = observer(function () {
-    const $topContainerInsets = useSafeAreaInsetsStyle(["top"])
+import { StackScreenProps } from "@react-navigation/stack";
+type Props = StackScreenProps<AppStackParamList, 'ChatScreen'>;
+export const ChatScreen = ({ navigation }: Props) => {
     const pagerViewRef = useRef<PagerView>(null);
     const [pageIndex, setPageIndex] = useState(0);
     const { t } = useTranslation('screens')
@@ -29,7 +26,6 @@ export const ChatScreen: FC<ChatScreenProps> = observer(function () {
     const changeTab = (idx: number) => {
         pagerViewRef.current?.setPage(idx);
     }
-
 
     const btnTextStyle = (idx: number) => {
         const choosed = pageIndex === idx
@@ -43,24 +39,22 @@ export const ChatScreen: FC<ChatScreenProps> = observer(function () {
         }
     }
     const btnStyle = (idx: number) => {
-        // return pageIndex === idx ? styles.tabChecked : styles.tabDefault
-
         if (pageIndex === idx) {
             return {
-                backgroundColor: themeColor.background,
+                backgroundColor: themeColor.btnChoosed,
                 color: colors.palette.primary,
                 borderColor: colors.palette.gray200,
             }
         } else {
             return {
-                backgroundColor: colors.palette.gray200,
+                backgroundColor: themeColor.btnDefault,
                 color: colors.palette.primary,
                 borderColor: colors.palette.gray200,
             }
         }
     }
 
-    return <View style={[styles.container, $topContainerInsets, {
+    return <View style={[styles.container, {
         backgroundColor: themeColor.background
     }]}>
         <HomeTitle title="信息" />
@@ -95,14 +89,14 @@ export const ChatScreen: FC<ChatScreenProps> = observer(function () {
             <FriendView />
         </PagerView>
     </View>
-})
+}
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         display: 'flex',
         flexDirection: 'column',
-        padding: scale(18),
+        paddingHorizontal: scale(18),
     },
     topContainer: {
         display: 'flex',
@@ -119,12 +113,13 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         minHeight: 0,
-        borderRadius: scale(12)
-    },
+        borderRadius: scale(12),
+        borderWidth: 0
 
+    },
 
     btnTextDefault: {
         fontSize: scale(14),
-        fontWeight: 400
+        fontWeight: 400,
     },
 })

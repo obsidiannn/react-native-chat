@@ -6,7 +6,7 @@ import { TouchableOpacity } from "react-native-gesture-handler"
 
 export interface HomeTitleProps {
     title: string
-
+    dark?: boolean
 }
 
 const HomeTitle = (props: HomeTitleProps) => {
@@ -16,17 +16,18 @@ const HomeTitle = (props: HomeTitleProps) => {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        paddingVertical: scale(32)
+        paddingVertical: scale(24)
     }}>
         <Text style={{
             fontWeight: 600,
-            fontSize: scale(32)
+            fontSize: scale(32),
+            color: props.dark ? '#ffffff' : 'black'
         }}>
             {props.title}
         </Text>
         <TouchableOpacity accessibilityRole="button" style={{
-            padding: scale(12),
-            backgroundColor: colors.palette.primary,
+            padding: scale(10),
+            backgroundColor: props.dark ? '#294AF5' : colors.palette.gray600,
             borderRadius: scale(24)
         }}>
             <Image source={require('assets/icons/plus.svg')} style={{

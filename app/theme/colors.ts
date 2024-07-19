@@ -110,7 +110,7 @@ export const $dark: IColors = {
 export const $light: IColors = {
   background: "white",
   secondaryBackground: "#F3F4F6",
-  text: "black",
+  text: colors.palette.gray600,
   textChoosed: '#FFFFFF',
   btnChoosed: colors.palette.gray800,
   btnDefault: colors.palette.gray100,
