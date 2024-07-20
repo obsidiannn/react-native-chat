@@ -37,7 +37,7 @@ PODS:
   - EXJSONUtils (0.13.1)
   - EXManifests (0.14.3):
     - ExpoModulesCore
-  - Expo (51.0.19):
+  - Expo (51.0.21):
     - ExpoModulesCore
   - expo-dev-client (4.0.20):
     - EXManifests
@@ -254,9 +254,9 @@ PODS:
     - ExpoModulesCore
   - ExpoFileSystem (17.0.1):
     - ExpoModulesCore
-  - ExpoFont (12.0.7):
+  - ExpoFont (12.0.9):
     - ExpoModulesCore
-  - ExpoImage (1.12.12):
+  - ExpoImage (1.12.13):
     - ExpoModulesCore
     - libavif/libdav1d
     - SDWebImage (~> 5.19.1)
@@ -424,7 +424,11 @@ PODS:
     - nanopb/encode (= 2.30910.0)
   - nanopb/decode (2.30910.0)
   - nanopb/encode (2.30910.0)
-  - OpenSSL-Universal (3.1.5007)
+  - op-sqlite (6.2.11):
+    - React
+    - React-callinvoker
+    - React-Core
+  - OpenSSL-Universal (3.1.6000)
   - PromisesObjC (2.4.0)
   - RCT-Folly (2024.01.01.00):
     - boost
@@ -1397,6 +1401,8 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
+  - react-native-netinfo (11.3.1):
+    - React-Core
   - react-native-pager-view (6.3.0):
     - DoubleConversion
     - glog
@@ -1698,14 +1704,14 @@ PODS:
     - React-Core
   - RNDeviceInfo (11.1.0):
     - React-Core
-  - RNFBApp (20.2.0):
+  - RNFBApp (20.2.1):
     - Firebase/CoreOnly (= 10.29.0)
     - React-Core
   - RNFBAuth (20.2.1):
     - Firebase/Auth (= 10.29.0)
     - React-Core
     - RNFBApp
-  - RNFBMessaging (20.2.0):
+  - RNFBMessaging (20.2.1):
     - Firebase/Messaging (= 10.29.0)
     - FirebaseCoreExtension
     - React-Core
@@ -1847,6 +1853,7 @@ DEPENDENCIES:
   - fmt (from `../../../node_modules/react-native/third-party-podspecs/fmt.podspec`)
   - glog (from `../../../node_modules/react-native/third-party-podspecs/glog.podspec`)
   - hermes-engine (from `../../../node_modules/react-native/sdks/hermes-engine/hermes-engine.podspec`)
+  - "op-sqlite (from `../../../node_modules/@op-engineering/op-sqlite`)"
   - RCT-Folly (from `../../../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec`)
   - RCT-Folly/Fabric (from `../../../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec`)
   - RCTDeprecation (from `../../../node_modules/react-native/ReactApple/Libraries/RCTFoundation/RCTDeprecation`)
@@ -1875,6 +1882,7 @@ DEPENDENCIES:
   - React-Mapbuffer (from `../../../node_modules/react-native/ReactCommon`)
   - react-native-compressor (from `../../../node_modules/react-native-compressor`)
   - react-native-mmkv (from `../../../node_modules/react-native-mmkv`)
+  - "react-native-netinfo (from `../../../node_modules/@react-native-community/netinfo`)"
   - react-native-pager-view (from `../../../node_modules/react-native-pager-view`)
   - react-native-quick-crypto (from `../../../node_modules/react-native-quick-crypto`)
   - react-native-safe-area-context (from `../../../node_modules/react-native-safe-area-context`)
@@ -2012,6 +2020,8 @@ EXTERNAL SOURCES:
   hermes-engine:
     :podspec: "../../../node_modules/react-native/sdks/hermes-engine/hermes-engine.podspec"
     :tag: hermes-2024-06-03-RNv0.74.2-bb1e74fe1e95c2b5a2f4f9311152da052badc2bc
+  op-sqlite:
+    :path: "../../../node_modules/@op-engineering/op-sqlite"
   RCT-Folly:
     :podspec: "../../../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec"
   RCTDeprecation:
@@ -2064,6 +2074,8 @@ EXTERNAL SOURCES:
     :path: "../../../node_modules/react-native-compressor"
   react-native-mmkv:
     :path: "../../../node_modules/react-native-mmkv"
+  react-native-netinfo:
+    :path: "../../../node_modules/@react-native-community/netinfo"
   react-native-pager-view:
     :path: "../../../node_modules/react-native-pager-view"
   react-native-quick-crypto:
@@ -2151,7 +2163,7 @@ SPEC CHECKSUMS:
   EXImageLoader: ab589d67d6c5f2c33572afea9917304418566334
   EXJSONUtils: 30c17fd9cc364d722c0946a550dfbf1be92ef6a4
   EXManifests: c1fab4c3237675e7b0299ea8df0bcb14baca4f42
-  Expo: 2c34ddd7563a13699edc68eb4cd1de391a000d3d
+  Expo: 6ff8c293719c5e5d23204e3f5fc9f472b5d0fd32
   expo-dev-client: d24806e84d072563b0a26537c22ec902443e77d6
   expo-dev-launcher: d5d9578924f01ed6647e4d406b35b985cc84c788
   expo-dev-menu: 1a5c625ec904ae230ee552aeddb5c09949db4882
@@ -2160,8 +2172,8 @@ SPEC CHECKSUMS:
   ExpoClipboard: 23d203f5d4843699fbc45be1cc4fe1fbd811a6fa
   ExpoDocumentPicker: a82eaccc62ecb62662d5a6ca7a8ef40b71daa521
   ExpoFileSystem: 80bfe850b1f9922c16905822ecbf97acd711dc51
-  ExpoFont: 43b69559cef3d773db57c7ae7edd3cb0aa0dc610
-  ExpoImage: 2ccccff1219ebc765e344f3338f2430af2df4824
+  ExpoFont: e7f2275c10ca8573c991e007329ad6bf98086485
+  ExpoImage: cbe7617b4e0e7ba064cc4caa51bfc96262e51ef3
   ExpoImageManipulator: aea99205c66043a00a0af90e345395637b9902fa
   ExpoImagePicker: 12a420923383ae38dccb069847218f27a3b87816
   ExpoKeepAwake: 3b8815d9dd1d419ee474df004021c69fdd316d08
@@ -2192,7 +2204,8 @@ SPEC CHECKSUMS:
   MMKV: 36a22a9ec84c9bb960613a089ddf6f48be9312b0
   MMKVCore: 158e61c8516401a9fac730288acb29e6fc19bbf9
   nanopb: 438bc412db1928dac798aa6fd75726007be04262
-  OpenSSL-Universal: 2d916d735a0196be6a14b959ce976c564d392861
+  op-sqlite: b4f61f3085ea3b70f264f3a64b724c81ab117e58
+  OpenSSL-Universal: f8ff60e85501991636ffc3d184078d7526a27ff7
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
   RCT-Folly: 02617c592a293bd6d418e0a88ff4ee1f88329b47
   RCTDeprecation: b03c35057846b685b3ccadc9bfe43e349989cdb2
@@ -2220,6 +2233,7 @@ SPEC CHECKSUMS:
   React-Mapbuffer: 86703e9e4f6522053568300827b436ccc01e1101
   react-native-compressor: 1517d0a055c73d4e29d5840deb24a345dcae9df0
   react-native-mmkv: 6d8259f25b80397c99ad50e2d891e22465f65e09
+  react-native-netinfo: bdb108d340cdb41875c9ced535977cac6d2ff321
   react-native-pager-view: b4ba00095f74ab430250cef2a119a5e2491b2c8d
   react-native-quick-crypto: 09c5986efae9b05e31b0aba0be75fac9e4d8bd44
   react-native-safe-area-context: dcab599c527c2d7de2d76507a523d20a0b83823d
@@ -2250,9 +2264,9 @@ SPEC CHECKSUMS:
   RecaptchaInterop: 7d1a4a01a6b2cb1610a47ef3f85f0c411434cb21
   RNCAsyncStorage: 826b603ae9c0f88b5ac4e956801f755109fa4d5c
   RNDeviceInfo: b899ce37a403a4dea52b7cb85e16e49c04a5b88e
-  RNFBApp: 801b0c9d1adb238aa4365f4863390ed6e89d549c
+  RNFBApp: 5548f7e415d10dd7d167684400c41b539544380b
   RNFBAuth: b78dbebae463105bb44f329c5df66b17553a60c4
-  RNFBMessaging: 79b7a21e969369e27d68dcd5cd3d512571e9b30d
+  RNFBMessaging: 376078a2cb91f277d4afc47a6968a1453261abf0
   RNFlashList: 06ac066ee3c7adcecc5725c6be7cee41b3696347
   RNGestureHandler: 20a4307fd21cbff339abfcfa68192f3f0a6a518b
   RNPermissions: f61ebf52bb670809d522bba0b09b3e6a9ea5ab7e
@@ -2267,6 +2281,6 @@ SPEC CHECKSUMS:
   SPIndicator: 93e0a4fb23de51294ac48e874c0f081a5e293e4f
   Yoga: 45564236f670899c9739b1581a12b00ead5d391f
 
-PODFILE CHECKSUM: 998e375b6fff757d163b51648d876da11aa814f4
+PODFILE CHECKSUM: 2aa1cb238812f585d8e9c8a7ea4ac30759b496cb
 
 COCOAPODS: 1.13.0

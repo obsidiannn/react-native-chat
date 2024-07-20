@@ -6,12 +6,11 @@ import { s } from "app/utils/size"
 import { TextInput, TouchableOpacity, View } from "react-native"
 import { useRecoilValue } from "recoil"
 import { StackScreenProps } from "@react-navigation/stack"
-import { AppStackParamList } from "app/navigators"
 import { useEffect, useState } from "react"
 import { Image } from "expo-image"
 import Crypto from "react-native-quick-crypto";
 import { AuthService } from "app/services/auth.service"
-type Props = StackScreenProps<AppStackParamList, 'UnlockScreen'>;
+type Props = StackScreenProps<App.StackParamList, 'UnlockScreen'>;
 export const UnlockScreen = ({ navigation }: Props) => {
   const $colors = useRecoilValue(ColorsState);
   const [avatar, setAvatar] = useState('');

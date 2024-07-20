@@ -1,12 +1,11 @@
 
-import { AppStackParamList, AppStackScreenProps } from "app/navigators";
 import { useRef, useState } from "react";
 import PagerView from "react-native-pager-view";
-import { StyleSheet, View, useColorScheme, Text } from "react-native";
+import { StyleSheet, View } from "react-native";
 import ChatView from "./Chats";
 import FriendView from "./Friends";
 import GroupView from "./GroupChats";
-import theme, { $dark, $light, colors } from "../../theme/colors";
+import { colors } from "../../theme/colors";
 import { Button } from "app/components";
 import { scale } from "app/utils/size";
 import BannerComponent from "app/components/Banner";
@@ -15,7 +14,7 @@ import { useTranslation } from "react-i18next";
 import { useRecoilValue } from "recoil";
 import { ColorsState } from "app/stores/system";
 import { StackScreenProps } from "@react-navigation/stack";
-type Props = StackScreenProps<AppStackParamList, 'ChatScreen'>;
+type Props = StackScreenProps<App.StackParamList, 'ChatScreen'>;
 export const ChatScreen = ({ navigation }: Props) => {
     const pagerViewRef = useRef<PagerView>(null);
     const [pageIndex, setPageIndex] = useState(0);

@@ -3,10 +3,9 @@ import {useEffect} from "react";
 import { View, Text,StatusBar } from "react-native"
 import { useRecoilValue } from "recoil"
 import { StackScreenProps } from "@react-navigation/stack"
-import { AppStackParamList } from "app/navigators"
 import { s } from "app/utils/size"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
-type Props = StackScreenProps<AppStackParamList, 'ContactScreen'>;
+type Props = StackScreenProps<App.StackParamList, 'ContactScreen'>;
 export const ContactScreen = ({ navigation }: Props) => {
   const $colors = useRecoilValue(ColorsState);
   const $theme = useRecoilValue(ThemeState);

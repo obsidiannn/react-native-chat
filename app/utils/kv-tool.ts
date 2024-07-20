@@ -7,9 +7,9 @@ export const init = async ():Promise<KV> => {
     if(!globalKV || globalKV === undefined){
         const key = await getUniqueId() ?? "bobo";
         console.log("global key:" + key)
-        globalKV = new KV('global', key);
+        globalKV = new KV(key, key);
     }
-    globalKV.flushAll()
+   //globalKV.flushAll()
     return globalKV
 }
 export const getKV = (id: string, key?: string) => {

@@ -1,13 +1,15 @@
 declare namespace Model{
     interface IUser {
         id: number;
-        avatar: string;
-        pubKey: string;
-        gender: string;
-        nickName: string;
-        nickNameIdx: number;
-        userName: string;
-        sign: string;
-        createdAt: string;
+        addr: string | null;
+        avatar: string | null;
+        pubKey: string | null;
+        gender: number | null;
+        nickName: string | null;
+        nickNameIdx: string | null;
+        userName: string | null;
+        sign: string | null;
+        createdAt: Date | null;
+        updatedAt?: Date | null;
     }
 }

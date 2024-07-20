@@ -13,8 +13,6 @@ const encodeInterceptor = async (wallet: Wallet, config: InternalAxiosRequestCon
 
   const time = Date.now();
   const sharedSecret = wallet.computeSharedSecret(process.env.EXPO_PUBLIC_SYSTEM_PUBLIC_KEY)
-  console.log("[syspub]", process.env.EXPO_PUBLIC_SYSTEM_PUBLIC_KEY);
-  console.log("[sharedSecret]", sharedSecret);
 
   const dataHash = computeDataHash(content + ':' + time);
   const sign = wallet.signMessage(dataHash)
@@ -24,13 +22,11 @@ const encodeInterceptor = async (wallet: Wallet, config: InternalAxiosRequestCon
   config.headers.set('X-Req-OS', Platform.OS);
   config.headers.set('X-Req-Pub-Key', wallet.getPublicKey());
   const data = quickCrypto.En(sharedSecret, Buffer.from(content, "utf8"))
-  console.log("加密后的数据", Buffer.from(data).toString("hex"));
   config.data = Buffer.from(data).toString("hex");
   return config;
 }
 const decodeInterceptor = async (wallet: Wallet, rep: AxiosResponse<any, any>): Promise<AxiosResponse<any, any>> => {
   let data = rep.data ?? ""
-  console.log('[original response]', data);
 
   if (data.substring(0, 2) == '0x') {
     data = data.substring(2)
@@ -39,24 +35,20 @@ const decodeInterceptor = async (wallet: Wallet, rep: AxiosResponse<any, any>): 
   let rel: any = {}
   if (data != "") {
     const decrypted = quickCrypto.De(sharedSecret, Buffer.from(data, 'hex'))
-    console.log("quickAes.De(data, sharedSecret)", decrypted)
     const text = Buffer.from(decrypted).toString('utf8');
-    console.log("quickAes.De(data, sharedSecret)", text)
     rel = JSON.parse(text ?? '{}');
   }
   if (rel?.code && Number(rel?.code) != 200) {
     toast(rel.msg);
     throw new Error(rel.err_msg);
   }
-  console.log('[response]', rel.data);
 
   return rel.data;
 }
 
 export const createInstance = (en = true) => {
-  // const baseURL = SystemService.GetApiUrlByCache();
-  const baseURL = 'http://192.168.0.103:5001'
-  console.log("请求的api url", baseURL)
+  const baseURL = SystemService.GetApiUrlByCache();
+  //const baseURL = 'http://192.168.0.103:5001'
   const startTime = new Date().valueOf()
   const instance: AxiosInstance = axios.create({
     baseURL,
@@ -68,8 +60,6 @@ export const createInstance = (en = true) => {
     if (!wallet) {
       throw new Error('請先登錄');
     }
-    console.log("請求的錢包", wallet);
-    console.log('path=', baseURL + config.url);
     return await encodeInterceptor(wallet, config);
   }, (err) => {
     throw new Error(err.message);

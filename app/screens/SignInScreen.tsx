@@ -8,12 +8,11 @@ import { useRecoilValue } from "recoil"
 import * as Clipboard from 'expo-clipboard';
 import { useState } from "react"
 import { StackScreenProps } from "@react-navigation/stack"
-import { AppStackParamList } from "app/navigators"
 import * as DocumentPicker from 'expo-document-picker';
 import * as FileSystem from 'expo-file-system';
 import toast from "app/utils/toast"
 import { restore } from "app/utils/account"
-type Props = StackScreenProps<AppStackParamList, 'SignInScreen'>;
+type Props = StackScreenProps<App.StackParamList, 'SignInScreen'>;
 export const SignInScreen = ({navigation}: Props) => {
   const $colors = useRecoilValue(ColorsState)
   const [priKey, setPriKey] = useState('');

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react"
 import { Image } from "expo-image"
 import { ImageStyle, View, Text, Appearance, Pressable, ViewStyle, TextStyle } from "react-native";
-import { AppStackParamList } from "../../navigators"
 import { s } from 'app/utils/size';
 import { useRecoilValue } from "recoil"
 import { ColorsState } from "app/stores/system"
@@ -13,7 +12,7 @@ import { StackScreenProps } from "@react-navigation/stack";
 import { Checkbox } from "./Checkbox";
 
 
-type Props = StackScreenProps<AppStackParamList, 'WelcomeScreen'>;
+type Props = StackScreenProps<App.StackParamList, 'WelcomeScreen'>;
 export const WelcomeScreen = ({ navigation }: Props) => {
   const colorScheme = Appearance.getColorScheme();
   const $colors = useRecoilValue(ColorsState);

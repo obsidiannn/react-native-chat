@@ -12,6 +12,12 @@ const plugins = [
       },
     },
   ],
+  [
+    'inline-import',
+    {
+      extensions: ['.sql'],
+    },
+  ],
 ]
 /** @type {import('@babel/core').TransformOptions} */
 module.exports = function (api) {

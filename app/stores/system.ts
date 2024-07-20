@@ -12,7 +12,7 @@ export const LangState = atom<string>({
     effects_UNSTABLE: [
         ({ setSelf, onSet }) => {
             onSet((newValue) => {
-                globalStorage.set('Lang',newValue);
+                globalStorage.set('Lang', newValue);
             })
         },
     ]
@@ -21,8 +21,12 @@ export const ColorsState = selector({
     key: 'ColorsState',
     get: ({ get }) => {
         const themeState = get(ThemeState);
-        console.log('themestate=',themeState);
-        
+        console.log('themestate=', themeState);
+
         return themeState == "dark" ? $dark : $light;
     },
 });
+export const NetworkState = atom<boolean>({
+    key: "Network",
+    default: false,
+})

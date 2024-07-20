@@ -1,16 +1,23 @@
 import { createInstance } from "../req";
-import { UserInfoItem, IServer } from "@repo/types";
-// 注册
-const signup = async (): Promise<UserInfoItem> => await createInstance(true).post('/auth/signup')
+
+const signUp = async (): Promise<Model.IUser> => {
+    const user: any = await createInstance(true).post('/auth/signup')
+    user.createdAt = new Date(user.createdAt);
+    return user as Model.IUser;
+}
 
 
 const destory = async (): Promise<null> => await createInstance(true).post('/auth/destroy')
-const getInfo = async (): Promise<{
-    user: IServer.IUser
-}> => await createInstance(true).post('/auth/info', {});
+const getInfo = async (): Promise<Model.IUser> => {
+    const rep: {
+        user: any
+    } = await createInstance(true).post('/auth/info');
+    rep.user.createdAt = new Date(rep.user.createdAt);
+    return rep.user as Model.IUser;
+};
 
 export default {
-    signup,
+    signUp,
     destory,
     getInfo
 }

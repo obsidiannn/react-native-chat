@@ -35,7 +35,9 @@
     "@expo-google-fonts/space-grotesk": "^0.2.2",
     "@expo/metro-runtime": "~3.2.1",
     "@flyerhq/react-native-link-preview": "^1.5.2",
+    "@op-engineering/op-sqlite": "^6.2.11",
     "@react-native-async-storage/async-storage": "1.23.1",
+    "@react-native-community/netinfo": "11.3.1",
     "@react-native-firebase/app": "^20.2.0",
     "@react-native-firebase/auth": "^20.2.0",
     "@react-native-firebase/messaging": "^20.2.0",
@@ -45,9 +47,11 @@
     "@react-navigation/stack": "^6.4.1",
     "@shopify/flash-list": "^1.6.4",
     "apisauce": "3.0.1",
+    "babel-plugin-inline-import": "^3.0.0",
     "babel-plugin-module-resolver": "^5.0.2",
     "burnt": "^0.12.2",
     "date-fns": "^2.30.0",
+    "drizzle-orm": "^0.32.0",
     "ethers": "^6.13.1",
     "expo": "~51.0.8",
     "expo-av": "~14.0.6",
@@ -109,6 +113,7 @@
     "@typescript-eslint/parser": "^5.59.0",
     "babel-jest": "^29.2.1",
     "burnt": "^0.12.2",
+    "drizzle-kit": "^0.23.0",
     "eslint": "8.17.0",
     "eslint-config-prettier": "8.5.0",
     "eslint-config-standard": "17.0.0",
@@ -214,5 +219,14 @@
       "space-before-function-paren": 0,
       "reactotron/no-tron-in-production": "error"
     }
+  },
+  "op-sqlite": {
+    "sqlcipher": true,
+    "crsqlite": true,
+    "performanceMode": "2",
+    "iosSqlite": false,
+    "sqliteFlags": "-DSQLITE_DQS=0",
+    "fts5": true,
+    "libsql": true
   }
 }

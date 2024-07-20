@@ -3,24 +3,27 @@ import Navbar from "app/components/Navbar"
 import { ColorsState } from "app/stores/system"
 import { s } from "app/utils/size"
 import { Text, View } from "react-native"
-import { useRecoilState, useRecoilValue } from "recoil"
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
 import { useState } from "react";
 import { AuthService } from "app/services/auth.service";
 import { PasswordInput } from "app/components/PasswordInput/PasswordInput"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { generatePrivateKey, Wallet } from "app/utils/wallet"
-import { AuthWallet } from "app/stores/auth-user"
+import { AuthUser, AuthWallet } from "app/stores/auth"
 import { setNow, writePriKey } from "app/utils/account"
-import { AppStackParamList } from "app/navigators"
+import { Init as DBInit } from "app/utils/database";
 import { NativeStackScreenProps } from "@react-navigation/native-stack"
-type Props = NativeStackScreenProps<AppStackParamList, 'SignUpScreen'>;
+import { UserService } from "app/services/user.service"
+import { LocalUserService } from "app/services/LocalUserService"
+type Props = NativeStackScreenProps<App.StackParamList, 'SignUpScreen'>;
 export const SignUpScreen = ({navigation}:Props) => {
   const $colors = useRecoilValue(ColorsState);
   const [loading, setLoading] = useState(false);
   // 密码 与 确认密码
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [,setAuthWallet] =  useRecoilState(AuthWallet)
+  const setAuthWallet =  useSetRecoilState(AuthWallet)
+  const setAuthUser =  useSetRecoilState(AuthUser)
   const insets = useSafeAreaInsets();
   return <View style={{
     flex: 1,
@@ -83,7 +86,7 @@ export const SignUpScreen = ({navigation}:Props) => {
         marginHorizontal: s(16),
         marginTop: s(200),
       }}>
-        <BlockButton loading={loading} onPress={() => {
+        <BlockButton loading={loading} onPress={async () => {
           if (!password) {
             alert("密码不能为空");
             return;
@@ -101,13 +104,16 @@ export const SignUpScreen = ({navigation}:Props) => {
 
           const priKey = generatePrivateKey();
           global.wallet = new Wallet(priKey);
+          await DBInit(global.wallet.getAddress());
           AuthService.signUp().then(async user => {
             console.log(user);
             const result = await writePriKey(password, priKey);
             if(result){
               setAuthWallet(global.wallet);
-              // 将user写入缓存
               setNow(priKey);
+              if(global.wallet){
+                setAuthUser(user);
+              }
               navigation.replace('TabStack');
             }
           }).catch(e => {
