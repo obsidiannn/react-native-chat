@@ -12,6 +12,7 @@ import * as DocumentPicker from 'expo-document-picker';
 import * as FileSystem from 'expo-file-system';
 import toast from "app/utils/toast"
 import { restore } from "app/utils/account"
+import { App } from "types/app"
 type Props = StackScreenProps<App.StackParamList, 'SignInScreen'>;
 export const SignInScreen = ({navigation}: Props) => {
   const $colors = useRecoilValue(ColorsState)

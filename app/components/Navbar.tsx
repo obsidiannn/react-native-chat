@@ -19,7 +19,7 @@ const Navbar = (props: {
         renderCenter,
         renderRight
     } = props;
-    const $theme =  useRecoilValue(ThemeState)
+    const $theme = useRecoilValue(ThemeState)
     const $colors = useRecoilValue(ColorsState)
     return <View style={$container}>
         {<View style={$leftContainer}>

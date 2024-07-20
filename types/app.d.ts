@@ -1,3 +1,5 @@
+import { ChatDetailItem } from "@repo/types";
+
 declare namespace App{
     type StackParamList = {
         WelcomeScreen: undefined;
@@ -7,7 +9,10 @@ declare namespace App{
         GroupScreen: undefined;
         ChatScreen: undefined;
         UserScreen: undefined;
-        UserChatScreen: undefined;
+        UserChatScreen: {
+          item: ChatDetailItem
+          fromNotify?: boolean
+        };
         WebViewScreen: {
           title: string;
           url: string;

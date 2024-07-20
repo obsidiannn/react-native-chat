@@ -1,7 +1,8 @@
+import { IUser } from "drizzle/schema"
 import { createInstance } from "./req"
 
 
-const signUp = async (): Promise<Model.IUser> => await createInstance(true).post('/auth/signup')
+const signUp = async (): Promise<IUser> => await createInstance(true).post('/auth/signup')
 export default {
     signUp
 }

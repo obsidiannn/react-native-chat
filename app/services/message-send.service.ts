@@ -6,9 +6,8 @@ import { uploadFile } from "./file.service";
 import { IModel } from "@repo/enums";
 import { MessageDetailItem, MessageExtra } from "@repo/types";
 import userService from "./user.service";
-// import MessagesModel from "@/service/message.model";
 import { MessageType } from "app/components/chat-ui";
-import chatUiAdapter from "./chat-ui.adapter";
+import chatUiAdapter from "app/utils/chat-ui.adapter";
 import { imageFormat } from "app/utils/media-util";
 
 const _send = async (chatId: string, key: string, mid: string, type: IModel.IChat.IMessageTypeEnum, data: {

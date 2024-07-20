@@ -1,22 +1,76 @@
 import Navbar from "app/components/Navbar";
-import { AppStackScreenProps, navigate } from "app/navigators";
+import { navigate } from "app/navigators";
 import { colors } from "app/theme";
 import { scale } from "app/utils/size";
 import { useSafeAreaInsetsStyle } from "app/utils/useSafeAreaInsetsStyle";
 import { Image } from "expo-image";
-import { observer } from "mobx-react-lite";
-import { FC, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
-import ChatPage from "./ChatPage";
+import ChatPage, { ChatUIPageRef } from "./ChatPage";
+import { ChatDetailItem } from "@repo/types";
+import { IUser } from "drizzle/schema";
+import { StackScreenProps } from "@react-navigation/stack";
+import { App } from "types/app";
+import friendService from "app/services/friend.service";
 
-interface UserChatScreenProps extends AppStackScreenProps<"UserChatScreen"> { }
+type Props = StackScreenProps<App.StackParamList, 'UserChatScreen'>;
 
-export const UserChatScreen: FC<UserChatScreenProps> = observer(function () {
+export const UserChatScreen = ({ navigation, route }: Props) => {
     const $topContainerInsets = useSafeAreaInsetsStyle(["top"])
+
+    const [chatItem, setChatItem] = useState<ChatDetailItem>()
+    const [user, setUser] = useState<IUser>();
+    const chatPageRef = useRef<ChatUIPageRef>(null)
+
+    const init = useCallback(async () => {
+        const _chatItem = route.params.item
+        const uid = _chatItem?.sourceId;
+        if (!uid || !globalThis.wallet) {
+            navigation.goBack();
+            return;
+        }
+        setChatItem(_chatItem)
+        const friend = await friendService.getFriendInfoByUserId(uid)
+        if (friend !== null) {
+            setUser(friend);
+            chatPageRef.current?.init(_chatItem, friend)
+        }
+    }, [])
+
+    useEffect(() => {
+        navigation.addListener('focus', () => {
+            init()
+        });
+        return () => {
+            navigation.removeListener('focus', () => { })
+        }
+    }, [navigation])
+
+    /**
+     * 置顶
+     * @param val 
+     */
+    const setContextTopFunc = (val: number) => {
+        const _chatItem = {
+            ...chatItem,
+            isTop: val
+        } as ChatDetailItem
+        setChatItem(_chatItem)
+    }
+
+
     return <View style={[styles.container, $topContainerInsets, {
         backgroundColor: '#ffffff'
     }]}>
-        <Navbar title={"user name"}
+        <Navbar title={chatItem?.chatAlias}
+            onLeftPress={() => {
+                void chatPageRef.current?.close()
+                if (route.params.fromNotify) {
+                    navigation.replace('TabStack')
+                } else {
+                    navigation.goBack()
+                }
+            }}
             renderRight={() => {
                 return <View style={{
                     height: '100%',
@@ -35,9 +89,9 @@ export const UserChatScreen: FC<UserChatScreenProps> = observer(function () {
                     </TouchableOpacity>
                 </View>
             }} />
-        <ChatPage />
+        <ChatPage ref={chatPageRef} />
     </View>
-})
+}
 
 const styles = StyleSheet.create({
     container: {

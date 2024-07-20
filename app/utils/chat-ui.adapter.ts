@@ -1,18 +1,13 @@
-import {
-    MessageDetailItem,
-    MessageExtra,
-    GroupMemberItemVO,
-} from "@repo/types"
-import { MessageType, User } from "app/components/chat-ui"
-import { IUser } from "@/drizzle/schema"
-import { IMessage } from '@/drizzle/schema'
-import quickAes from "app/utils/quick-crypto"
+import { IUser, IMessage } from "drizzle/schema"
 import fileService from "app/services/file.service"
 import dayjs from 'dayjs'
 import { IModel } from "@repo/enums"
+import { GroupMemberItemVO, MessageDetailItem, MessageExtra } from "@repo/types"
+import quickCrypto from "./quick-crypto"
+import { MessageType, User } from "app/components/chat-ui"
 
-const userTransfer = (user: IUser): User => {
-    if (user === undefined) {
+const userTransfer = (user: IUser|null): User => {
+    if (user === undefined || user === null) {
         return {} as User
     }
 
@@ -326,7 +321,7 @@ const convertPartialContent = (m: MessageType.PartialAny): string => {
 
 const decrypt = (key: string, content: string) => {
     try {
-        const decrypted = quickAes.De(content, Buffer.from(key, 'utf8'));
+        const decrypted = quickCrypto.De(content, Buffer.from(key, 'utf8'));
         const data = Buffer.from(decrypted).toString('utf8');
         return JSON.parse(data) as { t: string, d: any };
     } catch (error) {

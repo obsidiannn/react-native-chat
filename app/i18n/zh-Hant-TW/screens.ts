@@ -24,6 +24,7 @@ export default {
         back: "Back",
         btn_download: 'Download',
         btn_submit: "",
-        btn_cancel: ""
+        btn_cancel: "",
+        loading: "加载中"
     },
 }

@@ -4,10 +4,10 @@ import userApi from "app/api/auth/user";
 import { OfficialUserItem } from "@repo/types";
 import { GetDB } from "app/utils/database";
 import { eq } from "drizzle-orm";
-import { users } from "drizzle/schema";
+import { IUser, users } from "drizzle/schema";
 
 export class UserService {
-    static async add(data: Model.IUser): Promise<Model.IUser> {
+    static async add(data: IUser): Promise<IUser> {
         const old = await GetDB().query.users.findFirst({
             where: eq(users.id, data.id)
         })
@@ -18,17 +18,17 @@ export class UserService {
         const items = await GetDB().insert(users).values(data).returning();
         return items[0];
     }
-    static async findById(id: number): Promise<Model.IUser | undefined> {
+    static async findById(id: number): Promise<IUser | undefined> {
         return await GetDB().query.users.findFirst({
             where: eq(users.id, id)
         })
     }
-    static async findByUserName(username: string): Promise<Model.IUser | undefined> {
+    static async findByUserName(username: string): Promise<IUser | undefined> {
         return await GetDB().query.users.findFirst({
             where: eq(users.userName, username)
         })
     }
-    static async findByAddr(addr: string): Promise<Model.IUser | undefined> {
+    static async findByAddr(addr: string): Promise<IUser | undefined> {
         return await GetDB().query.users.findFirst({
             where: eq(users.addr, addr)
         })

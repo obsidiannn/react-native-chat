@@ -222,11 +222,11 @@
   },
   "op-sqlite": {
     "sqlcipher": true,
-    "crsqlite": true,
-    "performanceMode": "2",
+    "crsqlite": false,
+    "performanceMode": "1",
     "iosSqlite": false,
     "sqliteFlags": "-DSQLITE_DQS=0",
-    "fts5": true,
-    "libsql": true
+    "fts5": false,
+    "libsql": false
   }
 }
