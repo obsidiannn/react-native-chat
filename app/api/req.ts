@@ -5,7 +5,6 @@ import { InternalAxiosRequestConfig } from "axios";
 import { Platform } from "react-native";
 import { Wallet, computeDataHash } from 'app/utils/wallet';
 import toast from 'app/utils/toast';
-import { SystemService } from 'app/services/system.service';
 import { AuthService } from 'app/services/auth.service';
 const encodeInterceptor = async (wallet: Wallet, config: InternalAxiosRequestConfig): Promise<InternalAxiosRequestConfig<any>> => {
   const content = typeof config.data === 'string' ? config.data : JSON.stringify(config.data ?? {})
@@ -21,6 +20,8 @@ const encodeInterceptor = async (wallet: Wallet, config: InternalAxiosRequestCon
   config.headers.set('X-Req-Time', time);
   config.headers.set('X-Req-OS', Platform.OS);
   config.headers.set('X-Req-Pub-Key', wallet.getPublicKey());
+  console.log('[sharedSecret]', sharedSecret);
+
   const data = quickCrypto.En(sharedSecret, Buffer.from(content, "utf8"))
   config.data = Buffer.from(data).toString("hex");
   return config;
@@ -47,8 +48,9 @@ const decodeInterceptor = async (wallet: Wallet, rep: AxiosResponse<any, any>): 
 }
 
 export const createInstance = (en = true) => {
-  const baseURL = SystemService.GetApiUrlByCache();
-  //const baseURL = 'http://192.168.0.103:5001'
+  // const baseURL = SystemService.GetApiUrlByCache();
+  const baseURL = 'http://192.168.0.103:5001'
+
   const startTime = new Date().valueOf()
   const instance: AxiosInstance = axios.create({
     baseURL,
@@ -56,6 +58,8 @@ export const createInstance = (en = true) => {
     timeout: 3000,
   });
   instance.interceptors.request.use(async (config) => {
+    console.log('[baseURL]', baseURL + config.url);
+
     const wallet = AuthService.GetWallet();
     if (!wallet) {
       throw new Error('請先登錄');

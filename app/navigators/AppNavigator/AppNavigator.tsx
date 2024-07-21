@@ -23,13 +23,19 @@ import UserChatInfoModal from 'app/screens/UserChat/UserChatInfoModal'
 import { init as KVInit } from "app/utils/kv-tool";
 import { getNow } from "app/utils/account";
 import { Wallet } from "app/utils/wallet";
-import { AuthUser, AuthWallet } from "app/stores/auth";
+import { AuthUser, AuthWallet, ChatsStore } from "app/stores/auth";
 import TabStack from "./../TabStack/TabStack";
 import { Init as DBInit } from "app/utils/database";
 import NetInfo from '@react-native-community/netinfo';
 import { LocalUserService } from "app/services/LocalUserService";
 import { AuthService } from "app/services/auth.service";
 import { AppStackParamList } from "./type";
+import chatService from "app/services/chat.service";
+import { IModel } from "@repo/enums";
+import { SocketJoinEvent } from "@repo/types";
+
+import EventManager from 'app/services/event-manager.service'
+
 
 /**
  * This is a list of all the route names that will exit the app if the back button
@@ -68,6 +74,7 @@ export const AppNavigator = () => {
   const setAuthWallet = useSetRecoilState(AuthWallet)
   const setNetworkState = useSetRecoilState(NetworkState);
   const setAuthUser = useSetRecoilState(AuthUser)
+  const setChatsStore = useSetRecoilState(ChatsStore)
   useEffect(() => {
     const v = Appearance.getColorScheme()
     setThemeState(v === "dark" ? 'dark' : 'light');
@@ -131,6 +138,8 @@ export const AppNavigator = () => {
       onReady={async () => {
         await KVInit();
         const now = getNow()
+        console.log('now=', now);
+
         if (now) {
           global.wallet = new Wallet(now);
           setAuthWallet(global.wallet);
@@ -143,10 +152,13 @@ export const AppNavigator = () => {
           if (user) {
             setAuthUser(user)
           }
+
           NetInfo.fetch().then((state) => {
             if (state.isConnected) {
               setNetworkState(true)
               AuthService.getInfo().then((v) => {
+                console.log('当前登陆人', v);
+
                 setAuthUser(v)
               }).catch(e => console.log(e))
               // 刷新请求地址
@@ -156,6 +168,15 @@ export const AppNavigator = () => {
               setNetworkState(false)
             }
           })
+          console.log('chat detail list');
+          chatService.mineChatList().then((res) => {
+            if (res !== null && res.length > 0) {
+              console.log('change chat detail');
+              setChatsStore(res)
+            }
+          })
+
+
         }
       }}
     >

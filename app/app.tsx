@@ -15,6 +15,7 @@ import Config from "./config"
 import { GestureHandlerRootView } from "react-native-gesture-handler"
 import { ViewStyle } from "react-native"
 import { RecoilRoot } from 'recoil';
+import { SocketProvider } from "app/components/socket"
 
 export const NAVIGATION_PERSISTENCE_KEY = "Login"
 
@@ -39,13 +40,15 @@ const App = (props: AppProps) => {
   }
   return (
     <RecoilRoot>
-      <SafeAreaProvider initialMetrics={initialWindowMetrics}>
-        <ErrorBoundary catchErrors={Config.catchErrors}>
-          <GestureHandlerRootView style={$container}>
-            <AppNavigator />
-          </GestureHandlerRootView>
-        </ErrorBoundary>
-      </SafeAreaProvider>
+      <SocketProvider>
+        <SafeAreaProvider initialMetrics={initialWindowMetrics}>
+          <ErrorBoundary catchErrors={Config.catchErrors}>
+            <GestureHandlerRootView style={$container}>
+              <AppNavigator />
+            </GestureHandlerRootView>
+          </ErrorBoundary>
+        </SafeAreaProvider>
+      </SocketProvider>
     </RecoilRoot>
   )
 }

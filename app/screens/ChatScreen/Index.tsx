@@ -14,6 +14,7 @@ import { useTranslation } from "react-i18next";
 import { useRecoilValue } from "recoil";
 import { ColorsState } from "app/stores/system";
 import { StackScreenProps } from "@react-navigation/stack";
+import chatService from "app/services/chat.service";
 type Props = StackScreenProps<App.StackParamList, 'ChatScreen'>;
 export const ChatScreen = ({ navigation }: Props) => {
     const pagerViewRef = useRef<PagerView>(null);
@@ -24,6 +25,10 @@ export const ChatScreen = ({ navigation }: Props) => {
 
     const changeTab = (idx: number) => {
         pagerViewRef.current?.setPage(idx);
+        chatService.mineChatList().then(res=>{
+            console.log(res);
+            
+        })
     }
 
     const btnTextStyle = (idx: number) => {

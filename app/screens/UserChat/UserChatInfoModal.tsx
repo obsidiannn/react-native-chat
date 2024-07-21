@@ -6,7 +6,7 @@ import InfoCard from "./ChatInfoCard";
 import ActionItem from "./action-item";
 import { ClearChatMessageEvent } from "@repo/types";
 import { IModel } from "@repo/enums";
-import EventManager from 'app/services/events'
+import EventManager from 'app/services/event-manager.service'
 import chatApi from "app/api/chat/chat";
 import { scale } from "app/utils/size";
 import Navbar from "app/components/Navbar";

@@ -15,6 +15,8 @@ import { Init as DBInit } from "app/utils/database";
 import { NativeStackScreenProps } from "@react-navigation/native-stack"
 import { UserService } from "app/services/user.service"
 import { LocalUserService } from "app/services/LocalUserService"
+
+import { App } from "types/app"
 type Props = NativeStackScreenProps<App.StackParamList, 'SignUpScreen'>;
 export const SignUpScreen = ({navigation}:Props) => {
   const $colors = useRecoilValue(ColorsState);
