@@ -24,6 +24,19 @@ export class LocalUserService {
         })
     }
 
+    static async createMany(data: IUser[]) {
+        const db = GetDB()
+        if (!db) {
+            console.log('err');
+            
+            return
+        }
+        const ids = data.map(d => d.id)
+        const deleteResult = await db.delete(users).where(inArray(users.id, ids)).returning({ deletedId: users.id })
+        console.log('delete result', deleteResult);
+
+        await db.insert(users).values(data);
+    }
 
     /**
      * 获取 sqlite 的user 
@@ -36,22 +49,22 @@ export class LocalUserService {
             return []
         }
         const db = GetDB()
-        if(!db){
+        if (!db) {
             return []
         }
         // await UserModel.deleteAll()
         const cacheSeconds = 5 * 60
-        try{
+        try {
             const currentSecond = dayjs().unix()
-            console.log('cacheSeconds',cacheSeconds);
-            
+            console.log('cacheSeconds', cacheSeconds);
+
             return (db).select().from(users).where(
                 and(
                     inArray(users.id, ids),
-                    gte(users.updatedAt, (currentSecond - cacheSeconds) as number)
+                    gte(users.updatedAt, new Date(currentSecond - cacheSeconds))
                 ))
                 ?? [];
-        }catch(e){
+        } catch (e) {
             console.error(e);
         }
         return []

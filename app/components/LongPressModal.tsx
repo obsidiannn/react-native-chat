@@ -1,5 +1,5 @@
 
-import { Pressable, TouchableOpacity, StyleSheet, Text, Animated, View, Dimensions, GestureResponderEvent, Platform, ViewProps } from "react-native"
+import { Pressable, TouchableOpacity, StyleSheet, Text, View, GestureResponderEvent, Platform } from "react-native"
 import { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import { MessageType } from "./chat-ui";
 import { scale } from "app/utils/size";

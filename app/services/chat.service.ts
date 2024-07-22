@@ -4,6 +4,7 @@ import groupService from './group.service';
 import { ChatDetailItem } from '@repo/types';
 import { globalKV } from 'app/utils/kv-tool';
 import { IModel } from '@repo/enums';
+import fileService from './file.service';
 export const getBatchInfo = async (ids: string) => {
     // 批量獲取信息
 }
@@ -78,6 +79,8 @@ const mineChatList = async (chatId?: string): Promise<ChatDetailItem[]> => {
         }
     })
     const userHash = await userService.getUserHash(userIds)
+    console.log('userHash', userHash);
+
     //const officialHash = await userService.officialUserHash(officialIds)
     const groupHash = await groupService.groupSingleInfo(groupIds)
 
@@ -85,16 +88,19 @@ const mineChatList = async (chatId?: string): Promise<ChatDetailItem[]> => {
         if (i.type === IModel.IChat.IChatTypeEnum.GROUP && i.sourceId) {
             const source = groupHash.get(i.sourceId)
             if (source !== null) {
-                i.avatar = source?.avatar ?? ''
+                i.avatar = fileService.getFullUrl(source?.avatar ?? '')
                 i.chatAlias = source?.name ?? ''
             }
         }
         // todo: 這裏要切換成好友備註
         if (i.type === IModel.IChat.IChatTypeEnum.NORMAL && i.sourceId) {
             const source = userHash.get(i.sourceId)
+            console.log('source', source);
+
             if (source !== null) {
-                i.avatar = source?.avatar ?? ''
+                i.avatar = fileService.getFullUrl(source?.avatar ?? '')
                 i.chatAlias = source?.nickName ?? ''
+                i.describe = source?.sign ?? ''
             }
         }
         if (i.type === IModel.IChat.IChatTypeEnum.OFFICIAL && i.sourceId) {

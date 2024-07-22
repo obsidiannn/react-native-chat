@@ -13,7 +13,6 @@ import { MediaTypeOptions, launchImageLibraryAsync } from 'expo-image-picker'
 import * as DocumentPicker from 'expo-document-picker';
 import chatUiAdapter from "app/utils/chat-ui.adapter";
 import { useRecoilValue } from "recoil";
-import { IUser } from "drizzle/schema";
 import messageSendService from "app/services/message-send.service";
 import { PreviewData } from "@flyerhq/react-native-link-preview";
 
@@ -21,7 +20,6 @@ import VideoPlayModal, { IVideoPreviewModal } from "app/components/VideoModal"
 import FilePreviewModal, { ChatUIFileModalRef } from "app/components/FileModal"
 
 import { captureImage, captureVideo, videoFormat, generateVideoThumbnail } from 'app/utils/media-util';
-import fileService from "app/services/file.service";
 import LongPressModal, { LongPressModalType } from "app/components/LongPressModal";
 import LoadingModal, { LoadingModalType } from 'app/components/loading-modal';
 
@@ -46,7 +44,7 @@ export default forwardRef((props, ref) => {
     const chatItemRef = useRef<ChatDetailItem>()
     const authorRef = useRef<GroupMemberItemVO>()
     const groupContext = useContext(GroupChatUiContext)
-    const author = useRecoilValue<IUser>(AuthUser)
+    const author = useRecoilValue(AuthUser)
     const sharedSecretRef = useRef<string>('');
     const firstSeq = useRef<number>(0);
     const lastSeq = useRef<number>(0);
@@ -159,7 +157,7 @@ export default forwardRef((props, ref) => {
         console.log('[event]', e);
         if (type === IModel.IClient.SocketTypeEnum.MESSAGE) {
             const _eventItem = e as SocketMessageEvent
-            if (lastSeq.current < _eventItem.sequence && author.id !== _eventItem.sender) {
+            if (lastSeq.current < _eventItem.sequence && author?.id !== _eventItem.sender) {
                 loadMessages('down')
             }
         }
@@ -296,7 +294,7 @@ export default forwardRef((props, ref) => {
                     size: response.size ?? 0,
                     type: 'file',
                     uri: response.uri,
-                    senderId: author.id,
+                    senderId: author?.id ?? 0,
                     sequence: -1,
                     status: 'sending'
                 }
@@ -336,7 +334,7 @@ export default forwardRef((props, ref) => {
                 // uri: `data:image/*;base64,${response.base64}`,
                 uri: response.uri,
                 width: response.width,
-                senderId: author.id,
+                senderId: author?.id ?? 0,
                 sequence: -1
             }
             addMessage(imageMessage)
@@ -364,7 +362,7 @@ export default forwardRef((props, ref) => {
                 type: 'image',
                 uri: photo.uri,
                 width: photo.width,
-                senderId: author.id,
+                senderId: author?.id ?? 0,
                 sequence: -1
             }
             addMessage(imageMessage)
@@ -392,7 +390,7 @@ export default forwardRef((props, ref) => {
                         author: chatUiAdapter.userTransfer(author),
                         createdAt: Date.now(),
                         type: 'video',
-                        senderId: author.id,
+                        senderId: author?.id ?? 0,
                         sequence: -1,
                         height: formatVideo.height,
                         width: formatVideo.width,
@@ -453,7 +451,7 @@ export default forwardRef((props, ref) => {
             id: generateUtil.generateId(),
             text: message.text,
             type: 'text',
-            senderId: author.id,
+            senderId: author?.id ?? 0,
             sequence: -1
         }
         addMessage(textMessage)

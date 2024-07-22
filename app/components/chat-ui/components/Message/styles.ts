@@ -28,8 +28,8 @@ const styles = ({
     contentContainer: {
       backgroundColor:
         !currentUserIsAuthor || message.type === 'image'
-          ? theme.colors.secondary
-          : theme.colors.primary,
+          ? theme.colors.receivedMessageBackground
+          : theme.colors.sentMessageBackground,
       borderTopLeftRadius:
         currentUserIsAuthor || roundBorder
           ? theme.borders.messageBorderRadius

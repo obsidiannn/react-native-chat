@@ -1,3 +1,5 @@
+import { IUser } from "drizzle/schema";
+
 export type AppStackParamList = {
     WelcomeScreen: undefined;
     HomeScreen: undefined;
@@ -7,6 +9,7 @@ export type AppStackParamList = {
     ChatScreen: undefined;
     UserScreen: undefined;
     UserChatScreen: undefined;
+    GroupChatScreen: undefined
     WebViewScreen: {
       title: string;
       url: string;
@@ -20,7 +23,8 @@ export type AppStackParamList = {
     WalletScreen: undefined;
     // IGNITE_GENERATOR_ANCHOR_APP_STACK_PARAM_LIST
     UserChatInfoModal: {
-  
+      user: IUser
+      chatId: string
     }
   
   }

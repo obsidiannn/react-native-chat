@@ -5,6 +5,7 @@ export * from "./SignInScreen"
 
 export * from './ChatScreen/Index'
 export * from './UserChat/Index'
+export * from './GroupChat/Index'
 export * from './WebViewScreen'
 export * from './SignUpScreen'
 export * from './SignInScreen'

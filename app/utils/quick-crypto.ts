@@ -34,13 +34,3 @@ export default {
 
 
 
-const content = `helloworld`
-const password = "12345678901234561234567890123456"
-
-const encode = En(password, Buffer.from(content, "utf8"))
-console.log('encode = ', encode);
-
-const decode = De(password, encode)
-console.log('decode=', decode);
-
-

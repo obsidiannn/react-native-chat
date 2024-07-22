@@ -13,6 +13,10 @@ declare namespace App{
           item: ChatDetailItem
           fromNotify?: boolean
         };
+        GroupChatScreen: {
+          item: ChatDetailItem
+          fromNotify?: boolean
+        };
         WebViewScreen: {
           title: string;
           url: string;

@@ -46,18 +46,6 @@ export const UserChatScreen = ({ navigation, route }: Props) => {
         }
     }, [navigation])
 
-    /**
-     * 置顶
-     * @param val 
-     */
-    const setContextTopFunc = (val: number) => {
-        const _chatItem = {
-            ...chatItem,
-            isTop: val
-        } as ChatDetailItem
-        setChatItem(_chatItem)
-    }
-
 
     return <View style={[styles.container, $topContainerInsets, {
         backgroundColor: '#ffffff'
@@ -80,7 +68,10 @@ export const UserChatScreen = ({ navigation, route }: Props) => {
                     flexDirection: 'row'
                 }}>
                     <TouchableOpacity onPress={() => {
-                        navigate('UserChatInfoModal')
+                        navigate('UserChatInfoModal',{
+                            user,
+                            chatId: chatItem?.id
+                        })
                     }}>
                         <Image source={require('assets/icons/more.svg')} style={{
                             width: scale(32),

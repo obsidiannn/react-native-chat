@@ -23,6 +23,7 @@ import { IModel } from "@repo/enums"
 import messageSendService from "app/services/message-send.service"
 import chatUiAdapter from "app/utils/chat-ui.adapter"
 import { ThemeState } from "app/stores/system"
+import toast from "app/utils/toast"
 
 export interface ChatUIPageRef {
     init: (chatItem: ChatDetailItem, friend: IUser) => void
@@ -88,7 +89,11 @@ const ChatPage = forwardRef((_, ref) => {
         }
         console.log('[chatui] init', chatItem);
         console.log('[chatui] friend', friend);
-
+        console.log(sharedSecretRef.current);
+        
+        if (sharedSecretRef.current) {
+            return
+        }
         chatItemRef.current = chatItem
         friendRef.current = friend
         sharedSecretRef.current = globalThis.wallet.computeSharedSecret(friend?.pubKey ?? '');
@@ -439,7 +444,6 @@ const ChatPage = forwardRef((_, ref) => {
                 loadMessages('up')
             }}
             showUserAvatars
-            showUserNames
             onMessageLongPress={(m, e) => {
                 longPressModalRef.current?.open({ message: m, e })
             }}

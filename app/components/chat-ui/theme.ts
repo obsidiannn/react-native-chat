@@ -170,6 +170,8 @@ export const lightTheme: Theme = {
     sentMessageDocumentIcon: colors.palette.gray600,
     userAvatarImageBackground: 'transparent',
     userAvatarNameColors: COLORS,
+    sentMessageBackground: colors.palette.gray200,
+    receivedMessageBackground: colors.palette.gray50
   },
   fonts: {
     dateDividerTextStyle: {
@@ -209,7 +211,7 @@ export const lightTheme: Theme = {
       lineHeight: 20,
     },
     receivedMessageLinkTitleTextStyle: {
-      color: colors.palette.gray600, color: NEUTRAL_0,
+      color: colors.palette.gray600, 
       fontSize: 16,
       fontWeight: '800',
       lineHeight: 18,
@@ -276,6 +278,8 @@ export const darkTheme: Theme = {
     sentMessageDocumentIcon: NEUTRAL_7,
     userAvatarImageBackground: 'transparent',
     userAvatarNameColors: COLORS,
+    sentMessageBackground: colors.palette.blue600,
+    receivedMessageBackground: colors.palette.gray600
   },
   fonts: {
     dateDividerTextStyle: {

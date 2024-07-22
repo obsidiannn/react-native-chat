@@ -7,68 +7,19 @@ import { scale } from "app/utils/size"
 import { useEffect, useState } from "react"
 import { StyleSheet, Text, View, ActivityIndicator } from "react-native"
 import dayjs from 'dayjs'
+import { useRecoilValue } from "recoil"
+import { ChatsStore } from "app/stores/auth"
+import chatService from "app/services/chat.service"
+import { IModel } from "@repo/enums"
+import { ChatDetailItem } from "@repo/types"
+import { navigate } from "app/navigators"
 
-interface ChatDetailItem {
-    id: string;
-    creatorId: string;
-    type: number;
-    status: number;
-    isEnc: number;
-    lastReadSequence: number;
-    lastSequence: number;
-    firstSequence: number
-    lastTime: number;
-    createdAt: number;
-    avatar: string
-    sourceId: number
-    chatAlias: string
-    isTop: number
-    chatUserId: string
-};
 
 const ChatView = () => {
 
-    const [chats, setChats] = useState<ChatDetailItem[]>([])
+    const chats = useRecoilValue(ChatsStore)
     const [loading, setLoading] = useState<boolean>(false)
 
-    useEffect(() => {
-        setChats([
-            {
-                id: "1",
-                creatorId: "2",
-                type: 2,
-                status: 1,
-                isEnc: 1,
-                lastReadSequence: 10,
-                lastSequence: 15,
-                firstSequence: 1,
-                lastTime: dayjs().valueOf(),
-                createdAt: dayjs().valueOf(),
-                avatar: "https://avatars.githubusercontent.com/u/122279700",
-                sourceId: 1,
-                chatAlias: "system",
-                isTop: 1,
-                chatUserId: "1"
-            },
-            {
-                id: "2",
-                creatorId: "2",
-                type: 2,
-                status: 1,
-                isEnc: 1,
-                lastReadSequence: 10,
-                lastSequence: 15,
-                firstSequence: 1,
-                lastTime: dayjs().valueOf(),
-                createdAt: dayjs().valueOf(),
-                avatar: "https://avatars.githubusercontent.com/u/122279700",
-                sourceId: 1,
-                chatAlias: "chat user",
-                isTop: 1,
-                chatUserId: "1"
-            },
-        ])
-    }, [])
     const renderList = () => {
         return <View style={{
             flex: 1,
@@ -85,24 +36,46 @@ const ChatView = () => {
 
     const renderItem = (item: ChatDetailItem, isLast: boolean) => {
         const unread = item.lastSequence - item.lastReadSequence
+        console.log('item=', item);
         return <ConversationItem
             key={item.id}
             badgeNumber={unread}
             bottomLine={!isLast}
             icon={item.avatar}
             title={item.chatAlias}
-            describe="您有一个新的好友申请"
+            describe={item.describe}
             subTitle={formatDate(dayjs().toISOString())}
-            online={isLast ? true: undefined}
-            inhibite={isLast}
+            online={true}
+            inhibite={item.isMute === IModel.ICommon.ICommonBoolEnum.YES}
             onPress={() => {
+                console.log('jjj');
+                
                 itemPress(item)
             }}
         />
     }
-
+    /**
+     * 点击跳转
+     * @param item 
+     */
     const itemPress = (item: ChatDetailItem) => {
-
+        if (item.type === IModel.IChat.IChatTypeEnum.NORMAL) {
+            console.log('jump');
+            
+            navigate('UserChatScreen', {
+                item,
+            })
+        } else if (item.type === IModel.IChat.IChatTypeEnum.GROUP) {
+            console.log('group item', item);
+            navigate('GroupChatScreen', {
+                item
+            })
+        } else if (item.type === IModel.IChat.IChatTypeEnum.OFFICIAL) {
+            // console.log('official item', item);
+            // navigate('OfficialChat', {
+            //     item
+            // })
+        }
     }
 
     const renderState = () => {

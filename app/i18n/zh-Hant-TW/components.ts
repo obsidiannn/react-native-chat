@@ -1,7 +1,7 @@
 export default {
     chatUI: {
         attachmentButtonAccessibilityLabel: 'Send media',
-        emptyChatPlaceholder: 'No messages here yet',
+        emptyChatPlaceholder: '',
         fileButtonAccessibilityLabel: 'File',
         inputPlaceholder: 'Message',
         sendButtonAccessibilityLabel: 'Send',

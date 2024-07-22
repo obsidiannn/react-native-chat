@@ -10,6 +10,7 @@ export default {
     chat: {
         btn_send: "发送",
         btn_bother_ignore: "消息免打扰",
+        btn_chat_top: "消息置顶",
         btn_message_delete: "清空聊天记录",
         btn_message_delete_desc: "将清空与该好友的聊天记录，且无法恢复",
         success_cleaned: "清除成功",

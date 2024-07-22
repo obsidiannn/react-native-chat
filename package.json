@@ -222,7 +222,7 @@
     }
   },
   "op-sqlite": {
-    "sqlcipher": true,
+    "sqlcipher": false,
     "crsqlite": false,
     "performanceMode": "1",
     "iosSqlite": false,

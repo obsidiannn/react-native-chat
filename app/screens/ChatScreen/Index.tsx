@@ -11,23 +11,24 @@ import { scale } from "app/utils/size";
 import BannerComponent from "app/components/Banner";
 import HomeTitle from "app/components/HomeTitle";
 import { useTranslation } from "react-i18next";
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { ColorsState } from "app/stores/system";
 import { StackScreenProps } from "@react-navigation/stack";
 import chatService from "app/services/chat.service";
+import { App } from "types/app";
+import { ChatsStore } from "app/stores/auth";
+
 type Props = StackScreenProps<App.StackParamList, 'ChatScreen'>;
 export const ChatScreen = ({ navigation }: Props) => {
     const pagerViewRef = useRef<PagerView>(null);
     const [pageIndex, setPageIndex] = useState(0);
     const { t } = useTranslation('screens')
     const themeColor = useRecoilValue(ColorsState)
-    console.log('theme=', themeColor);
-
+    const setChatsStore = useSetRecoilState(ChatsStore)
     const changeTab = (idx: number) => {
         pagerViewRef.current?.setPage(idx);
         chatService.mineChatList().then(res=>{
-            console.log(res);
-            
+            setChatsStore(res)
         })
     }
 
@@ -126,4 +127,4 @@ const styles = StyleSheet.create({
         fontSize: scale(14),
         fontWeight: 400,
     },
-})
+})  

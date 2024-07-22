@@ -11,6 +11,7 @@ import { Platform } from 'react-native';
 import * as RNFS from '@dr.pogodin/react-native-fs';
 import { SaveFormat, manipulateAsync } from 'expo-image-manipulator';
 import { imageFormat } from 'app/utils/media-util';
+import { SystemService } from './system.service';
 
 
 export interface ChooseImageOption {
@@ -133,7 +134,7 @@ const getFullUrl = (key: string) => {
         return key
     }
     if (!baseUrl) {
-        // baseUrl = getStaticUrl();
+        baseUrl = SystemService.GetStaticUrl()
     }
     const url = `${baseUrl}/${key}`
     console.log('[url]', url);

@@ -9,6 +9,7 @@ import userService from "./user.service";
 import { MessageType } from "app/components/chat-ui";
 import chatUiAdapter from "app/utils/chat-ui.adapter";
 import { imageFormat } from "app/utils/media-util";
+import { LocalMessageService } from "./LocalMessageService";
 
 const _send = async (chatId: string, key: string, mid: string, type: IModel.IChat.IMessageTypeEnum, data: {
     t: string;
@@ -20,12 +21,13 @@ const _send = async (chatId: string, key: string, mid: string, type: IModel.ICha
     if (!globalThis.wallet) {
         throw new ToastException('請先登錄');
     }
+    const encode = quickAes.En(key, Buffer.from(JSON.stringify(data), 'utf8'))
     return await messageApi.sendMessage({
         id: mid,
         chatId: chatId,
         type,
         isEnc: 1,
-        content: quickAes.En(JSON.stringify(data), key),
+        content: Buffer.from(encode).toString('hex')
     });
 }
 
@@ -154,11 +156,8 @@ const getListFromDb = async (
         direction: direction,
         limit: limit
     }
-    // const list = await MessagesModel.queryEntity(queryParam)
-    // console.log('----', list);
-
-    // return chatUiAdapter.messageEntityToItems(list, key, false)
-    return []
+    const list = await LocalMessageService.queryEntity(queryParam)
+    return chatUiAdapter.messageEntityToItems(list, key, false)
 }
 
 const checkDiffFromWb = (
@@ -243,6 +242,8 @@ const getList = async (
         }
     })
     const userHash = await userService.getUserHash(userIds)
+    console.log('message list',list);
+    
     return list.map((item) => {
         const user = userHash.get(item?.senderId ?? -1)
         // console.log('user avatar::',user?.avatar);
@@ -266,7 +267,7 @@ const getMessageDetails = async (
         return []
     }
     const _limit = 20
-    // await MessagesModel.deleteMessageByChatIdIn([chatId])
+    // await LocalMessageService.deleteMessageByChatIdIn([chatId])
     const list: MessageType.Any[] = await getListFromDb(chatId, sequence, direction, _limit, key, needDecode)
     const checkResult = checkDiffFromWb(list, sequence, direction, _limit, firstSeq)
     console.log('檢查', checkResult);
@@ -311,14 +312,14 @@ const getMessageDetails = async (
         console.log('remote data', remoteData);
         console.log('list data', list);
         if (list.length <= 0) {
-            // void MessagesModel.saveBatchEntity(chatUiAdapter.messageEntityConverts(remoteData))
+            void LocalMessageService.saveBatchEntity(chatUiAdapter.messageEntityConverts(remoteData))
             return remoteData
         }
 
         const localSequence = new Set(list.map(r => r.sequence))
         const saveData = remoteData.filter(r => !localSequence.has(r.sequence))
 
-        // MessagesModel.saveBatchEntity(chatUiAdapter.messageEntityConverts(saveData))
+        LocalMessageService.saveBatchEntity(chatUiAdapter.messageEntityConverts(saveData))
         const result = list.concat(saveData).sort((a, b) => { return (b.sequence ?? 0) - (a.sequence ?? 0) })
         console.log('[msg result]', result);
 
@@ -336,7 +337,7 @@ const removeBatch = async (chatId: string, mids: string[]) => {
 // 清除所有消息
 // 發起更新chatItem的事件
 const clearMineMessage = async (chatIds: string[]) => {
-    // await MessagesModel.deleteMessageByChatIdIn(chatIds)
+    await LocalMessageService.deleteMessageByChatIdIn(chatIds)
     return messageApi.clearMineMessage({ chatIds: chatIds })
 }
 
@@ -344,17 +345,17 @@ const clearMineMessage = async (chatIds: string[]) => {
  * 刪除羣消息
  */
 const dropGroupMessage = async (chatIds: string[]) => {
-    // await MessagesModel.deleteMessageByChatIdIn(chatIds)
+    await LocalMessageService.deleteMessageByChatIdIn(chatIds)
     return messageApi.clearGroupMessageByChatIds({ chatIds: chatIds })
 }
 
 const deleteMessage = async (chatId: string, ids: string[]) => {
-    // await MessagesModel.deleteMessageByMsgIds(chatId, ids)
+    await LocalMessageService.deleteMessageByMsgIds(chatId, ids)
     return messageApi.deleteSelfMsg({ ids: ids })
 }
 
 const clearMineMessageAll = async () => {
-    // await MessagesModel.deleteAll()
+    await LocalMessageService.deleteAll()
     return messageApi.clearMineMessageAll()
 }
 

@@ -35,8 +35,8 @@ const styles = ({
     {
       ...(user?.id === message.author.id
         ? theme.fonts.sentMessageBodyTextStyle
-        : theme.fonts.receivedMessageBodyTextStyle)
-
+        : theme.fonts.receivedMessageBodyTextStyle),
+     
     },
     textContainer: {
       marginHorizontal: theme.insets.messageInsetsHorizontal,

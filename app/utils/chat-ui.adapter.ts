@@ -321,7 +321,7 @@ const convertPartialContent = (m: MessageType.PartialAny): string => {
 
 const decrypt = (key: string, content: string) => {
     try {
-        const decrypted = quickCrypto.De(content, Buffer.from(key, 'utf8'));
+        const decrypted = quickCrypto.De(key,Buffer.from(content,'hex'));
         const data = Buffer.from(decrypted).toString('utf8');
         return JSON.parse(data) as { t: string, d: any };
     } catch (error) {

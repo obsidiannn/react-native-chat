@@ -23,12 +23,18 @@ export const Init = async (name: string) => {
     const sqlite = open({
         name: name + '.sqlite' ,
         location: Platform.OS === 'ios' ? IOS_LIBRARY_PATH : ANDROID_DATABASE_PATH,
-        encryptionKey: key
+        // encryptionKey: key
     });
-    
+
     db = drizzle(sqlite, { schema });
     console.log('db migrate');
+    // AppState.addEventListener('change',(e)=>{
+    //     if(e === 'inactive'){
+    //     }
+    // })
     await migrate(db, x);
 }
+
+
 
 export const GetDB = () => db;

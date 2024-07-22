@@ -5,31 +5,32 @@ import Navbar from "app/components/Navbar";
 import { TouchableOpacity } from "react-native";
 import { Image } from "expo-image";
 import groupService from "app/services/group.service";
-import { GroupDetailItem, GroupInfoItem, GroupMemberItemVO } from "@repo/types";
+import { ChatDetailItem, GroupDetailItem, GroupMemberItemVO } from "@repo/types";
 import PagerView from "react-native-pager-view";
-import ChatPage, { GroupChatPageRef } from './chat/chat-page';
-import InfoPage from "./info/index";
-import { ChatDetailItem } from "@/api/types/chat";
+import ChatPage, { GroupChatPageRef } from './ChatPage';
+import InfoPage from "./info/Index";
 import { GroupChatUiContext } from "./context";
-import colors from "@/config/colors";
 import { useRecoilState } from "recoil";
-import { atomCurrentUser } from "@/stores/app";
-import { IUser } from "@/drizzle/schema";
+import { IUser } from "drizzle/schema";
 import { useTranslation } from 'react-i18next';
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { App } from "types/app";
+import { AuthUser } from "app/stores/auth";
+import toast from "app/utils/toast";
+import { scale } from "app/utils/size";
+import { colors } from "app/theme";
 
 
 type Props = StackScreenProps<App.StackParamList, 'GroupChatScreen'>;
 
 
-const GroupChatUIScreen = ({ navigation, route }: Props) => {
+export const GroupChatScreen = ({ navigation, route }: Props) => {
     const insets = useSafeAreaInsets();
     const chatItemRef = useRef<ChatDetailItem>()
 
     const groupIdRef = useRef<number>(-1)
     const [group, setGroup] = useState<GroupDetailItem>()
-    const [authUser, _] = useRecoilState<IUser | null>(atomCurrentUser)
+    const [authUser, _] = useRecoilState<IUser | null>(AuthUser)
     // const groupRef = useRef<GroupDetailItem>()
     const [pageIndex, setPageIndex] = useState(0);
     const chatPageRef = useRef<GroupChatPageRef>(null);
@@ -112,7 +113,7 @@ const GroupChatUIScreen = ({ navigation, route }: Props) => {
                 <Navbar title={group?.name ?? ''}
                     onLeftPress={() => {
                         if (route.params.fromNotify) {
-                            navigation.replace('Tab')
+                            navigation.replace('TabStack')
                         } else {
                             navigation.goBack()
                         }
@@ -128,19 +129,19 @@ const GroupChatUIScreen = ({ navigation, route }: Props) => {
                             <TouchableOpacity onPress={() => {
                                 pagerViewRef.current?.setPage(0);
                             }}>
-                                <Image source={require('@/assets/icons/chat.svg')} style={{
+                                <Image source={require('assets/icons/chat.svg')} style={{
                                     width: scale(32),
                                     height: scale(32),
-                                    tintColor: colors.gray800
+                                    tintColor: colors.palette.gray800
                                 }} />
                             </TouchableOpacity>
                             <TouchableOpacity onPress={() => {
                                 pagerViewRef.current?.setPage(1);
                             }}>
-                                <Image source={require('@/assets/icons/more.svg')} style={{
+                                <Image source={require('assets/icons/more.svg')} style={{
                                     width: scale(32),
                                     height: scale(32),
-                                    tintColor: colors.gray800
+                                    tintColor: colors.palette.gray800
                                 }} />
                             </TouchableOpacity>
 
@@ -165,11 +166,10 @@ const GroupChatUIScreen = ({ navigation, route }: Props) => {
                         setPageIndex(v.nativeEvent.position);
                     }} initialPage={pageIndex}>
                     <ChatPage ref={chatPageRef} />
-                    <InfoPage authUser={selfMemberRef.current} group={group ?? undefined} />
+                    {/* <InfoPage authUser={selfMemberRef.current} group={group ?? undefined} /> */}
                 </PagerView>
             </GroupChatUiContext.Provider>
         </View>
 
     )
-}
-export default GroupChatUIScreen;
+} 

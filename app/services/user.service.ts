@@ -5,6 +5,9 @@ import { OfficialUserItem } from "@repo/types";
 import { GetDB } from "app/utils/database";
 import { eq } from "drizzle-orm";
 import { IUser, users } from "drizzle/schema";
+import { LocalUserService } from "./LocalUserService";
+import { diff } from "radash"
+import dayjs from 'dayjs'
 
 export class UserService {
     static async add(data: IUser): Promise<IUser> {
@@ -45,24 +48,26 @@ const findByUserName = async (username: string) => {
 }
 
 const findByIds = async (ids: number[]): Promise<IUser[]> => {
-    return []
-    // ids = [...new Set(ids)]
-    // const localUsers = await UserModel.findByIds(ids);
+    ids = [...new Set(ids)]
+    const localUsers = await LocalUserService.findByIds(ids);
 
-    // const missingIds = diff(ids, localUsers.map(i => i.id));
-
-    // if (missingIds.length > 0) {
-    //     const result = await userApi.getBatchInfo(missingIds);
-    //     const users = result.users.map(u => {
-    //         return {
-    //             ...u,
-    //             refreshAt: dayjs().unix(),
-    //         } as IUser
-    //     })
-    //     await UserModel.createMany(users)
-    //     return [...localUsers, ...users]
-    // }
-    // return localUsers as IUser[];
+    const missingIds = diff(ids, localUsers.map(i => i.id));
+    
+    if (missingIds.length > 0) {
+        const result = await userApi.getBatchInfo(missingIds);
+        const users = result.users.map(u => {
+            return {
+                ...u,
+                createdAt: new Date(u.createdAt),
+                updatedAt: new Date()
+            } as IUser
+        })
+        console.log('users',users);
+        
+        await LocalUserService.createMany(users)
+        return [...localUsers, ...users]
+    }
+    return localUsers as IUser[];
 }
 const findById = async (id: number) => {
     const users = await findByIds([id]);
@@ -73,15 +78,17 @@ const findById = async (id: number) => {
 }
 
 const getUserHash = async (ids: number[]): Promise<Map<number, IUser>> => {
-    // const result = new Map<number, IUser>()
-    // if (ids.length <= 0) {
-    //     return result
-    // }
-    // const users = await findByIds(ids)
-    // users.forEach(u => {
-    //     result.set(u.id, u)
-    // })
-    return new Map()
+    const result = new Map<number, IUser>()
+    if (ids.length <= 0) {
+        return result
+    }
+    const users = await findByIds(ids)
+    console.log('findByIds',users);
+
+    users.forEach(u => {
+        result.set(u.id, u)
+    })
+    return result
 }
 
 const officialUserHash = async (ids: number[]): Promise<Map<number, OfficialUserItem>> => {

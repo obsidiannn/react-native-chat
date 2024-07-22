@@ -177,8 +177,9 @@ export interface ThemeColors {
   primary: ColorValue
   secondary: ColorValue
   receivedMessageDocumentIcon: ColorValue
-  
   sentMessageDocumentIcon: ColorValue
+  receivedMessageBackground: ColorValue
+  sentMessageBackground: ColorValue
   userAvatarImageBackground: ColorValue
   userAvatarNameColors: ColorValue[]
 }

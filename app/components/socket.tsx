@@ -4,15 +4,16 @@ import { AppStateStatus, Platform } from 'react-native';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import EventManager from 'app/services/event-manager.service'
 
-import quickCrypto from 'app/utils/quick-crypto';
 import { AuthUser, AuthWallet, ChatsStore } from 'app/stores/auth';
 import { ChatDetailItem, SocketJoinEvent, SocketMessageEvent } from '@repo/types';
 import { IModel } from '@repo/enums';
+import { IUser } from 'drizzle/schema';
+import { computeDataHash } from 'app/utils/wallet';
 
 export interface SocketContextType {
     socket: Socket
     initRoom: (items: ChatDetailItem[]) => void
-    init: () => void;
+    init: (user?: IUser) => void;
     close: () => void;
     setAppState: (state: AppStateStatus) => void;
 }
@@ -34,7 +35,6 @@ const connectionConfig = {
 
 export const SocketProvider = ({ children }: { children: any }) => {
     const socketRef = useRef<Socket>()
-    const wallet = useRecoilValue(AuthWallet)
     const currentUser = useRecoilValue(AuthUser)
     const connectedRef = useRef<boolean>(false)
     const [connected, setConnected] = useState<boolean>(false)
@@ -77,33 +77,39 @@ export const SocketProvider = ({ children }: { children: any }) => {
         }
     }
 
-    const loadSocketConfig = () => {
-        if (!wallet) {
+    const loadSocketConfig = (user: IUser) => {
+        if (!global.wallet) {
             return null
         }
-        const content = JSON.stringify({ id: currentUser?.id })
-        const time = String(Math.floor(new Date().getTime() / 1000))
+        const content = JSON.stringify({ id: user?.id })
+        // const time = String(Math.floor(new Date().getTime() / 1000))
         // const sharedSecret = wallet.signingKey.computeSharedSecret(Buffer.from(sysPubKey, 'hex'))
-        const dataHash = quickCrypto.En(content, Buffer.from(process.env.EXPO_PUBLIC_SYSTEM_PUBLIC_KEY, 'utf8'))
-        const sign = wallet.signMessage(dataHash + ':' + time)
+        // const dataHash = quickCrypto.En(content, Buffer.from(process.env.EXPO_PUBLIC_SYSTEM_PUBLIC_KEY, 'utf8'))
+        const time = Date.now();
+        const dataHash = computeDataHash(content + ':' + time);
+        const sign = global.wallet.signMessage(dataHash + ':' + time)
         const config = {
             ...connectionConfig,
             extraHeaders: {
-                'X-Sequence': currentUser?.id,
-                'X-Pub-Key': wallet.getPublicKey(),
+                'X-Sequence': user?.id.toString(),
+                'X-Pub-Key': global.wallet.getPublicKey(),
                 'X-Sign': sign,
                 'X-Time': time,
-                'X-Data-Hash': dataHash
+                'X-Data-Hash':  '0x' + Buffer.from(dataHash).toString('hex')
             }
         }
         return config
     }
 
-    const init = () => {
-        console.log('初始化[socket] close');
+    const init = (user?: IUser) => {
+        console.log('初始化[socket] init,ref===null?', (socketRef.current === null || socketRef.current === undefined));
+        console.log('[socket] user=', user);
+        console.log('[socket] current=', currentUser);
         // const env = getSocketUrl()
-        const env = 'http://localhost:9500'
-        const config = loadSocketConfig()
+        const env = 'http://192.168.0.103:9500'
+        const config = loadSocketConfig(user ?? currentUser)
+        console.log('config=', config);
+
         if (config === null) {
             return
         }
@@ -112,6 +118,7 @@ export const SocketProvider = ({ children }: { children: any }) => {
             socketRef.current = socketClient(env, { ...config, path: '/ws' })
             newClient = true
         } else {
+            console.log('[socket active]', socketRef.current?.active);
             if (!socketRef.current?.active) {
                 socketRef.current?.connect()
             }
@@ -127,46 +134,53 @@ export const SocketProvider = ({ children }: { children: any }) => {
         if (!socketRef.current) {
             return
         }
-        console.log('init listener');
-        socketRef.current.on('connect', () => {
-            connectedRef.current = true;
-            console.log('[socket] conencted');
-            setConnected(true)
-            reJoin()
-        })
-        socketRef.current.on('message', (msg) => {
-            const _msg = JSON.parse(msg) as SocketMessageEvent
-            console.log('[socket] receive', _msg)
-            const eventKey = EventManager.generateKey(_msg.type, _msg.chatId)
-            try {
-                EventManager.emit(eventKey, _msg)
-            } catch (e) {
-                console.log(e);
-            }
-            setChatList((items) => {
-                const newItems = items.map(t => {
-                    if (_msg.chatId === t.id) {
-                        return { ...t, lastSequence: _msg.sequence }
-                    }
-                    return t
-                })
-                return newItems
+        if(!socketRef.current.hasListeners('connected')){
+            console.log('init listener [connected]');
+            socketRef.current.on('connect', () => {
+                connectedRef.current = true;
+                console.log('[socket] conencted');
+                setConnected(true)
+                reJoin()
             })
-        })
-        socketRef.current.on('disconnect', msg => {
-            console.log('[socket] disconnect');
-            connectedRef.current = false;
-            joinedRef.current?.clear()
-            socketRef.current?.removeAllListeners()
-            setConnected(false)
-            if (appStateRef.current == "active") {
-                setTimeout(() => {
-                    init()
-                }, 3000);
-            }
-        })
+        }
+        if(!socketRef.current.hasListeners('message')){
+            console.log('init listener [message]');
+            socketRef.current.on('message', (msg) => {
+                const _msg = JSON.parse(msg) as SocketMessageEvent
+                console.log('[socket] receive', _msg)
+                const eventKey = EventManager.generateKey(_msg.type, _msg.chatId)
+                try {
+                    EventManager.emit(eventKey, _msg)
+                } catch (e) {
+                    console.log(e);
+                }
+                setChatList((items) => {
+                    const newItems = items.map(t => {
+                        if (_msg.chatId === t.id) {
+                            return { ...t, lastSequence: _msg.sequence }
+                        }
+                        return t
+                    })
+                    return newItems
+                })
+            })
+        }
+        if(!socketRef.current.hasListeners('disconnect')){
+            console.log('init listener [disconnect]');
+            socketRef.current.on('disconnect', msg => {
+                console.log('[socket] disconnect');
+                connectedRef.current = false;
+                joinedRef.current?.clear()
+                socketRef.current?.removeAllListeners()
+                setConnected(false)
+                if (appStateRef.current == "active") {
+                    setTimeout(() => {
+                        init()
+                    }, 3000);
+                }
+            })
+        }
         socketRef.current.connect()
-
     }
 
     const initRoom = (chatIds: string[]): string[] => {

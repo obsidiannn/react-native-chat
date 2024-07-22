@@ -10,6 +10,7 @@ import {
 } from 'react-native'
 
 import {  ThemeContext, translate } from '../../utils'
+import { colors } from 'app/theme'
 
 export interface SendButtonPropsAdditionalProps {
   touchableOpacityProps?: TouchableOpacityProps
@@ -46,7 +47,7 @@ export const SendButton = ({
         borderRadius: 16,
       }}>
         <Text style={{
-          color: theme.colors.inputText,
+          color: colors.palette.neutral100,
         }}>{
             translate('chatUI.btnSend')
           }</Text>
