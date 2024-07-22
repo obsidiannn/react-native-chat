@@ -21,4 +21,5 @@ export const getKV = (id: string, key?: string) => {
     return kv;
 }
 
+
 export const globalStorage = new KV('global', 'bobochat');

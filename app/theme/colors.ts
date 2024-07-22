@@ -107,7 +107,8 @@ export const $dark: IColors = {
   btnDefault: colors.palette.gray800,
   border: colors.palette.gray600,
   primary: "#294AF5",
-  secondaryText: '#9CA3AF'
+  secondaryText: '#9CA3AF',
+  title: colors.palette.neutral100
 }
 export const $light: IColors = {
   background: "white",
@@ -119,6 +120,7 @@ export const $light: IColors = {
   border: "#D1D5DB",
   primary: colors.palette.gray600,
   secondaryText: '#9CA3AF',
+  title: colors.palette.gray950
 }
 export default {
   $dark,

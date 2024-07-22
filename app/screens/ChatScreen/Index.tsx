@@ -27,7 +27,7 @@ export const ChatScreen = ({ navigation }: Props) => {
     const setChatsStore = useSetRecoilState(ChatsStore)
     const changeTab = (idx: number) => {
         pagerViewRef.current?.setPage(idx);
-        chatService.mineChatList().then(res=>{
+        chatService.mineChatList().then(res => {
             setChatsStore(res)
         })
     }
@@ -62,8 +62,10 @@ export const ChatScreen = ({ navigation }: Props) => {
     return <View style={[styles.container, {
         backgroundColor: themeColor.background
     }]}>
-        <HomeTitle title="信息" />
-        <BannerComponent label="邀请好友" describe="分享一个链接" onPress={() => { }} />
+        <HomeTitle title="信息"  />
+        <BannerComponent label="邀请好友" describe="分享一个链接" onPress={() => {
+            
+        }} />
 
         <View style={styles.topContainer}>
             <Button children={t('chat.btn_recent')} onPress={() => changeTab(0)}

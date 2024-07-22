@@ -1,6 +1,7 @@
 interface IColors {
     background: string;
     secondaryBackground: string;
+    title: string;
     text: string;
     textChoosed: string;
     btnDefault: string;

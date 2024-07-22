@@ -35,6 +35,7 @@ import chatService from "app/services/chat.service";
 import { SocketContext } from "app/components/socket";
 import { IUser } from "drizzle/schema";
 import { SystemService } from "app/services/system.service";
+import AddFriendModal from "app/screens/FriendScreen/AddFriendModal";
 
 
 /**
@@ -63,6 +64,7 @@ const AppStack = () => {
       <Stack.Screen name="SignUpScreen" component={Screens.SignUpScreen} />
       <Stack.Group screenOptions={{ presentation: 'modal' }}>
         <Stack.Screen name="UserChatInfoModal" component={UserChatInfoModal} />
+        <Stack.Screen name="AddFriendModal" component={AddFriendModal} />
       </Stack.Group>
     </Stack.Navigator>
   )

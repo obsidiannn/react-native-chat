@@ -13,15 +13,15 @@ const getReleationList = async (userIds: number[]) => {
  * 根據userId獲取friendInfo
  * @param userId 
  */
-const getFriendInfoByUserId = async (userId: number):Promise<IUser|null> =>{
+const getFriendInfoByUserId = async (userId: number): Promise<IUser | null> => {
     const user = await userService.findById(userId)
-    if(user === null){
+    if (user === null) {
         return null
     }
-    if(user.friendId === null){
+    if (user.friendId === null) {
         const friendResp = await friendApi.getFriendIdByUserId([userId])
-        if(friendResp.items.length >0){
-            const {friends} = await friendApi.getBatchInfo(friendResp.items);
+        if (friendResp.items.length > 0) {
+            const { friends } = await friendApi.getBatchInfo(friendResp.items);
             const friend = friends[0]
             user.friendId = friend.id
             user.remark = friend.remark
@@ -55,15 +55,15 @@ const getOfflineList = async () => {
 }
 const getOnlineList = async () => {
     const friendIds = await getIds();
-    console.log('friendIds',friendIds);
-    
+    console.log('friendIds', friendIds);
+
     if (friendIds.length === 0) {
         return [];
     }
     const friends = await findByIds(friendIds);
     const userIds = select(friends, f => f.friendId, () => true)
     const users = await userService.findByIds(userIds);
-    console.log("users==:",users);
+    console.log("users==:", users);
     const items = await map(users, async u => {
         const friend = friends.find(f => f.friendId === u.id);
         if (!friend) {

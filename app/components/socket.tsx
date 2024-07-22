@@ -141,7 +141,7 @@ export const SocketProvider = ({ children }: { children: any }) => {
         if (!socketRef.current) {
             return
         }
-        if (!socketRef.current.hasListeners('connected')) {
+        if (!socketRef.current.hasListeners('connect')) {
             console.log('init listener [connected]');
             socketRef.current.on('connect', () => {
                 connectedRef.current = true;

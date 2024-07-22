@@ -1,4 +1,4 @@
-import { Pressable, Text, TextStyle, View, ViewStyle } from "react-native";
+import { Pressable, StyleProp, Text, TextStyle, View, ViewStyle } from "react-native";
 import React from "react";
 import { Image, ImageStyle } from "expo-image";
 import { goBack } from "app/navigators";
@@ -11,13 +11,15 @@ const Navbar = (props: {
     renderLeft?: () => React.ReactNode;
     renderCenter?: () => React.ReactNode;
     title?: string;
+    rightStyle?: ViewStyle
 }) => {
     const {
         title = '',
         onLeftPress = () => goBack(),
         renderLeft,
         renderCenter,
-        renderRight
+        renderRight,
+        rightStyle
     } = props;
     const $theme = useRecoilValue(ThemeState)
     const $colors = useRecoilValue(ColorsState)
@@ -45,7 +47,9 @@ const Navbar = (props: {
             </View>
         }
         {
-            <View style={$rightContainer}>
+            <View style={{
+                ...$rightContainer,
+            }}>
                 {renderRight ? renderRight() : null}
             </View>
         }
@@ -69,6 +73,7 @@ const $container: ViewStyle = {
     display: 'flex',
     flexDirection: 'row',
     width: '100%',
+    alignItems: 'center',
 }
 const $leftContainer: ViewStyle = {
     height: scale(45),
@@ -98,8 +103,8 @@ const $centerText: TextStyle = {
     fontWeight: '500',
 }
 const $rightContainer: ViewStyle = {
-    height: s(44),
     width: '20%',
+    alignItems: 'center'
 }
 const $leftIcon: ImageStyle = {
     width: s(4),
