@@ -1,7 +1,7 @@
 import socketClient, { Socket } from 'socket.io-client'
 import React, { createContext, useEffect, useMemo, useRef, useState } from 'react';
 import { AppStateStatus, Platform } from 'react-native';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import EventManager from 'app/services/event-manager.service'
 
 import { AuthUser, AuthWallet, ChatsStore } from 'app/stores/auth';
@@ -9,6 +9,7 @@ import { ChatDetailItem, SocketJoinEvent, SocketMessageEvent } from '@repo/types
 import { IModel } from '@repo/enums';
 import { IUser } from 'drizzle/schema';
 import { computeDataHash } from 'app/utils/wallet';
+import { globalKV } from 'app/utils/kv-tool';
 
 export interface SocketContextType {
     socket: Socket
@@ -39,7 +40,7 @@ export const SocketProvider = ({ children }: { children: any }) => {
     const connectedRef = useRef<boolean>(false)
     const [connected, setConnected] = useState<boolean>(false)
     const appStateRef = useRef<AppStateStatus>("active")
-    const setChatList = useSetRecoilState(ChatsStore)
+    const setChatsStore = useSetRecoilState(ChatsStore)
     const joinedRef = useRef<Set<string>>(new Set())
     useEffect(() => {
         const _eventKey = EventManager.generateKey(IModel.IClient.SocketTypeEnum.SOCKET_JOIN, '')
@@ -70,10 +71,15 @@ export const SocketProvider = ({ children }: { children: any }) => {
     const setAppState = (state: AppStateStatus) => appStateRef.current = state
 
     const reJoin = () => {
-        console.log('rejoin:', joinedRef.current);
-
-        if (joinedRef.current && joinedRef.current.size > 0) {
-            initRoom(Array.from(joinedRef.current))
+        const chatIdstr = globalKV.get('string', 'chats_idx') as string
+        if (chatIdstr && chatIdstr !== '') {
+            console.log('rejoin', chatIdstr);
+            const result = initRoom(chatIdstr.split(','))
+            if (result.length > 0) {
+                result.forEach(r => {
+                    joinedRef.current.add(r)
+                })
+            }
         }
     }
 
@@ -95,7 +101,7 @@ export const SocketProvider = ({ children }: { children: any }) => {
                 'X-Pub-Key': global.wallet.getPublicKey(),
                 'X-Sign': sign,
                 'X-Time': time,
-                'X-Data-Hash':  '0x' + Buffer.from(dataHash).toString('hex')
+                'X-Data-Hash': '0x' + Buffer.from(dataHash).toString('hex')
             }
         }
         return config
@@ -129,12 +135,13 @@ export const SocketProvider = ({ children }: { children: any }) => {
     const close = () => {
         console.log('主动[socket] close');
         socketRef.current?.close()
+        joinedRef.current.clear()
     }
     const initListener = () => {
         if (!socketRef.current) {
             return
         }
-        if(!socketRef.current.hasListeners('connected')){
+        if (!socketRef.current.hasListeners('connected')) {
             console.log('init listener [connected]');
             socketRef.current.on('connect', () => {
                 connectedRef.current = true;
@@ -143,7 +150,7 @@ export const SocketProvider = ({ children }: { children: any }) => {
                 reJoin()
             })
         }
-        if(!socketRef.current.hasListeners('message')){
+        if (!socketRef.current.hasListeners('message')) {
             console.log('init listener [message]');
             socketRef.current.on('message', (msg) => {
                 const _msg = JSON.parse(msg) as SocketMessageEvent
@@ -154,7 +161,7 @@ export const SocketProvider = ({ children }: { children: any }) => {
                 } catch (e) {
                     console.log(e);
                 }
-                setChatList((items) => {
+                setChatsStore((items) => {
                     const newItems = items.map(t => {
                         if (_msg.chatId === t.id) {
                             return { ...t, lastSequence: _msg.sequence }
@@ -165,7 +172,7 @@ export const SocketProvider = ({ children }: { children: any }) => {
                 })
             })
         }
-        if(!socketRef.current.hasListeners('disconnect')){
+        if (!socketRef.current.hasListeners('disconnect')) {
             console.log('init listener [disconnect]');
             socketRef.current.on('disconnect', msg => {
                 console.log('[socket] disconnect');

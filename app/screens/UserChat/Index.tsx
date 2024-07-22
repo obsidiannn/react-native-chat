@@ -12,6 +12,7 @@ import { IUser } from "drizzle/schema";
 import { StackScreenProps } from "@react-navigation/stack";
 import { App } from "types/app";
 import friendService from "app/services/friend.service";
+import { UserChatUIContext } from "./context";
 
 type Props = StackScreenProps<App.StackParamList, 'UserChatScreen'>;
 
@@ -37,6 +38,17 @@ export const UserChatScreen = ({ navigation, route }: Props) => {
         }
     }, [])
 
+    /**
+   * 置顶
+   * @param val 
+   */
+    const setContextTopFunc = (val: number) => {
+        const _chatItem = {
+            ...chatItem,
+            isTop: val
+        } as ChatDetailItem
+        setChatItem(_chatItem)
+    }
     useEffect(() => {
         navigation.addListener('focus', () => {
             init()
@@ -50,37 +62,43 @@ export const UserChatScreen = ({ navigation, route }: Props) => {
     return <View style={[styles.container, $topContainerInsets, {
         backgroundColor: '#ffffff'
     }]}>
-        <Navbar title={chatItem?.chatAlias}
-            onLeftPress={() => {
-                void chatPageRef.current?.close()
-                if (route.params.fromNotify) {
-                    navigation.replace('TabStack')
-                } else {
-                    navigation.goBack()
-                }
-            }}
-            renderRight={() => {
-                return <View style={{
-                    height: '100%',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    display: 'flex',
-                    flexDirection: 'row'
-                }}>
-                    <TouchableOpacity onPress={() => {
-                        navigate('UserChatInfoModal',{
-                            user,
-                            chatId: chatItem?.id
-                        })
+        <UserChatUIContext.Provider value={{
+            chatItem: chatItem,
+            setContextTop: setContextTopFunc
+        }}>
+            <Navbar title={chatItem?.chatAlias}
+                onLeftPress={() => {
+                    void chatPageRef.current?.close()
+                    if (route.params.fromNotify) {
+                        navigation.replace('TabStack')
+                    } else {
+                        navigation.goBack()
+                    }
+                }}
+                renderRight={() => {
+                    return <View style={{
+                        height: '100%',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        display: 'flex',
+                        flexDirection: 'row'
                     }}>
-                        <Image source={require('assets/icons/more.svg')} style={{
-                            width: scale(32),
-                            height: scale(32),
-                        }} />
-                    </TouchableOpacity>
-                </View>
-            }} />
-        <ChatPage ref={chatPageRef} />
+                        <TouchableOpacity onPress={() => {
+                            navigate('UserChatInfoModal', {
+                                user,
+                                chatId: chatItem?.id
+                            })
+                        }}>
+                            <Image source={require('assets/icons/more.svg')} style={{
+                                width: scale(32),
+                                height: scale(32),
+                            }} />
+                        </TouchableOpacity>
+                    </View>
+                }} />
+
+            <ChatPage ref={chatPageRef} />
+        </UserChatUIContext.Provider>
     </View>
 }
 

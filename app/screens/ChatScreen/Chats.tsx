@@ -36,7 +36,6 @@ const ChatView = () => {
 
     const renderItem = (item: ChatDetailItem, isLast: boolean) => {
         const unread = item.lastSequence - item.lastReadSequence
-        console.log('item=', item);
         return <ConversationItem
             key={item.id}
             badgeNumber={unread}

@@ -43,7 +43,8 @@ const decodeInterceptor = async (wallet: Wallet, rep: AxiosResponse<any, any>): 
     toast(rel.msg);
     throw new Error(rel.err_msg);
   }
-
+  console.log('[response]',rel.data);
+  
   return rel.data;
 }
 

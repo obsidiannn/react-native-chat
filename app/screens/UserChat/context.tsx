@@ -4,7 +4,6 @@ import { createContext } from "react";
 
 export interface UserChatUIContextType {
     chatItem: ChatDetailItem
-    friend: IUser
     setContextTop: (val: number)=>void
 }
 

@@ -17,7 +17,7 @@ const chatDetail = async (param: BaseIdsArrayReq): Promise<BaseArrayResp<ChatDet
 const deleteChat = async (param: BaseIdsArrayReq) => await createInstance(true).post('/chats/delete', param);
 
 // 置顶
-const raiseTop = async (param: ChatRaiseTopReq): Promise<{ isTop: number }> => await createInstance(true).post('/chats/raise-top', param);
+const raiseTop = async (param: ChatRaiseTopReq): Promise<{ isTop: number }> => createInstance(true).post('/chats/raise-top', param);
 
 const tokenRegister = async (param: { token: string }): Promise<void> => await createInstance(true).post('/chats/tokenRegister', param);
 

@@ -19,7 +19,6 @@ export interface IContactListItemProps {
 }
 export default (props: IContactListItemProps) => {
 
-
     const renderPoint = () => {
         if (props.inhibite) {
             return <Image source={require('assets/icons/inhibite.svg')} style={{

@@ -19,19 +19,21 @@ import { ChatsStore } from "app/stores/auth";
 
 
 
-export default function ({ navigation, route }) {
-    // const route = useRoute()
+export const UserChatInfoModel = ({ navigation, route }) => {
+    // const route = useRoute()gai l
+    console.log('start');
+
+    const [chatsStore, setChatsStore] = useRecoilState(ChatsStore)
     console.log(route.params);
     const user = route.params
     const chatId = route.params.chatId
 
-    const [chatsStore, setChatsStore] = useRecoilState(ChatsStore)
-    
+
 
     const { t } = useTranslation('screens')
     const theme = useRecoilValue(ColorsState)
     const confirmModalRef = useRef<ConfirmModalType>(null);
-  
+
     const changeTop = (chatIdVal: string, val: number) => {
         setChatsStore((items) => {
             const newItems = items.map(t => {
@@ -56,16 +58,17 @@ export default function ({ navigation, route }) {
         })
     }
 
-    const chat = useMemo(() => {
-        const chatDetails = chatsStore.filter(c => c.id = chatId)
-      
-        if (chatDetails.length > 0) {
-            console.log('chat has changed',chatDetails[0]);
-            return chatDetails[0]
-        }
-        return null
-    }, [chatsStore, chatId])
+    // const chat = useMemo(() => {
+    //     const chatDetails = chatsStore.filter(c => c.id = chatId)
 
+    //     if (chatDetails.length > 0) {
+    //         console.log('chat has changed', chatDetails[0]);
+    //         return chatDetails[0]
+    //     }
+    //     return null
+    // }, [chatsStore.filter(c => c.id === chatId)])
+
+    const chat = chatsStore.filter(c => c.id === chatId)[0]
     const onClose = () => {
         navigation.goBack()
     }
@@ -115,10 +118,11 @@ export default function ({ navigation, route }) {
                             }} />
                         }
                         rightComponent={<Switch height={scale(24)}
-
                             onColor={colors.palette.primary} value={
                                 chat?.isMute === IModel.ICommon.ICommonBoolEnum.YES
-                            } onValueChange={(v) => {
+                            } onValueChange={async (v) => {
+                                await new Promise(resolve => setTimeout(resolve, 500));
+                                changeMute(chat?.id ?? '', v ? 1 : 0)
                             }} />} />
                 </View>
 
@@ -138,15 +142,15 @@ export default function ({ navigation, route }) {
                             value={
                                 chat?.isTop === IModel.ICommon.ICommonBoolEnum.YES
                             }
-                            onValueChange={(v) => {
-                                if (chat) {
-                                    chatApi.raiseTop({
-                                        chatUserId: chat.chatUserId ?? '',
-                                        top: v
-                                    }).then(res => {
-                                        changeTop(chat.id, res.isTop)
-                                    })
-                                }
+                            onChange={async (e) => {
+                                console.log('chatchange');
+
+                                const res = await chatApi.raiseTop({
+                                    chatUserId: chat.chatUserId ?? '',
+                                    top: e.nativeEvent.value
+                                })
+
+                                changeTop(chat.id, res.isTop)
                             }} />} />
                 </View>
 
@@ -211,3 +215,5 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
     },
 });
+
+export default UserChatInfoModel
