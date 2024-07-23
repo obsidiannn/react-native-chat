@@ -12,7 +12,6 @@ import { ColorsState, ThemeState } from 'app/stores/system';
 import { useRecoilValue } from 'recoil';
 import { Image } from 'expo-image';
 import { s } from 'app/utils/size';
-import * as Screens from "app/screens"
 import AvatarComponent from 'app/components/Avatar';
 import { AppStackParamList } from '../AppNavigator/type';
 import { AuthUser } from 'app/stores/auth';

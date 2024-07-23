@@ -6,6 +6,7 @@ import { Platform } from "react-native";
 import { Wallet, computeDataHash } from 'app/utils/wallet';
 import toast from 'app/utils/toast';
 import { AuthService } from 'app/services/auth.service';
+import { SystemService } from 'app/services/system.service';
 const encodeInterceptor = async (wallet: Wallet, config: InternalAxiosRequestConfig): Promise<InternalAxiosRequestConfig<any>> => {
   const content = typeof config.data === 'string' ? config.data : JSON.stringify(config.data ?? {})
   console.log('[request]', content);
@@ -49,8 +50,8 @@ const decodeInterceptor = async (wallet: Wallet, rep: AxiosResponse<any, any>): 
 }
 
 export const createInstance = (en = true) => {
-  // const baseURL = SystemService.GetApiUrlByCache();
-  const baseURL = 'http://192.168.0.103:5001'
+  const baseURL = SystemService.GetApiUrlByCache();
+  //const baseURL = 'http://192.168.0.103:5001'
 
   const startTime = new Date().valueOf()
   const instance: AxiosInstance = axios.create({

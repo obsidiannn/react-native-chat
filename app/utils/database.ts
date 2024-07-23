@@ -2,17 +2,14 @@ import { drizzle, OPSQLiteDatabase } from "drizzle-orm/op-sqlite";
 import { migrate } from "drizzle-orm/op-sqlite/migrator";
 import {
     open,
-    IOS_LIBRARY_PATH, // Default iOS
-    ANDROID_DATABASE_PATH, // Default Android
+    IOS_LIBRARY_PATH,
+    ANDROID_DATABASE_PATH,
 } from '@op-engineering/op-sqlite';
 import * as schema from '../../drizzle/schema';
 import x from '../../drizzle/migrations.js'
 import Crypto from 'react-native-quick-crypto';
 
-import {
-
-} from '@op-engineering/op-sqlite';
-import { AppState, Platform } from "react-native";
+import { Platform } from "react-native";
 
 let db: OPSQLiteDatabase<typeof schema>;
 
