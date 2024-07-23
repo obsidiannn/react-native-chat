@@ -45,5 +45,6 @@ declare namespace App {
     UserChatInfoModal: {
 
     }
+    AddFriendModal: undefined
   }
 }

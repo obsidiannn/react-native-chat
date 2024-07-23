@@ -29,13 +29,13 @@ import { Init as DBInit } from "app/utils/database";
 import NetInfo from '@react-native-community/netinfo';
 import { LocalUserService } from "app/services/LocalUserService";
 import { AuthService } from "app/services/auth.service";
-import { AppStackParamList } from "./type";
 import chatService from "app/services/chat.service";
 
 import { SocketContext } from "app/components/socket";
 import { IUser } from "drizzle/schema";
 import { SystemService } from "app/services/system.service";
 import AddFriendModal from "app/screens/FriendScreen/AddFriendModal";
+import { App } from "types/app";
 
 
 /**
@@ -44,10 +44,10 @@ import AddFriendModal from "app/screens/FriendScreen/AddFriendModal";
  */
 const exitRoutes = Config.exitRoutes
 
-export type AppStackScreenProps<T extends keyof AppStackParamList> = NativeStackScreenProps<AppStackParamList, T>
+export type AppStackScreenProps<T extends keyof App.StackParamList> = NativeStackScreenProps<App.StackParamList, T>
 
 // Documentation: https://reactnavigation.org/docs/stack-navigator/
-const Stack = createNativeStackNavigator<AppStackParamList>()
+const Stack = createNativeStackNavigator<App.StackParamList>()
 
 const AppStack = () => {
   return (
@@ -102,7 +102,7 @@ export const AppNavigator = () => {
     };
   }, []);
   useBackButtonHandler((routeName) => exitRoutes.includes(routeName))
-  const linking: LinkingOptions<AppStackParamList> = {
+  const linking: LinkingOptions<App.StackParamList> = {
     enabled: true,
     prefixes: ['https://mychat.com', 'next-chat://'],
     config: {
@@ -150,7 +150,6 @@ export const AppNavigator = () => {
         if (now) {
           global.wallet = new Wallet(now);
           setAuthWallet(global.wallet);
-          await SystemService.refreshNodes()
           navigationRef.current?.reset({
             index: 0,
             routes: [{ name: 'TabStack' }],
@@ -165,8 +164,9 @@ export const AppNavigator = () => {
             currentUser = user
           }
 
-          NetInfo.fetch().then((state) => {
+          NetInfo.fetch().then(async (state) => {
             if (state.isConnected) {
+              await SystemService.refreshNodes()
               setNetworkState(true)
               AuthService.getInfo().then((v) => {
                 console.log('当前登陆人', v);

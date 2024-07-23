@@ -12,6 +12,7 @@ import { useIsMounted } from "../utils/useIsMounted"
 import type { AppStackParamList } from "./AppNavigator"
 
 import * as storage from "../utils/storage"
+import { App } from "types/app"
 
 type Storage = typeof storage
 
@@ -26,7 +27,7 @@ type Storage = typeof storage
  * The types on this reference will only let you reference top level navigators. If you have
  * nested navigators, you'll need to use the `useNavigation` with the stack navigator's ParamList type.
  */
-export const navigationRef = createNavigationContainerRef<AppStackParamList>()
+export const navigationRef = createNavigationContainerRef<App.StackParamList>()
 
 /**
  * Gets the current screen from any navigation state.

@@ -124,13 +124,7 @@ export const uploadImage = async (localImage: string) => {
 let baseUrl: string | undefined;
 
 const getFullUrl = (key: string) => {
-    if (key.startsWith('http') || key.startsWith('https')) {
-        return key
-    }
-    if (key.startsWith('data:')) {
-        return key
-    }
-    if (key.startsWith('file://')) {
+    if (key.startsWith('http') || key.startsWith('data:') || key.startsWith('file://')) {
         return key
     }
     if (!baseUrl) {

@@ -23,13 +23,15 @@ const Navbar = (props: {
     } = props;
     const $theme = useRecoilValue(ThemeState)
     const $colors = useRecoilValue(ColorsState)
-    return <View style={$container}>
+    return <View style={[$container,{
+        backgroundColor: $colors.secondaryBackground
+    }]}>
         {<View style={$leftContainer}>
             {
                 renderLeft ? renderLeft() : <Pressable style={[
                     $leftIconContainer,
                     {
-                        backgroundColor: $theme == "dark" ? "#F0F2F525" : "#ffffff99"
+                        backgroundColor: $colors.background
                     }
                 ]} onPress={() => onLeftPress()}>
                     <Image source={$theme == "dark" ? require('assets/icons/back-white.svg') : require('assets/icons/back.svg')} style={$leftIcon} />

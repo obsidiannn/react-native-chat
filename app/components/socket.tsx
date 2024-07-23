@@ -112,7 +112,7 @@ export const SocketProvider = ({ children }: { children: any }) => {
         console.log('[socket] user=', user);
         console.log('[socket] current=', currentUser);
         // const env = getSocketUrl()
-        const env = 'http://192.168.0.103:9500'
+        const env = 'http://127.0.0.1:9500'
         const config = loadSocketConfig(user ?? currentUser)
         console.log('config=', config);
 
