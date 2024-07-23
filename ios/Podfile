@@ -29,6 +29,16 @@ target 'nextchat' do
   use_frameworks! :linkage => podfile_properties['ios.useFrameworks'].to_sym if podfile_properties['ios.useFrameworks']
   use_frameworks! :linkage => ENV['USE_FRAMEWORKS'].to_sym if ENV['USE_FRAMEWORKS']
 
+  pre_install do |installer|
+    installer.pod_targets.each do |pod|
+      if pod.name.eql?('op-sqlite')
+        def pod.build_type
+          Pod::BuildType.static_library
+        end
+      end
+    end
+  end
+  
   use_react_native!(
     :path => config[:reactNativePath],
     :hermes_enabled => podfile_properties['expo.jsEngine'] == nil || podfile_properties['expo.jsEngine'] == 'hermes',
@@ -56,15 +66,7 @@ target 'nextchat' do
       end
     end
   end
-  pre_install do |installer|
-    installer.pod_targets.each do |pod|
-      if pod.name.eql?('op-sqlite')
-        def pod.build_type
-          Pod::BuildType.static_library
-        end
-      end
-    end
-  end
+
   post_integrate do |installer|
     begin
       expo_patch_react_imports!(installer)

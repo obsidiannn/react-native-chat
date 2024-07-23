@@ -135,7 +135,7 @@ const ChatPage = forwardRef((_, ref) => {
         console.log('[event]', e);
         if (type === IModel.IClient.SocketTypeEnum.MESSAGE) {
             const _eventItem = e as SocketMessageEvent
-            if (lastSeq.current < _eventItem.sequence && author?.id !== _eventItem.sender) {
+            if (lastSeq.current < _eventItem.sequence && author?.id !== _eventItem.senderId) {
                 console.log("socket 监听到新的消息了")
                 loadMessages('down')
             }
