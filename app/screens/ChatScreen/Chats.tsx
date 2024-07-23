@@ -25,7 +25,7 @@ const ChatView = () => {
             width: '100%',
         }}>
             <FlashList
-                keyExtractor={(item) => item.id.toString()}
+                keyExtractor={(item) => item.id}
                 data={chats}
                 renderItem={({ item, index }) => renderItem(item, index === chats.length - 1)}
                 estimatedItemSize={scale(76)}

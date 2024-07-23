@@ -139,6 +139,8 @@ export const SocketProvider = ({ children }: { children: any }) => {
     }
     const initListener = () => {
         if (!socketRef.current) {
+            console.log('init listener error');
+            
             return
         }
         if (!socketRef.current.hasListeners('connect')) {
@@ -155,7 +157,7 @@ export const SocketProvider = ({ children }: { children: any }) => {
             socketRef.current.on('message', (msg) => {
                 const _msg = JSON.parse(msg) as SocketMessageEvent
                 console.log('[socket] receive', _msg)
-                const eventKey = EventManager.generateKey(_msg.type, _msg.chatId)
+                const eventKey = EventManager.generateKey(_msg.type, _msg.channel)
                 try {
                     EventManager.emit(eventKey, _msg)
                 } catch (e) {
@@ -163,7 +165,7 @@ export const SocketProvider = ({ children }: { children: any }) => {
                 }
                 setChatsStore((items) => {
                     const newItems = items.map(t => {
-                        if (_msg.chatId === t.id) {
+                        if (_msg.channel === t.id) {
                             return { ...t, lastSequence: _msg.sequence }
                         }
                         return t
@@ -194,8 +196,10 @@ export const SocketProvider = ({ children }: { children: any }) => {
         const result: string[] = []
         if (chatIds.length > 0 && socketRef.current) {
             chatIds.forEach(c => {
-                console.log('加入room', c, socketRef.current !== null);
-                socketRef.current?.emit('join', c)
+                if(socketRef.current && socketRef.current?.active === true){
+                    socketRef.current.emit('join', c)
+                    console.log('加入room', c, socketRef.current !== null);
+                }
                 result.push(c)
             })
         }
