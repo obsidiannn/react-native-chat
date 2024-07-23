@@ -6,13 +6,13 @@ import {
 } from '../../screens/index'
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BottomTab } from './BottomTab';
-import { AppStackParamList } from '../AppNavigator/type';
 import { Header } from './Header';
 import { View } from 'react-native';
+import { App } from 'types/app';
 
 export default () => {
     const insets = useSafeAreaInsets();
-    const Stack = createBottomTabNavigator<AppStackParamList>();
+    const Stack = createBottomTabNavigator<App.StackParamList>();
     return <Stack.Navigator screenOptions={{
         headerShown: true,
         // header: () => null

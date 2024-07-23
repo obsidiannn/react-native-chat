@@ -9,9 +9,10 @@ import { scale } from "app/utils/size"
 import { Image } from "expo-image"
 import { useCallback, useState } from "react"
 import { View, TouchableOpacity, StyleSheet, TextInput, Pressable, ScrollView } from "react-native"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { useRecoilValue } from "recoil"
 
-const AddFriendModal = ({ navigation }) => {
+export const AddFriendModal = () => {
     const themeColor = useRecoilValue(ColorsState)
     const [keyword, setKeyword] = useState('')
     const [loading, setLoading] = useState(false);
@@ -58,27 +59,12 @@ const AddFriendModal = ({ navigation }) => {
             setLoading(false)
         }
     }, [])
-
+    const insets = useSafeAreaInsets();
     return <View style={{
-        flex: 1
+        flex: 1,
+        paddingTop: insets.top
     }}>
-        <Navbar title="添加好友" renderRight={() => {
-            return <TouchableOpacity style={{
-                backgroundColor: themeColor.background,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                padding: scale(8),
-                width: scale(32),
-                height: scale(32),
-                borderRadius: scale(10),
-            }}>
-                <Image source={require('assets/icons/scan.svg')} style={{
-                    width: scale(20),
-                    height: scale(20)
-                }} />
-            </TouchableOpacity>
-        }} />
+        <Navbar title="添加好友"/>
         <View style={{
             ...styles.mainContainer,
             backgroundColor: themeColor.background
@@ -88,12 +74,19 @@ const AddFriendModal = ({ navigation }) => {
                 backgroundColor: themeColor.secondaryBackground,
             }}>
                 <TextInput
-                    multiline
                     underlineColorAndroid='transparent'
                     style={{
                         ...styles.input,
                         color: themeColor.text
                     }}
+                    onSubmitEditing={() => {
+                        if (!keyword) {
+                            return;
+                        }
+                        search(keyword, true)
+                    }}
+                    returnKeyLabel="搜索"
+                    returnKeyType="search"
                     onChangeText={(v) => {
                         setKeyword(v)
                     }}
@@ -127,8 +120,8 @@ const styles = StyleSheet.create({
         paddingTop: scale(24),
         display: 'flex',
         marginTop: scale(24),
-        borderTopLeftRadius: scale(24),
-        borderTopRightRadius: scale(24)
+        borderTopLeftRadius: scale(32),
+        borderTopRightRadius: scale(32)
     },
   
     queryView: {
@@ -153,5 +146,3 @@ const styles = StyleSheet.create({
         paddingTop: scale(15),
     },
 })
-
-export default AddFriendModal

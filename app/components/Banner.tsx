@@ -38,7 +38,7 @@ const BannerComponent = (props: BannerProperty) => {
         <Image source={require('assets/images/banner.png')}
             contentFit="contain"
             style={{ 
-                height: scale(100),
+                height: scale(66),
                 aspectRatio:1.6
             }}
         />

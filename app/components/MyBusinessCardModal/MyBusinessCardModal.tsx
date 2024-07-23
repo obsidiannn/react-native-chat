@@ -57,7 +57,7 @@ const hasAndroidPermission = async () => {
     return await getRequestPermissionPromise();
   }
 export default forwardRef((_, ref) => {
-    const [visible, setVisible] = useState(true);
+    const [visible, setVisible] = useState(false);
     const insets = useSafeAreaInsets();
     const $colors = useRecoilValue(ColorsState);
     const authUser = useRecoilValue(AuthUser);

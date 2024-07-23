@@ -10,7 +10,7 @@ import {
 } from "@react-navigation/native"
 import { createNativeStackNavigator, NativeStackScreenProps } from "@react-navigation/native-stack";
 import messaging from '@react-native-firebase/messaging';
-import React, { useContext, useEffect } from "react"
+import React, { useCallback, useContext, useEffect } from "react"
 import { AppState, Appearance, Linking, StatusBar } from "react-native"
 import * as Screens from "app/screens"
 import Config from "../../config"
@@ -18,7 +18,6 @@ import { navigationRef, useBackButtonHandler } from "./../navigationUtilities"
 import { colors } from "app/theme"
 import { useSetRecoilState } from "recoil";
 import { NetworkState, ThemeState } from "app/stores/system";
-import UserChatInfoModal from 'app/screens/UserChat/UserChatInfoModal'
 
 import { init as KVInit } from "app/utils/kv-tool";
 import { getNow } from "app/utils/account";
@@ -34,7 +33,6 @@ import chatService from "app/services/chat.service";
 import { SocketContext } from "app/components/socket";
 import { IUser } from "drizzle/schema";
 import { SystemService } from "app/services/system.service";
-import AddFriendModal from "app/screens/FriendScreen/AddFriendModal";
 import { App } from "types/app";
 
 
@@ -50,39 +48,76 @@ export type AppStackScreenProps<T extends keyof App.StackParamList> = NativeStac
 const Stack = createNativeStackNavigator<App.StackParamList>()
 
 const AppStack = () => {
-  return (
-    <Stack.Navigator
-      initialRouteName="WelcomeScreen"
-      screenOptions={{ headerShown: false, navigationBarColor: colors.background }}
-    >
-      <Stack.Screen name="TabStack" component={TabStack} />
-      <Stack.Screen name="UserChatScreen" component={Screens.UserChatScreen} />
-      <Stack.Screen name="GroupChatScreen" component={Screens.GroupChatScreen} />
-      <Stack.Screen name="WelcomeScreen" component={Screens.WelcomeScreen} />
-      <Stack.Screen name="WebViewScreen" options={{ presentation: "modal" }} component={Screens.WebViewScreen} />
-      <Stack.Screen name="SignInScreen" component={Screens.SignInScreen} />
-      <Stack.Screen name="SignUpScreen" component={Screens.SignUpScreen} />
-      <Stack.Screen name="UserInfoScreen" component={Screens.UserInfoScreen} />
-      <Stack.Screen name="InviteFriendScreen" component={Screens.InviteFriendScreen} />
-      <Stack.Screen name="InviteInfoScreen" component={Screens.InviteInfoScreen} />
-      <Stack.Screen name="FriendInviteRecordScreen" component={Screens.FriendInviteRecordScreen} />
-
-      <Stack.Group screenOptions={{ presentation: 'modal' }}>
-        <Stack.Screen name="UserChatInfoModal" component={UserChatInfoModal} />
-        <Stack.Screen name="AddFriendModal" component={AddFriendModal} />
-      </Stack.Group>
-    </Stack.Navigator>
-  )
-}
-
-
-export const AppNavigator = () => {
-  const setThemeState = useSetRecoilState(ThemeState);
-  const setAuthWallet = useSetRecoilState(AuthWallet)
-  const setNetworkState = useSetRecoilState(NetworkState);
   const setAuthUser = useSetRecoilState(AuthUser)
   const setChatsStore = useSetRecoilState(ChatsStore)
   const socketContext = useContext(SocketContext)
+
+  const setAuthWallet = useSetRecoilState(AuthWallet)
+  const setNetworkState = useSetRecoilState(NetworkState);
+  const init = useCallback(async () => {
+    await KVInit();
+    const now = getNow()
+    console.log('now=', now);
+    if (now) {
+      global.wallet = new Wallet(now);
+      setAuthWallet(global.wallet);
+      navigationRef.current?.reset({
+        index: 0,
+        routes: [{ name: 'TabStack' }],
+      })
+      await DBInit(global.wallet.getAddress());
+
+
+      let currentUser: IUser | undefined = undefined
+      const user = await LocalUserService.findByAddr(global.wallet.getAddress())
+      if (user) {
+        setAuthUser(user)
+        currentUser = user
+      }
+      NetInfo.fetch().then(async (state) => {
+        if (state.isConnected) {
+          await SystemService.refreshNodes()
+          console.log('节点刷新成功');
+          setNetworkState(true)
+          AuthService.getInfo().then((v) => {
+            console.log('当前登陆人', v);
+            currentUser = v
+            setAuthUser(v)
+
+            AppState.addEventListener('change', nextAppState => {
+              console.log('@@@@@@@@@@@@@@应用状态AppState', nextAppState);
+              socketContext.setAppState(nextAppState);
+              if (nextAppState == "background") {
+                // 关闭socket
+                socketContext.close();
+              }
+              if (nextAppState == "active") {
+                // 打开socket
+                socketContext.init(currentUser);
+              }
+            });
+            socketContext.init(currentUser);
+
+          }).catch(e => console.log(e))
+          // 刷新请求地址
+          // 上报firebase token
+          // 连接websocket
+          console.log('chat detail list');
+          chatService.mineChatList().then((res) => {
+            if (res !== null && res.length > 0) {
+              console.log('change chat detail');
+              setChatsStore(res)
+            }
+          })
+
+        } else {
+          setNetworkState(false)
+        }
+      })
+
+    }
+  }, [])
+  const setThemeState = useSetRecoilState(ThemeState);
   useEffect(() => {
     const v = Appearance.getColorScheme()
     setThemeState(v === "dark" ? 'dark' : 'light');
@@ -96,11 +131,37 @@ export const AppNavigator = () => {
         console.log('Disconnected');
       }
     });
+    init();
     return () => {
       subscription.remove()
       networkSubscription();
     };
   }, []);
+  return (
+    <Stack.Navigator
+      initialRouteName="WelcomeScreen"
+      screenOptions={{ headerShown: false, navigationBarColor: colors.background }}
+    >
+      <Stack.Screen name="TabStack" component={TabStack} />
+      <Stack.Screen name="UserChatScreen" component={Screens.UserChatScreen} />
+      <Stack.Screen name="GroupChatScreen" component={Screens.GroupChatScreen} />
+      <Stack.Screen name="WelcomeScreen" component={Screens.WelcomeScreen} />
+      <Stack.Screen name="WebViewScreen" component={Screens.WebViewScreen} />
+      <Stack.Screen name="SignInScreen" component={Screens.SignInScreen} />
+      <Stack.Screen name="SignUpScreen" component={Screens.SignUpScreen} />
+      <Stack.Screen name="UserInfoScreen" component={Screens.UserInfoScreen} />
+      <Stack.Screen name="InviteFriendScreen" component={Screens.InviteFriendScreen} />
+      <Stack.Screen name="InviteInfoScreen" component={Screens.InviteInfoScreen} />
+      <Stack.Screen name="FriendInviteRecordScreen" component={Screens.FriendInviteRecordScreen} />
+      <Stack.Screen name="UserChatInfoModal" component={Screens.UserChatInfoModel} />
+      <Stack.Screen name="AddFriendModal" component={Screens.AddFriendModal} />
+    </Stack.Navigator>
+  )
+}
+
+
+export const AppNavigator = () => {
+
   useBackButtonHandler((routeName) => exitRoutes.includes(routeName))
   const linking: LinkingOptions<App.StackParamList> = {
     enabled: true,
@@ -144,67 +205,7 @@ export const AppNavigator = () => {
       ref={navigationRef}
       linking={linking}
       onReady={async () => {
-        await KVInit();
-        const now = getNow()
-        console.log('now=', now);
-        if (now) {
-          global.wallet = new Wallet(now);
-          setAuthWallet(global.wallet);
-          navigationRef.current?.reset({
-            index: 0,
-            routes: [{ name: 'TabStack' }],
-          })
-          await DBInit(global.wallet.getAddress());
 
-
-          let currentUser: IUser | undefined = undefined
-          const user = await LocalUserService.findByAddr(global.wallet.getAddress())
-          if (user) {
-            setAuthUser(user)
-            currentUser = user
-          }
-
-          NetInfo.fetch().then(async (state) => {
-            if (state.isConnected) {
-              await SystemService.refreshNodes()
-              setNetworkState(true)
-              AuthService.getInfo().then((v) => {
-                console.log('当前登陆人', v);
-                currentUser = v
-                setAuthUser(v)
-
-                AppState.addEventListener('change', nextAppState => {
-                  console.log('@@@@@@@@@@@@@@应用状态AppState', nextAppState);
-                  socketContext.setAppState(nextAppState);
-                  if (nextAppState == "background") {
-                    // 关闭socket
-                    socketContext.close();
-                  }
-                  if (nextAppState == "active") {
-                    // 打开socket
-                    socketContext.init(currentUser);
-                  }
-                });
-                socketContext.init(currentUser);
-
-              }).catch(e => console.log(e))
-              // 刷新请求地址
-              // 上报firebase token
-              // 连接websocket
-              console.log('chat detail list');
-              chatService.mineChatList().then((res) => {
-                if (res !== null && res.length > 0) {
-                  console.log('change chat detail');
-                  setChatsStore(res)
-                }
-              })
-
-            } else {
-              setNetworkState(false)
-            }
-          })
-
-        }
       }}
     >
       <AppStack />

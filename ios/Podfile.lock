@@ -1474,6 +1474,8 @@ PODS:
     - Yoga
   - react-native-safe-area-context (4.10.1):
     - React-Core
+  - react-native-view-shot (3.8.0):
+    - React-Core
   - react-native-webview (13.10.5):
     - DoubleConversion
     - glog
@@ -1920,6 +1922,7 @@ DEPENDENCIES:
   - react-native-pager-view (from `../../../node_modules/react-native-pager-view`)
   - react-native-quick-crypto (from `../../../node_modules/react-native-quick-crypto`)
   - react-native-safe-area-context (from `../../../node_modules/react-native-safe-area-context`)
+  - react-native-view-shot (from `../../../node_modules/react-native-view-shot`)
   - react-native-webview (from `../../../node_modules/react-native-webview`)
   - React-nativeconfig (from `../../../node_modules/react-native/ReactCommon`)
   - React-NativeModulesApple (from `../../../node_modules/react-native/ReactCommon/react/nativemodule/core/platform/ios`)
@@ -2122,6 +2125,8 @@ EXTERNAL SOURCES:
     :path: "../../../node_modules/react-native-quick-crypto"
   react-native-safe-area-context:
     :path: "../../../node_modules/react-native-safe-area-context"
+  react-native-view-shot:
+    :path: "../../../node_modules/react-native-view-shot"
   react-native-webview:
     :path: "../../../node_modules/react-native-webview"
   React-nativeconfig:
@@ -2281,6 +2286,7 @@ SPEC CHECKSUMS:
   react-native-pager-view: b4ba00095f74ab430250cef2a119a5e2491b2c8d
   react-native-quick-crypto: 09c5986efae9b05e31b0aba0be75fac9e4d8bd44
   react-native-safe-area-context: dcab599c527c2d7de2d76507a523d20a0b83823d
+  react-native-view-shot: 6b7ed61d77d88580fed10954d45fad0eb2d47688
   react-native-webview: 04168cbda528df7154fdef3086b4644b9e6dd683
   React-nativeconfig: 5d452e509d6fbedc1522e21b566451fc673ac6b7
   React-NativeModulesApple: 6560431301ffdab8df6212cc8c8eff779396d8e0
@@ -2327,6 +2333,6 @@ SPEC CHECKSUMS:
   Yoga: 45564236f670899c9739b1581a12b00ead5d391f
   ZXingObjC: 8898711ab495761b2dbbdec76d90164a6d7e14c5
 
-PODFILE CHECKSUM: d9f84cdb6cc6aed3f393e7d281d77aa14dd848b4
+PODFILE CHECKSUM: 2aa1cb238812f585d8e9c8a7ea4ac30759b496cb
 
 COCOAPODS: 1.13.0

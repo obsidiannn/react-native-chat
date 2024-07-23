@@ -5,6 +5,7 @@ import Navbar from "app/components/Navbar";
 import { ColorsState } from "app/stores/system";
 import { useRecoilValue } from "recoil";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { App } from "types/app";
 const { height } = Dimensions.get('window');
 type Props = StackScreenProps<App.StackParamList, 'WebViewScreen'>;
 export const WebViewScreen = ({ route }: Props) => {

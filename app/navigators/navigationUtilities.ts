@@ -8,8 +8,7 @@ import {
 } from "@react-navigation/native"
 import Config from "../config"
 import type { PersistNavigationConfig } from "../config/config.base"
-import { useIsMounted } from "../utils/useIsMounted"
-import type { AppStackParamList } from "./AppNavigator"
+import { useIsMounted } from "../utils/useIsMounted";
 
 import * as storage from "../utils/storage"
 import { App } from "types/app"
@@ -38,10 +37,10 @@ export function getActiveRouteName(state: NavigationState | PartialState<Navigat
   const route = state.routes[state.index ?? 0]
 
   // Found the active route -- return the name
-  if (!route.state) return route.name as keyof AppStackParamList
+  if (!route.state) return route.name as keyof App.StackParamList
 
   // Recursive call to deal with nested routers
-  return getActiveRouteName(route.state as NavigationState<AppStackParamList>)
+  return getActiveRouteName(route.state as NavigationState<App.StackParamList>)
 }
 
 /**
@@ -125,7 +124,7 @@ export function useNavigationPersistence(storage: Storage, persistenceKey: strin
   const initNavState = navigationRestoredDefaultState(Config.persistNavigation)
   const [isRestored, setIsRestored] = useState(initNavState)
 
-  const routeNameRef = useRef<keyof AppStackParamList | undefined>()
+  const routeNameRef = useRef<keyof App.StackParamList | undefined>()
 
   const onNavigationStateChange = (state: NavigationState | undefined) => {
     const previousRouteName = routeNameRef.current
@@ -140,7 +139,7 @@ export function useNavigationPersistence(storage: Storage, persistenceKey: strin
       }
 
       // Save the current route name for later comparison
-      routeNameRef.current = currentRouteName as keyof AppStackParamList
+      routeNameRef.current = currentRouteName as keyof App.StackParamList
 
       // Persist state to storage
       storage.save(persistenceKey, state)
@@ -176,9 +175,10 @@ export function useNavigationPersistence(storage: Storage, persistenceKey: strin
  * @param {unknown} params - The params to pass to the route.
  */
 export function navigate(name: unknown, params?: unknown) {
+  console.log("navigate", name, params,navigationRef.isReady())
   if (navigationRef.isReady()) {
     // @ts-expect-error
-    navigationRef.navigate(name as never, params as never)
+    navigationRef.navigate(name as never, params as never);
   }
 }
 

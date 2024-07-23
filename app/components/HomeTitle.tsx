@@ -5,8 +5,7 @@ import { View, Text, TouchableOpacity } from "react-native"
 import { useRecoilValue } from "recoil"
 import ModelMenus, { ModelMenuProps } from "./ModelMenus"
 import { useRef } from "react"
-import { navigate } from "app/navigators"
-
+import { navigate, navigationRef } from "app/navigators"
 export interface HomeTitleProps {
     title: string
 }
@@ -15,7 +14,6 @@ const HomeTitle = (props: HomeTitleProps) => {
 
     const themeColor = useRecoilValue(ColorsState)
     const modelMenuRef = useRef<ModelMenuProps>(null)
-
     return <View style={{
         display: 'flex',
         flexDirection: 'row',
@@ -39,7 +37,7 @@ const HomeTitle = (props: HomeTitleProps) => {
                         title: "添加好友",
                         icon: require("assets/icons/user-add.svg"),
                         onPress: () => {
-                            navigate('AddFriendModal')
+                            navigate("AddFriendModal")
                         },
                     },
                     {
