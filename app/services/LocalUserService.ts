@@ -6,7 +6,7 @@ export class LocalUserService {
     static async add(data: IUser): Promise<IUser> {
         data = {
             ...data,
-            updatedAt: new Date(),
+            refreshAt: dayjs().unix()
         }
         const old = await GetDB().query.users.findFirst({
             where: eq(users.id, data.id)
@@ -28,7 +28,6 @@ export class LocalUserService {
         const db = GetDB()
         if (!db) {
             console.log('err');
-            
             return
         }
         const ids = data.map(d => d.id)
@@ -61,7 +60,7 @@ export class LocalUserService {
             return (db).select().from(users).where(
                 and(
                     inArray(users.id, ids),
-                    gte(users.updatedAt, new Date(currentSecond - cacheSeconds))
+                    gte(users.refreshAt, currentSecond - cacheSeconds)
                 ))
                 ?? [];
         } catch (e) {
@@ -71,8 +70,13 @@ export class LocalUserService {
     }
 
     static async findByUserName(username: string): Promise<IUser | undefined> {
+        const cacheSeconds = 5 * 60
+        const currentSecond = dayjs().unix()
         return await GetDB().query.users.findFirst({
-            where: eq(users.userName, username)
+            where: and(
+                eq(users.userName, username),
+                gte(users.refreshAt, currentSecond - cacheSeconds)
+            )
         })
     }
     static async findByAddr(addr: string): Promise<IUser | undefined> {

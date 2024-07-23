@@ -6,7 +6,6 @@ import friendService from "app/services/friend.service"
 import userService from "app/services/user.service"
 import { ColorsState } from "app/stores/system"
 import { scale } from "app/utils/size"
-import { toast } from "burnt"
 import { Image } from "expo-image"
 import { useCallback, useState } from "react"
 import { View, TouchableOpacity, StyleSheet, TextInput, Pressable, ScrollView } from "react-native"
@@ -22,9 +21,9 @@ const AddFriendModal = ({ navigation }) => {
         if (!v) {
             return;
         }
-        // if (loading) {
-        //     return;
-        // }
+        if (loading) {
+            return;
+        }
         setLoading(true);
         const user = await userService.findByUserName(v);
         console.log('user', user);
@@ -47,7 +46,8 @@ const AddFriendModal = ({ navigation }) => {
                             relation: 1,
                             relationStatus: userRelation.status,
                             chatId: '',
-                            addr: user.addr ?? ''
+                            addr: user.addr ?? '',
+                            updateAt: user.updatedAt?.valueOf() ?? 0,
                         }
                     ])
                 }

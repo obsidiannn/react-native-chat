@@ -1,3 +1,4 @@
+import { IServer } from "@repo/types";
 import { IUser } from "drizzle/schema";
 
 export type AppStackParamList = {
@@ -25,7 +26,17 @@ export type AppStackParamList = {
   UserChatInfoModal: {
     user: IUser
     chatId: string
+  };
+  InviteFriendScreen: {
+    userId: number
+  };
+  InviteInfoScreen: {
+    friendApply: IServer.IFriendApply;
+    user: IUser;
   }
+  FriendInviteRecordScreen: undefined
   AddFriendModal: undefined
+  UserInfoScreen: {
 
+  }
 }

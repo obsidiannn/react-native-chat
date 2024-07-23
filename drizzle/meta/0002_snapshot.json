@@ -1,103 +1,9 @@
 {
-  "version": "8",
+  "version": "9",
   "dialect": "sqlite",
-  "id": "d8ca92c6-6538-4a4e-b495-bf7737270274",
-  "prevId": "8c009a90-b549-4f83-b440-bafea5f4f781",
+  "id": "8c009a90-b549-4f83-b440-bafea5f4f782",
+  "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
-    "messages": {
-      "name": "messages",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "text",
-          "primaryKey": true,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "chat_id": {
-          "name": "chat_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "type": {
-          "name": "type",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "sequence": {
-          "name": "sequence",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "uid": {
-          "name": "uid",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "uid_type": {
-          "name": "uid_type",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "time": {
-          "name": "time",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "state": {
-          "name": "state",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "data": {
-          "name": "data",
-          "type": "text(2048)",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "extra": {
-          "name": "extra",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        }
-      },
-      "indexes": {
-        "chatIdx": {
-          "name": "chatIdx",
-          "columns": [
-            "chat_id"
-          ],
-          "isUnique": false
-        },
-        "sequenceIdx": {
-          "name": "sequenceIdx",
-          "columns": [
-            "sequence"
-          ],
-          "isUnique": false
-        }
-      },
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
     "users": {
       "name": "users",
       "columns": {
@@ -179,9 +85,23 @@
           "autoincrement": false,
           "default": "CURRENT_TIMESTAMP"
         },
-        "refreshAt": {
-          "name": "refreshAt",
+        "isFriend": {
+          "name": "isFriend",
           "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "friendId": {
+          "name": "friendId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "chatId": {
+          "name": "chatId",
+          "type": "text",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false

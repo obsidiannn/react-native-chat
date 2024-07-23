@@ -6,7 +6,6 @@ const generateId = (): string => {
     return Buffer.from(crypto.randomBytes(12)).toString('hex')
 }
 
-
 export default {
     generateId
 }

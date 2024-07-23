@@ -21,7 +21,8 @@ const AvatarComponent = (props: AvatarProps) => {
             ...(props.style ? { ...props.style } : { ...styles.defaultAvatar }),
             ...(props.width && props.height ? {
                 width: props.width,
-                height: props.height
+                height: props.height,
+                borderRadius: props.width
             } : {}),
             ...(props.enableAvatarBorder ? {
                 borderWidth: scale(3),

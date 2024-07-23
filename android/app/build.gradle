@@ -113,9 +113,6 @@ android {
         }
     }
     packagingOptions {
-        pickFirst '**/libcrypto.so'
-        pickFirst '**/libreact_nativemodule_core.so'
-        pickFirst '**/libturbomodulejsijni.so'
         jniLibs {
             useLegacyPackaging (findProperty('expo.useLegacyPackaging')?.toBoolean() ?: false)
         }

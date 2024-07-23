@@ -62,6 +62,11 @@ const AppStack = () => {
       <Stack.Screen name="WebViewScreen" options={{ presentation: "modal" }} component={Screens.WebViewScreen} />
       <Stack.Screen name="SignInScreen" component={Screens.SignInScreen} />
       <Stack.Screen name="SignUpScreen" component={Screens.SignUpScreen} />
+      <Stack.Screen name="UserInfoScreen" component={Screens.UserInfoScreen} />
+      <Stack.Screen name="InviteFriendScreen" component={Screens.InviteFriendScreen} />
+      <Stack.Screen name="InviteInfoScreen" component={Screens.InviteInfoScreen} />
+      <Stack.Screen name="FriendInviteRecordScreen" component={Screens.FriendInviteRecordScreen} />
+
       <Stack.Group screenOptions={{ presentation: 'modal' }}>
         <Stack.Screen name="UserChatInfoModal" component={UserChatInfoModal} />
         <Stack.Screen name="AddFriendModal" component={AddFriendModal} />
@@ -151,7 +156,7 @@ export const AppNavigator = () => {
             routes: [{ name: 'TabStack' }],
           })
           await DBInit(global.wallet.getAddress());
-          
+
 
           let currentUser: IUser | undefined = undefined
           const user = await LocalUserService.findByAddr(global.wallet.getAddress())

@@ -181,3 +181,7 @@ export const restore = (content: string) => {
     }
     return globalStorage.set(STORAGE_KEY, content);
 }
+
+export const isOnline = (refreshAt: number) => {
+    return true;
+}

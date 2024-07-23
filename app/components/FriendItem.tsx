@@ -5,24 +5,28 @@ import { useTranslation } from 'react-i18next';
 import { navigate } from "app/navigators";
 import { scale } from "app/utils/size";
 import { colors } from "app/theme";
+import AvatarComponent from "./Avatar";
+import strUtil from "app/utils/str-util";
+import toast from "app/utils/toast";
 
 export default (props: {
     item: IServer.IFriend;
     isLast: boolean;
 }) => {
     const { item, isLast } = props;
+    const {t} = useTranslation('screens')
     return <TouchableOpacity onPress={() => {
         if (!item.relationStatus) {
-            navigate('UserInfo', {
+            navigate('UserInfoScreen', {
                 userId: item.id
             })
         } else {
-            // toast(t('error_already_friend'))
+            toast(t('error_already_friend'))
         }
     }} style={{
         ...styles.container,
     }}>
-        <Image style={styles.avatar} source={{ uri: item.avatar }} />
+        <AvatarComponent url={props.item.avatar} online={false} /> 
         <View style={{
             ...styles.rightContainer,
             borderBottomColor: isLast ? 'white' : '#F4F4F4',
@@ -35,7 +39,7 @@ export default (props: {
                 <Text style={{
                     fontSize: 14,
                     color: colors.palette.gray400
-                }}>{item.addr}</Text>
+                }}>{strUtil.truncateMiddle(item.addr,18)}</Text>
             </View>
             <View>
                 <Image style={styles.icon} source={require('assets/icons/arrow-right-gray.svg')} />

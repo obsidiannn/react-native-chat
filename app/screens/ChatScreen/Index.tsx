@@ -17,6 +17,8 @@ import { StackScreenProps } from "@react-navigation/stack";
 import chatService from "app/services/chat.service";
 import { App } from "types/app";
 import { ChatsStore } from "app/stores/auth";
+import friendService from "app/services/friend.service";
+import { IUser } from "drizzle/schema";
 
 type Props = StackScreenProps<App.StackParamList, 'ChatScreen'>;
 export const ChatScreen = ({ navigation }: Props) => {
@@ -25,11 +27,22 @@ export const ChatScreen = ({ navigation }: Props) => {
     const { t } = useTranslation('screens')
     const themeColor = useRecoilValue(ColorsState)
     const setChatsStore = useSetRecoilState(ChatsStore)
+    const [friends, setFriends] = useState<IUser[]>([])
     const changeTab = (idx: number) => {
         pagerViewRef.current?.setPage(idx);
-        chatService.mineChatList().then(res => {
-            setChatsStore(res)
-        })
+        if (idx === 0) {
+            chatService.mineChatList().then(res => {
+                setChatsStore(res)
+            })
+        }
+        if (idx === 1) {
+
+        }
+        if (idx === 2) {
+            friendService.getOnlineList().then((val) => {
+                setFriends(val)
+            })
+        }
     }
 
     const btnTextStyle = (idx: number) => {
@@ -62,9 +75,9 @@ export const ChatScreen = ({ navigation }: Props) => {
     return <View style={[styles.container, {
         backgroundColor: themeColor.background
     }]}>
-        <HomeTitle title="信息"  />
+        <HomeTitle title="信息" />
         <BannerComponent label="邀请好友" describe="分享一个链接" onPress={() => {
-            
+
         }} />
 
         <View style={styles.topContainer}>
@@ -93,7 +106,7 @@ export const ChatScreen = ({ navigation }: Props) => {
             }} initialPage={pageIndex}>
             <ChatView />
             <GroupView />
-            <FriendView />
+            <FriendView contacts={friends} />
         </PagerView>
     </View>
 }

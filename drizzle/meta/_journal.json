@@ -1,5 +1,5 @@
 {
-  "version": "7",
+  "version": "8",
   "dialect": "sqlite",
   "entries": [
     {
@@ -14,6 +14,20 @@
       "version": "7",
       "when": 1721465451994,
       "tag": "0001_productive_stature",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "8",
+      "when": 1721465451999,
+      "tag": "0002_alter_user",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "9",
+      "when": 1721465452000,
+      "tag": "0003_alter_user",
       "breakpoints": true
     }
   ]

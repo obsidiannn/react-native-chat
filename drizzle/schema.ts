@@ -12,6 +12,10 @@ export const users = sqliteTable('users', {
     sign: text('sign'),
     createdAt: integer('createdAt', { mode: 'timestamp' }),
     updatedAt: integer('updatedAt', { mode: 'timestamp' }).default(sql`CURRENT_TIMESTAMP`),
+    refreshAt: integer('refreshAt'),
+    isFriend: integer("isFriend").default(0),
+    friendId: integer("friendId").default(0),
+    chatId: text("chatId"),
 }, (users) => ({
     addrIdx: index('addrIdx').on(users.addr),
     userNameIdx: index('userNameIdx').on(users.userName),

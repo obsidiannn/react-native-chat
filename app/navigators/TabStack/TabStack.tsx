@@ -1,6 +1,5 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import {
-    ContactScreen,
     WalletScreen,
     PlazaScreen,
     ChatScreen

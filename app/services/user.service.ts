@@ -52,18 +52,22 @@ const findByIds = async (ids: number[]): Promise<IUser[]> => {
     const localUsers = await LocalUserService.findByIds(ids);
 
     const missingIds = diff(ids, localUsers.map(i => i.id));
-    
+
     if (missingIds.length > 0) {
         const result = await userApi.getBatchInfo(missingIds);
         const users = result.users.map(u => {
             return {
                 ...u,
                 createdAt: new Date(u.createdAt),
-                updatedAt: new Date()
+                updatedAt: new Date(u.updateAt),
+                refreshAt: dayjs().unix(),
+                isFriend: 0,
+                chatId: '',
+                friendId: 0
             } as IUser
         })
-        console.log('users',users);
-        
+        console.log('users', users);
+
         await LocalUserService.createMany(users)
         return [...localUsers, ...users]
     }
@@ -83,7 +87,7 @@ const getUserHash = async (ids: number[]): Promise<Map<number, IUser>> => {
         return result
     }
     const users = await findByIds(ids)
-    console.log('findByIds',users);
+    console.log('findByIds', users);
 
     users.forEach(u => {
         result.set(u.id, u)
