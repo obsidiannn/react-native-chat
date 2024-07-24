@@ -95,20 +95,24 @@ export default forwardRef((props, ref) => {
             return
         }
         console.log('會話id conversationIdRef', chatItem.id)
+        console.log('author=',author);
+        
         authorRef.current = author
         chatItemRef.current = chatItem
-
+        if (sharedSecretRef.current) {
+            return
+        }
         let sharedSecret: string
         if (author?.encPri !== '' && author?.encPri !== null && author?.encPri !== undefined) {
             console.log('a', author);
 
             const key = myWallet.computeSharedSecret(author.encPri)
-            const decode = quickCrypto.De(author.encKey, Buffer.from(key, 'hex'))
+            const decode = quickCrypto.De(key, Buffer.from(author.encKey, 'hex'))
             sharedSecret = Buffer.from(decode).toString('utf8')
         } else {
             console.log('b', author);
             const key = myWallet.computeSharedSecret(myWallet.getPublicKey())
-            const decode = quickCrypto.De(author.encKey, Buffer.from(key, 'hex'))
+            const decode = quickCrypto.De(key, Buffer.from(author.encKey, 'utf8'))
             sharedSecret = Buffer.from(decode).toString('utf8')
             console.log('sharedSecret==', sharedSecret);
         }

@@ -10,7 +10,6 @@ import VideoPlayModal, { IVideoPreviewModal } from "app/components/VideoModal"
 import FilePreviewModal, { ChatUIFileModalRef } from "app/components/FileModal"
 import { captureImage, captureVideo, videoFormat } from "app/utils/media-util"
 import LoadingModal, { LoadingModalType } from "app/components/loading-modal"
-import fileService from "app/services/file.service"
 import { generateVideoThumbnail } from 'app/utils/media-util'
 import { useTranslation } from "react-i18next"
 import { ChatDetailItem, DeleteMessageEvent, SocketJoinEvent, SocketMessageEvent } from "@repo/types"
@@ -23,7 +22,6 @@ import { IModel } from "@repo/enums"
 import messageSendService from "app/services/message-send.service"
 import chatUiAdapter from "app/utils/chat-ui.adapter"
 import { ThemeState } from "app/stores/system"
-import toast from "app/utils/toast"
 
 export interface ChatUIPageRef {
     init: (chatItem: ChatDetailItem, friend: IUser) => void

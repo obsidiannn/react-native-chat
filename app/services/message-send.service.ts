@@ -232,8 +232,7 @@ const getList = async (
     needDecode: boolean = true
 ): Promise<MessageType.Any[]> => {
 
-    // await MessagesModel.deleteMessageByChatIdIn([chatId])
-    // await UserModel.deleteAll()
+    // await LocalMessageService.deleteMessageByChatIdIn([chatId])
     const list = await getMessageDetails(chatId, key, sequence, direction, firstSeq, needDecode)
     const userIds: number[] = []
     list.forEach(d => {
