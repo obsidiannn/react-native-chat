@@ -50,7 +50,7 @@ const getIds = async () => {
     return rep.ids;
 }
 const getOfflineList = async () => {
-    const users = await UserModel.getFriends();
+    const users = await LocalUserService.getFriends();
     return users;
 }
 const getOnlineList = async () => {
@@ -79,7 +79,7 @@ const getOnlineList = async () => {
         };
     })
     await userService.setNonFriends(userIds);
-    await UserModel.setFriends(userIds);
+    await LocalUserService.setFriends(userIds);
     return items.filter(i => i != null) as IUser[];
 }
 const removeAll = async () => {

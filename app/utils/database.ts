@@ -20,7 +20,6 @@ export const Init = async (name: string) => {
     const sqlite = open({
         name: name + '.sqlite' ,
         location: Platform.OS === 'ios' ? IOS_LIBRARY_PATH : ANDROID_DATABASE_PATH,
-        encryptionKey: key
     });
 
     db = drizzle(sqlite, { schema });

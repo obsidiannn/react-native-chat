@@ -53,14 +53,14 @@ export default forwardRef((_, ref) => {
                             ...(i === menus.length - 1 ? {
                             } : {
                                 borderBottomColor: themeColor.border,
-                                borderBottomWidth: scale(0.7)
+                                borderBottomWidth: scale(0.5)
                             })
                         }} onPress={()=>{
                             close()
                             m.onPress()
                         }}>
                             <Image source={m.icon} style={{
-                                width: scale(20), height: scale(20)
+                                width: scale(18), height: scale(18),marginRight: scale(8)
                             }} />
                             <Text>{m.title}</Text>
                         </TouchableOpacity>

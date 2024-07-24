@@ -37,15 +37,13 @@ export default (props: IContactListItemProps) => {
 
 const styles = StyleSheet.create({
     container: {
-        height: scale(76),
         width: '100%',
-        paddingHorizontal: scale(16),
         display: 'flex',
         flexDirection: 'row',
     },
     iconContainer: {
         width: scale(57),
-        height: scale(76),
+        paddingVertical: scale(14),
         display: 'flex',
         justifyContent: 'center',
     },

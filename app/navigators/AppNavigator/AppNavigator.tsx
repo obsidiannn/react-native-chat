@@ -155,6 +155,7 @@ const AppStack = () => {
       <Stack.Screen name="FriendInviteRecordScreen" component={Screens.FriendInviteRecordScreen} />
       <Stack.Screen name="UserChatInfoModal" component={Screens.UserChatInfoModel} />
       <Stack.Screen name="AddFriendModal" component={Screens.AddFriendModal} />
+      <Stack.Screen name="GroupCreateScreen" component={Screens.GroupCreateScreen} />
     </Stack.Navigator>
   )
 }

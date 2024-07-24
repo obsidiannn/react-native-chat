@@ -7,5 +7,9 @@ export default {
         sendButtonAccessibilityLabel: 'Send',
         btnDownload: 'Download',
         btnSend: 'Send'
+    },
+    upload: {
+        label_camera: "拍照",
+        label_pick_album: "从相册选择",
     }
 }

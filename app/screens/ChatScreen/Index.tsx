@@ -9,7 +9,7 @@ import { colors } from "../../theme/colors";
 import { Button } from "app/components";
 import { scale } from "app/utils/size";
 import BannerComponent from "app/components/Banner";
-import HomeTitle from "app/components/HomeTitle";
+import HomeTitle from "./HomeTitle";
 import { useTranslation } from "react-i18next";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { ColorsState } from "app/stores/system";
@@ -19,15 +19,19 @@ import { App } from "types/app";
 import { ChatsStore } from "app/stores/auth";
 import friendService from "app/services/friend.service";
 import { IUser } from "drizzle/schema";
+import { GroupSingleItem } from "@repo/types";
+import groupService from "app/services/group.service";
 
 type Props = StackScreenProps<App.StackParamList, 'ChatScreen'>;
 export const ChatScreen = ({ navigation }: Props) => {
     const pagerViewRef = useRef<PagerView>(null);
     const [pageIndex, setPageIndex] = useState(0);
-    const { t } = useTranslation('screens')
     const themeColor = useRecoilValue(ColorsState)
     const setChatsStore = useSetRecoilState(ChatsStore)
     const [friends, setFriends] = useState<IUser[]>([])
+    const [groups, setGroups] = useState<GroupSingleItem[]>([])
+    const { t } = useTranslation('screens')
+
     const changeTab = (idx: number) => {
         pagerViewRef.current?.setPage(idx);
         if (idx === 0) {
@@ -36,7 +40,9 @@ export const ChatScreen = ({ navigation }: Props) => {
             })
         }
         if (idx === 1) {
-
+            groupService.getMineList().then(res => {
+                setGroups(res)
+            })
         }
         if (idx === 2) {
             friendService.getOnlineList().then((val) => {
@@ -105,7 +111,7 @@ export const ChatScreen = ({ navigation }: Props) => {
                 setPageIndex(v.nativeEvent.position);
             }} initialPage={pageIndex}>
             <ChatView />
-            <GroupView />
+            <GroupView groups={groups} />
             <FriendView contacts={friends} />
         </PagerView>
     </View>

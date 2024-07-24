@@ -4,7 +4,7 @@ import { EmptyComponent } from "app/components/EmptyComponent"
 import LoadingComponent from "app/components/Loading"
 import { scale } from "app/utils/size"
 import { useState } from "react"
-import { StyleSheet, Text, View, ActivityIndicator } from "react-native"
+import { StyleSheet, View } from "react-native"
 import { useRecoilValue } from "recoil"
 import { navigate } from "app/navigators"
 import { useTranslation } from "react-i18next"
@@ -46,6 +46,7 @@ const FriendListView = (props: { contacts: IUser[] }) => {
       return props.contacts.length <= 0 ? <EmptyComponent /> : (
         <FlashList
           // ref={listRef}
+          showsVerticalScrollIndicator={false}
           keyExtractor={(item) => "friend" + item.id.toString()}
           estimatedItemSize={scale(76)}
           data={props.contacts}
@@ -57,13 +58,12 @@ const FriendListView = (props: { contacts: IUser[] }) => {
                 return
               }
               console.log('chatDetail', chatDetail);
-
               navigate('UserChatUI', {
                 item: chatDetail,
                 userId: chatDetail.sourceId
               })
             }} icon={item.avatar}
-              title={!item?.userName ? item.nickName : item.userName}
+              title={item?.nickName ? item.nickName : item.userName}
               bottomLine={props.contacts.length > 1 && index < props.contacts.length - 1} />;
           }}
         />

@@ -1,6 +1,6 @@
 import { StyleSheet, View, Switch } from "react-native";
 import { useRef, useState, useContext, useMemo } from "react";
-import ConfirmModal, { ConfirmModalType } from "app/components/confirm-modal";
+import ConfirmModal, { ConfirmModalType } from "app/components/ConfirmModal";
 import messageSenderService from "app/services/message-send.service";
 import ActionItem from "./action-item";
 import { ChatDetailItem, ClearChatMessageEvent } from "@repo/types";
