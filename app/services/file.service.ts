@@ -4,7 +4,7 @@ import { requestCameraPermission, requestDirectoryPermission, requestPhotoPermis
 import s3Api from '../api/sys/s3';
 
 import * as FileSystem from 'expo-file-system';
-import mime from 'mime/dist/src/index_lite';
+import mime from 'mime';
 import crypto from 'react-native-quick-crypto';
 import * as MediaLibrary from 'expo-media-library';
 import { Platform } from 'react-native';

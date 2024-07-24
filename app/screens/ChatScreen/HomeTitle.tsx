@@ -1,11 +1,11 @@
 import { ColorsState } from "app/stores/system"
-import { scale } from "app/utils/size"
+import { s, scale } from "app/utils/size"
 import { Image } from "expo-image"
 import { View, Text, TouchableOpacity } from "react-native"
 import { useRecoilValue } from "recoil"
 import ModelMenus, { ModelMenuProps } from "app/components/ModelMenus"
 import { useRef } from "react"
-import { navigate, navigationRef } from "app/navigators"
+import { navigate } from "app/navigators"
 import SelectMemberModal, { SelectMemberModalType, SelectMemberOption } from "app/components/SelectMemberModal/Index"
 import friendService from "app/services/friend.service"
 export interface HomeTitleProps {
@@ -75,11 +75,11 @@ const HomeTitle = (props: HomeTitleProps) => {
         }} style={{
             padding: scale(10),
             backgroundColor: themeColor.primary,
-            borderRadius: scale(24)
+            borderRadius: scale(36)
         }}>
             <Image source={require('assets/icons/plus.svg')} style={{
-                width: scale(24),
-                height: scale(24)
+                width: s(36),
+                height: s(36)
             }} />
         </TouchableOpacity>
         <ModelMenus ref={modelMenuRef} />

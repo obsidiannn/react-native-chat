@@ -1,32 +1,32 @@
-/** @type {import('@babel/core').TransformOptions['plugins']} */
-const plugins = [
-  /** react-native-reanimated web support @see https://docs.swmansion.com/react-native-reanimated/docs/fundamentals/installation/#web */
-  "@babel/plugin-proposal-export-namespace-from",
-  [
-    'module-resolver',
-    {
-      alias: {
-        'crypto': 'react-native-quick-crypto',
-        'stream': 'readable-stream',
-        'buffer': '@craftzdog/react-native-buffer',
+module.exports = {
+  presets: ['module:@react-native/babel-preset'],
+  plugins: [
+    [
+      'module-resolver',
+      {
+        alias: {
+          'crypto': 'react-native-quick-crypto',
+          'stream': 'readable-stream',
+          'buffer': '@craftzdog/react-native-buffer',
+          'app': './app',
+          'drizzle': './drizzle',
+          'assets': './assets'
+        },
       },
-    },
-  ],
-  [
-    'inline-import',
-    {
-      extensions: ['.sql'],
-    },
-  ],
-]
-/** @type {import('@babel/core').TransformOptions} */
-module.exports = function (api) {
-  api.cache(true);
-  return {
-    presets: ["babel-preset-expo"],
-    env: {
-      production: {},
-    },
-    plugins,
-  };
+    ],
+    [
+      'inline-import',
+      {
+        extensions: ['.sql'],
+      },
+    ],
+    'react-native-reanimated/plugin',
+    ['module:react-native-dotenv',
+      {
+        envName: 'APP_ENV',
+        moduleName: '@env',
+        path: '.env',
+      },
+    ]
+  ]
 };

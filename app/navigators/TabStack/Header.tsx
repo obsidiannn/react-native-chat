@@ -4,9 +4,7 @@ import { ColorsState, ThemeState } from 'app/stores/system';
 import { useRecoilValue } from 'recoil';
 import { Image } from 'expo-image';
 import { s } from 'app/utils/size';
-import AvatarComponent from 'app/components/Avatar';
 import { AuthUser } from 'app/stores/auth';
-import fileService from 'app/services/file.service';
 import ScanModal, { ScanModalType } from 'app/components/ScanModal/ScanModal';
 import MyBusinessCardModal, { MyBusinessCardModalType } from 'app/components/MyBusinessCardModal/MyBusinessCardModal';
 import SettingCenterModal,{SettingCenterModalType} from 'app/components/SettingCenterModal/SettingCenterModal';
@@ -28,10 +26,15 @@ export const Header = () => {
         flexDirection: 'row',
         justifyContent: 'space-between',
     }}>
-        <TouchableOpacity onPress={() => {
+        <TouchableOpacity style={{
+            height: s(45),
+            flexDirection: 'row',
+            justifyContent: "flex-end",
+            alignItems: "center",
+        }} onPress={() => {
             settingCenterModalRef.current?.open();
         }}>
-            <AvatarX uri={authUser?.avatar ?? ''} size={74} online={true} border={true} />
+            <AvatarX uri={authUser?.avatar ?? ''} size={36} online={true} border={true} />
         </TouchableOpacity>
         <View style={{
             flex: 1,

@@ -1,3 +1,4 @@
+import fileService from "app/services/file.service";
 import { Image, ImageProps } from "expo-image";
 
 export const NetworkImage = (props: {
@@ -6,7 +7,7 @@ export const NetworkImage = (props: {
 }) => {
   return (
     <Image
-      source={{uri: props.uri}}
+      source={{uri: fileService.getFullUrl(props.uri)}}
       style={props.style}
       cachePolicy="disk"
     />

@@ -1,40 +1,32 @@
-import { StyleSheet, Text, View } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import * as clipboard from 'expo-clipboard';
 import { Image } from "expo-image";
 import { IUser } from "drizzle/schema";
 import { useTranslation } from 'react-i18next';
 import toast from "app/utils/toast";
 import { scale, verticalScale } from "app/utils/size";
-import fileService from "app/services/file.service";
-import AvatarComponent from "app/components/Avatar";
 import { isOnline } from "app/utils/account";
 import { IModel } from "@repo/enums";
-import strUtil from "app/utils/str-util";
 import { colors } from "app/theme";
 import { useRecoilValue } from "recoil";
 import { ColorsState } from "app/stores/system";
+import AvatarX from "app/components/AvatarX";
 export default (props: {
     user: IUser
 }) => {
     const { user } = props;
     const { t } = useTranslation('screens')
-    const themeColor = useRecoilValue(ColorsState)
+    const $colors = useRecoilValue(ColorsState)
     return <View style={{
         ...styles.container,
-        backgroundColor: themeColor.background
+        backgroundColor: $colors.background
     }}>
         <View style={styles.infoBox}>
-            <AvatarComponent
-                style={{
-                    marginTop: scale(-36)
-                }}
-                enableAvatarBorder
-                url={fileService.getFullUrl(user.avatar ?? "")}
-                online={isOnline(user.updatedAt?.valueOf() ?? 0)}
-                width={scale(72)}
-                height={scale(72)}
-            />
+            <View style={{
+                marginTop: scale(-40)
+            }}>
+                <AvatarX size={72} online={isOnline(user.updatedAt?.valueOf() ?? 0)} border={true} uri={user.avatar ?? ""} />
+            </View>
             <View style={styles.rightContainer}>
                 <Text style={styles.nameText}>{user.nickName}</Text>
                 {
@@ -55,7 +47,7 @@ export default (props: {
                 await clipboard.setStringAsync(user.userName ?? '');
                 toast(t('userInfo.success_copied'));
             }}>
-                <Text style={styles.signText}>{strUtil.truncateMiddle(user.addr ?? '', 24)}</Text>
+                <Text style={styles.signText}>@{user.userName}</Text>
                 <Image source={require('assets/icons/copy.svg')} style={styles.copyIcon} />
             </TouchableOpacity>
         </View>

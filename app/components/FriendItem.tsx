@@ -39,7 +39,7 @@ export default (props: {
                 <Text style={{
                     fontSize: 14,
                     color: colors.palette.gray400
-                }}>{strUtil.truncateMiddle(item.addr,18)}</Text>
+                }}>{strUtil.truncateMiddle(item.userName,18)}</Text>
             </View>
             <View>
                 <Image style={styles.icon} source={require('assets/icons/arrow-right-gray.svg')} />

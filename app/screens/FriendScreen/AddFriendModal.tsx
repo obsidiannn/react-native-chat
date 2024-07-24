@@ -1,16 +1,16 @@
-import { IServer } from "@repo/types"
-import FriendItem from "app/components/FriendItem"
-import Navbar from "app/components/Navbar"
+import { IServer } from "@repo/types";
+import FriendItem from "app/components/FriendItem";
+import Navbar from "app/components/Navbar";
 import fileService from "app/services/file.service"
-import friendService from "app/services/friend.service"
-import userService from "app/services/user.service"
-import { ColorsState } from "app/stores/system"
-import { scale } from "app/utils/size"
-import { Image } from "expo-image"
-import { useCallback, useState } from "react"
-import { View, TouchableOpacity, StyleSheet, TextInput, Pressable, ScrollView } from "react-native"
-import { useSafeAreaInsets } from "react-native-safe-area-context"
-import { useRecoilValue } from "recoil"
+import friendService from "app/services/friend.service";
+import userService from "app/services/user.service";
+import { ColorsState } from "app/stores/system";
+import { scale } from "app/utils/size";
+import { Image } from "expo-image";
+import { useCallback, useState } from "react";
+import { View, StyleSheet, TextInput, Pressable, ScrollView } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useRecoilValue } from "recoil";
 
 export const AddFriendModal = () => {
     const themeColor = useRecoilValue(ColorsState)
@@ -30,6 +30,7 @@ export const AddFriendModal = () => {
         console.log('user', user);
 
         if (user) {
+            console.log('userRelations',"请求关系");
             const userRelations = await friendService.getReleationList([user.id])
             console.log('userRelations', userRelations);
 

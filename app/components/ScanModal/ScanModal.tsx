@@ -8,7 +8,6 @@ import { ColorsState } from "app/stores/system";
 import { CameraPermissionView } from "./CameraPermissionView";
 import { CameraWindow } from "./CameraWindow";
 import { s } from "app/utils/size";
-
 export interface ScanModalType {
     open: () => void,
     close: () => void
@@ -38,7 +37,7 @@ export default forwardRef((props: ScanModalProps, ref) => {
             <Navbar title={'扫一扫'} onLeftPress={onClose} />
             <View style={{
                 flex: 1,
-                backgroundColor: $colors.background,
+                backgroundColor: $colors.secondaryBackground,
                 paddingTop: s(30),
             }}>
                 {permission ? (!permission.granted ? <CameraPermissionView requestPermission={requestPermission} /> : (visible ? <CameraWindow onChange={(v) => {

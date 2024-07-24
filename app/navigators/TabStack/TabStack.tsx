@@ -26,8 +26,8 @@ export default () => {
             <BottomTab {...props} />
         </View>
     }}>
-        <Stack.Screen name="PlazaScreen" component={PlazaScreen} />
+        {/* <Stack.Screen name="PlazaScreen" component={PlazaScreen} /> */}
         <Stack.Screen name="ChatScreen" component={ChatScreen} />
-        <Stack.Screen name="WalletScreen" component={WalletScreen} />
+        {/* <Stack.Screen name="WalletScreen" component={WalletScreen} /> */}
     </Stack.Navigator>
 }

@@ -10,6 +10,7 @@ import { Screen } from "app/components";
 import BlockButton from "app/components/BlockButton";
 import { StackScreenProps } from "@react-navigation/stack";
 import { Checkbox } from "./Checkbox";
+import { App } from "types/app";
 
 
 type Props = StackScreenProps<App.StackParamList, 'WelcomeScreen'>;

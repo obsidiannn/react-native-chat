@@ -1,8 +1,8 @@
-import fileService from "app/services/file.service";
 import { colors } from "app/theme"
 import { s, scale } from "app/utils/size"
-import { Image, ImageStyle } from "expo-image"
+import { ImageStyle } from "expo-image"
 import { View, ViewStyle } from "react-native"
+import { NetworkImage } from "./NetworkImage";
 
 export interface AvatarXProps {
     uri: string;
@@ -24,7 +24,7 @@ const AvatarX = (props: AvatarXProps) => {
                 overflow: 'hidden'
             }
         ]}>
-            <Image source={fileService.getFullUrl(uri)} style={[$avatar, { width: s(size), height: s(size) }]} />
+            <NetworkImage uri={uri} style={[$avatar, { width: s(size), height: s(size) }]} />
         </View>
         {
             online ?
