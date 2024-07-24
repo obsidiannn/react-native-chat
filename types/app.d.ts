@@ -40,6 +40,10 @@ declare namespace App {
       friendApply: IServer.IFriendApply;
       user: IUser;
     }
+    GroupCreateScreen: {
+      selected: SelectMemberOption[]
+    }
+
     FriendInviteRecordScreen: undefined
     // IGNITE_GENERATOR_ANCHOR_APP_STACK_PARAM_LIST
     UserChatInfoModal: {

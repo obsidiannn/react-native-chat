@@ -24,15 +24,18 @@ const BaseModal = ({
     animationType
 }: BaseModalProps) => {
     const insets = useSafeAreaInsets()
-
     return <Modal transparent={transparent ?? false} style={{ flex: 1 }} visible={visible} animationType={animationType} >
         <View style={{
             flex: 1,
             paddingTop: insets.top,
-            ...styles
         }}>
             <Navbar title={title} onLeftPress={onClose} />
-            {children}
+            <View style={{
+                ...styles
+            }}>
+
+                {children}
+            </View>
         </View>
     </Modal>
 }

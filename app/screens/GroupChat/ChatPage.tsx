@@ -6,7 +6,6 @@ import {
     SocketMessageEvent
 } from "@repo/types";
 import EventManager from 'app/services/event-manager.service'
-import { GroupChatUiContext } from "./context";
 import { useTranslation } from 'react-i18next';
 import { Chat, MessageType, darkTheme, lightTheme } from "app/components/chat-ui";
 import { MediaTypeOptions, launchImageLibraryAsync } from 'expo-image-picker'
@@ -43,7 +42,6 @@ export default forwardRef((props, ref) => {
     const theme = useRecoilValue(ThemeState)
     const chatItemRef = useRef<ChatDetailItem>()
     const authorRef = useRef<GroupMemberItemVO>()
-    const groupContext = useContext(GroupChatUiContext)
     const author = useRecoilValue(AuthUser)
     const sharedSecretRef = useRef<string>('');
     const firstSeq = useRef<number>(0);
@@ -61,7 +59,6 @@ export default forwardRef((props, ref) => {
             lastSeq.current = sequence
         }
         console.log('------add message', sequence);
-
         setMessages([message, ...messages])
     }
 
@@ -157,7 +154,7 @@ export default forwardRef((props, ref) => {
         console.log('[event]', e);
         if (type === IModel.IClient.SocketTypeEnum.MESSAGE) {
             const _eventItem = e as SocketMessageEvent
-            if (lastSeq.current < _eventItem.sequence && author?.id !== _eventItem.sender) {
+            if (lastSeq.current < _eventItem.sequence && author?.id !== _eventItem.senderId) {
                 loadMessages('down')
             }
         }

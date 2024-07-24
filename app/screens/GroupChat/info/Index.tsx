@@ -1,33 +1,48 @@
-import { GroupDetailItem, GroupInfoItem, GroupMemberItemVO } from "@repo/types";
-import { ScrollView, Text,View } from "react-native"
+import { ClearChatMessageEvent } from "@repo/types";
+import { StyleSheet, Switch, Text, View } from "react-native"
 import { Button } from "app/components/Button"
-import MemberItem from "./components/member-item";
-import MenuItem from "./components/menu-item";
-import QRcodeModal, { QRcodeModalRef } from "@/modals/screens/group-chat/qrcode-modal";
-import ApplyListModal, { ApplyListModalRef } from "@/modals/screens/group-chat/apply-list-modal";
-import ConfirmModal, { ConfirmModalType } from "@/modals/components/confirm-modal";
-import GoodCategory, { GroupCategoryModalRef } from "@/modals/screens/group-chat/group-category";
-import GoodManager, { GroupManagerModalRef } from "@/modals/screens/group-chat/group-manager";
-import { useCallback, useContext, useRef } from "react";
-import SelectMemberModal, { SelectMemberModalType, SelectMemberOption } from "@/modals/components/select-member-modal";
+import MemberItem from "./components/MemberItem";
+import MenuItem from "./components/MenuItem";
+import QRcodeModal, { QRcodeModalRef } from "./QrcodeModal";
+import ApplyListModal, { ApplyListModalRef } from "./ApplyListModal";
+import ConfirmModal, { ConfirmModalType } from "app/components/ConfirmModal";
+import GoodManager, { GroupManagerModalRef } from "./GroupManagerModal";
+import { forwardRef, useCallback, useContext, useImperativeHandle, useRef, useState } from "react";
+import SelectMemberModal, { SelectMemberModalType, SelectMemberOption } from "app/components/SelectMemberModal/Index"
 import groupService from "app/services/group.service";
 import friendService from "app/services/friend.service";
 import { GroupChatUiContext } from "../context";
 import EventManager from 'app/services/event-manager.service'
 import { useTranslation } from 'react-i18next';
 import { IModel } from "@repo/enums";
-export default (props: {
-    group?: GroupDetailItem;
-    authUser?: GroupMemberItemVO;
-}) => {
+import toast from "app/utils/toast";
+import { scale } from "app/utils/size";
+import messageSendService from "app/services/message-send.service";
+import quickCrypto from "app/utils/quick-crypto";
+import BaseModal from "app/components/base-modal";
+import { useRecoilValue } from "recoil";
+import { ColorsState } from "app/stores/system";
+import Icon from "app/components/Icon";
+import { colors } from "app/theme";
+import { ScrollView } from "react-native-gesture-handler";
+
+export interface GroupInfoModalType {
+    open: () => void
+}
+
+export default forwardRef((_, ref) => {
+
+    const groupContext = useContext(GroupChatUiContext)
+    const [visible, setVisible] = useState(false)
+    const themeColor = useRecoilValue(ColorsState)
+
     const qrcodeModalRef = useRef<QRcodeModalRef>(null);
     const applyListModalRef = useRef<ApplyListModalRef>(null);
     const confirmModalRef = useRef<ConfirmModalType>(null);
     const selectMemberModalRef = useRef<SelectMemberModalType>(null)
-    const groupCategoryModalRef = useRef<GroupCategoryModalRef>(null)
+    // const groupCategoryModalRef = useRef<GroupCategoryModalRef>(null)
     const groupManagerModalRef = useRef<GroupManagerModalRef>(null)
-    const groupContext = useContext(GroupChatUiContext)
-    const { t } = useTranslation('screen-group-chat')
+    const { t } = useTranslation('screens')
     const batchInviteJoin = useCallback(async (users: {
         id: number;
         pubKey: string;
@@ -37,28 +52,32 @@ export default (props: {
         if (!myWallet) {
             return
         }
-        const author = props.authUser
-        let sharedSecret: string
+        const author = groupContext.selfMember
+        if (!author) {
+            return
+        }
+        let secretBuff
         if (author?.encPri !== '' && author?.encPri !== null && author?.encPri !== undefined) {
             console.log('a');
             const key = wallet?.computeSharedSecret(author.encPri)
-            sharedSecret = quickAes.De(author.encKey, key ?? '')
+            secretBuff = quickCrypto.De(key ?? '', Buffer.from(author.encKey, 'utf8'))
         } else {
             console.log('b');
             const key = wallet?.computeSharedSecret(myWallet.getPublicKey())
-            sharedSecret = quickAes.De(author?.encKey ?? '', key ?? '')
+            // sharedSecret = quickAes.De(author?.encKey ?? '', key ?? '')
+            secretBuff = quickCrypto.De(key ?? '', Buffer.from(author.encKey, 'utf8'))
         }
-        const groupPassword = quickAes.De(author?.encKey ?? '', sharedSecret)
+        const groupPassword = quickCrypto.De(author?.encKey ?? '', secretBuff)
         const groupInfo = {
-            id: props.group?.id ?? -1,
-            groupPassword: groupPassword
+            id: groupContext.group?.id ?? -1,
+            groupPassword: Buffer.from(groupPassword).toString('hex')
         }
         await groupService.invite(users, groupInfo);
     }, []);
 
 
     const renderAddMember = () => {
-        return <MemberItem avatar={require('@/assets/icons/circle-plus-big-white.svg')} onPress={async () => {
+        return <MemberItem avatar={require('assets/icons/plus.svg')} onPress={async () => {
             const data = await friendService.getOnlineList();
             const existIds = groupContext.members?.map(item => item.id) ?? [];
             const options: SelectMemberOption[] = data.map((item) => {
@@ -77,7 +96,7 @@ export default (props: {
             if (options.length > 0) {
                 console.log('options', options);
                 selectMemberModalRef.current?.open({
-                    title: t('title_add_member'),
+                    title: t('groupChat.title_add_member'),
                     options,
                     callback: async (ops: SelectMemberOption[]) => {
                         const selected = ops.filter((item) => item.status).map(o => {
@@ -93,11 +112,11 @@ export default (props: {
     }
 
     const renderRemoveMember = () => {
-        return <MemberItem avatar={require('@/assets/icons/circle-sub-big-white.svg')} onPress={() => {
+        return <MemberItem avatar={require('assets/icons/plus.svg')} onPress={() => {
             console.log('踢出用戶');
             if (groupContext.members) {
                 const options: SelectMemberOption[] = groupContext.members.map((item) => {
-                    const disabled = props.authUser?.id === item.id;
+                    const disabled = groupContext.selfMember?.id === item.id;
                     return {
                         id: item.id,
                         icon: item.avatar,
@@ -111,20 +130,20 @@ export default (props: {
                 })
 
                 selectMemberModalRef.current?.open({
-                    title: t('title_remove_member'),
+                    title: t('groupChat.title_remove_member'),
                     options,
                     callback: (ops: SelectMemberOption[]) => {
                         console.log(ops);
                         const uids = ops.filter((item) => item.status).map(item => Number(item.id));
                         if (uids.length > 0) {
                             groupService.kickOut({
-                                id: props.group?.id ?? -1,
+                                id: groupContext.group?.id ?? -1,
                                 uids,
                             }).then(() => {
-                                toast(t('option_success'))
+                                toast(t('groupChat.option_success'))
                             }).catch((e) => {
                                 console.log(e);
-                                toast(t('option_failed'))
+                                toast(t('groupChat.option_failed'))
                             })
                         }
                     },
@@ -133,146 +152,187 @@ export default (props: {
         }} />
     }
 
-    return <ScrollView style={{
-        flex: 1,
-        backgroundColor: '#fff',
-        paddingHorizontal: scale(25),
+    useImperativeHandle(ref, () => ({
+        open: () => {
+            setVisible(true)
+        }
+    }));
+
+
+    return <BaseModal visible={visible} onClose={() => { setVisible(false) }} title="群设置" styles={{
+        backgroundColor: themeColor.secondaryBackground,
+        paddingTop: scale(24),
+        flex: 1
     }}>
-        <View style={{
-            borderRadius: scale(16),
-            borderWidth: 1,
-            borderColor: '#F4F4F4',
-            backgroundColor: '#F8F8F8',
+        <ScrollView style={{
+            flex: 1,
+            borderTopLeftRadius: scale(24),
+            borderTopRightRadius: scale(24),
+            backgroundColor: themeColor.background,
             padding: scale(15),
-            paddingRight: scale(0),
-            paddingTop: scale(5),
-            marginTop: scale(20),
         }}>
-            <View style={{
-                flexDirection: 'row',
-                display: 'flex',
-                flexWrap: 'wrap',
-            }}>
-                {(groupContext.members ?? []).map((member, i) => {
-                    return <MemberItem key={member.id} avatar={member.avatar} text={member.name} onPress={() => {
-                        console.log('點擊用戶', member);
-                    }} />
-                })}
-                {/* 超管 + -  */}
-                {(props.authUser && props.authUser.role < IModel.IGroup.IGroupMemberRoleEnum.MEMBER) ?
-                    <>
-                        {
-                            //  renderAddMember()
-                            renderRemoveMember()
-                        }
-                    </>
-                    : null}
-
-            </View>
-        </View>
-        <MenuItem onPress={() => {
-            if (!props.group) {
-                return;
+            {/* 群信息 */}
+            <MenuItem label={t('groupChat.title_group_info')}
+                leftIcon={<Icon path={require('assets/icons/group-info.svg')} width={16} height={20} />}
+                rightComponent={<Icon path={require('assets/icons/arrow-right-gray.svg')} />} />
+            {
+                // 管理员
+                (groupContext.selfMember && groupContext.selfMember.role === IModel.IGroup.IGroupMemberRoleEnum.OWNER) ?
+                    <MenuItem label={t('groupChat.title_manager')}
+                        onPress={() => {
+                            if (!groupContext.group) {
+                                return;
+                            }
+                            console.log("管理進入");
+                            groupManagerModalRef.current?.open(groupContext.group?.id);
+                        }}
+                        leftIcon={<Icon path={require('assets/icons/group-manager.svg')} width={16} height={20} />}
+                        rightComponent={<Icon path={require('assets/icons/arrow-right-gray.svg')} />} />
+                    : null
             }
-            qrcodeModalRef.current?.open({
-                group: props.group,
-                count: (groupContext.members ?? []).length
-            })
-        }} icon={require('@/assets/icons/qrcode.svg')} label={t('title_qrcode')} />
-        <MenuItem label={t('title_limit')} rightComponent={<Text style={{
-            fontSize: scale(14),
-            fontWeight: '400',
-            color: '#ABABB2',
-        }}>100人</Text>} />
+            <View style={{
+                ...styles.bottomLine,
+                borderBottomColor: themeColor.border
+            }} />
+
+            <MenuItem label={t('groupChat.title_top')}
+                leftIcon={<Icon path={require('assets/icons/top.svg')} width={16} height={16} />}
+                rightComponent={<Switch value={groupContext.chatItem?.isTop === IModel.ICommon.ICommonBoolEnum.YES}
+                    thumbColor={'#ffffff'}
+                    trackColor={{
+                        false: colors.palette.gray400,
+                        true: themeColor.primary
+                    }}
+                    onValueChange={(e) => {
+
+                    }} />} />
+
+            <MenuItem label={t('groupChat.title_inhibite')}
+                leftIcon={<Icon path={require('assets/icons/ignore.svg')} width={16} height={16} />}
+                rightComponent={<Switch value={groupContext.chatItem?.isMute === IModel.ICommon.ICommonBoolEnum.YES}
+                    thumbColor={'#ffffff'}
+                    trackColor={{
+                        false: colors.palette.gray400,
+                        true: themeColor.primary
+                    }}
+                    onValueChange={(e) => {
+
+                    }} />} />
+
+            <View style={{
+                ...styles.bottomLine,
+                borderBottomColor: themeColor.border
+            }} />
+
+            {
+                (groupContext.selfMember && groupContext.selfMember.role < IModel.IGroup.IGroupMemberRoleEnum.MEMBER) ?
+                    <>
+                        {/* 申请列表 */}
+                        <MenuItem onPress={() => {
+                            if (!groupContext.group) {
+                                return;
+                            }
+                            applyListModalRef.current?.open(groupContext.group?.gid, groupContext.selfMember?.encKey ?? '', groupContext.selfMember?.encPri ?? '');
+                        }} icon={require('assets/icons/arrow-right-gray.svg')} label={t('groupChat.title_apply_list')} />
+                        {/* 清空群记录 */}
+                        <MenuItem label={t('groupChat.title_drop_message')} labelColor="#FB3737"
+                            onPress={() => {
+                                confirmModalRef.current?.open({
+                                    title: t('groupChat.title_drop_message'),
+                                    desc: t('groupChat.title_drop_message_desc'),
+                                    onSubmit: () => {
+                                        groupService.clearGroupMessages([groupContext.group.id], [groupContext.group?.chatId]).then(() => {
+                                            const event: ClearChatMessageEvent = { chatId: groupContext.group.chatId, type: IModel.IClient.SocketTypeEnum.CLEAR_ALL_MESSAGE }
+                                            const eventKey = EventManager.generateChatTopic(groupContext.group.chatId)
+                                            EventManager.emit(eventKey, event)
+                                        })
+                                    }
+                                });
+                            }}
+                            leftIcon={<Icon path={require('assets/icons/ignore.svg')} width={16} height={16} color="#FB3737" />}
+                        />
+                    </>
+                    : null
+            }
+
+            <MenuItem label={t('groupChat.title_clear_message')} labelColor="#FB3737"
+                onPress={() => {
+                    confirmModalRef.current?.open({
+                        title: t('groupChat.title_clear_message'),
+                        desc: t('groupChat.title_drop_message_desc'),
+                        onSubmit: () => {
+                            groupService.clearGroupMessages([groupContext.group.id], [groupContext.group?.chatId]).then(() => {
+                                const event: ClearChatMessageEvent = { chatId: groupContext.group.chatId, type: IModel.IClient.SocketTypeEnum.CLEAR_ALL_MESSAGE }
+                                const eventKey = EventManager.generateChatTopic(groupContext.group.chatId)
+                                EventManager.emit(eventKey, event)
+                            })
+                        }
+                    });
+                }}
+                leftIcon={<Icon path={require('assets/icons/ignore.svg')} width={16} height={16} color="#FB3737" />}
+            />
+
+            {
+                (groupContext.selfMember && groupContext.selfMember.role !== IModel.IGroup.IGroupMemberRoleEnum.OWNER) ?
+                    <MenuItem label={t('groupChat.title_exit_group')} labelColor="#FB3737"
+                        onPress={() => {
+                            confirmModalRef.current?.open({
+                                title: t('groupChat.title_clear_message'),
+                                desc: t('groupChat.title_drop_message_desc'),
+                                onSubmit: () => {
+                                    messageSendService.clearMineMessage([groupContext.group.chatId]).then(res => {
+                                        const event: ClearChatMessageEvent = { chatId: groupContext.group.chatId, type: IModel.IClient.SocketTypeEnum.CLEAR_ALL_MESSAGE }
+                                        const eventKey = EventManager.generateChatTopic(groupContext.group.chatId)
+                                        EventManager.emit(eventKey, event)
+                                        toast(t('groupChat.option_success'))
+                                    })
+                                }
+                            });
+                        }}
+                        leftIcon={<Icon path={require('assets/icons/delete.svg')} width={20} height={20} color="#FB3737" />}
+                    /> : null
+            }
+
+            {
+                (groupContext.selfMember && groupContext.selfMember.role === IModel.IGroup.IGroupMemberRoleEnum.OWNER) ?
+                    <Button onPress={() => {
+                        confirmModalRef.current?.open({
+                            title: t('groupChat.title_drop_group'),
+                            desc: t('groupChat.title_drop_group_desc'),
+                            onSubmit: () => {
+                                console.log('解散羣聊');
+                            }
+                        });
+                    }} style={{
+                        height: scale(50),
+                        marginVertical: scale(24),
+                        borderRadius: scale(12)
+                    }} >
+                        <Text>{t('groupChat.title_drop_group')}</Text>
+                    </Button>
+
+                    : null
+            }
+
+        </ScrollView>
 
 
 
 
-        {
+
+        {/* {
             (props.authUser && props.authUser.role === IModel.IGroup.IGroupMemberRoleEnum.OWNER) ?
                 <MenuItem onPress={() => {
                     if (!props.group) {
                         return;
                     }
                     groupCategoryModalRef.current?.open(props.group?.id);
-                }} icon={require('@/assets/icons/arrow-right-gray.svg')} label={t('title_category')} />
+                }} icon={require('@/assets/icons/arrow-right-gray.svg')} label={t('groupChat.title_category')} />
                 : null
-        }
+        } */}
 
 
-        {
-            (props.authUser && props.authUser.role === IModel.IGroup.IGroupMemberRoleEnum.OWNER) ?
-                <MenuItem onPress={() => {
-                    if (!props.group) {
-                        return;
-                    }
-                    console.log("管理進入");
-                    groupManagerModalRef.current?.open(props.group?.id);
-                }} icon={require('@/assets/icons/arrow-right-gray.svg')} label={t('title_manager')} />
-                : null
-        }
 
-        {
-            (props.authUser && props.authUser.role < IModel.IGroup.IGroupMemberRoleEnum.MEMBER) ?
-                <>
-
-                    <MenuItem onPress={() => {
-                        if (!props.group) {
-                            return;
-                        }
-                        applyListModalRef.current?.open(props.group?.id, props.authUser?.encKey ?? '', props.authUser?.encPri ?? '');
-                    }} icon={require('@/assets/icons/arrow-right-gray.svg')} label={t('title_apply_list')} />
-                    <MenuItem onPress={() => {
-                        confirmModalRef.current?.open({
-                            title: t('title_drop_message'),
-                            desc: t('title_drop_message_desc'),
-                            onSubmit: () => {
-                                groupService.clearGroupMessages([groupContext.group.id], [groupContext.chatId]).then(() => {
-                                    const event: ClearChatMessageEvent = { chatId: groupContext.chatId, type: IModel.IClient.SocketTypeEnum.CLEAR_ALL_MESSAGE }
-                                    const eventKey = EventManager.generateChatTopic(groupContext.chatId)
-                                    EventManager.emit(eventKey, event)
-                                })
-                            }
-                        });
-                    }} icon={require('@/assets/icons/arrow-right-gray.svg')} label={t('title_drop_message')} />
-
-
-                </>
-                : null
-        }
-
-        <MenuItem onPress={() => {
-            confirmModalRef.current?.open({
-                title: t('title_clear_message'),
-                desc: t('title_drop_message_desc'),
-                onSubmit: () => {
-                    messageService.clearMineMessage([groupContext.chatId]).then(res => {
-                        const event: ClearChatMessageEvent = { chatId: groupContext.chatId, type: IModel.IClient.SocketTypeEnum.CLEAR_ALL_MESSAGE }
-                        const eventKey = EventManager.generateChatTopic(groupContext.chatId)
-                        EventManager.emit(eventKey, event)
-                        toast(t('option_success'))
-                    })
-                }
-            });
-        }} labelColor="#FB3737" icon={require('@/assets/icons/arrow-right-gray.svg')} label={t('title_clear_message')} />
-
-        {
-            (props.authUser && props.authUser.role === IModel.IGroup.IGroupMemberRoleEnum.OWNER) ?
-                <Button onPress={() => {
-                    confirmModalRef.current?.open({
-                        title: t('title_drop_group'),
-                        desc: t('title_drop_group_desc'),
-                        onSubmit: () => {
-                            console.log('解散羣聊');
-                        }
-                    });
-                }} style={{
-                    height: scale(50),
-                    marginTop: scale(40),
-                }} borderRadius={scale(12)} color="#FB3737" backgroundColor="white" outlineColor="#FB3737" label={t('title_drop_group')} />
-
-                : null
-        }
 
         <QRcodeModal ref={qrcodeModalRef} />
         <ApplyListModal onCheck={(item) => {
@@ -280,9 +340,9 @@ export default (props: {
             // applyInfoModalRef.current?.open(item);
         }} ref={applyListModalRef} />
         <ConfirmModal ref={confirmModalRef} />
-        <GoodCategory ref={groupCategoryModalRef} onCheck={() => {
+        {/* <GoodCategory ref={groupCategoryModalRef} onCheck={() => {
             console.log("打開羣分類");
-        }} />
+        }} /> */}
 
         <GoodManager ref={groupManagerModalRef} onCheck={() => {
             console.log("打開羣管理");
@@ -290,5 +350,12 @@ export default (props: {
 
 
         <SelectMemberModal ref={selectMemberModalRef} />
-    </ScrollView>
-}
+    </BaseModal>
+})
+
+
+const styles = StyleSheet.create({
+    bottomLine: {
+        borderBottomWidth: scale(0.5),
+    }
+})

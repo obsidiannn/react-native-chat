@@ -6,9 +6,7 @@ import { TouchableOpacity } from "react-native";
 import { Image } from "expo-image";
 import groupService from "app/services/group.service";
 import { ChatDetailItem, GroupDetailItem, GroupMemberItemVO } from "@repo/types";
-import PagerView from "react-native-pager-view";
 import ChatPage, { GroupChatPageRef } from './ChatPage';
-import InfoPage from "./info/Index";
 import { GroupChatUiContext } from "./context";
 import { useRecoilState } from "recoil";
 import { IUser } from "drizzle/schema";
@@ -19,7 +17,7 @@ import { AuthUser } from "app/stores/auth";
 import toast from "app/utils/toast";
 import { scale } from "app/utils/size";
 import { colors } from "app/theme";
-
+import GroupInfoModal, { GroupInfoModalType } from './info/Index'
 
 type Props = StackScreenProps<App.StackParamList, 'GroupChatScreen'>;
 
@@ -32,16 +30,16 @@ export const GroupChatScreen = ({ navigation, route }: Props) => {
     const [group, setGroup] = useState<GroupDetailItem>()
     const [authUser, _] = useRecoilState<IUser | null>(AuthUser)
     // const groupRef = useRef<GroupDetailItem>()
-    const [pageIndex, setPageIndex] = useState(0);
+    const groupInfoModalRef = useRef<GroupInfoModalType>(null)
     const chatPageRef = useRef<GroupChatPageRef>(null);
-    const pagerViewRef = useRef<PagerView>(null);
     const [members, setMembers] = useState<GroupMemberItemVO[]>([]);
 
     const selfMemberRef = useRef<GroupMemberItemVO>()
-    const { t } = useTranslation('screen-group-chat')
+    const [selfMember,setSelfMember] = useState<GroupMemberItemVO>()
+    const { t } = useTranslation('screens')
 
     // TODO: 這裏是根據uid變化而部分請求接口的函數
-    const refreshMember = useCallback(async (uids: string[]) => {
+    const refreshMember = useCallback(async (uids: number[]) => {
         loadMembers()
     }, []);
 
@@ -53,6 +51,7 @@ export const GroupChatScreen = ({ navigation, route }: Props) => {
 
             if (self !== null) {
                 selfMemberRef.current = self
+                setSelfMember(self)
                 chatPageRef.current?.init(chatItemRef.current, self);
             }
         });
@@ -61,7 +60,7 @@ export const GroupChatScreen = ({ navigation, route }: Props) => {
         const res = await groupService.getInfo(groupIdRef.current)
         console.log('羣信息', res);
         if (res === null) {
-            toast(t('error_group'))
+            toast(t('groupChat.error_group'))
             return
         }
         setGroup(res);
@@ -70,7 +69,7 @@ export const GroupChatScreen = ({ navigation, route }: Props) => {
     const init = useCallback(async () => {
 
         if (!globalThis.wallet) {
-            toast(t('error_wallet_init'));
+            toast(t('groupChat.error_wallet_init'));
             return;
         }
 
@@ -106,7 +105,6 @@ export const GroupChatScreen = ({ navigation, route }: Props) => {
             }}>
 
             <View style={{
-                height: 40,
                 width: '100%',
                 backgroundColor: 'white',
             }}>
@@ -126,17 +124,9 @@ export const GroupChatScreen = ({ navigation, route }: Props) => {
                             display: 'flex',
                             flexDirection: 'row',
                         }}>
+
                             <TouchableOpacity onPress={() => {
-                                pagerViewRef.current?.setPage(0);
-                            }}>
-                                <Image source={require('assets/icons/chat.svg')} style={{
-                                    width: scale(32),
-                                    height: scale(32),
-                                    tintColor: colors.palette.gray800
-                                }} />
-                            </TouchableOpacity>
-                            <TouchableOpacity onPress={() => {
-                                pagerViewRef.current?.setPage(1);
+                                groupInfoModalRef.current.open()
                             }}>
                                 <Image source={require('assets/icons/more.svg')} style={{
                                     width: scale(32),
@@ -152,22 +142,14 @@ export const GroupChatScreen = ({ navigation, route }: Props) => {
             <GroupChatUiContext.Provider value={{
                 members: members,
                 group: group,
-                selfMember: selfMemberRef.current,
+                chatItem: chatItemRef.current,
+                selfMember: selfMember,
                 reloadMember: loadMembers,
                 reloadMemberByUids: refreshMember,
                 reloadGroup: loadGroup
             }}>
-                <PagerView ref={pagerViewRef}
-                    scrollEnabled={false}
-                    style={{
-                        flex: 1,
-                        backgroundColor: '#F4F4F4',
-                    }} onPageSelected={(v) => {
-                        setPageIndex(v.nativeEvent.position);
-                    }} initialPage={pageIndex}>
-                    <ChatPage ref={chatPageRef} />
-                    {/* <InfoPage authUser={selfMemberRef.current} group={group ?? undefined} /> */}
-                </PagerView>
+                <ChatPage ref={chatPageRef} />
+                <GroupInfoModal ref={groupInfoModalRef} />
             </GroupChatUiContext.Provider>
         </View>
 

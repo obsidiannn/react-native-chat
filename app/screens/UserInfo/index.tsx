@@ -6,8 +6,6 @@ import userService from 'app/services/user.service'
 import { useEffect, useState } from "react";
 import InfoCard from "./components/info-card";
 import RemarkCard from "./components/remark-card";
-import { Image } from "expo-image";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import { IUser } from "drizzle/schema";
 import chatService from "app/services/chat.service";
 import { useTranslation } from 'react-i18next';

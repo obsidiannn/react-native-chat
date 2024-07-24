@@ -21,7 +21,13 @@ const quitAll = async () => {
 
 // 獲取羣組列表
 const getMineList = async () => {
-    return groupApi.mineGroupList({});
+    const groupIdsResp = await groupApi.mineGroupList({})
+    const groups = groupIdsResp.items ?? []
+    if (groups.length > 0) {
+        const result = await groupApi.groupSingleInfo({ ids: groups.map(g => g.groupId) })
+        return result.items
+    }
+    return []
 }
 
 
@@ -67,7 +73,7 @@ const alphabetList = (items: GroupMemberItemVO[]) => {
     };
 }
 
-const create = async (name: string, avatar: string, isEnc: boolean, searchType: string) => {
+const create = async (name: string, avatar: string, isEnc: boolean, searchType: string,describe: string) => {
     if (!globalThis.wallet) {
         throw new Error('請先登錄');
     }
@@ -88,7 +94,8 @@ const create = async (name: string, avatar: string, isEnc: boolean, searchType: 
         banType: 0,
         searchType: Number(searchType),
         encPri: '',
-        encKey: Buffer.from(enc_key).toString('hex')
+        encKey: Buffer.from(enc_key).toString('hex'),
+        describe: describe
     }
     const { id } = await groupApi.create(group);
     group.id = id
@@ -120,11 +127,11 @@ const invite = async (members: {
     }[] = [];
     members.forEach(member => {
         const itemSecretKey = wallet?.computeSharedSecret(member.pubKey ?? '')
-        const enkey = quickAes.En(groupInfo.groupPassword, itemSecretKey ?? '');
+        const enkey = quickCrypto.En(groupInfo.groupPassword, Buffer.from(itemSecretKey ?? '','utf8'));
         items.push({
             uid: Number(member.id),
             encPri: myWallet.getPublicKey(),
-            encKey: enkey,
+            encKey: Buffer.from(enkey).toString('hex'),
         })
     })
     if (items.length > 0) {
@@ -181,16 +188,6 @@ const getInfo = async (id: number): Promise<GroupDetailItem> => {
 }
 
 
-// // Todo: 這裏需要調整
-// const encInfo = async (id: string) => {
-//     const data = await groupApi.encInfoByIds({
-//         ids: [id]
-//     });
-//     if (data.items.length == 0) {
-//         throw new Error('羣組不存在');
-//     }
-//     return data.items[0];
-// }
 const join = async (id: number, remark: string): Promise<GroupRequireJoinResp> => {
     return groupApi.requireJoin({ id, encKey: '', encPri: '', remark: remark });
 }

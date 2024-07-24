@@ -1,6 +1,6 @@
-import { Image } from "@/components/image";
+import { scale } from "app/utils/size";
+import { Image } from "expo-image";
 import { Text, TouchableOpacity } from "react-native";
-import { scale } from "react-native-size-matters/extend";
 
 export default (props: {
     avatar: string;

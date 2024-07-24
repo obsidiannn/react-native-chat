@@ -84,4 +84,24 @@ export class LocalUserService {
             where: eq(users.addr, addr)
         })
     }
+
+    static async setFriends(ids: number[]) {
+        if (ids.length <= 0) {
+            return;
+        }
+        const db = GetDB()
+        if (!db) {
+            return
+        }
+        return await db.update(users).set({
+            isFriend: 1
+        }).where(inArray(users.id, ids));
+    }
+    static async getFriends(): Promise<IUser[]> {
+        const db = GetDB()
+        if (!db) {
+            return []
+        }
+        return await db.select().from(users).where(eq(users.isFriend, 1));
+    }
 }

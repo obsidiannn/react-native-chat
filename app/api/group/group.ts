@@ -41,7 +41,7 @@ const requireJoin = async (param: GroupRequireJoinReq):Promise<GroupRequireJoinR
 
 const kickOut = async (param: GroupKickOutReq) => await createInstance(true).post('/groups/kick-out', param);
 
-const mineGroupList = async (param: GroupIdsReq) :Promise<GroupListIdResp> => await createInstance(true).post('/groups/list',param);
+const mineGroupList = async (param: GroupIdsReq) :Promise<BaseArrayResp<GroupListIdResp>> => createInstance(true).post('/groups/list',param);
 
 const groupInfoList = async (param: GroupIdsReq): Promise<BaseArrayResp<GroupInfoDto>> =>await createInstance(true).post('/groups/list-by-ids',param);
 

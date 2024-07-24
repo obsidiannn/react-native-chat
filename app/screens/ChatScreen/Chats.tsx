@@ -29,12 +29,21 @@ const ChatView = () => {
                 data={chats}
                 renderItem={({ item, index }) => renderItem(item, index === chats.length - 1)}
                 estimatedItemSize={scale(76)}
+                showsVerticalScrollIndicator={false}
             />
         </View>
     }
 
+    const getOnlineStatus = (item: ChatDetailItem): boolean | undefined => {
+        if (item.type === IModel.IChat.IChatTypeEnum.NORMAL) {
+            return true
+        }
+        return undefined
+    }
+
     const renderItem = (item: ChatDetailItem, isLast: boolean) => {
         const unread = item.lastSequence - item.lastReadSequence
+        const online = getOnlineStatus(item)
         return <ConversationItem
             key={item.id}
             badgeNumber={unread}
@@ -43,11 +52,10 @@ const ChatView = () => {
             title={item.chatAlias}
             describe={item.describe}
             subTitle={formatDate(dayjs().toISOString())}
-            online={true}
+            online={online}
             inhibite={item.isMute === IModel.ICommon.ICommonBoolEnum.YES}
             onPress={() => {
                 console.log('jjj');
-                
                 itemPress(item)
             }}
         />
@@ -59,7 +67,7 @@ const ChatView = () => {
     const itemPress = (item: ChatDetailItem) => {
         if (item.type === IModel.IChat.IChatTypeEnum.NORMAL) {
             console.log('jump');
-            
+
             navigate('UserChatScreen', {
                 item,
             })
