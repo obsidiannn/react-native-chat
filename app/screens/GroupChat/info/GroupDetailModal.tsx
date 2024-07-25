@@ -1,11 +1,10 @@
-import { forwardRef, useContext, useImperativeHandle, useState } from "react";
+import { forwardRef, useCallback, useContext, useImperativeHandle, useRef, useState } from "react";
 import { GroupDetailItem, GroupMemberItemVO } from "@repo/types";
 import BaseModal from "app/components/base-modal";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { scale } from "app/utils/size";
 import { useRecoilValue } from "recoil";
 import { ColorsState } from "app/stores/system";
-import { Avatar } from "app/components/chat-ui";
 import AvatarX from "app/components/AvatarX";
 import { GroupChatUiContext } from "../context";
 import { ScrollView, TextInput } from "react-native-gesture-handler";
@@ -15,7 +14,12 @@ import { IModel } from "@repo/enums";
 import Icon from "app/components/Icon";
 import { isOnline } from "app/utils/account";
 import { Button } from "app/components";
-
+import groupApi from "app/api/group/group";
+import GroupMemberManageModal, { GroupMemberManageModalType } from "./GroupMemberManageModal";
+import SelectMemberModal, { SelectMemberModalType, SelectMemberOption } from "app/components/SelectMemberModal/Index"
+import quickCrypto from "app/utils/quick-crypto";
+import groupService from "app/services/group.service";
+import friendService from "app/services/friend.service";
 
 export interface GroupDetailModalType {
     open: () => void
@@ -26,8 +30,10 @@ export default forwardRef((_, ref) => {
     const themeColor = useRecoilValue(ColorsState)
     const groupContext = useContext(GroupChatUiContext)
     const [editing, setEditing] = useState(false)
-
+    const [groupName, setGroupName] = useState(groupContext.group.name)
+    const groupMemberManageRef = useRef<GroupMemberManageModalType>()
     const { t } = useTranslation('screens')
+    const selectMemberModalRef = useRef<SelectMemberModalType>(null)
 
     const onClose = () => {
         setVisible(false)
@@ -38,11 +44,68 @@ export default forwardRef((_, ref) => {
         }
     }));
 
+    const changeName = async () => {
+        if (editing) {
+            groupApi.changeName({ id: groupContext.group.id, name: groupName }).then(res => {
+                groupContext.reloadGroup()
+                setEditing(false)
+            })
+        } else {
+            setEditing(true)
+        }
+    }
+
+
+    const batchInviteJoin = useCallback(async (users: {
+        id: number;
+        pubKey: string;
+    }[]) => {
+
+        const myWallet = globalThis.wallet
+        if (!myWallet) {
+            return
+        }
+        const author = groupContext.selfMember
+        if (!author) {
+            return
+        }
+        let secretBuff
+        if (author?.encPri !== '' && author?.encPri !== null && author?.encPri !== undefined) {
+            console.log('a');
+            const key = wallet?.computeSharedSecret(author.encPri)
+            secretBuff = quickCrypto.De(key ?? '', Buffer.from(author.encKey, 'utf8'))
+        } else {
+            console.log('b');
+            const key = wallet?.computeSharedSecret(myWallet.getPublicKey())
+            // sharedSecret = quickAes.De(author?.encKey ?? '', key ?? '')
+            secretBuff = quickCrypto.De(key ?? '', Buffer.from(author.encKey, 'utf8'))
+        }
+        const groupPassword = quickCrypto.De(author?.encKey ?? '', secretBuff)
+        const groupInfo = {
+            id: groupContext.group?.id ?? -1,
+            groupPassword: Buffer.from(groupPassword).toString('hex')
+        }
+        groupService.invite(users, groupInfo).then(()=>{
+            groupContext.reloadMember()
+        })
+    }, []);
+
+
+
+
     return <BaseModal visible={visible} onClose={onClose} title={""} animationType="slide" styles={{
         flex: 1,
         backgroundColor: themeColor.secondaryBackground,
         paddingTop: scale(36),
-    }} >
+    }}
+        renderRight={
+            <TouchableOpacity style={{ backgroundColor: themeColor.background, padding: scale(4), borderRadius: scale(8) }}
+            >
+                <Icon path={require("assets/icons/share.svg")} color={themeColor.text} />
+            </TouchableOpacity>
+        }
+
+    >
         <View style={{
             flex: 1,
             borderTopLeftRadius: scale(24),
@@ -61,22 +124,29 @@ export default forwardRef((_, ref) => {
                 display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: "space-between"
             }}>
                 <TextInput
-                    enabled={editing && groupContext.selfMember && groupContext.selfMember.role < IModel.IGroup.IGroupMemberRoleEnum.MEMBER}
+                    editable={editing && groupContext.selfMember && groupContext.selfMember.role < IModel.IGroup.IGroupMemberRoleEnum.MEMBER}
                     placeholder={t('groupCreate.placeholder_name')}
                     placeholderTextColor={colors.palette.gray300}
                     maxLength={128}
                     style={{
                         ...styles.input,
+                        color: themeColor.text
                     }}
-                    value={groupContext.group?.name}
+                    value={groupName}
                     cursorColor={themeColor.text}
                     onChangeText={text => {
-
+                        if (text.length <= 10) {
+                            setGroupName(text)
+                        } else {
+                            setGroupName(text.substring(0, 10))
+                        }
                     }}
                 />
                 {groupContext.selfMember && groupContext.selfMember.role < IModel.IGroup.IGroupMemberRoleEnum.MEMBER ?
-                    <TouchableOpacity style={{ backgroundColor: themeColor.secondaryBackground, padding: scale(4), borderRadius: scale(8) }}>
-                        {editing ? <Icon path={require("assets/icons/edit.svg")} /> : <Icon path={require("assets/icons/edit.svg")} />}
+                    <TouchableOpacity style={{ backgroundColor: themeColor.secondaryBackground, padding: scale(4), borderRadius: scale(8) }}
+                        onPress={changeName}
+                    >
+                        {editing ? <Icon path={require("assets/icons/check.svg")} color={themeColor.text} /> : <Icon path={require("assets/icons/edit.svg")} color={themeColor.text} />}
                     </TouchableOpacity> :
                     null
                 }
@@ -109,7 +179,9 @@ export default forwardRef((_, ref) => {
                                     <Text style={{ color: colors.palette.gray400 }}>{item.sign}</Text>
                                 </View>
                             </View>
-                            <TouchableOpacity>
+                            <TouchableOpacity onPress={() => {
+                                groupMemberManageRef.current?.open(groupContext.group.id, item, groupContext.selfMember)
+                            }}>
                                 <Icon path={require("assets/icons/more.svg")} />
                             </TouchableOpacity>
                         </View>
@@ -120,12 +192,50 @@ export default forwardRef((_, ref) => {
             <Button style={{
                 backgroundColor: themeColor.primary,
                 borderRadius: scale(14),
-            }}>
+            }}
+                pressedStyle={{
+                    backgroundColor: themeColor.btnChoosed
+                }}
+                onPress={async() => {
+                    const data = await friendService.getOnlineList();
+                    const existIds = groupContext.members?.map(item => item.id) ?? [];
+                    const options: SelectMemberOption[] = data.map((item) => {
+                        const disabled = existIds.includes(item.id);
+                        return {
+                            id: item.id,
+                            icon: item.avatar,
+                            status: false,
+                            name: item.nickName,
+                            title: item.nickName,
+                            name_index: item.nickNameIdx,
+                            disabled,
+                            pubKey: item.pubKey
+                        } as SelectMemberOption;
+                    })
+                    if (options.length > 0) {
+                        console.log('options', options);
+                        selectMemberModalRef.current?.open({
+                            title: t('groupChat.title_add_member'),
+                            options,
+                            callback: async (ops: SelectMemberOption[]) => {
+                                const selected = ops.filter((item) => item.status).map(o => {
+                                    return { id: Number(o.id), pubKey: o.pubKey ?? '' }
+                                })
+                                if (selected.length > 0) {
+                                    await batchInviteJoin(selected)
+                                }
+                            },
+                        })
+                    }
+                }}
+            >
                 <Text style={{ color: themeColor.btnDefault }}>{t('groupChat.btn_invite_member')}</Text>
             </Button>
         </View>
 
-    </BaseModal>
+        <SelectMemberModal ref={selectMemberModalRef} />
+        <GroupMemberManageModal ref={groupMemberManageRef} />
+    </BaseModal >
 })
 
 

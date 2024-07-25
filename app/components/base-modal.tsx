@@ -12,6 +12,7 @@ export interface BaseModalProps {
     transparent?: boolean
     animationType?: 'none' | 'slide' | 'fade'
     onClose: () => void
+    renderRight?: ReactNode
 }
 
 const BaseModal = ({
@@ -21,7 +22,8 @@ const BaseModal = ({
     visible,
     onClose,
     transparent,
-    animationType
+    animationType,
+    renderRight
 }: BaseModalProps) => {
     const insets = useSafeAreaInsets()
     return <Modal transparent={transparent ?? false} style={{ flex: 1 }} visible={visible} animationType={animationType} >
@@ -29,7 +31,7 @@ const BaseModal = ({
             flex: 1,
             paddingTop: insets.top,
         }}>
-            <Navbar title={title} onLeftPress={onClose} />
+            <Navbar title={title} onLeftPress={onClose} renderRight={()=>{return renderRight}}/>
             <View style={{
                 ...styles
             }}>

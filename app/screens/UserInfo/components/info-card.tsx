@@ -11,6 +11,7 @@ import { colors } from "app/theme";
 import { useRecoilValue } from "recoil";
 import { ColorsState } from "app/stores/system";
 import AvatarX from "app/components/AvatarX";
+import strUtil from "app/utils/str-util";
 export default (props: {
     user: IUser
 }) => {
@@ -47,7 +48,7 @@ export default (props: {
                 await clipboard.setStringAsync(user.userName ?? '');
                 toast(t('userInfo.success_copied'));
             }}>
-                <Text style={styles.signText}>@{user.userName}</Text>
+                <Text style={styles.signText}>@{strUtil.truncateMiddle(user.userName,30)}</Text>
                 <Image source={require('assets/icons/copy.svg')} style={styles.copyIcon} />
             </TouchableOpacity>
         </View>
