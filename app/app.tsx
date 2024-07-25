@@ -1,6 +1,6 @@
 import "./i18n"
 import "./utils/ignoreWarnings"
-import React from "react"
+import React, { useEffect } from "react"
 import { initialWindowMetrics, SafeAreaProvider } from "react-native-safe-area-context"
 import { AppNavigator, useNavigationPersistence } from "./navigators"
 import { ErrorBoundary } from "./screens/ErrorScreen/ErrorBoundary"
@@ -24,7 +24,9 @@ const App = (props: AppProps) => {
     isRestored: isNavigationStateRestored,
   } = useNavigationPersistence(storage, NAVIGATION_PERSISTENCE_KEY)
 
-
+  useEffect(() => {
+    hideSplashScreen();
+  },[])
 
   if (!isNavigationStateRestored) {
     return null

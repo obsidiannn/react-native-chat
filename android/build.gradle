@@ -1,3 +1,16 @@
+allprojects {
+    project.pluginManager.withPlugin("com.facebook.react") {
+        react {
+            reactNativeDir = rootProject.file("../../../node_modules/react-native/")
+            codegenDir = rootProject.file("../../../node_modules/react-native-codegen/")
+        }
+    }
+    repositories {
+        maven {
+            url rootProject.file("../../../node_modules/expo-camera/android/maven")
+        }
+    }
+}
 buildscript {
     ext {
         buildToolsVersion = "34.0.0"
@@ -20,10 +33,4 @@ buildscript {
 }
 
 apply plugin: "com.facebook.react.rootproject"
-allprojects {
-    repositories {
-        maven {
-            url "$rootDir/../node_modules/expo-camera/android/maven"
-        }
-    }
-}
+
