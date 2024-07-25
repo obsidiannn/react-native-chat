@@ -7,6 +7,7 @@ export const NetworkImage = (props: {
 }) => {
   return (
     <Image
+      contentFit="contain"
       source={{uri: fileService.getFullUrl(props.uri)}}
       style={props.style}
       cachePolicy="disk"

@@ -1,9 +1,7 @@
 import { StyleSheet, View, Text, ScrollView, TouchableOpacity } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { forwardRef, useContext, useImperativeHandle, useMemo, useRef, useState } from "react";
 import { Image } from "expo-image";
 import SelectMemberModal, { SelectMemberModalType, SelectMemberOption } from "app/components/SelectMemberModal/Index";
-import MemberItem from "./components/MemberItem";
 import groupService from "app/services/group.service";
 import { GroupChatUiContext } from "../context";
 import BaseModal from "app/components/base-modal";
@@ -11,6 +9,10 @@ import { useTranslation } from "react-i18next";
 import { IModel } from "@repo/enums";
 import { scale } from "app/utils/size";
 import { colors } from "app/theme";
+import Icon from "app/components/Icon";
+import AvatarComponent from "app/components/Avatar";
+import { useRecoilValue } from "recoil";
+import { ColorsState } from "app/stores/system";
 
 export interface GroupManagerModalRef {
   open: (groupId: number) => void;
@@ -19,17 +21,16 @@ export interface GroupManagerModalRef {
 export default forwardRef((props: {
   onCheck: () => void;
 }, ref) => {
-  const insets = useSafeAreaInsets();
   const [visible, setVisible] = useState(false);
   const [groupId, setGroupId] = useState<number>();
-  const maxManager = 5;
+  const maxManager = 3;
   const selectMemberModalRef = useRef<SelectMemberModalType>(null)
+  const themeColor = useRecoilValue(ColorsState)
   const { t } = useTranslation('screens')
   const managerDescribe = [
     t('groupChat.label_manager_1'),
     t('groupChat.label_manager_2'),
     t('groupChat.label_manager_3'),
-    t('groupChat.label_manager_4')
   ]
   const groupContext = useContext(GroupChatUiContext)
 
@@ -53,24 +54,30 @@ export default forwardRef((props: {
     setVisible(false)
   }
   return <BaseModal visible={visible} onClose={onClose} title={'管理員'} animationType="slide" styles={{
-    flex: 1
+    flex: 1,
+    backgroundColor: themeColor.secondaryBackground,
+    paddingTop: scale(24),
   }} >
-    <ScrollView style={styles.mainContainer}>
+    <ScrollView style={{
+      ...styles.mainContainer,
+      backgroundColor: themeColor.background,
+      borderTopLeftRadius: scale(24),
+      borderTopRightRadius: scale(24),
+    }}>
       <View style={{ marginTop: "5%" }}>
-        <Text style={styles.titleStyle}>{t('groupChat.label_manager_auth')}</Text>
-        <View style={styles.groupDescribe}>
-          {
-            managerDescribe.map(
-              (e, i) => {
-                return <Text style={{ color: "#6b7280", marginTop: scale(5), marginBottom: scale(5) }} key={i}> {e} </Text>
-              }
-            )
-          }
-        </View>
+        {
+          managerDescribe.map(
+            (e, i) => {
+              return <View style={styles.groupDescribe} key={"label_" + i}>
+                <Icon path={require('assets/icons/bell.svg')} width={14} height={14} />
+                <Text style={{ color: "#6b7280", margin: scale(5) }} key={i}> {e} </Text>
+              </View>
+            }
+          )
+        }
       </View>
 
       <View style={{ marginBottom: scale(12) }}>
-        <Text style={styles.titleStyle}>{t('groupChat.label_current_manager')}</Text>
         <View style={styles.managerList}>
           {
             managers.map((e, i) => {
@@ -79,15 +86,13 @@ export default forwardRef((props: {
                 marginTop: i === 0 ? 0 : scale(14)
               }} key={e.id + "member"}>
                 <View style={{ flexDirection: "row", alignItems: "center" }}>
-                  <Image source={e.avatar} style={styles.avatar} />
-                  <Text style={{ color: "#4b5563", marginLeft: scale(10), fontSize: scale(18) }}>{e.name}</Text>
+                  <AvatarComponent url={e.avatar} enableAvatarBorder />
+                  <Text style={{ ...styles.memberText, marginLeft: scale(10), color: themeColor.text }}>{e.name}</Text>
                 </View>
-
 
                 <TouchableOpacity
                   style={{ padding: scale(4) }}
                   onPress={async () => {
-                    console.log('remove admin');
                     await groupService.adminRemove({
                       id: groupId ?? -1,
                       uids: [e.uid]
@@ -105,49 +110,61 @@ export default forwardRef((props: {
           }
         </View>
 
+        <TouchableOpacity style={{
+          ...styles.managerItem,
+        }} key={"add_member"}
+          onPress={async () => {
+            const existIds = managers?.map(item => item.uid) ?? [];
+            const options: SelectMemberOption[] = (groupContext.members ?? [])
+              .filter(m => { return m.role !== IModel.IGroup.IGroupMemberRoleEnum.OWNER })
+              .map((item) => {
+                const disabled = existIds.includes(item.uid);
+                console.log(item);
+                return {
+                  id: item.uid,
+                  icon: item.avatar,
+                  status: item.role === IModel.IGroup.IGroupMemberRoleEnum.MANAGER,
+                  name: item.name,
+                  title: item.name,
+                  name_index: item.nameIndex,
+                  disabled,
+                  pubKey: item.pubKey
+                } as SelectMemberOption;
+              })
+            if (options.length > 0) {
+              console.log('options', options);
+              selectMemberModalRef.current?.open({
+                title: t('groupChat.btn_add_manager'),
+                options,
+                callback: async (ops: SelectMemberOption[]) => {
+                  const uids = ops.filter((item) => item.status).map(item => Number(item.id));
+                  // const totalManagers = new Set([...managers.map(m=>m.uid),...uids])
+                  if (uids.length > 0) {
+                    await groupService.adminAdd({
+                      id: groupId ?? -1,
+                      uids: uids
+                    })
+                    groupContext.reloadMemberByUids(uids)
+                  }
+                },
+              })
+            }
+          }}
+        >
+          <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+            <Icon path={require('assets/icons/circle-plus-primary.svg')} width={48} height={48} />
+            <Text style={{
+              ...styles.memberText,
+              color: themeColor.text,
+              marginLeft: scale(10)
+            }}>{t('groupChat.btn_add_manager')}</Text>
+          </View>
+          <Icon path={require("assets/icons/arrow-right-gray.svg")} />
+        </TouchableOpacity>
+
       </View>
 
-      <MemberItem
 
-        avatar={require('assets/icons/plus.svg')}
-        text={t('groupChat.btn_add_manager')}
-        onPress={async () => {
-          const existIds = managers?.map(item => item.uid) ?? [];
-          const options: SelectMemberOption[] = (groupContext.members ?? [])
-            .filter(m => { return m.role !== IModel.IGroup.IGroupMemberRoleEnum.OWNER })
-            .map((item) => {
-              const disabled = existIds.includes(item.uid);
-              console.log(item);
-              return {
-                id: item.uid,
-                icon: item.avatar,
-                status: item.role === IModel.IGroup.IGroupMemberRoleEnum.MANAGER,
-                name: item.name,
-                title: item.name,
-                name_index: item.nameIndex,
-                disabled,
-                pubKey: item.pubKey
-              } as SelectMemberOption;
-            })
-          if (options.length > 0) {
-            console.log('options', options);
-            selectMemberModalRef.current?.open({
-              title: t('groupChat.btn_add_manager'),
-              options,
-              callback: async (ops: SelectMemberOption[]) => {
-                const uids = ops.filter((item) => item.status).map(item => Number(item.id));
-                // const totalManagers = new Set([...managers.map(m=>m.uid),...uids])
-                if (uids.length > 0) {
-                  await groupService.adminAdd({
-                    id: groupId ?? -1,
-                    uids: uids
-                  })
-                  groupContext.reloadMemberByUids(uids)
-                }
-              },
-            })
-          }
-        }} />
     </ScrollView>
     <SelectMemberModal ref={selectMemberModalRef} />
   </BaseModal>
@@ -174,20 +191,21 @@ const styles = StyleSheet.create({
   },
   groupDescribe: {
     backgroundColor: "#f3f4f6",
-    padding: scale(20),
+    padding: scale(12),
     borderRadius: scale(15),
-
+    marginTop: scale(8),
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center'
   },
   managerList: {
     // backgroundColor:"yellow",
+    marginTop: scale(18)
   },
   managerItem: {
-    padding: scale(10),
-    paddingLeft: scale(20),
-    paddingRight: scale(20),
-    backgroundColor: "#f3f4f6",
-    borderRadius: scale(15),
 
+    borderRadius: scale(15),
+    paddingVertical: scale(12),
     display: 'flex',
     flexDirection: "row",
     justifyContent: 'space-between',
@@ -212,7 +230,10 @@ const styles = StyleSheet.create({
   buttonFont: {
     fontSize: scale(14),
     textAlign: "center"
+  },
+  memberText: {
+    fontSize: scale(16),
+    fontWeight: "500",
   }
-
 
 })

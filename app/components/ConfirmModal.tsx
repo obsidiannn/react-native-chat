@@ -13,7 +13,7 @@ export interface ConfirmModalType {
 }
 export default forwardRef((_, ref) => {
     const [visible, setVisible] = useState(false);
-    const {t} = useTranslation()
+    const {t} = useTranslation('components')
     const [option, setOption] = useState<ConfirmOption>({
         title: '',
         desc: '',
@@ -70,7 +70,7 @@ export default forwardRef((_, ref) => {
                         color: '#D90000',
                         fontSize: scale(16),
                         fontWeight: '500',
-                    }}>{t('common.btn_submit')}</Text>
+                    }}>{t('confirm.btn_submit')}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => {
                     setVisible(false)
@@ -85,7 +85,7 @@ export default forwardRef((_, ref) => {
                     <Text style={{
                         fontSize: scale(16),
                         fontWeight: '500',
-                    }}>{t('common.btn_cancel')}</Text>
+                    }}>{t('confirm.btn_cancel')}</Text>
                 </TouchableOpacity>
             </View>
         </View>

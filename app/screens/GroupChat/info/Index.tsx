@@ -7,7 +7,7 @@ import QRcodeModal, { QRcodeModalRef } from "./QrcodeModal";
 import ApplyListModal, { ApplyListModalRef } from "./ApplyListModal";
 import ConfirmModal, { ConfirmModalType } from "app/components/ConfirmModal";
 import GoodManager, { GroupManagerModalRef } from "./GroupManagerModal";
-import { forwardRef, useCallback, useContext, useImperativeHandle, useRef, useState } from "react";
+import { forwardRef, useCallback, useContext, useImperativeHandle, useMemo, useRef, useState } from "react";
 import SelectMemberModal, { SelectMemberModalType, SelectMemberOption } from "app/components/SelectMemberModal/Index"
 import groupService from "app/services/group.service";
 import friendService from "app/services/friend.service";
@@ -20,11 +20,16 @@ import { scale } from "app/utils/size";
 import messageSendService from "app/services/message-send.service";
 import quickCrypto from "app/utils/quick-crypto";
 import BaseModal from "app/components/base-modal";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { ColorsState } from "app/stores/system";
 import Icon from "app/components/Icon";
 import { colors } from "app/theme";
 import { ScrollView } from "react-native-gesture-handler";
+import GroupDetailModal, { GroupDetailModalType } from "./GroupDetailModal";
+import { ChatsStore } from "app/stores/auth";
+
+import chatApi from "app/api/chat/chat";
+import group from "app/api/group/group";
 
 export interface GroupInfoModalType {
     open: () => void
@@ -40,9 +45,22 @@ export default forwardRef((_, ref) => {
     const applyListModalRef = useRef<ApplyListModalRef>(null);
     const confirmModalRef = useRef<ConfirmModalType>(null);
     const selectMemberModalRef = useRef<SelectMemberModalType>(null)
+    const groupDetailModalRef = useRef<GroupDetailModalType>(null)
     // const groupCategoryModalRef = useRef<GroupCategoryModalRef>(null)
     const groupManagerModalRef = useRef<GroupManagerModalRef>(null)
     const { t } = useTranslation('screens')
+
+    // const [chatsStore, setChatsStore] = useRecoilState(ChatsStore)
+
+    const chat = useMemo(() => {
+        return groupContext.chatItem
+    }, [
+        groupContext.chatItem?.isTop,
+        groupContext.chatItem?.isMute,
+    ])
+
+
+
     const batchInviteJoin = useCallback(async (users: {
         id: number;
         pubKey: string;
@@ -152,6 +170,22 @@ export default forwardRef((_, ref) => {
         }} />
     }
 
+
+    const changeTop = (chatIdVal: string, val: number) => {
+        groupContext.reloadChat({
+            ...groupContext.chatItem,
+            isTop: val
+        })
+    }
+
+    const changeMute = (chatIdVal: string, val: number) => {
+        groupContext.reloadChat({
+            ...groupContext.chatItem,
+            isMute: val
+        })
+    }
+
+
     useImperativeHandle(ref, () => ({
         open: () => {
             setVisible(true)
@@ -174,7 +208,11 @@ export default forwardRef((_, ref) => {
             {/* 群信息 */}
             <MenuItem label={t('groupChat.title_group_info')}
                 leftIcon={<Icon path={require('assets/icons/group-info.svg')} width={16} height={20} />}
-                rightComponent={<Icon path={require('assets/icons/arrow-right-gray.svg')} />} />
+                rightComponent={<Icon path={require('assets/icons/arrow-right-gray.svg')} />}
+                onPress={() => {
+                    groupDetailModalRef.current?.open()
+                }}
+            />
             {
                 // 管理员
                 (groupContext.selfMember && groupContext.selfMember.role === IModel.IGroup.IGroupMemberRoleEnum.OWNER) ?
@@ -197,26 +235,32 @@ export default forwardRef((_, ref) => {
 
             <MenuItem label={t('groupChat.title_top')}
                 leftIcon={<Icon path={require('assets/icons/top.svg')} width={16} height={16} />}
-                rightComponent={<Switch value={groupContext.chatItem?.isTop === IModel.ICommon.ICommonBoolEnum.YES}
+                rightComponent={<Switch value={chat?.isTop === IModel.ICommon.ICommonBoolEnum.YES}
                     thumbColor={'#ffffff'}
                     trackColor={{
                         false: colors.palette.gray400,
                         true: themeColor.primary
                     }}
-                    onValueChange={(e) => {
+                    onValueChange={async (e) => {
+                        const res = await chatApi.raiseTop({
+                            chatUserId: groupContext.chatItem.chatUserId ?? '',
+                            top: e
+                        })
+                        changeTop(groupContext.chatItem.id, res.isTop)
 
                     }} />} />
 
             <MenuItem label={t('groupChat.title_inhibite')}
                 leftIcon={<Icon path={require('assets/icons/ignore.svg')} width={16} height={16} />}
-                rightComponent={<Switch value={groupContext.chatItem?.isMute === IModel.ICommon.ICommonBoolEnum.YES}
+                rightComponent={<Switch value={chat?.isMute === IModel.ICommon.ICommonBoolEnum.YES}
                     thumbColor={'#ffffff'}
                     trackColor={{
                         false: colors.palette.gray400,
                         true: themeColor.primary
                     }}
-                    onValueChange={(e) => {
-
+                    onValueChange={async (e) => {
+                        await new Promise(resolve => setTimeout(resolve, 1000));
+                        changeMute(groupContext.chatItem.id, e ? 1 : 0)
                     }} />} />
 
             <View style={{
@@ -347,7 +391,7 @@ export default forwardRef((_, ref) => {
         <GoodManager ref={groupManagerModalRef} onCheck={() => {
             console.log("打開羣管理");
         }} />
-
+        <GroupDetailModal ref={groupDetailModalRef} />
 
         <SelectMemberModal ref={selectMemberModalRef} />
     </BaseModal>
