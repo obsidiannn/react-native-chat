@@ -10,6 +10,7 @@ export interface GroupChatUiContextType {
 	reloadMember: () => Promise<void>
 	reloadMemberByUids: (uids: number[]) => Promise<void>
 	reloadGroup: () => Promise<void>
+	reloadChat: (chat: ChatDetailItem) => void 
 }
 
 export const GroupChatUiContext = createContext({} as GroupChatUiContextType)

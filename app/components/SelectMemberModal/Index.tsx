@@ -24,6 +24,7 @@ export interface SelectMemberModalType {
     open: (params: {
         title: string;
         options: SelectMemberOption[],
+        max?: number
         callback: (options: SelectMemberOption[]) => void
     }) => void;
 }

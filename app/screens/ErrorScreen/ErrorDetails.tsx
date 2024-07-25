@@ -14,7 +14,7 @@ export interface ErrorDetailsProps {
  * @param {ErrorDetailsProps} props - The props for the `ErrorDetails` component.
  * @returns {JSX.Element} The rendered `ErrorDetails` component.
  */
-export function ErrorDetails(props: ErrorDetailsProps) {
+export const ErrorDetails = (props: ErrorDetailsProps) => {
   return (
     <Screen
       preset="fixed"

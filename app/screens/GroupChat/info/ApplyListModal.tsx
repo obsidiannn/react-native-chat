@@ -1,7 +1,7 @@
 import { GroupApplyItem } from "@repo/types";
 import groupService from "app/services/group.service";
 import { forwardRef, useImperativeHandle, useRef, useState } from "react";
-import { View } from "react-native";
+import { Text, View } from "react-native";
 import ApplyListItemComponent from "./components/ApplyListItem";
 import ApplyInfoModal, { ApplyInfoModalRef } from "./ApplyInfoModal"
 import BaseModal from "app/components/base-modal";
@@ -38,8 +38,10 @@ export default forwardRef((props: {
         setVisible(false)
     }
 
-    return <BaseModal animationType="slide" visible={visible} onClose={onClose} title="申請列表" >
-        <View>
+    return <BaseModal animationType="slide" visible={visible} onClose={onClose} title="申請列表" styles={{
+        flex: 1
+    }}>
+        <View style={{ flex: 1,}}>
             {items.map((item, idx) => {
                 const isLast = idx === (items.length - 1);
                 return <ApplyListItemComponent

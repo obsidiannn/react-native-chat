@@ -8,7 +8,7 @@ import groupService from "app/services/group.service";
 import { ChatDetailItem, GroupDetailItem, GroupMemberItemVO } from "@repo/types";
 import ChatPage, { GroupChatPageRef } from './ChatPage';
 import { GroupChatUiContext } from "./context";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { IUser } from "drizzle/schema";
 import { useTranslation } from 'react-i18next';
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -25,17 +25,18 @@ type Props = StackScreenProps<App.StackParamList, 'GroupChatScreen'>;
 export const GroupChatScreen = ({ navigation, route }: Props) => {
     const insets = useSafeAreaInsets();
     const chatItemRef = useRef<ChatDetailItem>()
+    const [chatItem,setChatItem] = useState<ChatDetailItem>()
 
     const groupIdRef = useRef<number>(-1)
     const [group, setGroup] = useState<GroupDetailItem>()
-    const [authUser, _] = useRecoilState<IUser | null>(AuthUser)
+    const authUser = useRecoilValue<IUser>(AuthUser)
     // const groupRef = useRef<GroupDetailItem>()
     const groupInfoModalRef = useRef<GroupInfoModalType>(null)
     const chatPageRef = useRef<GroupChatPageRef>(null);
     const [members, setMembers] = useState<GroupMemberItemVO[]>([]);
 
     const selfMemberRef = useRef<GroupMemberItemVO>()
-    const [selfMember,setSelfMember] = useState<GroupMemberItemVO>()
+    const [selfMember, setSelfMember] = useState<GroupMemberItemVO>()
     const { t } = useTranslation('screens')
 
     // TODO: 這裏是根據uid變化而部分請求接口的函數
@@ -66,6 +67,14 @@ export const GroupChatScreen = ({ navigation, route }: Props) => {
         setGroup(res);
         return res
     }, [])
+
+    const reloadChat = (chat: ChatDetailItem) => {
+        console.log('[group]reload',chat);
+        
+        // chatItemRef.current = chat
+        setChatItem(chat)
+    }
+
     const init = useCallback(async () => {
 
         if (!globalThis.wallet) {
@@ -76,6 +85,7 @@ export const GroupChatScreen = ({ navigation, route }: Props) => {
         const _chatItem = route.params.item as ChatDetailItem
         console.log(_chatItem);
         chatItemRef.current = _chatItem
+        setChatItem(_chatItem)
         groupIdRef.current = _chatItem.sourceId ?? ''
         console.log('羣id', groupIdRef.current)
         await loadGroup()
@@ -142,11 +152,12 @@ export const GroupChatScreen = ({ navigation, route }: Props) => {
             <GroupChatUiContext.Provider value={{
                 members: members,
                 group: group,
-                chatItem: chatItemRef.current,
+                chatItem: chatItem,
                 selfMember: selfMember,
                 reloadMember: loadMembers,
                 reloadMemberByUids: refreshMember,
-                reloadGroup: loadGroup
+                reloadGroup: loadGroup,
+                reloadChat: reloadChat
             }}>
                 <ChatPage ref={chatPageRef} />
                 <GroupInfoModal ref={groupInfoModalRef} />
