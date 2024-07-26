@@ -4,11 +4,11 @@ import {
   GroupChangeAliasReq,
   GroupChangeNoticeReq,
   GroupChangeDescReq,
-  GroupMemberResp,GroupInviteJoinReq,
-  GroupKickOutReq,GroupChangeNameReq ,
-  GroupDetailResp,MineGroupInfoItem,
+  GroupMemberResp, GroupInviteJoinReq,
+  GroupKickOutReq, GroupChangeNameReq,
+  GroupDetailResp, MineGroupInfoItem,
   GroupTransferReq,
-  GroupIdsReq,GroupListIdResp, GroupApplyItem, GroupApplyJoinReq, GroupRequireJoinReq, GroupInfoDto,
+  GroupIdsReq, GroupListIdResp, GroupApplyItem, GroupApplyJoinReq, GroupRequireJoinReq, GroupInfoDto,
   GroupMemberItem,
   GroupDetailItem,
   GroupMembersReq,
@@ -20,44 +20,55 @@ import {
   GroupSingleItem
 } from "@repo/types";
 import { createInstance } from '../req';
-import { BaseIdReq,BaseIdArrayReq, BaseIdsArrayReq, BaseArrayResp, BaseIdsNumberReq } from "../types/common";
+import { BaseIdReq, BaseIdArrayReq, BaseIdsArrayReq, BaseArrayResp, BaseIdsNumberReq } from "../types/common";
 
-const create =async (param: GroupCreateReq):Promise<{id: number}> => await createInstance(true).post('/groups/create', param);
-
-
-const getGroupMembersById = async (param: GroupMemberListReq):Promise<BaseArrayResp<GroupMemberItem>> => await createInstance(true).post('/groups/members-list', param);
+const create = async (param: GroupCreateReq): Promise<{ id: number }> => await createInstance(true).post('/groups/create', param);
 
 
-const getGroupMembers = async (param: GroupMembersReq):Promise<GroupMemberResp> => await createInstance(true).post('/groups/members', param);
+const getGroupMembersById = async (param: GroupMemberListReq): Promise<BaseArrayResp<GroupMemberItem>> => await createInstance(true).post('/groups/members-list', param);
 
-const rejectJoin = async (param: GroupApplyJoinReq) => await  createInstance(true).post('/groups/reject-join', param);
 
-const agreeJoin = async (param: {id: number,uid: number,encPri: string,encKey: string}) => await createInstance(true).post('/groups/agree-join', param);
+const getGroupMembers = async (param: GroupMembersReq): Promise<GroupMemberResp> => await createInstance(true).post('/groups/members', param);
+
+const rejectJoin = async (param: GroupApplyJoinReq) => await createInstance(true).post('/groups/reject-join', param);
+
+const agreeJoin = async (param: { id: number, uid: number, encPri: string, encKey: string }) => await createInstance(true).post('/groups/agree-join', param);
 
 const inviteJoin = async (param: GroupInviteJoinReq) => await createInstance(true).post('/groups/invite-join', param);
 
 // 申请加入群组
-const requireJoin = async (param: GroupRequireJoinReq):Promise<GroupRequireJoinResp> => await createInstance(true).post('/groups/require-join', param);
+const requireJoin = async (param: GroupRequireJoinReq): Promise<GroupRequireJoinResp> => await createInstance(true).post('/groups/require-join', param);
 
 const kickOut = async (param: GroupKickOutReq) => await createInstance(true).post('/groups/kick-out', param);
 
-const mineGroupList = async (param: GroupIdsReq) :Promise<BaseArrayResp<GroupListIdResp>> => createInstance(true).post('/groups/list',param);
+const mineGroupList = async (param: GroupIdsReq): Promise<BaseArrayResp<GroupListIdResp>> => createInstance(true).post('/groups/list', param);
 
-const groupInfoList = async (param: GroupIdsReq): Promise<BaseArrayResp<GroupInfoDto>> =>await createInstance(true).post('/groups/list-by-ids',param);
+const groupInfoList = async (param: GroupIdsReq): Promise<BaseArrayResp<GroupInfoDto>> => await createInstance(true).post('/groups/list-by-ids', param);
 
-const changeName =async (param: GroupChangeNameReq) => await createInstance(true).post('/groups/update-name',param);
+const changeName = async (param: GroupChangeNameReq) => await createInstance(true).post('/groups/update-name', param);
 
-const changeAvatar = async (param: GroupChangeAvatarReq) => await createInstance(true).post('/groups/update-avatar',param);
+const changeAvatar = async (param: GroupChangeAvatarReq) => await createInstance(true).post('/groups/update-avatar', param);
 
-const changeAlias = async (param: GroupChangeAliasReq) => await  createInstance(true).post('/groups/update-alias',param);
-const changeNotice = async (param: GroupChangeNoticeReq) => await createInstance(true).post('/groups/update-notice',param);
+const changeAlias = async (param: GroupChangeAliasReq) => await createInstance(true).post('/groups/update-alias', param);
 
-const changeDesc = async (param: GroupChangeDescReq) => await createInstance(true).post('/groups/update-desc',param);
+const changeAliasByManager = async (param: {
+  id: number
+  uid: number
+  alias: string
+}): Promise<{
+  id: number
+  uid: number
+  alias: string
+}> => await createInstance(true).post('/groups/update-member-alias', param);
+
+const changeNotice = async (param: GroupChangeNoticeReq) => await createInstance(true).post('/groups/update-notice', param);
+
+const changeDesc = async (param: GroupChangeDescReq) => await createInstance(true).post('/groups/update-desc', param);
 
 
-const quit = async (param: BaseIdReq) => await createInstance(true).post('/groups/quit',param);
+const quit = async (param: BaseIdReq) => await createInstance(true).post('/groups/quit', param);
 
-const quitBatch = async (param: BaseIdArrayReq) => await createInstance(true).post('/groups/quit-batch',param);
+const quitBatch = async (param: BaseIdArrayReq) => await createInstance(true).post('/groups/quit-batch', param);
 
 const quitAll = async () => await createInstance(true).post('/groups/quit-all');
 
@@ -81,7 +92,7 @@ const groupDetail = async (param: BaseIdsArrayReq): Promise<GroupDetailResp> => 
 
 const clearGroupMessages = async (param: BaseIdsArrayReq) => await createInstance(true).post('/groups/clear-messages', param);
 
-const groupDegist = async (param: {id: number}): Promise<GroupDetailItem> => await createInstance(true).post('/groups/get-info', param);
+const groupDegist = async (param: { id: number }): Promise<GroupDetailItem> => await createInstance(true).post('/groups/get-info', param);
 
 const saveGroupTag = async (param: GroupTagReq) => await createInstance(true).post('/groups/change-tag', param);
 
@@ -100,6 +111,7 @@ export default {
   changeName,
   changeAvatar,
   changeAlias,
+  changeAliasByManager,
   changeNotice,
   changeDesc,
   quit,

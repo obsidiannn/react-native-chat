@@ -8,7 +8,8 @@
     "lint": "eslint .",
     "start": "react-native start",
     "build:android:prod": "cd ./android && ./gradlew assembleRelease",
-    "test": "jest"
+    "test": "jest",
+    "adb": "adb reverse tcp:8081 tcp:8081"
   },
   "dependencies": {
     "@craftzdog/react-native-buffer": "^6.0.5",

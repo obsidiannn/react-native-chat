@@ -39,7 +39,7 @@ export default {
         btn_backup_tips: "備份私钥",
         btn_backup_tips_desc: "請謹慎操作！",
         title_user_info: "用戶信息",
-        label_start_chat: "開始聊天",
+        label_start_chat: "发送消息",
         label_add_friend: "添加好友",
         label_empty: "(空)",
         label_remark: "備註："
@@ -128,6 +128,7 @@ export default {
         btn_kick_out:"移除群组",
         btn_block_user: "加入黑名单",
         label_rejected: "已拒絕",
+
         label_manager_1: "管理员可协助群主管理群聊，拥有发布群简介、移除群成员等能力",
         label_manager_2: "只有群主具备设置管理员、解散群聊的能力",
         label_manager_3: "最多可设置3个管理员",

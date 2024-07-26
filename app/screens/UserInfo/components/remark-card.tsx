@@ -5,9 +5,9 @@ import { StyleSheet, Text, View } from "react-native"
 export default (props: {
     remark: string;
 }) => {
-    const {t} = useTranslation('user-center')
+    const {t} = useTranslation('screens')
     return <View style={styles.container}>
-        <Text style={styles.text}>{t('label_remark')}{props.remark}</Text>
+        <Text style={styles.text}>{t('userInfo.label_remark')}{props.remark}</Text>
     </View>
 }
 const styles = StyleSheet.create({

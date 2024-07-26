@@ -50,15 +50,17 @@ export default forwardRef((_, ref) => {
     const groupManagerModalRef = useRef<GroupManagerModalRef>(null)
     const { t } = useTranslation('screens')
 
-    // const [chatsStore, setChatsStore] = useRecoilState(ChatsStore)
-
-    const chat = useMemo(() => {
-        return groupContext.chatItem
+    const switchState = useMemo(() => {
+        console.log('chat change memo', groupContext.chatItem);
+        return {
+            isTop: groupContext.chatItem?.isTop === IModel.ICommon.ICommonBoolEnum.YES,
+            isMute: groupContext.chatItem?.isMute === IModel.ICommon.ICommonBoolEnum.YES,
+        }
     }, [
-        groupContext.chatItem?.isTop,
-        groupContext.chatItem?.isMute,
+        groupContext.chatItem
     ])
 
+    console.log('loadload');
 
 
     const batchInviteJoin = useCallback(async (users: {
@@ -172,6 +174,7 @@ export default forwardRef((_, ref) => {
 
 
     const changeTop = (chatIdVal: string, val: number) => {
+
         groupContext.reloadChat({
             ...groupContext.chatItem,
             isTop: val
@@ -179,6 +182,7 @@ export default forwardRef((_, ref) => {
     }
 
     const changeMute = (chatIdVal: string, val: number) => {
+
         groupContext.reloadChat({
             ...groupContext.chatItem,
             isMute: val
@@ -213,6 +217,16 @@ export default forwardRef((_, ref) => {
                     groupDetailModalRef.current?.open()
                 }}
             />
+            <MenuItem label={t('groupChat.title_qrcode')}
+                leftIcon={<Icon path={require('assets/icons/qrcode.svg')} width={16} height={24} />}
+                rightComponent={<Icon path={require('assets/icons/arrow-right-gray.svg')} />}
+                onPress={() => {
+                    qrcodeModalRef.current?.open({
+                        group: groupContext.group,
+                        count: groupContext.members?.length ?? 0
+                    })
+                }}
+            />
             {
                 // 管理员
                 (groupContext.selfMember && groupContext.selfMember.role === IModel.IGroup.IGroupMemberRoleEnum.OWNER) ?
@@ -235,24 +249,29 @@ export default forwardRef((_, ref) => {
 
             <MenuItem label={t('groupChat.title_top')}
                 leftIcon={<Icon path={require('assets/icons/top.svg')} width={16} height={16} />}
-                rightComponent={<Switch value={chat?.isTop === IModel.ICommon.ICommonBoolEnum.YES}
-                    thumbColor={'#ffffff'}
-                    trackColor={{
-                        false: colors.palette.gray400,
-                        true: themeColor.primary
-                    }}
-                    onValueChange={async (e) => {
-                        const res = await chatApi.raiseTop({
-                            chatUserId: groupContext.chatItem.chatUserId ?? '',
-                            top: e
-                        })
-                        changeTop(groupContext.chatItem.id, res.isTop)
+                rightComponent={
+                    <Switch value={switchState.isTop}
+                        thumbColor={'#ffffff'}
+                        trackColor={{
+                            false: colors.palette.gray400,
+                            true: themeColor.primary
+                        }}
+                        onChange={async (e) => {
 
-                    }} />} />
+                            // console.log('changed');
+                            e.stopPropagation()
+                            e.persist()
+                            const res = await chatApi.raiseTop({
+                                chatUserId: groupContext.chatItem.chatUserId ?? '',
+                                top: e.nativeEvent.value
+                            })
+                            changeTop(groupContext.chatItem.id, res.isTop ? 1 : 0)
+
+                        }} />} />
 
             <MenuItem label={t('groupChat.title_inhibite')}
                 leftIcon={<Icon path={require('assets/icons/ignore.svg')} width={16} height={16} />}
-                rightComponent={<Switch value={chat?.isMute === IModel.ICommon.ICommonBoolEnum.YES}
+                rightComponent={<Switch value={switchState.isMute}
                     thumbColor={'#ffffff'}
                     trackColor={{
                         false: colors.palette.gray400,

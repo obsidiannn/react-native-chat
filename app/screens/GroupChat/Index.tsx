@@ -18,6 +18,7 @@ import toast from "app/utils/toast";
 import { scale } from "app/utils/size";
 import { colors } from "app/theme";
 import GroupInfoModal, { GroupInfoModalType } from './info/Index'
+import { ColorsState } from "app/stores/system";
 
 type Props = StackScreenProps<App.StackParamList, 'GroupChatScreen'>;
 
@@ -25,7 +26,7 @@ type Props = StackScreenProps<App.StackParamList, 'GroupChatScreen'>;
 export const GroupChatScreen = ({ navigation, route }: Props) => {
     const insets = useSafeAreaInsets();
     const chatItemRef = useRef<ChatDetailItem>()
-    const [chatItem,setChatItem] = useState<ChatDetailItem>()
+    const [chatItem, setChatItem] = useState<ChatDetailItem>()
 
     const groupIdRef = useRef<number>(-1)
     const [group, setGroup] = useState<GroupDetailItem>()
@@ -35,6 +36,7 @@ export const GroupChatScreen = ({ navigation, route }: Props) => {
     const chatPageRef = useRef<GroupChatPageRef>(null);
     const [members, setMembers] = useState<GroupMemberItemVO[]>([]);
 
+    const themeColor = useRecoilValue(ColorsState)
     const selfMemberRef = useRef<GroupMemberItemVO>()
     const [selfMember, setSelfMember] = useState<GroupMemberItemVO>()
     const { t } = useTranslation('screens')
@@ -69,8 +71,8 @@ export const GroupChatScreen = ({ navigation, route }: Props) => {
     }, [])
 
     const reloadChat = (chat: ChatDetailItem) => {
-        console.log('[group]reload',chat);
-        
+        console.log('[group]reload', chat);
+
         // chatItemRef.current = chat
         setChatItem(chat)
     }
@@ -135,9 +137,13 @@ export const GroupChatScreen = ({ navigation, route }: Props) => {
                             flexDirection: 'row',
                         }}>
 
-                            <TouchableOpacity onPress={() => {
-                                groupInfoModalRef.current.open()
-                            }}>
+                            <TouchableOpacity style={{ 
+                                backgroundColor: themeColor.background,
+                                borderRadius: scale(10)
+                             }}
+                                onPress={() => {
+                                    groupInfoModalRef.current?.open()
+                                }}>
                                 <Image source={require('assets/icons/more.svg')} style={{
                                     width: scale(32),
                                     height: scale(32),

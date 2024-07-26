@@ -11,6 +11,7 @@ import { Button } from "app/components";
 import toast from "app/utils/toast";
 import { useRecoilValue } from "recoil";
 import { ColorsState } from "app/stores/system";
+import { colors } from "app/theme";
 export interface QRcodeModalRef {
     open: (params: {
         group: GroupDetailItem;
@@ -19,7 +20,7 @@ export interface QRcodeModalRef {
 }
 export default forwardRef((_, ref) => {
     const [visible, setVisible] = useState(false);
-    const [group, setGroup] = useState<GroupInfoItem>();
+    const [group, setGroup] = useState<GroupDetailItem>();
     const [count, setCount] = useState<number>(0)
     const [data, setData] = useState<string>("xxxx");
     const viewRef = useRef<ViewShot>(null);
@@ -28,7 +29,7 @@ export default forwardRef((_, ref) => {
 
     useImperativeHandle(ref, () => ({
         open: (params: {
-            group: GroupInfoItem;
+            group: GroupDetailItem;
             count: number
         }) => {
             setGroup(params.group);
@@ -40,24 +41,14 @@ export default forwardRef((_, ref) => {
     const onClose = () => {
         setVisible(false)
     }
-    return <BaseModal visible={visible} onClose={onClose} title={'管理員'} animationType="slide" >
+    return <BaseModal visible={visible} onClose={onClose} title={'群二维码'} animationType="slide" >
         <View style={{
-            flex: 1,
             paddingHorizontal: scale(15),
         }}>
             <View style={{
-                backgroundColor: '#fff',
                 borderRadius: scale(16),
-                padding: scale(30),
-                marginTop: scale(20),
-                shadowColor: "#000",
-                shadowOffset: {
-                    width: 0,
-                    height: 1,
-                },
-                shadowOpacity: 0.30,
-                shadowRadius: 1,
-                elevation: 1
+                padding: scale(15),
+                marginTop: scale(30),
             }}>
                 <View style={{
                     display: 'flex',
@@ -68,21 +59,20 @@ export default forwardRef((_, ref) => {
                         width: scale(50),
                         height: scale(50),
                         borderRadius: scale(10),
-                        backgroundColor: '#F6F6F6',
                         borderWidth: 1,
-                        borderColor: '#ECECEC',
+                        borderColor: themeColor.border,
                         marginRight: scale(10),
                     }} />
                     <Text style={{
-                        flex: 1,
-                        fontSize: scale(15),
-                        color: '#333',
+                        fontSize: scale(24),
+                        color: themeColor.text,
                         fontWeight: '400',
-                    }}>{group?.name}<Text style={{ fontSize: scale(14), color: '#999', fontWeight: '400' }}>({count}人)</Text></Text>
+                    }}>{group?.name}
+                        <Text style={{ fontSize: scale(14), color: colors.palette.gray400, fontWeight: '400', marginHorizontal: scale(12) }}>({count}人)</Text>
+                    </Text>
                 </View>
                 <ViewShot ref={viewRef} style={{
-                    width: scale(280),
-                    height: scale(280),
+                    padding: scale(14),
                     borderRadius: scale(16),
                     marginTop: scale(40),
                     backgroundColor: 'white',
@@ -125,7 +115,7 @@ export default forwardRef((_, ref) => {
                         <Text style={{
                             fontSize: scale(14),
                             fontWeight: '700',
-                            color: '#333',
+                            color: themeColor.textChoosed
                         }}>
                             {t('groupChat.btn_save_image')}
                         </Text>

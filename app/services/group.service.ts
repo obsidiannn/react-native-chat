@@ -19,6 +19,10 @@ const quitAll = async () => {
 }
 
 
+const changeAliasByManage = () => {
+    
+}
+
 // 獲取羣組列表
 const getMineList = async () => {
     const groupIdsResp = await groupApi.mineGroupList({})

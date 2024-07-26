@@ -53,7 +53,11 @@ export default (props: {
             </TouchableOpacity>
         </View>
         <View style={styles.signContainer}>
-            <Text style={styles.signText}>{user.sign == '' ? t('label_empty') : user.sign}</Text>
+            <Text style={{
+                ...styles.signText,
+                color: colors.palette.gray500,
+                paddingVertical: scale(12)
+            }}>{!user.sign ? t('userInfo.label_empty') : user.sign}</Text>
         </View>
     </View>
 };
@@ -110,7 +114,6 @@ const styles = StyleSheet.create({
     signText: {
         fontSize: scale(16),
         fontWeight: '400',
-        color: '#999',
         flexWrap: 'wrap'
     }
 });

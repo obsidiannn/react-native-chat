@@ -15,6 +15,8 @@ import { scale, verticalScale } from "app/utils/size";
 import { Button } from "app/components";
 import { useRecoilValue } from "recoil";
 import { ColorsState } from "app/stores/system";
+import Icon from "app/components/Icon";
+import { IModel } from "@repo/enums";
 
 
 type Props = StackScreenProps<App.StackParamList, 'UserInfoScreen'>;
@@ -41,38 +43,50 @@ export const UserInfoScreen = ({ navigation, route }: Props) => {
         });
         return unsubscribe;
     }, [navigation])
+
+    const renderLabel = (isFriend: number) => {
+        if (isFriend === IModel.ICommon.ICommonBoolEnum.YES) {
+            return <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                <Icon path={require("assets/icons/chat-box.svg")} />
+                <Text style={{
+                    color: themeColor.textChoosed
+                }}>{t('userInfo.label_start_chat')}
+                </Text>
+            </View>
+        } else {
+            return <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                <Icon path={require("assets/icons/chat-box.svg")} />
+                <Text style={{
+                    color: themeColor.textChoosed
+                }}>{t('userInfo.label_add_friend')}
+                </Text>
+            </View>
+        }
+    }
+
     return (
         <View style={{
             ...styles.container,
             paddingTop: insets.top,
             paddingBottom: insets.bottom,
         }}>
-            <View>
-                <Navbar title={t('userInfo.title_user_info')}
-                    onLeftPress={() => {
-                        if (route.params.outside) {
-                            navigation.replace('TabStack')
-                        } else {
-                            navigation.goBack()
-                        }
-                    }}
-                />
-            </View>
+            <Navbar title={t('userInfo.title_user_info')}
+                onLeftPress={() => {
+                    if (route.params.outside) {
+                        navigation.replace('TabStack')
+                    } else {
+                        navigation.goBack()
+                    }
+                }}
+            />
             {user ?
                 <View style={{ flex: 1 }}>
                     <View style={{
-                        marginTop: verticalScale(20),
                         backgroundColor: themeColor.secondaryBackground,
                         paddingTop: scale(48)
                     }}>
                         <InfoCard user={user} />
                     </View>
-                    {!user.isFriend ? null : <View style={{
-                        paddingHorizontal: scale(15),
-                        marginTop: verticalScale(21),
-                    }}>
-                        <RemarkCard remark={route.params.remark ?? ''} />
-                    </View>}
                     <View style={{
                         paddingHorizontal: scale(16),
                         alignItems: 'center',
@@ -107,11 +121,9 @@ export const UserInfoScreen = ({ navigation, route }: Props) => {
                             }
                         }}
                         >
-                            <Text style={{
-                                color: themeColor.textChoosed
-                            }}>{
-                                    user.isFriend ? t('userInfo.label_start_chat') : t('userInfo.label_add_friend')
-                                } </Text>
+                            {
+                                renderLabel(user.isFriend)
+                            }
                         </Button>
                     </View>
                 </View> : null}

@@ -20,6 +20,8 @@ import SelectMemberModal, { SelectMemberModalType, SelectMemberOption } from "ap
 import quickCrypto from "app/utils/quick-crypto";
 import groupService from "app/services/group.service";
 import friendService from "app/services/friend.service";
+import AvatarUpload from "app/components/AvatarUpload";
+import fileService from "app/services/file.service";
 
 export interface GroupDetailModalType {
     open: () => void
@@ -85,7 +87,7 @@ export default forwardRef((_, ref) => {
             id: groupContext.group?.id ?? -1,
             groupPassword: Buffer.from(groupPassword).toString('hex')
         }
-        groupService.invite(users, groupInfo).then(()=>{
+        groupService.invite(users, groupInfo).then(() => {
             groupContext.reloadMember()
         })
     }, []);
@@ -118,7 +120,22 @@ export default forwardRef((_, ref) => {
             <View style={{
                 marginTop: scale(-48)
             }}>
-                <AvatarX uri={groupContext.group.avatar} border size={64} />
+                {
+                    groupContext.selfMember.role < IModel.IGroup.IGroupMemberRoleEnum.MEMBER ?
+                        <AvatarUpload
+                            border
+                            avatar={fileService.getFullUrl(groupContext.group.avatar)}
+                            onChange={(uri) => {
+                                groupApi.changeAvatar({
+                                    id: groupContext.group.id,
+                                    avatar: uri
+                                }).then(()=>{
+                                    groupContext.reloadGroup()
+                                })
+
+                            }} /> :
+                        <AvatarX uri={groupContext.group.avatar} border size={64} />
+                }
             </View>
             <View style={{
                 display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: "space-between"
@@ -196,7 +213,7 @@ export default forwardRef((_, ref) => {
                 pressedStyle={{
                     backgroundColor: themeColor.btnChoosed
                 }}
-                onPress={async() => {
+                onPress={async () => {
                     const data = await friendService.getOnlineList();
                     const existIds = groupContext.members?.map(item => item.id) ?? [];
                     const options: SelectMemberOption[] = data.map((item) => {

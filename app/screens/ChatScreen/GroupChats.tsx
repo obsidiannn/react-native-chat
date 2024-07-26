@@ -19,7 +19,7 @@ import fileService from "app/services/file.service"
 const GroupListView = (props: { groups: GroupSingleItem[] }) => {
     const themeColor = useRecoilValue(ColorsState)
     const [loading, setLoading] = useState<boolean>(false)
-    const { t } = useTranslation('friend')
+    const { t } = useTranslation('screens')
     const renderList = () => {
         return <View style={{
             flex: 1,

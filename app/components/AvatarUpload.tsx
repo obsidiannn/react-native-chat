@@ -11,9 +11,13 @@ import { ColorsState } from "app/stores/system";
 export default (props: {
     avatar: string;
     onChange: (v: string) => void
+    border?: boolean;
+    size?: number;
     style?: ViewStyle
 }) => {
     const { t } = useTranslation('components')
+    console.log('avatar', props.avatar);
+    const size = props.size ?? 64
     const themeColor = useRecoilValue(ColorsState)
     const bottomOptionModalRef = useRef<BottomOptionModalType>();
     const options = [
@@ -52,30 +56,40 @@ export default (props: {
         <TouchableOpacity style={{
             ...styles.container,
             backgroundColor: themeColor.primary,
-            ...props.style
+            
+            width: size ,
+            height: size
         }} onPress={() => {
             bottomOptionModalRef.current?.open();
         }}>
-            {props.avatar ? <Image source={props.avatar} style={styles.avatar} /> : null}
+            {props.avatar ? <Image source={props.avatar} style={{
+                borderRadius: scale(32),
+                ...(props.border ? styles.border : null),
+                width: size,
+                height: size
+            }} /> : null}
             <Image source={require('assets/icons/circle-plus-primary.svg')} style={styles.icon} />
         </TouchableOpacity>
         <BottomOptionModal ref={bottomOptionModalRef} items={options} />
     </>
 }
 const styles = StyleSheet.create({
+    border: {
+        borderWidth: scale(3),
+        borderStartColor: 'red',
+        borderEndColor: '#890084',
+        borderTopColor: '#8A0184',
+        borderBottomColor: 'green',
+    },
     container: {
-        width: scale(64),
-        height: scale(64),
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
         borderRadius: scale(32),
     },
-    avatar: {
-        width: scale(64),
-        height: scale(64),
-        borderRadius: scale(32),
-        borderWidth: 1,
-        borderColor: '#f0f0f0',
-    },
+
     icon: {
+        zIndex: 1,
         position: 'absolute',
         bottom: scale(0),
         right: scale(0),

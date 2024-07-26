@@ -10,6 +10,7 @@ import MyBusinessCardModal, { MyBusinessCardModalType } from 'app/components/MyB
 import SettingCenterModal,{SettingCenterModalType} from 'app/components/SettingCenterModal/SettingCenterModal';
 import { useRef } from 'react';
 import AvatarX from 'app/components/AvatarX';
+import scanService from 'app/services/scan.service';
 export const Header = () => {
     const insets = useSafeAreaInsets();
     const $colors = useRecoilValue(ColorsState);
@@ -70,6 +71,7 @@ export const Header = () => {
         </View>
         <ScanModal onChange={(v) => {
             console.log("scan result", v)
+            scanService.scanQrcode(v)
             scanModalRef.current?.close();
         }} ref={scanModalRef}/>
         <MyBusinessCardModal ref={myBusinessCardModalRef}/>
