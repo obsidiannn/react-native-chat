@@ -5,50 +5,43 @@ import { ChatDetailItem } from '@repo/types';
 import { globalKV } from 'app/utils/kv-tool';
 import { IModel } from '@repo/enums';
 import fileService from './file.service';
-export const getBatchInfo = async (ids: string) => {
-    // 批量獲取信息
-}
-export const getMineIdList = async () => {
-    // 獲取我的會話列表id列表
-}
-export const getMineList = async () => {
-    // 根據獲取ids後
-    // 判斷是否命中本地緩存
-}
-export const findByUserId = async (userId: number) => {
-    const cacheKey = `chat:user-id-map:${userId}`;
-    const cacheVal = globalKV.get("string", cacheKey);
-    let chatId: string | null;
-    if (cacheVal) {
-        chatId = cacheVal as string
-    } else {
-        const chats = await mineChatList();
-        console.log("chats", chats);
-        const chat = chats.find(v => Number(v.chatUserId) == userId)
-        console.log("chat", chat, userId);
-        if (!chat) {
-            return null;
-        }
-        chatId = chat.id;
-    }
-    if (!chatId) {
-        return null;
-    }
-    return findById(chatId);
-}
-const findById = async (chatId: string) => {
-    const cacheKey = `chat:detail:${chatId}`;
-    const cacheVal = globalKV.getObj<ChatDetailItem>(cacheKey)
-    if (cacheVal) {
-        return cacheVal;
-    }
-    const items = await mineChatList(chatId)
-    if (!items || items.length <= 0) {
-        return null;
-    }
-    globalKV.set(cacheKey, JSON.stringify(items[0]))
-    return items[0];
-}
+import { LocalChatService } from './LocalChatService';
+import chatMapper from 'app/utils/chat.mapper';
+
+// export const findByUserId = async (userId: number) => {
+//     const cacheKey = `chat:user-id-map:${userId}`;
+//     const cacheVal = globalKV.get("string", cacheKey);
+//     let chatId: string | null;
+//     if (cacheVal) {
+//         chatId = cacheVal as string
+//     } else {
+//         const chats = await mineChatList();
+//         console.log("chats", chats);
+//         const chat = chats.find(v => Number(v.chatUserId) == userId)
+//         console.log("chat", chat, userId);
+//         if (!chat) {
+//             return null;
+//         }
+//         chatId = chat.id;
+//     }
+//     if (!chatId) {
+//         return null;
+//     }
+//     return findById(chatId);
+// }
+// const findById = async (chatId: string) => {
+//     const cacheKey = `chat:detail:${chatId}`;
+//     const cacheVal = globalKV.getObj<ChatDetailItem>(cacheKey)
+//     if (cacheVal) {
+//         return cacheVal;
+//     }
+//     const items = await mineChatList(chatId)
+//     if (!items || items.length <= 0) {
+//         return null;
+//     }
+//     globalKV.set(cacheKey, JSON.stringify(items[0]))
+//     return items[0];
+// }
 const getChatIdByUserId = async (userId: number): Promise<string> => {
     return (await chatApi.findChatIdByUserId(userId)).id ?? null
 }
@@ -61,7 +54,6 @@ const mineChatList = async (chatId?: string): Promise<ChatDetailItem[]> => {
     if (!list.items || list.items.length <= 0) {
         return []
     }
-    console.log('itenms', list.items);
 
     const groupIds: number[] = []
     const userIds: number[] = []
@@ -129,10 +121,25 @@ const chatDetail = async (id: string): Promise<ChatDetailItem[]> => {
 }
 
 
+const mineLocalChats = async (): Promise<ChatDetailItem[]> => {
+    const chats = await LocalChatService.queryEntity()
+    return chats.map(e => chatMapper.entity2Dto(e))
+}
+
+const changeChat = async (dto: ChatDetailItem) => {
+    await LocalChatService.save(chatMapper.dto2Entity(dto))
+}
+
+const batchSaveLocal = (chats: ChatDetailItem[]) => {
+    void LocalChatService.saveBatch(chats.map(c => chatMapper.dto2Entity(c)))
+}
+
 export default {
-    findById,
-    findByUserId,
     mineChatList,
     chatDetail,
-    getChatIdByUserId
+    getChatIdByUserId,
+    
+    mineLocalChats,
+    changeChat,
+    batchSaveLocal
 }

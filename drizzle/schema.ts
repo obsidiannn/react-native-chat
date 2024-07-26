@@ -23,7 +23,7 @@ export const users = sqliteTable('users', {
 }, (users) => ({
     addrIdx: index('addrIdx').on(users.addr),
     userNameIdx: index('userNameIdx').on(users.userName),
-    refreshIdx: index('refreshIdx').on(users.refreshAt),
+    refreshIdx: index('userRefreshIdx').on(users.refreshAt),
 }));
 
 export type IUser = typeof users.$inferSelect
@@ -40,7 +40,7 @@ export const messages = sqliteTable("messages", {
     data: text('data', { length: 2048 }),
     extra: text('extra')
 }, (entity) => ({
-    chatIdx: index('chatIdx').on(entity.chatId),
+    chatIdx: index('msgChatIdx').on(entity.chatId),
     sequenceIdx: index('sequenceIdx').on(entity.sequence),
 }))
 
@@ -70,7 +70,7 @@ export const chats = sqliteTable("chats", {
 }, (entity) => ({
     typeIdx: index('typeIdx').on(entity.type),
     isTopIdx: index('isTopIdx').on(entity.isTop),
-    refreshIdx: index('refreshIdx').on(entity.refreshAt),
+    refreshIdx: index('chatRefreshIdx').on(entity.refreshAt),
 }))
 
 
@@ -102,8 +102,8 @@ export const groups = sqliteTable('groups', {
     chatId: text('chat_id'),
     refreshAt: integer('refreshAt'),
 }, (entity) => ({
-    chatIdIdx: index('chatIdIdx').on(entity.chatId),
-    refreshIdx: index('refreshIdx').on(entity.refreshAt),
+    chatIdIdx: index('groupChatIdIdx').on(entity.chatId),
+    refreshIdx: index('groupRefreshIdx').on(entity.refreshAt),
 }))
 
 export type IGroup = typeof groups.$inferSelect

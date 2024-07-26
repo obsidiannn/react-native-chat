@@ -101,7 +101,7 @@
     "node": ">=18"
   },
   "op-sqlite": {
-    "sqlcipher": true,
+    "sqlcipher": false,
     "crsqlite": true,
     "performanceMode": "1",
     "iosSqlite": false,

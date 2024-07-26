@@ -66,8 +66,9 @@ const AppStack = () => {
         routes: [{ name: 'TabStack' }],
       })
       await DBInit(global.wallet.getAddress());
-
-
+      chatService.mineLocalChats().then(res => {
+        setChatsStore(res)
+      })
       let currentUser: IUser | undefined = undefined
       const user = await LocalUserService.findByAddr(global.wallet.getAddress())
       if (user) {
@@ -97,16 +98,15 @@ const AppStack = () => {
               }
             });
             socketContext.init(currentUser);
-
           }).catch(e => console.log(e))
           // 刷新请求地址
           // 上报firebase token
           // 连接websocket
-          console.log('chat detail list');
           chatService.mineChatList().then((res) => {
             if (res !== null && res.length > 0) {
               console.log('change chat detail');
               setChatsStore(res)
+              chatService.batchSaveLocal(res)
             }
           })
 

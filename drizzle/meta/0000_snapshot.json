@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "922cd1f2-20aa-4990-b648-e11b23b3bfc5",
+  "id": "4d4f0ad0-c9c3-4dad-bac6-82ea4b92a9d2",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "chats": {
@@ -151,8 +151,8 @@
           ],
           "isUnique": false
         },
-        "refreshIdx": {
-          "name": "refreshIdx",
+        "chatRefreshIdx": {
+          "name": "chatRefreshIdx",
           "columns": [
             "refreshAt"
           ],
@@ -323,15 +323,15 @@
         }
       },
       "indexes": {
-        "chatIdIdx": {
-          "name": "chatIdIdx",
+        "groupChatIdIdx": {
+          "name": "groupChatIdIdx",
           "columns": [
             "chat_id"
           ],
           "isUnique": false
         },
-        "refreshIdx": {
-          "name": "refreshIdx",
+        "groupRefreshIdx": {
+          "name": "groupRefreshIdx",
           "columns": [
             "refreshAt"
           ],
@@ -417,8 +417,8 @@
         }
       },
       "indexes": {
-        "chatIdx": {
-          "name": "chatIdx",
+        "msgChatIdx": {
+          "name": "msgChatIdx",
           "columns": [
             "chat_id"
           ],
@@ -585,8 +585,8 @@
           ],
           "isUnique": false
         },
-        "refreshIdx": {
-          "name": "refreshIdx",
+        "userRefreshIdx": {
+          "name": "userRefreshIdx",
           "columns": [
             "refreshAt"
           ],

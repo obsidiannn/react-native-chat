@@ -80,11 +80,11 @@ CREATE TABLE `users` (
 --> statement-breakpoint
 CREATE INDEX `typeIdx` ON `chats` (`chat_type`);--> statement-breakpoint
 CREATE INDEX `isTopIdx` ON `chats` (`is_top`);--> statement-breakpoint
-CREATE INDEX `refreshIdx` ON `chats` (`refreshAt`);--> statement-breakpoint
-CREATE INDEX `chatIdIdx` ON `groups` (`chat_id`);--> statement-breakpoint
-CREATE INDEX `refreshIdx` ON `groups` (`refreshAt`);--> statement-breakpoint
-CREATE INDEX `chatIdx` ON `messages` (`chat_id`);--> statement-breakpoint
+CREATE INDEX `chatRefreshIdx` ON `chats` (`refreshAt`);--> statement-breakpoint
+CREATE INDEX `groupChatIdIdx` ON `groups` (`chat_id`);--> statement-breakpoint
+CREATE INDEX `groupRefreshIdx` ON `groups` (`refreshAt`);--> statement-breakpoint
+CREATE INDEX `msgChatIdx` ON `messages` (`chat_id`);--> statement-breakpoint
 CREATE INDEX `sequenceIdx` ON `messages` (`sequence`);--> statement-breakpoint
 CREATE INDEX `addrIdx` ON `users` (`addr`);--> statement-breakpoint
 CREATE INDEX `userNameIdx` ON `users` (`userName`);--> statement-breakpoint
-CREATE INDEX `refreshIdx` ON `users` (`refreshAt`);
+CREATE INDEX `userRefreshIdx` ON `users` (`refreshAt`);

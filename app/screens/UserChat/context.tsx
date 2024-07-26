@@ -1,10 +1,9 @@
-import { ChatDetailItem } from "@repo/types";
-import { IUser } from "@/drizzle/schema";
+import { ChatDetailItem } from "@repo/types"; 
 import { createContext } from "react";
 
 export interface UserChatUIContextType {
     chatItem: ChatDetailItem
-    setContextTop: (val: number)=>void
+    reloadChat: (id: string)=>void
 }
 
 export const UserChatUIContext = createContext({} as UserChatUIContextType)

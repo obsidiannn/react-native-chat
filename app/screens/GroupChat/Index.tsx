@@ -19,6 +19,8 @@ import { scale } from "app/utils/size";
 import { colors } from "app/theme";
 import GroupInfoModal, { GroupInfoModalType } from './info/Index'
 import { ColorsState } from "app/stores/system";
+import chatService from "app/services/chat.service";
+import chatMapper from "app/utils/chat.mapper";
 
 type Props = StackScreenProps<App.StackParamList, 'GroupChatScreen'>;
 
@@ -72,13 +74,14 @@ export const GroupChatScreen = ({ navigation, route }: Props) => {
 
     const reloadChat = (chat: ChatDetailItem) => {
         console.log('[group]reload', chat);
-
-        // chatItemRef.current = chat
         setChatItem(chat)
+        chatService.mineChatList(chat.id).then(res => {
+            chatService.changeChat(chatMapper.dto2Entity(res[0]))
+        })
+        // chatItemRef.current = chat
     }
 
     const init = useCallback(async () => {
-
         if (!globalThis.wallet) {
             toast(t('groupChat.error_wallet_init'));
             return;
@@ -137,10 +140,10 @@ export const GroupChatScreen = ({ navigation, route }: Props) => {
                             flexDirection: 'row',
                         }}>
 
-                            <TouchableOpacity style={{ 
+                            <TouchableOpacity style={{
                                 backgroundColor: themeColor.background,
                                 borderRadius: scale(10)
-                             }}
+                            }}
                                 onPress={() => {
                                     groupInfoModalRef.current?.open()
                                 }}>
