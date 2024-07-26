@@ -1,8 +1,11 @@
 import { GetDB } from "app/utils/database";
 import { and, inArray, eq, lte, gte, desc, asc } from "drizzle-orm";
-import { IUser, users } from "drizzle/schema";
+import { users } from "drizzle/schema";
+import type { IUser } from "drizzle/schema";
 import dayjs from 'dayjs'
+
 export class LocalUserService {
+
     static async add(data: IUser): Promise<IUser> {
         data = {
             ...data,
@@ -17,11 +20,6 @@ export class LocalUserService {
         }
         const items = await GetDB().insert(users).values([data]).returning();
         return items[0];
-    }
-    static async findById(id: number): Promise<IUser | undefined> {
-        return await GetDB().query.users.findFirst({
-            where: eq(users.id, id)
-        })
     }
 
     static async createMany(data: IUser[]) {
@@ -79,6 +77,7 @@ export class LocalUserService {
             )
         })
     }
+
     static async findByAddr(addr: string): Promise<IUser | undefined> {
         return await GetDB().query.users.findFirst({
             where: eq(users.addr, addr)

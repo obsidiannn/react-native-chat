@@ -22,3 +22,10 @@ pre_install do |installer|
   end
 end
 ```
+
+
+* drizzle 生成 
+
+```
+npx drizzle-kit generate
+```
