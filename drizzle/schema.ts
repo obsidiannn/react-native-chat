@@ -47,7 +47,7 @@ export const messages = sqliteTable("messages", {
 export type IMessage = typeof messages.$inferSelect
 
 
-export const chat = sqliteTable("chat_detail", {
+export const chats = sqliteTable("chats", {
     id: text('id').primaryKey(),
     creatorId: text('creator_id'),
     type: integer('chat_type'),
@@ -78,7 +78,7 @@ export type IChat = typeof chat.$inferSelect
 
 
 
-export const group = sqliteTable('group_detail', {
+export const groups = sqliteTable('groups', {
     id: integer('id').primaryKey(),
     name: text('group_name'),
     avatar: text('group_avatar'),
@@ -106,4 +106,4 @@ export const group = sqliteTable('group_detail', {
     refreshIdx: index('refreshIdx').on(entity.refreshAt),
 }))
 
-export type IGroup = typeof group.$inferSelect
+export type IGroup = typeof groups.$inferSelect

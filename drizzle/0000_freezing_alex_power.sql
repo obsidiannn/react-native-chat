@@ -1,4 +1,4 @@
-CREATE TABLE `chat_detail` (
+CREATE TABLE `chats` (
 	`id` text PRIMARY KEY NOT NULL,
 	`creator_id` text,
 	`chat_type` integer,
@@ -19,7 +19,7 @@ CREATE TABLE `chat_detail` (
 	`refreshAt` integer
 );
 --> statement-breakpoint
-CREATE TABLE `group_detail` (
+CREATE TABLE `groups` (
 	`id` integer PRIMARY KEY NOT NULL,
 	`group_name` text,
 	`group_avatar` text,
@@ -70,18 +70,19 @@ CREATE TABLE `users` (
 	`createdAt` integer,
 	`updatedAt` integer DEFAULT CURRENT_TIMESTAMP,
 	`refreshAt` integer,
-	`relation_type` integer DEFAULT 0,
+	`is_friend` integer DEFAULT 0,
 	`friendId` integer DEFAULT 0,
 	`friend_alias` text,
+	`friend_alias_idx` text,
 	`is_self` integer DEFAULT 0,
 	`chatId` text
 );
 --> statement-breakpoint
-CREATE INDEX `typeIdx` ON `chat_detail` (`chat_type`);--> statement-breakpoint
-CREATE INDEX `isTopIdx` ON `chat_detail` (`is_top`);--> statement-breakpoint
-CREATE INDEX `refreshIdx` ON `chat_detail` (`refreshAt`);--> statement-breakpoint
-CREATE INDEX `chatIdIdx` ON `group_detail` (`chat_id`);--> statement-breakpoint
-CREATE INDEX `refreshIdx` ON `group_detail` (`refreshAt`);--> statement-breakpoint
+CREATE INDEX `typeIdx` ON `chats` (`chat_type`);--> statement-breakpoint
+CREATE INDEX `isTopIdx` ON `chats` (`is_top`);--> statement-breakpoint
+CREATE INDEX `refreshIdx` ON `chats` (`refreshAt`);--> statement-breakpoint
+CREATE INDEX `chatIdIdx` ON `groups` (`chat_id`);--> statement-breakpoint
+CREATE INDEX `refreshIdx` ON `groups` (`refreshAt`);--> statement-breakpoint
 CREATE INDEX `chatIdx` ON `messages` (`chat_id`);--> statement-breakpoint
 CREATE INDEX `sequenceIdx` ON `messages` (`sequence`);--> statement-breakpoint
 CREATE INDEX `addrIdx` ON `users` (`addr`);--> statement-breakpoint

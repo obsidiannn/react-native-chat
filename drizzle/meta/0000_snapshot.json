@@ -1,11 +1,11 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "31e2a78c-f49a-4df2-ae2e-a7b45214388a",
+  "id": "922cd1f2-20aa-4990-b648-e11b23b3bfc5",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
-    "chat_detail": {
-      "name": "chat_detail",
+    "chats": {
+      "name": "chats",
       "columns": {
         "id": {
           "name": "id",
@@ -163,8 +163,8 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "group_detail": {
-      "name": "group_detail",
+    "groups": {
+      "name": "groups",
       "columns": {
         "id": {
           "name": "id",
@@ -524,8 +524,8 @@
           "notNull": false,
           "autoincrement": false
         },
-        "relation_type": {
-          "name": "relation_type",
+        "is_friend": {
+          "name": "is_friend",
           "type": "integer",
           "primaryKey": false,
           "notNull": false,
@@ -542,6 +542,13 @@
         },
         "friend_alias": {
           "name": "friend_alias",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "friend_alias_idx": {
+          "name": "friend_alias_idx",
           "type": "text",
           "primaryKey": false,
           "notNull": false,
