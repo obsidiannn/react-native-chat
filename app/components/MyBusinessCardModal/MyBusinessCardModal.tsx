@@ -110,7 +110,7 @@ export default forwardRef((_, ref) => {
                         borderColor: $colors.border,
                         padding: s(8)
                     }}>
-                        <QRCode size={s(227)} value={"/user/" + authUser?.userName}/>
+                        <QRCode size={s(227)} value={"nextchat://userinfo/" + authUser?.id}/>
                     </View>
                 </View>
                 <View style={{

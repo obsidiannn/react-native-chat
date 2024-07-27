@@ -7,12 +7,13 @@ import { Wallet, computeDataHash } from 'app/utils/wallet';
 import toast from 'app/utils/toast';
 import { AuthService } from 'app/services/auth.service';
 import { SystemService } from 'app/services/system.service';
+import {SYSTEM_PUBLIC_KEY} from "@env"
 const encodeInterceptor = async (wallet: Wallet, config: InternalAxiosRequestConfig): Promise<InternalAxiosRequestConfig<any>> => {
   const content = typeof config.data === 'string' ? config.data : JSON.stringify(config.data ?? {})
   console.log('[request]', content);
 
   const time = Date.now();
-  const sharedSecret = wallet.computeSharedSecret(process.env.EXPO_PUBLIC_SYSTEM_PUBLIC_KEY)
+  const sharedSecret = wallet.computeSharedSecret(SYSTEM_PUBLIC_KEY)
 
   const dataHash = computeDataHash(content + ':' + time);
   const sign = wallet.signMessage(dataHash)
@@ -33,7 +34,7 @@ const decodeInterceptor = async (wallet: Wallet, rep: AxiosResponse<any, any>): 
   if (data.substring(0, 2) == '0x') {
     data = data.substring(2)
   }
-  const sharedSecret = wallet.computeSharedSecret(process.env.EXPO_PUBLIC_SYSTEM_PUBLIC_KEY)
+  const sharedSecret = wallet.computeSharedSecret(SYSTEM_PUBLIC_KEY)
   let rel: any = {}
   if (data != "") {
     const decrypted = quickCrypto.De(sharedSecret, Buffer.from(data, 'hex'))
@@ -50,8 +51,8 @@ const decodeInterceptor = async (wallet: Wallet, rep: AxiosResponse<any, any>): 
 }
 
 export const createInstance = (en = true) => {
-  // const baseURL = SystemService.GetApiUrlByCache();
-  const baseURL = 'http://192.168.0.104:5001'
+  const baseURL = SystemService.GetApiUrlByCache();
+  // const baseURL = 'http://192.168.0.104:5001'
 
   const startTime = new Date().valueOf()
   const instance: AxiosInstance = axios.create({
@@ -84,7 +85,7 @@ export const createInstance = (en = true) => {
         // toast('網絡錯誤,請稍後重試!');
       } else {
         const wallet = AuthService.GetWallet();
-        const sharedSecret = wallet.computeSharedSecret(process.env.EXPO_PUBLIC_SYSTEM_PUBLIC_KEY)
+        const sharedSecret = wallet.computeSharedSecret(SYSTEM_PUBLIC_KEY)
         const decrypted = quickCrypto.De(sharedSecret, Buffer.from(err.response?.data, 'hex'))
         const text = Buffer.from(decrypted).toString('utf8');
         const rel: any = JSON.parse(text ?? '{}');

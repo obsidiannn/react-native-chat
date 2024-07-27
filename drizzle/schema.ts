@@ -74,7 +74,7 @@ export const chats = sqliteTable("chats", {
 }))
 
 
-export type IChat = typeof chat.$inferSelect
+export type IChat = typeof chats.$inferSelect
 
 
 

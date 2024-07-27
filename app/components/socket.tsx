@@ -1,15 +1,16 @@
 import socketClient, { Socket } from 'socket.io-client'
-import React, { createContext, useEffect, useMemo, useRef, useState } from 'react';
+import React, { createContext, useEffect, useRef, useState } from 'react';
 import { AppStateStatus, Platform } from 'react-native';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import EventManager from 'app/services/event-manager.service'
 
-import { AuthUser, AuthWallet, ChatsStore } from 'app/stores/auth';
+import { AuthUser, ChatsStore } from 'app/stores/auth';
 import { ChatDetailItem, SocketJoinEvent, SocketMessageEvent } from '@repo/types';
 import { IModel } from '@repo/enums';
 import { IUser } from 'drizzle/schema';
 import { computeDataHash } from 'app/utils/wallet';
 import { globalKV } from 'app/utils/kv-tool';
+import { SystemService } from 'app/services/system.service';
 
 export interface SocketContextType {
     socket: Socket
@@ -111,8 +112,7 @@ export const SocketProvider = ({ children }: { children: any }) => {
         console.log('初始化[socket] init,ref===null?', (socketRef.current === null || socketRef.current === undefined));
         console.log('[socket] user=', user);
         console.log('[socket] current=', currentUser);
-        // const env = getSocketUrl()
-        const env = 'http://192.168.0.104:9500'
+        const env = SystemService.GetSocketUrl()
         const config = loadSocketConfig(user ?? currentUser)
         console.log('config=', config);
 

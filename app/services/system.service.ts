@@ -1,5 +1,6 @@
 import { globalKV, globalStorage } from "app/utils/kv-tool"
 import { getLists } from "app/api/sys/node"
+import { SYSTEM_API_URL } from "@env";
 
 export class SystemService {
     static GetApiUrlByCache = () => {
@@ -7,12 +8,15 @@ export class SystemService {
         if (apiUrl) {
             return apiUrl as string;
         }
-        return process.env.EXPO_PUBLIC_SYSTEM_API_URL;
+        return SYSTEM_API_URL;
     }
     static GetApiUrl = () => {
 
     }
-
+    static GetSocketUrl = (): string => {
+        const url = globalKV.get('string', 'NOW_SOCKET_URL') ?? ''
+        return String(url)
+    }
     static GetStaticUrl = (): string => {
         const url = globalKV.get('string', 'NOW_STATIC_URL') ?? ''
         return String(url)
@@ -32,12 +36,7 @@ export class SystemService {
                     if (!result[type]) {
                         result[type] = [];
                     }
-                    let proto = "http";
-                    if (node.tls == "ON") {
-                        proto = "https"
-                    }
-                    const url = `${proto}://${node.host}:${node.port}`;
-                    result[type].push(url);
+                    result[type].push(node.addr);
                     return result;
                 }, {} as Record<string, Array<string>>);
                 console.log("groupByType:", groupByType);

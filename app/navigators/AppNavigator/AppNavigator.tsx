@@ -166,12 +166,13 @@ export const AppNavigator = () => {
   useBackButtonHandler((routeName) => exitRoutes.includes(routeName))
   const linking: LinkingOptions<App.StackParamList> = {
     enabled: true,
-    prefixes: ['https://mychat.com', 'next-chat://'],
+    prefixes: ['https://mychat.com', 'nextchat://'],
     config: {
       screens: {
         ChatScreen: 'chat/:id',
         GroupScreen: 'group/:id',
         UserScreen: 'user/:user_name',
+        UserInfoScreen: 'userinfo/:userId'
       },
     },
     async getInitialURL() {
