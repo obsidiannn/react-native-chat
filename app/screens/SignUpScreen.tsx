@@ -3,7 +3,7 @@ import Navbar from "app/components/Navbar"
 import { ColorsState } from "app/stores/system"
 import { s } from "app/utils/size"
 import { Text, View } from "react-native"
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
+import { useRecoilValue, useSetRecoilState } from "recoil"
 import { useState } from "react";
 import { AuthService } from "app/services/auth.service";
 import { PasswordInput } from "app/components/PasswordInput/PasswordInput"
@@ -13,8 +13,6 @@ import { AuthUser, AuthWallet } from "app/stores/auth"
 import { setNow, writePriKey } from "app/utils/account"
 import { Init as DBInit } from "app/utils/database";
 import { NativeStackScreenProps } from "@react-navigation/native-stack"
-import { UserService } from "app/services/user.service"
-import { LocalUserService } from "app/services/LocalUserService"
 
 import { App } from "types/app"
 type Props = NativeStackScreenProps<App.StackParamList, 'SignUpScreen'>;

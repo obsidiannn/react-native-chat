@@ -1,6 +1,6 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import {
-    WalletScreen,
+    UserCenterScreen,
     PlazaScreen,
     ChatScreen
 } from '../../screens/index'
@@ -16,7 +16,7 @@ export default () => {
     return <Stack.Navigator screenOptions={{
         headerShown: true,
         // header: () => null
-        header: () => <Header />
+        header: (props) => <Header {...props} />
     }} initialRouteName="ChatScreen" tabBar={(props) => {
         return <View style={{
             padding: 0,
@@ -26,8 +26,8 @@ export default () => {
             <BottomTab {...props} />
         </View>
     }}>
-        {/* <Stack.Screen name="PlazaScreen" component={PlazaScreen} /> */}
+        <Stack.Screen name="PlazaScreen" component={PlazaScreen} />
         <Stack.Screen name="ChatScreen" component={ChatScreen} />
-        {/* <Stack.Screen name="WalletScreen" component={WalletScreen} /> */}
+        <Stack.Screen name="UserCenterScreen" component={UserCenterScreen} />
     </Stack.Navigator>
 }

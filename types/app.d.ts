@@ -49,6 +49,10 @@ declare namespace App {
     UserChatInfoModal: {
 
     }
-    AddFriendModal: undefined
+    AddFriendModal: undefined;
+    UserCenterScreen: undefined;
+    ProfileScreen: undefined;
+    SafetyScreen:undefined;
+    SettingScreen: undefined;
   }
 }

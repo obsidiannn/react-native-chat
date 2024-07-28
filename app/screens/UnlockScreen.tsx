@@ -10,6 +10,7 @@ import { useEffect, useState } from "react"
 import { Image } from "expo-image"
 import Crypto from "react-native-quick-crypto";
 import { AuthService } from "app/services/auth.service"
+import { App } from "types/app"
 type Props = StackScreenProps<App.StackParamList, 'UnlockScreen'>;
 export const UnlockScreen = ({ navigation }: Props) => {
   const $colors = useRecoilValue(ColorsState);

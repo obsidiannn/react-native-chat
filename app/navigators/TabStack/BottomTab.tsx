@@ -58,7 +58,7 @@ export function BottomTab({ state, descriptors, navigation }: BottomTabBarProps)
                                 width: s(32),
                                 height: s(32),
                             }} source={isFocused ? require('./contact-selected.png') : require('./contact.png')} /> : null}
-                            {route.name == 'WalletScreen' ? <Image style={{
+                            {route.name == 'UserCenterScreen' ? <Image style={{
                                 width: s(32),
                                 height: s(32),
                             }} source={isFocused ? require('./wallet-selected.png') : require('./wallet.png')} /> : null}
