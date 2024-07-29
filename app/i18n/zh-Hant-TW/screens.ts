@@ -24,9 +24,15 @@ export default {
         cancel: "Cancel",
         back: "Back",
         btn_download: 'Download',
-        btn_submit: "",
         btn_cancel: "",
-        loading: "加载中"
+        loading: "加载中",
+        btn_save: "保存",
+        btn_submit: "提交",
+        success_copied: "複製成功",
+        success_updated: "更新成功",
+        failed_updated: "更新失败",
+        default_label_none: "無",
+
     },
     userInfo: {
         my_qrcode: "我的二维码",
@@ -123,9 +129,9 @@ export default {
         btn_save_image: "保存爲圖片",
         btn_do_apply: "發送申請",
         btn_invite_member: "邀请成员",
-        btn_user_profile:"查看个人资料",
+        btn_user_profile: "查看个人资料",
         btn_change_alias: "添加群备注",
-        btn_kick_out:"移除群组",
+        btn_kick_out: "移除群组",
         btn_block_user: "加入黑名单",
         label_rejected: "已拒絕",
 
@@ -140,5 +146,51 @@ export default {
         success_save_album: "保存到相冊成功",
         success_apply_request: "發送申請成功",
         success_operation: "操作成功"
+    },
+    setting: {
+        title_setting: "設置",
+        title_current_version: "當前版本",
+        title_cache_minutes: "缓存时间",
+        placeholder_cachetime: "设置缓存时间（分钟）",
+        btn_submit: "提交",
+        btn_logout: "退出登錄",
+        btn_logout_desc: "退出登錄後，將無法收到消息,但數據將保留",
+    },
+    profile: {
+        title_user_profile: "编辑资料",
+
+        placeholder_nickname: "設置暱稱",
+
+
+        error_updated: "更新失敗",
+
+        label_camera: "拍照",
+        label_pick_album: "從相冊選擇",
+
+        title_nickname: "暱稱",
+
+        title_gender: "性別",
+        title_choose_gender: "选择性别",
+        title_sign: "個性簡介",
+        title_username: "用戶名",
+        title_language: "語言",
+
+        status_gender_unknown: "保密",
+        status_gender_male: "男",
+        status_gender_female: "女",
+
+        placeholder_sign: "介紹一下你自己",
+        placeholder_username: "設置用戶名",
+        paragraph_nickname_1: "您的昵称将对与您选择了相同语言的用户可见，您今年还有3次机会修改;C2C 认证商家和钻石商家不能修改昵称",
+        paragraph_nickname_2: "我们会审核您提交的昵称，过程需要一定时间，请耐心等待",
+        paragraph_nickname_3: "创建昵称时，请勿使用不雅用词、欧易官方名称 (即产品名称)和其他交易平台上的名称",
+
+        paragraph_sign_1: "您可分享您的交易经验、交易策略和关注币种与板块",
+        paragraph_sign_2: "我们会审核您提交的个人简介，过程需时数分钟",
+        paragraph_sign_3: "创建个人简介时，请勿包含不雅词汇、欧易官方名称、其他平台账户内容",
+        paragraph_username_1: "您的昵称将对与您选择了相同语言的用户可见，您今年还有3次机会修改;C2C 认证商家和钻石商家不能修改昵称",
+        paragraph_username_2: "我们会审核您提交的昵称，过程需要一定时间，请耐心等待",
+        paragraph_username_3: "创建昵称时，请勿使用不雅用词、欧易官方名称 (即产品名称)和其他交易平台上的名称",
     }
+
 }

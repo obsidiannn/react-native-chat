@@ -57,7 +57,7 @@ const getOnlineList = async () => {
     const friendIds = await getIds();
     console.log('friendIds', friendIds);
 
-    if (friendIds.length === 0) {
+    if (!friendIds || friendIds.length === 0) {
         return [];
     }
     const friends = await findByIds(friendIds);

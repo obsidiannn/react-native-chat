@@ -22,6 +22,16 @@ export class LocalUserService {
         return items[0];
     }
 
+    static async deleteByIdIn(ids: number[]) {
+        const db = GetDB()
+        if (!db) {
+            console.log('err');
+            return
+        }
+        const deleteResult = await db.delete(users).where(inArray(users.id, ids)).returning({ deletedId: users.id })
+        console.log('delete result', deleteResult);
+    }
+
     static async createMany(data: IUser[]) {
         const db = GetDB()
         if (!db) {

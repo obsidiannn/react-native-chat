@@ -18,7 +18,8 @@ const AvatarComponent = (props: AvatarProps) => {
         display: 'flex'
     }} >
         <Image source={props.url} style={{
-            ...(props.style ? { ...props.style } : { ...styles.defaultAvatar }),
+            ...styles.defaultAvatar,
+            ...(props.style ? { ...props.style } : {}),
             ...(props.width && props.height ? {
                 width: props.width,
                 height: props.height,
