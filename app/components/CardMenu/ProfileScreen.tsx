@@ -2,8 +2,6 @@ import { ColorsState, ThemeState } from "app/stores/system"
 
 import { Text, View } from "react-native"
 import { useRecoilValue } from "recoil"
-import { StackScreenProps } from "@react-navigation/stack"
-import { App } from "types/app"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { AuthUser } from "app/stores/auth"
 import { s } from "app/utils/size"

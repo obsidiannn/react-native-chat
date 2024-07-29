@@ -14,8 +14,8 @@ export default () => {
     const insets = useSafeAreaInsets();
     const Stack = createBottomTabNavigator<App.StackParamList>();
     return <Stack.Navigator screenOptions={{
+        animation: 'shift',
         headerShown: true,
-        // header: () => null
         header: (props) => <Header {...props} />
     }} initialRouteName="ChatScreen" tabBar={(props) => {
         return <View style={{

@@ -72,6 +72,7 @@ const AppStack = () => {
       let currentUser: IUser | undefined = undefined
       const user = await LocalUserService.findByAddr(global.wallet.getAddress())
       if (user) {
+        console.log('本地用户信息', user)
         setAuthUser(user)
         currentUser = user
       }

@@ -1,7 +1,7 @@
 import { scale, verticalScale } from "app/utils/size";
 import { forwardRef, useImperativeHandle, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Modal, Text, TouchableOpacity, View } from "react-native";
+import { Modal, Text, TouchableOpacity, View, ViewStyle } from "react-native";
 export interface ConfirmOption {
     title: string;
     desc: string;
@@ -24,9 +24,7 @@ export default forwardRef((_, ref) => {
             setVisible(true);
         }
     }));
-    return <Modal animationType="fade" transparent={true} visible={visible} style={{
-        flex: 1,
-    }}>
+    return <Modal animationType="fade" transparent={true} visible={visible} style={$container}>
         <View style={{
             flex: 1,
             backgroundColor: '#00000066',
@@ -91,3 +89,7 @@ export default forwardRef((_, ref) => {
         </View>
     </Modal>
 });
+
+const $container: ViewStyle = {
+    flex: 1,
+}

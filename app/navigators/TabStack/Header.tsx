@@ -32,15 +32,6 @@ export const Header = (props: BottomTabHeaderProps) => {
         justifyContent: 'space-between',
     }}>
         <View style={{
-            height:s(45),
-            justifyContent:"center"
-        }}>
-            <Text style={{
-                fontSize: 36,
-                fontWeight:"600"
-            }}>{props.route.name =="ChatScreen"? "信息": "个人中心"}</Text>
-        </View>
-        <View style={{
             flex: 1,
             height: s(45),
             flexDirection: 'row',

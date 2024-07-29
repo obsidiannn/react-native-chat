@@ -16,6 +16,7 @@
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		86A3305E1306903AD0F35306 /* Pods_NextChat.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFAA7B912460645692E8C49C /* Pods_NextChat.framework */; };
 		C2D493A8D487058FA5EDD532 /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B477292CDA29808EB6191E3 /* ExpoModulesProvider.swift */; };
+		DF9C7CD32C57A6000044EFE7 /* SplashScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DF9C7CD22C57A6000044EFE7 /* SplashScreen.storyboard */; };
 		DFE28D7F2C514D4100BA8C1F /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = DFE28D7E2C514D4100BA8C1F /* GoogleService-Info.plist */; };
 		FFF8E9282F6BC20977A9BF79 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = C7AE6795046C283ACB0F0FD9 /* PrivacyInfo.xcprivacy */; };
 /* End PBXBuildFile section */
@@ -50,6 +51,7 @@
 		89C6BE57DB24E9ADA2F236DE /* Pods-NextChat-NextChatTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NextChat-NextChatTests.release.xcconfig"; path = "Target Support Files/Pods-NextChat-NextChatTests/Pods-NextChat-NextChatTests.release.xcconfig"; sourceTree = "<group>"; };
 		C7AE6795046C283ACB0F0FD9 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = NextChat/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		DE9AF7DD6EB15A1D1FE37190 /* Pods_NextChat_NextChatTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_NextChat_NextChatTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		DF9C7CD22C57A6000044EFE7 /* SplashScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = SplashScreen.storyboard; sourceTree = "<group>"; };
 		DFAA7B912460645692E8C49C /* Pods_NextChat.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_NextChat.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		DFE28D7E2C514D4100BA8C1F /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "NextChat/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		DFE28D802C51509F00BA8C1F /* NextChat.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = NextChat.entitlements; path = NextChat/NextChat.entitlements; sourceTree = "<group>"; };
@@ -105,6 +107,7 @@
 				13B07FB71A68108700A75B9A /* main.m */,
 				13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */,
 				C7AE6795046C283ACB0F0FD9 /* PrivacyInfo.xcprivacy */,
+				DF9C7CD22C57A6000044EFE7 /* SplashScreen.storyboard */,
 			);
 			name = NextChat;
 			sourceTree = "<group>";
@@ -253,7 +256,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "nextchat" */;
+			buildConfigurationList = 83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "NextChat" */;
 			compatibilityVersion = "Xcode 12.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -287,6 +290,7 @@
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				DFE28D7F2C514D4100BA8C1F /* GoogleService-Info.plist in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				DF9C7CD32C57A6000044EFE7 /* SplashScreen.storyboard in Resources */,
 				FFF8E9282F6BC20977A9BF79 /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -819,7 +823,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "nextchat" */ = {
+		83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "NextChat" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				83CBBA201A601CBA00E9B192 /* Debug */,
