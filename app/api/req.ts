@@ -51,8 +51,8 @@ const decodeInterceptor = async (wallet: Wallet, rep: AxiosResponse<any, any>): 
 }
 
 export const createInstance = (en = true) => {
-  // const baseURL = SystemService.GetApiUrlByCache();
-  const baseURL = 'http://192.168.0.104:5001'
+  const baseURL = SystemService.GetApiUrlByCache();
+  //const baseURL = 'http://192.168.0.104:5001'
 
   const startTime = new Date().valueOf()
   const instance: AxiosInstance = axios.create({

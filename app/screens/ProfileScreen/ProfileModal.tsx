@@ -1,4 +1,3 @@
-import AvatarX from "app/AvatarX";
 import AvatarUpload from "app/components/AvatarUpload";
 import { FormLine } from "app/components/FormLine";
 import Icon from "app/components/Icon";
@@ -18,7 +17,6 @@ import toast from "app/utils/toast";
 import { IModel } from "@repo/enums";
 import profile from "app/utils/profile";
 import strUtil from "app/utils/str-util";
-import auth from "app/api/auth";
 import { AuthService } from "app/services/auth.service";
 import fileService from "app/services/file.service";
 import { IUser } from "drizzle/schema";
@@ -79,7 +77,7 @@ export default forwardRef((_, ref) => {
                 borderTopLeftRadius: s(32),
                 paddingTop: s(30)
             }}>
-                <AvatarUpload avatar={fileService.getFullUrl(authUser.avatar ?? '')} border onChange={(val: string) => {
+                <AvatarUpload avatar={fileService.getFullUrl(authUser?.avatar ?? '')} border onChange={(val: string) => {
                     AuthService.updateAvatar(val).then((res) => {
                         if (res) {
                             authUpdate({
@@ -100,7 +98,7 @@ export default forwardRef((_, ref) => {
                 }}>
                     <FormLine onPress={() => {
                         updateNicknameModalRef.current?.open({
-                            value: authUser.nickName ?? '',
+                            value: authUser?.nickName ?? '',
                             callback: (val: string) => {
                                 authUpdate({
                                     ...authUser,
@@ -116,14 +114,14 @@ export default forwardRef((_, ref) => {
                         }
                         renderRight={
                             <View style={styles.formLine} >
-                                <Text style={{ color: themeColor.secondaryText }}>{authUser.nickName}</Text>
+                                <Text style={{ color: themeColor.secondaryText }}>{authUser?.nickName}</Text>
                                 <Icon color={themeColor.secondaryText} path={require('assets/icons/arrow-right-gray.svg')} />
                             </View>
                         }
                     />
                     <FormLine onPress={() => {
                         updateGenderModalRef.current?.open({
-                            value: authUser.gender ?? IModel.IUser.Gender.UNKNOWN,
+                            value: authUser?.gender ?? IModel.IUser.Gender.UNKNOWN,
                             callback: (val: number) => {
                                 authUpdate({
                                     ...authUser,
@@ -139,7 +137,7 @@ export default forwardRef((_, ref) => {
                         }
                         renderRight={
                             <View style={styles.formLine} >
-                                <Text style={{ color: themeColor.secondaryText }}>{profile.genderValue(authUser.gender)}</Text>
+                                <Text style={{ color: themeColor.secondaryText }}>{profile.genderValue(authUser?.gender)}</Text>
                                 <Icon color={themeColor.secondaryText} path={require('assets/icons/arrow-right-gray.svg')} />
                             </View>
                         }
@@ -147,7 +145,7 @@ export default forwardRef((_, ref) => {
 
                     <FormLine onPress={() => {
                         updateSignModalRef.current?.open({
-                            value: authUser.sign ?? '',
+                            value: authUser?.sign ?? '',
                             callback: (val: string) => {
                                 authUpdate({
                                     ...authUser,
@@ -163,7 +161,7 @@ export default forwardRef((_, ref) => {
                         }
                         renderRight={
                             <View style={styles.formLine} >
-                                <Text style={{ color: themeColor.secondaryText }}>{strUtil.truncateMiddle(authUser.sign, 20) ?? t('common.default_label_none')}</Text>
+                                <Text style={{ color: themeColor.secondaryText }}>{strUtil.truncateMiddle(authUser?.sign, 20) ?? t('common.default_label_none')}</Text>
                                 <Icon color={themeColor.text} path={require('assets/icons/arrow-right-gray.svg')} />
                             </View>
                         }
@@ -201,7 +199,6 @@ export default forwardRef((_, ref) => {
         <UpdateGender ref={updateGenderModalRef} />
         <UpdateSign ref={updateSignModalRef} />
         <UpdateUsername ref={updateUsernameModalRef} />
-
 
     </BaseModal >
 })

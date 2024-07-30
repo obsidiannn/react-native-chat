@@ -1,9 +1,10 @@
+
 import { IUser } from "drizzle/schema";
 import { createInstance } from "../req";
-
+import dayjs from "dayjs"
 const signUp = async (): Promise<IUser> => {
     const user: any = await createInstance(true).post('/auth/signup')
-    user.createdAt = new Date(user.createdAt);
+    user.createdAt = user?.createdAt ? dayjs(user?.createdAt).toDate():null;
     return user as IUser;
 }
 

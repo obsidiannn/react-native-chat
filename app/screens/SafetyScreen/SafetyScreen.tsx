@@ -6,10 +6,15 @@ import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { s } from "app/utils/size"
 import Navbar from "app/components/Navbar"
 import { CardMenu } from "app/components/CardMenu/CardMenu"
+import ConfirmModal, { ConfirmModalType } from "app/components/ConfirmModal"
+import { useRef } from "react"
+import { globalKV, globalStorage } from "app/utils/kv-tool"
+import RNRestart from 'react-native-restart'; 
 export const SafetyScreen = () => {
     const insets = useSafeAreaInsets();
     const $colors = useRecoilValue(ColorsState);
     const $theme = useRecoilValue(ThemeState);
+    const confirmModalRef = useRef<ConfirmModalType>(null);
     return <View style={{
         flex: 1,
         paddingTop: insets.top,
@@ -34,22 +39,40 @@ export const SafetyScreen = () => {
             paddingTop: s(30)
         }}>
             <CardMenu items={[
-                {
-                    icon: $theme == "dark" ? require('./edit-dark.png') : require('./edit-light.png'),
-                    title: "备份助记词",
-                    onPress: () => { },
-                    theme: $theme,
-                },
+                // {
+                //     icon: $theme == "dark" ? require('./edit-dark.png') : require('./edit-light.png'),
+                //     title: "备份私钥",
+                //     onPress: () => {
+                        
+                //     },
+                //     theme: $theme,
+                // },
                 {
                     icon: $theme == "dark" ? require('./edit-dark.png') : require('./edit-light.png'),
                     title: "退出所有群聊",
-                    onPress: () => { },
+                    onPress: () => {
+                        confirmModalRef.current?.open({
+                            desc: "是否退出所有群聊？",
+                            title: "退出所有群聊",
+                            onCancel: () => { },
+                            onSubmit: () => {
+                            }
+                        })
+                    },
                     theme: $theme,
                 },
                 {
                     icon: $theme == "dark" ? require('./edit-dark.png') : require('./edit-light.png'),
                     title: "清空所有消息",
-                    onPress: () => { },
+                    onPress: () => {
+                        confirmModalRef.current?.open({
+                            desc: "是否清空所有消息？",
+                            title: "清空所有消息",
+                            onCancel: () => { },
+                            onSubmit: () => {
+                            }
+                        })
+                    },
                     theme: $theme,
                 },
             ]} />
@@ -59,18 +82,37 @@ export const SafetyScreen = () => {
                 {
                     icon: $theme == "dark" ? require('./edit-dark.png') : require('./edit-light.png'),
                     title: "删除所有好友",
-                    onPress: () => { },
+                    onPress: () => {
+                        confirmModalRef.current?.open({
+                            desc: "是否删除所有好友？",
+                            title: "删除所有好友",
+                            onCancel: () => { },
+                            onSubmit: () => {
+                            }
+                        })
+                    },
                     theme: $theme,
                 },
                 {
                     icon: $theme == "dark" ? require('./edit-dark.png') : require('./edit-light.png'),
                     title: "重置应用",
-                    onPress: () => { },
+                    onPress: () => {
+                        confirmModalRef.current?.open({
+                            desc: "是否重置应用？",
+                            title: "重置应用",
+                            onCancel: () => { },
+                            onSubmit: () => {
+                                globalStorage.flushAll();
+                                globalKV.flushAll();
+                                RNRestart.restart();
+                            }
+                        })
+                    },
                     theme: $theme,
                 },
             ]} />
         </View>
-
+        <ConfirmModal ref={confirmModalRef}/>
     </View>
 }
 

@@ -1,4 +1,4 @@
-import { Dimensions, Platform, View, ViewStyle } from "react-native";
+import { Dimensions, View, ViewStyle } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
 import WebView from "react-native-webview";
 import Navbar from "app/components/Navbar";
@@ -11,11 +11,11 @@ type Props = StackScreenProps<App.StackParamList, 'WebViewScreen'>;
 export const WebViewScreen = ({ route }: Props) => {
     const $colors = useRecoilValue(ColorsState);
     const insets = useSafeAreaInsets();
-    
+
     return (
         <View style={{
             flex: 1,
-            top: Platform.OS=="ios" ? 0: insets.top,
+            top: insets.top,
             backgroundColor: $colors.secondaryBackground
         }}>
             <View style={$container}>

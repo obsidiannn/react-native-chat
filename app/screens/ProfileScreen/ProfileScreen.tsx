@@ -1,18 +1,40 @@
-import { ColorsState, ThemeState } from "app/stores/system"
+import AvatarUpload from "app/components/AvatarUpload";
+import { AuthUser } from "app/stores/auth";
+import { ColorsState, ThemeState } from "app/stores/system";
+import { s } from "app/utils/size";
+import { useTranslation } from "react-i18next";
+import { useRecoilState, useRecoilValue } from "recoil";
+import UpdateNickname, { UpdateNicknameRef } from "./update-nickname";
+import UpdateGender, { UpdateGenderRef } from "./update-gender";
+import UpdateSign, { UpdateSignRef } from "./update-sign";
+import UpdateUsername, { UpdateUsernameModalRef } from "./update-username";
+import toast from "app/utils/toast";
+import { IModel } from "@repo/enums";
+import { AuthService } from "app/services/auth.service";
+import fileService from "app/services/file.service";
+import { IUser } from "drizzle/schema";
+import { LocalUserService } from "app/services/LocalUserService";
 
-import { Text, View } from "react-native"
-import { useRecoilValue } from "recoil"
-import { useSafeAreaInsets } from "react-native-safe-area-context"
-import { AuthUser } from "app/stores/auth"
-import { s } from "app/utils/size"
-import AvatarX from "app/components/AvatarX"
-import Navbar from "app/components/Navbar"
-import { CardMenu } from "app/components/CardMenu/CardMenu"
+import { useRef } from "react"
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import Navbar from "app/components/Navbar";
+import { CardMenu } from "app/components/CardMenu/CardMenu";
+import { Text, View } from "react-native";
 export const ProfileScreen = () => {
     const insets = useSafeAreaInsets();
     const $colors = useRecoilValue(ColorsState);
-    const authUser = useRecoilValue(AuthUser);
     const $theme = useRecoilValue(ThemeState);
+    const updateNicknameModalRef = useRef<UpdateNicknameRef>(null)
+    const updateGenderModalRef = useRef<UpdateGenderRef>(null)
+    const updateSignModalRef = useRef<UpdateSignRef>(null)
+    const updateUsernameModalRef = useRef<UpdateUsernameModalRef>(null)
+    const [authUser, setAuthUser] = useRecoilState(AuthUser)
+    const { t } = useTranslation('screens');
+    const authUpdate = (user: IUser) => {
+        void LocalUserService.deleteByIdIn([user?.id ?? 0])
+        setAuthUser(user)
+    }
+
     return <View style={{
         flex: 1,
         paddingTop: insets.top,
@@ -31,7 +53,19 @@ export const ProfileScreen = () => {
             width: s(343),
             padding: s(16),
         }}>
-            <AvatarX border size={74} uri={authUser?.avatar ?? ''} online={true} />
+            <AvatarUpload avatar={fileService.getFullUrl(authUser?.avatar ?? '')} border onChange={(val: string) => {
+                AuthService.updateAvatar(val).then((res) => {
+                    if (res) {
+                        authUpdate({
+                            ...authUser,
+                            avatar: res
+                        })
+                        toast(t('common.success_updated'));
+                    } else {
+                        toast(t('common.failed_updated'));
+                    }
+                })
+            }} />
         </View>
         <View style={{
             flex: 1,
@@ -45,30 +79,77 @@ export const ProfileScreen = () => {
             <CardMenu items={[
                 {
                     icon: $theme == "dark" ? require('./edit-dark.png') : require('./edit-light.png'),
-                    title: "用户名",
-                    onPress: () => { },
+                    title: "昵称",
+                    onPress: () => {
+                        updateNicknameModalRef.current?.open({
+                            value: authUser?.nickName ?? '',
+                            callback: (val: string) => {
+                                authUpdate({
+                                    ...authUser,
+                                    nickName: val
+                                })
+                                toast(t('common.success_updated'));
+                            }
+                        })
+                    },
                     theme: $theme,
                 },
                 {
                     icon: $theme == "dark" ? require('./edit-dark.png') : require('./edit-light.png'),
-                    title: "昵称",
-                    onPress: () => { },
+                    title: "用户名",
+                    onPress: () => {
+                        updateUsernameModalRef.current?.open({
+                            value: authUser?.userName ?? '',
+                            callback: (val: string) => {
+                                authUpdate({
+                                    ...authUser,
+                                    userName: val
+                                })
+                                toast(t('success_updated'));
+                            }
+                        })
+                    },
                     theme: $theme,
                 },
                 {
                     icon: $theme == "dark" ? require('./edit-dark.png') : require('./edit-light.png'),
                     title: "性别",
-                    onPress: () => { },
+                    onPress: () => {
+                        updateGenderModalRef.current?.open({
+                            value: authUser?.gender ?? IModel.IUser.Gender.UNKNOWN,
+                            callback: (val: number) => {
+                                authUpdate({
+                                    ...authUser,
+                                    gender: val
+                                })
+                                toast(t('common.success_updated'));
+                            }
+                        })
+                    },
                     theme: $theme,
                 },
                 {
                     icon: $theme == "dark" ? require('./edit-dark.png') : require('./edit-light.png'),
                     title: "简介",
-                    onPress: () => { },
+                    onPress: () => {
+                        updateSignModalRef.current?.open({
+                            value: authUser?.sign ?? '',
+                            callback: (val: string) => {
+                                authUpdate({
+                                    ...authUser,
+                                    sign: val
+                                })
+                                toast(t('common.success_updated'));
+                            }
+                        })
+                    },
                     theme: $theme,
                 },
             ]} />
         </View>
-
+        <UpdateNickname ref={updateNicknameModalRef} />
+        <UpdateGender ref={updateGenderModalRef} />
+        <UpdateSign ref={updateSignModalRef} />
+        <UpdateUsername ref={updateUsernameModalRef} />
     </View>
 }

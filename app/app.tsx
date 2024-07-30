@@ -3,9 +3,7 @@ import "./utils/ignoreWarnings"
 import React, { useEffect } from "react"
 import { initialWindowMetrics, SafeAreaProvider } from "react-native-safe-area-context"
 import { AppNavigator, useNavigationPersistence } from "./navigators"
-import { ErrorBoundary } from "./screens/ErrorScreen/ErrorBoundary"
 import * as storage from "./utils/storage"
-import Config from "./config"
 import { GestureHandlerRootView } from "react-native-gesture-handler"
 import { ViewStyle } from "react-native"
 import { RecoilRoot } from 'recoil';
@@ -35,11 +33,9 @@ const App = (props: AppProps) => {
     <RecoilRoot>
       <SocketProvider>
         <SafeAreaProvider initialMetrics={initialWindowMetrics}>
-          <ErrorBoundary catchErrors={Config.catchErrors}>
             <GestureHandlerRootView style={$container}>
               <AppNavigator />
             </GestureHandlerRootView>
-          </ErrorBoundary>
         </SafeAreaProvider>
       </SocketProvider>
     </RecoilRoot>

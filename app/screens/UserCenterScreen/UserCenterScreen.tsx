@@ -8,19 +8,11 @@ import { s } from "app/utils/size"
 import { navigate } from "app/navigators"
 import { CardMenu } from "app/components/CardMenu/CardMenu"
 import AvatarComponent from "app/components/Avatar"
-import { useRef } from "react"
-import SettingModal, { SettingModalType } from "../SettingScreen/SettingModal"
-import ProfileModal, { ProfiModalType } from "../ProfileScreen/ProfileModal"
-import SafetyModal, { SafetyModalType } from "../SafetyScreen/SafetyModal"
 export const UserCenterScreen = () => {
     const insets = useSafeAreaInsets();
     const $colors = useRecoilValue(ColorsState);
     const authUser = useRecoilValue(AuthUser);
     const $theme = useRecoilValue(ThemeState);
-
-    const settingModalRef = useRef<SettingModalType>(null)
-    const profileModalRef = useRef<ProfiModalType>(null)
-    const safetyModalRef = useRef<SafetyModalType>(null)
 
     console.log('authuser=', authUser);
 
@@ -48,7 +40,6 @@ export const UserCenterScreen = () => {
                 <AvatarComponent enableAvatarBorder width={74} height={74} url={authUser?.avatar ?? ''} online={true} style={{
                     marginTop: s(-42)
                 }} />
-                <Text>xxx</Text>
             </View>
             <View style={{
                 height: s(74),
@@ -65,16 +56,14 @@ export const UserCenterScreen = () => {
                     icon: $theme == "dark" ? require('./edit-dark.png') : require('./edit-light.png'),
                     title: "编辑资料",
                     onPress: () => {
-                        profileModalRef.current?.open()
+                        navigate("ProfileScreen")
                     },
                     theme: $theme,
                 },
                 {
                     icon: $theme == "dark" ? require('./safe-dark.png') : require('./safe-light.png'),
                     title: "安全",
-                    onPress: () => {
-                        safetyModalRef.current?.open()
-                    },
+                    onPress: () => navigate("SafetyScreen"),
                     theme: $theme,
                 },
                 {
@@ -85,8 +74,5 @@ export const UserCenterScreen = () => {
                 },
             ]} />
         </View>
-        <SettingModal ref={settingModalRef} />
-        <ProfileModal ref={profileModalRef} />
-        <SafetyModal ref={safetyModalRef} />
     </View>
 }

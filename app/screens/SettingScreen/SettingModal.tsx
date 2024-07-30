@@ -1,10 +1,12 @@
 import BaseModal from "app/components/base-modal";
-import { ColorsState } from "app/stores/system";
+import { ColorsState, ThemeState } from "app/stores/system";
 import { s } from "app/utils/size";
-import { forwardRef, useImperativeHandle, useState } from "react";
+import { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import { Text, View } from "react-native";
 import { useRecoilValue } from "recoil";
 import { OptionItem } from "./OptionItem";
+import { CardMenu } from "app/components/CardMenu/CardMenu";
+import ConfirmModal, { ConfirmModalType } from "app/components/ConfirmModal";
 
 
 export interface SettingModalType {
@@ -15,7 +17,8 @@ export default forwardRef((_, ref) => {
 
     const [visible, setVisible] = useState(false)
     const themeColor = useRecoilValue(ColorsState)
-
+    const $theme = useRecoilValue(ThemeState);
+    const confirmModalRef = useRef<ConfirmModalType>(null);
     const onClose = () => {
         setVisible(false)
     }
@@ -36,6 +39,7 @@ export default forwardRef((_, ref) => {
             }}>
                 设置
             </Text>
+            
             <View style={{
                 flex: 1,
                 backgroundColor: "white",
@@ -54,7 +58,7 @@ export default forwardRef((_, ref) => {
                 }}>
                     <OptionItem onPress={() => {
                         console.log("edit")
-                    }} icon={require('./edit-dark.png')} title="关于我们" />
+                    }} icon={require('./edit-dark.png')} title="" />
                     <OptionItem onPress={() => {
                         console.log("edit")
                     }} icon={require('./edit-dark.png')} title="注销账号" />
@@ -82,6 +86,6 @@ export default forwardRef((_, ref) => {
             </View>
         </View>
 
-
+        <ConfirmModal ref={confirmModalRef}/>
     </BaseModal>
 })

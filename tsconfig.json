@@ -21,7 +21,7 @@
     "paths": {
       "app/*": ["./app/*"],
       "assets/*": ["./assets/*"],
-      "drizzle/*": ["./drizzle"]
+      "drizzle/*": ["./drizzle/*"]
     }
   },
   "ts-node": {
@@ -32,6 +32,6 @@
       "module": "commonjs"
     }
   },
-  "include": ["index.js", "App.tsx", "app", "types", "plugins", "app.config.ts"],
+  "include": ["index.js", "App.tsx", "app", "types", "plugins", "app.config.ts","drizzle/*"],
   "exclude": ["node_modules", "test/**/*"]
 }

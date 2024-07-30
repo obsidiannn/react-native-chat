@@ -73,7 +73,7 @@ export const SignInScreen = ({navigation}: Props) => {
           marginHorizontal: s(16),
         }}>
           <BlockButton onPress={() => {
-            console.log("解锁本地账户")
+            navigation.navigate('UnlockScreen')
           }} label="登录本地账户" type="primary" />
         </View>
         <View style={{

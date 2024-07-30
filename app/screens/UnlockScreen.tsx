@@ -1,97 +1,104 @@
-import { Screen } from "app/components"
 import BlockButton from "app/components/BlockButton"
 import Navbar from "app/components/Navbar"
-import { ColorsState, ThemeState } from "app/stores/system"
+import { ColorsState } from "app/stores/system"
 import { s } from "app/utils/size"
-import { TextInput, TouchableOpacity, View } from "react-native"
-import { useRecoilValue } from "recoil"
-import { StackScreenProps } from "@react-navigation/stack"
-import { useEffect, useState } from "react"
-import { Image } from "expo-image"
-import Crypto from "react-native-quick-crypto";
-import { AuthService } from "app/services/auth.service"
+import { Text, View } from "react-native"
+import { useRecoilValue, useSetRecoilState } from "recoil"
+import { useState } from "react";
+import { AuthService } from "app/services/auth.service";
+import { PasswordInput } from "app/components/PasswordInput/PasswordInput"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
+import { generatePrivateKey, Wallet } from "app/utils/wallet"
+import { AuthUser, AuthWallet } from "app/stores/auth"
+import { readPriKey, setNow, writePriKey } from "app/utils/account"
+import { Init as DBInit } from "app/utils/database";
+import { NativeStackScreenProps } from "@react-navigation/native-stack"
+
 import { App } from "types/app"
-type Props = StackScreenProps<App.StackParamList, 'UnlockScreen'>;
-export const UnlockScreen = ({ navigation }: Props) => {
+import { LocalUserService } from "app/services/LocalUserService"
+type Props = NativeStackScreenProps<App.StackParamList, 'UnlockScreen'>;
+export const UnlockScreen = ({navigation}:Props) => {
   const $colors = useRecoilValue(ColorsState);
-  const [avatar, setAvatar] = useState('');
-  const $theme = useRecoilValue(ThemeState);
-  useEffect(()=>{
-    const seed = Crypto.randomUUID();
-    setAvatar('https://api.dicebear.com/8.x/fun-emoji/svg?seed='+seed);
-},[])
-  return <Screen preset="fixed" safeAreaEdges={["top"]} backgroundColor={$colors.background}>
-    <View style={{ flex: 1 }}>
-      <Navbar title="" />
-      <View style={{ flex: 1, backgroundColor: $colors.background }}>
-        <View style={{
-          width: s(375),
-          height: s(64),
-          alignItems: 'center',
-          marginTop: s(40)
-        }}>
-          <TouchableOpacity style={{
-            width: s(64),
-            height: s(64),
-            borderRadius: s(32),
-            backgroundColor: $colors.primary,
-          }} onPress={() => {
-            console.log("选择图片")
-          }}>
-            {avatar ? <Image source={avatar} style={{
-              width: s(64),
-              height: s(64),
-              borderRadius: s(32),
-              borderWidth: 1,
-              borderColor: '#f0f0f0',
-            }} /> : null}
-            <Image source={$theme == "dark" ? require('assets/icons/camera-dark.png') : require('assets/icons/camera-light.png')} style={{
-              position: 'absolute',
-              bottom: s(0),
-              right: s(0),
-              width: s(22),
-              height: s(22),
-              borderRadius: s(11),
-            }} />
-          </TouchableOpacity>
-        </View>
-        <View style={{
-          width: s(343),
-          height: s(48),
-          marginTop: s(20),
-          borderRadius: s(12),
-          backgroundColor: "#414C5B",
-          marginHorizontal: s(16),
-          paddingHorizontal: s(16),
-        }}>
-          <TextInput style={{
-            height: s(48),
-            width: "100%",
-            color: $colors.text
-          }} placeholderTextColor={$colors.secondaryText} placeholder="昵称" />
-        </View>
-        <View style={{
-          width: s(343),
-          height: s(48),
-          marginHorizontal: s(16),
-          marginTop: s(40),
-        }}>
-          <BlockButton onPress={() => {
-            console.log("创建账户")
-            AuthService.signUp().then(user => {
-              console.log(user);
-            }).catch(e => {
-              console.log(e)
-              global.wallet = null;
-            }).finally(() => {
-              console.log()
-            })
-            // 请求服务器
-            // 创建成功后保存用户信息
-            // 直接跳转到首页
-          }} label="创建账户" type="primary" />
-        </View>
+  const [loading, setLoading] = useState(false);
+  // 密码 与 确认密码
+  const [password, setPassword] = useState('');
+  const setAuthWallet =  useSetRecoilState(AuthWallet)
+  const setAuthUser =  useSetRecoilState(AuthUser)
+  const insets = useSafeAreaInsets();
+  return <View style={{
+    flex: 1,
+    backgroundColor: $colors.secondaryBackground,
+    paddingTop: insets.top,
+  }}>
+    <Navbar title="解锁账户" />
+    <View style={{
+      marginTop: s(20),
+      flex: 1,
+      backgroundColor: "white",
+      borderTopStartRadius: s(24),
+      borderTopRightRadius: s(24),
+    }}>
+      <View style={{
+        paddingHorizontal: s(16),
+        marginTop: s(20),
+        paddingTop: s(25),
+      }}>
+        <Text style={{
+          color: $colors.text,
+          fontSize: 16,
+          fontWeight: "400"
+        }}>输入安全密码</Text>
+      </View>
+      <View style={{
+        width: s(343),
+        alignItems: 'center',
+        marginTop: s(20),
+        height: s(48),
+        marginHorizontal: s(16),
+      }}>
+        <PasswordInput value={password} onChangeText={(v) => setPassword(v)} placeholder="请输入密码" />
+      </View>
+      <View style={{
+        width: s(343),
+        alignItems: 'center',
+        marginTop: s(20),
+        height: s(48),
+        marginHorizontal: s(16),
+        paddingHorizontal: s(16),
+      }}>
+        <Text style={{
+          fontSize: 14,
+          color: $colors.secondaryText,
+        }}>请输入安全密码，安全密码将用户保护你在本地的私钥</Text>
+      </View>
+      <View style={{
+        width: s(343),
+        height: s(48),
+        marginHorizontal: s(16),
+        marginTop: s(200),
+      }}>
+        <BlockButton loading={loading} onPress={async () => {
+          if (!password) {
+            alert("密码不能为空");
+            return;
+          }
+          if (password.length < 8) {
+            alert("密码不能低于8位");
+            return;
+          }
+          const priKey = readPriKey(password)
+          global.wallet = new Wallet(priKey);
+          setNow(priKey);
+          await DBInit(global.wallet.getAddress());
+          const user = await LocalUserService.findByAddr(global.wallet.getAddress())
+          if(user){
+            setAuthUser(user);
+          }
+          setAuthWallet(global.wallet);
+          
+          navigation.replace('TabStack');
+        }} label="登录" type="primary" />
       </View>
     </View>
-  </Screen>
+  </View>
 }

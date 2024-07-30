@@ -6,7 +6,7 @@ import {
     ANDROID_DATABASE_PATH,
 } from '@op-engineering/op-sqlite';
 import * as schema from '../../drizzle/schema';
-import x from '../../drizzle/migrations.js'
+import x from 'drizzle/migrations'
 import Crypto from 'react-native-quick-crypto';
 
 import { Platform } from "react-native";
@@ -25,11 +25,15 @@ export const Init = async (name: string) => {
 
     db = drizzle(sqlite, { schema });
     console.log('db migrate');
-    // AppState.addEventListener('change',(e)=>{
-    //     if(e === 'inactive'){
-    //     }
-    // })
-    await migrate(db, x);
+    return new Promise<void>(async (resolve, reject) => {
+        migrate(db, x).then(() => {
+            console.log('migrate success');
+            resolve();
+        }).catch((error) => {
+            console.log('migrate error', error);
+            reject(error);
+        })
+    });
 }
 
 
