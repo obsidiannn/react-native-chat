@@ -11,6 +11,7 @@ import AvatarComponent from "app/components/Avatar"
 import { useRef } from "react"
 import SettingModal, { SettingModalType } from "../SettingScreen/SettingModal"
 import ProfileModal, { ProfiModalType } from "../ProfileScreen/ProfileModal"
+import SafetyModal, { SafetyModalType } from "../SafetyScreen/SafetyModal"
 export const UserCenterScreen = () => {
     const insets = useSafeAreaInsets();
     const $colors = useRecoilValue(ColorsState);
@@ -19,6 +20,7 @@ export const UserCenterScreen = () => {
 
     const settingModalRef = useRef<SettingModalType>(null)
     const profileModalRef = useRef<ProfiModalType>(null)
+    const safetyModalRef = useRef<SafetyModalType>(null)
 
     console.log('authuser=', authUser);
 
@@ -41,7 +43,7 @@ export const UserCenterScreen = () => {
                 flexDirection: 'row',
                 alignItems: 'center',
                 justifyContent: 'space-between',
-                
+
             }}>
                 <AvatarComponent enableAvatarBorder width={74} height={74} url={authUser?.avatar ?? ''} online={true} style={{
                     marginTop: s(-42)
@@ -70,7 +72,9 @@ export const UserCenterScreen = () => {
                 {
                     icon: $theme == "dark" ? require('./safe-dark.png') : require('./safe-light.png'),
                     title: "安全",
-                    onPress: () => navigate("SafetyScreen"),
+                    onPress: () => {
+                        safetyModalRef.current?.open()
+                    },
                     theme: $theme,
                 },
                 {
@@ -82,6 +86,7 @@ export const UserCenterScreen = () => {
             ]} />
         </View>
         <SettingModal ref={settingModalRef} />
-        <ProfileModal ref={profileModalRef}/>
+        <ProfileModal ref={profileModalRef} />
+        <SafetyModal ref={safetyModalRef} />
     </View>
 }
