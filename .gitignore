@@ -88,3 +88,4 @@ web-build/
 !env.js
 
 /coverage
+.env
