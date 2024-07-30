@@ -23,7 +23,26 @@ const Navbar = (props: {
     } = props;
     const $theme = useRecoilValue(ThemeState)
     const $colors = useRecoilValue(ColorsState)
-    return <View style={[$container,{
+
+    const renderTitle = () => {
+        if (renderCenter) {
+            return renderCenter()
+        } else {
+            if (title && title !== '') {
+                <View style={[$centerContainer]}>
+                    <Text style={[
+                        $centerText,
+                        {
+                            color: $colors.text,
+                        },
+                    ]}>{title}</Text>
+                </View>
+            }
+        }
+        return null
+    }
+
+    return <View style={[$container, {
         backgroundColor: $colors.secondaryBackground
     }]}>
         {<View style={$leftContainer}>
@@ -39,18 +58,12 @@ const Navbar = (props: {
             }
         </View>}
         {
-            renderCenter ? renderCenter() : <View style={[$centerContainer]}>
-                <Text style={[
-                    $centerText,
-                    {
-                        color: $colors.text,
-                    },
-                ]}>{title}</Text>
-            </View>
+            renderTitle()
         }
         {
             <View style={{
                 ...$rightContainer,
+                ...rightStyle
             }}>
                 {renderRight ? renderRight() : null}
             </View>

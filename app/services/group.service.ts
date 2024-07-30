@@ -18,9 +18,21 @@ const quitAll = async () => {
     return groupApi.quitAll()
 }
 
+const searchGroup = async (keyword: string, page: number, limit: number = 10): Promise<{
+    items: GroupDetailItem[],
+    total: number
+}> => {
+    const groupIdsResp = await groupApi.searchGroup({ keyword })
+    const groupIds = groupIdsResp.items ?? []
+    if (groupIds.length > 0) {
+        const result = await groupApi.groupDetail({ ids: groupIds })
+        return { items: result.items, total: groupIdsResp.total }
+    }
+    return []
+}
 
 const changeAliasByManage = () => {
-    
+
 }
 
 // 獲取羣組列表
@@ -77,7 +89,7 @@ const alphabetList = (items: GroupMemberItemVO[]) => {
     };
 }
 
-const create = async (name: string, avatar: string, isEnc: boolean, searchType: string,describe: string) => {
+const create = async (name: string, avatar: string, isEnc: boolean, searchType: string, describe: string) => {
     if (!globalThis.wallet) {
         throw new Error('請先登錄');
     }
@@ -131,7 +143,7 @@ const invite = async (members: {
     }[] = [];
     members.forEach(member => {
         const itemSecretKey = wallet?.computeSharedSecret(member.pubKey ?? '')
-        const enkey = quickCrypto.En(groupInfo.groupPassword, Buffer.from(itemSecretKey ?? '','utf8'));
+        const enkey = quickCrypto.En(groupInfo.groupPassword, Buffer.from(itemSecretKey ?? '', 'utf8'));
         items.push({
             uid: Number(member.id),
             encPri: myWallet.getPublicKey(),
@@ -287,5 +299,6 @@ export default {
     adminAgree,
     saveTag,
     clearGroupMessages,
-    groupSingleInfo
+    groupSingleInfo,
+    searchGroup
 }
