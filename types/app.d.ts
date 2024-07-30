@@ -54,5 +54,6 @@ declare namespace App {
     ProfileScreen: undefined;
     SafetyScreen:undefined;
     SettingScreen: undefined;
+    DiscoverScreen: undefined
   }
 }

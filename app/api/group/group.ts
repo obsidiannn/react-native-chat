@@ -20,7 +20,7 @@ import {
   GroupSingleItem
 } from "@repo/types";
 import { createInstance } from '../req';
-import { BaseIdReq, BaseIdArrayReq, BaseIdsArrayReq, BaseArrayResp, BaseIdsNumberReq } from "../types/common";
+import { BaseIdReq, BaseIdArrayReq, BaseIdsArrayReq, BaseArrayResp, BaseIdsNumberReq } from "@repo/types";
 
 const create = async (param: GroupCreateReq): Promise<{ id: number }> => await createInstance(true).post('/groups/create', param);
 
@@ -42,6 +42,7 @@ const requireJoin = async (param: GroupRequireJoinReq): Promise<GroupRequireJoin
 const kickOut = async (param: GroupKickOutReq) => await createInstance(true).post('/groups/kick-out', param);
 
 const mineGroupList = async (param: GroupIdsReq): Promise<BaseArrayResp<GroupListIdResp>> => createInstance(true).post('/groups/list', param);
+const searchGroup = async (param: {keyword: string}): Promise<BaseArrayResp<number>> => createInstance(true).post('/groups/search', param);
 
 const groupInfoList = async (param: GroupIdsReq): Promise<BaseArrayResp<GroupInfoDto>> => await createInstance(true).post('/groups/list-by-ids', param);
 
@@ -68,7 +69,7 @@ const changeDesc = async (param: GroupChangeDescReq) => await createInstance(tru
 
 const quit = async (param: BaseIdReq) => await createInstance(true).post('/groups/quit', param);
 
-const quitBatch = async (param: BaseIdArrayReq) => await createInstance(true).post('/groups/quit-batch', param);
+const quitBatch = async (param: { ids: number[] }) => await createInstance(true).post('/groups/quit-batch', param);
 
 const quitAll = async () => await createInstance(true).post('/groups/quit-all');
 
@@ -88,7 +89,7 @@ const myApplyList = async (param: BaseIdsArrayReq): Promise<BaseArrayResp<MineGr
 
 const groupSingleInfo = async (param: BaseIdsNumberReq): Promise<BaseArrayResp<GroupSingleItem>> => await createInstance(true).post('/groups/get-single-info', param);
 
-const groupDetail = async (param: BaseIdsArrayReq): Promise<GroupDetailResp> => await createInstance(true).post('/groups/get-batch-info', param);
+const groupDetail = async (param: { ids: number[] }): Promise<GroupDetailResp> => await createInstance(true).post('/groups/get-batch-info', param);
 
 const clearGroupMessages = async (param: BaseIdsArrayReq) => await createInstance(true).post('/groups/clear-messages', param);
 
@@ -127,5 +128,6 @@ export default {
   groupDetail,
   saveGroupTag,
   clearGroupMessages,
-  groupSingleInfo
+  groupSingleInfo,
+  searchGroup
 }

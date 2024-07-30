@@ -159,6 +159,7 @@ const AppStack = () => {
       <Stack.Screen name="ProfileScreen" component={Screens.ProfileScreen} />
       <Stack.Screen name="SafetyScreen" component={Screens.SafetyScreen} />
       <Stack.Screen name="SettingScreen" component={Screens.SettingScreen} />
+      <Stack.Screen name="DiscoverScreen" component={Screens.DiscoverScreen} />
     </Stack.Navigator>
   )
 }

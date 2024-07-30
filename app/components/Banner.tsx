@@ -1,6 +1,6 @@
 import { scale } from "app/utils/size"
 import { Image } from "expo-image"
-import { Text, View,Platform } from "react-native"
+import { Text, View,Platform, Pressable } from "react-native"
 
 export interface BannerProperty {
     label: string
@@ -10,7 +10,7 @@ export interface BannerProperty {
 
 const BannerComponent = (props: BannerProperty) => {
 
-    return <View style={{
+    return <Pressable onPress={props.onPress} style={{
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
@@ -42,7 +42,7 @@ const BannerComponent = (props: BannerProperty) => {
                 aspectRatio:1.6
             }}
         />
-    </View>
+    </Pressable>
 }
 
 export default BannerComponent

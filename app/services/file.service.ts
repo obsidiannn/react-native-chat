@@ -125,6 +125,8 @@ let baseUrl: string | undefined;
 
 const getFullUrl = (key: string) => {
     if (key.startsWith('http') || key.startsWith('data:') || key.startsWith('file://')) {
+        console.log('original', key);
+
         return key
     }
     if (!baseUrl) {
