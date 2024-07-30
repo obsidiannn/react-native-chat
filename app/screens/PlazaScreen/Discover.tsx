@@ -15,7 +15,7 @@ import { ColorsState } from "app/stores/system";
 
 type Props = StackScreenProps<App.StackParamList, 'DiscoverScreen'>;
 
-export const DiscoverScreen = (props: Props) => {
+export const DiscoverScreen = ({ navigation }: Props) => {
     const themeColor = useRecoilValue(ColorsState)
     const [data, setData] = useState<GroupDetailItem[]>([])
     const [pageState, setPageState] = useState({
@@ -31,14 +31,14 @@ export const DiscoverScreen = (props: Props) => {
         const total = resp.total
         setPageState({
             ...pageState,
-           total
+            total
         })
         if (append) {
             if (!groups || groups.length <= 0) {
                 return
             }
             console.log('items');
-            
+
             setData((items) => {
                 return groups.concat(items);
             })
@@ -77,7 +77,11 @@ export const DiscoverScreen = (props: Props) => {
                 estimatedItemSize={scale(40)}
                 renderItem={({ item, index }) => {
                     return <View style={{ padding: scale(8) }} key={item.id}>
-                        <GroupCard group={item} />
+                        <GroupCard group={item} onPress={() => {
+                            navigation.navigate('GroupInfoScreen', {
+                                group: item
+                            })
+                        }} />
                     </View>
                 }}
             />

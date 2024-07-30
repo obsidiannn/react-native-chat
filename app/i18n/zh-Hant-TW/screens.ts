@@ -145,8 +145,14 @@ export default {
         option_failed: "操作失敗",
         success_save_album: "保存到相冊成功",
         success_apply_request: "發送申請成功",
-        success_operation: "操作成功"
+        success_operation: "操作成功",
+        group_status_added: "已添加",
+        group_status_rejected: "已拒绝",
+        group_status_pending: "等待验证",
+        group_missed: "群聊不存在",
+        group_member_joined: "人加入",
     },
+
     setting: {
         title_setting: "設置",
         title_current_version: "當前版本",

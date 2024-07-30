@@ -13,16 +13,14 @@ import { useRecoilValue } from "recoil"
 
 export interface GroupCardProps {
     group: GroupDetailItem
+    onPress: () => void
 }
 
 export const GroupCard = (props: GroupCardProps) => {
     const authUser = useRecoilValue(AuthUser)
     const themeColor = useRecoilValue(ColorsState)
     const { group } = props
-    return <Pressable onPress={() => {
-        console.log('press');
-
-    }}>
+    return <Pressable onPress={props.onPress}>
         <ImageBackground
             accessibilityRole='image'
             resizeMode="cover"

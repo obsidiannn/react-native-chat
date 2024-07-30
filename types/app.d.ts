@@ -1,4 +1,4 @@
-import { ChatDetailItem } from "@repo/types";
+import { ChatDetailItem, GroupDetailItem } from "@repo/types";
 
 declare namespace App {
   type StackParamList = {
@@ -17,6 +17,10 @@ declare namespace App {
       item: ChatDetailItem
       fromNotify?: boolean
     };
+    GroupInfoScreen: {
+      group: GroupDetailItem
+      outside?: boolean
+    }
     WebViewScreen: {
       title: string;
       url: string;
