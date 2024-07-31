@@ -74,8 +74,8 @@ export const Button = (props: ButtonProps) => {
     fullWidth && {
       width: "100%",
     },
-    containerStyle,
     $containerType[type],
+    containerStyle,
   ]}>
     <Text style={[
       {
@@ -83,8 +83,8 @@ export const Button = (props: ButtonProps) => {
         textAlign: "center",
       },
       $label[size],
-      textStyle,
       $labelType[type],
+      textStyle,
     ]}>{label}</Text>
   </TouchableOpacity>
 }

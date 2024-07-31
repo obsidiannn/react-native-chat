@@ -141,5 +141,5 @@ export default {
     
     mineLocalChats,
     changeChat,
-    batchSaveLocal
+    batchSaveLocal,
 }

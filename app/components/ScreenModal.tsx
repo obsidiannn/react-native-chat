@@ -12,6 +12,7 @@ export interface ScreenModalType {
 }
 export const ScreenModal = forwardRef((props: {
     style?: ViewStyle;
+    title?: string
     children?: React.ReactNode;
 }, ref) => {
     const [visible, setVisible] = useState(false);
@@ -38,7 +39,7 @@ export const ScreenModal = forwardRef((props: {
                     },
                     props.style
                 ]}>
-                    <Navbar onLeftPress={() => setVisible(false)} />
+                    <Navbar onLeftPress={() => setVisible(false)} title={props.title} />
                     {props.children}
                 </View>
             </GestureDetector>

@@ -14,7 +14,7 @@ const dto2Entity = (dto: ChatDetailItem): IChat => {
         lastTime: dto.lastTime,
         createdAt: dto.createdAt,
         avatar: dto.avatar,
-        sourceId: dto.sourceId,
+        sourceId: dto.sourceId + '',
         chatAlias: dto.chatAlias,
         isTop: dto.isTop,
         chatUserId: dto.chatUserId,

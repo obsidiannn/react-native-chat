@@ -1,5 +1,6 @@
 import { Button } from "app/components";
 import Icon from "app/components/Icon";
+import { ScreenModal, ScreenModalType } from "app/components/ScreenModal";
 import BaseModal from "app/components/base-modal";
 import { AuthService } from "app/services/auth.service";
 import { ColorsState } from "app/stores/system";
@@ -23,16 +24,15 @@ export default forwardRef((_, ref) => {
     const maxLength = 60
     const { t } = useTranslation('screens')
     const [val, setVal] = useState('')
-    const [visible, setVisible] = useState<boolean>(false)
     const [loading, setLoading] = useState<boolean>(false)
     const onFinishRef = useRef<(v: string) => void>()
     const themeColor = useRecoilValue(ColorsState)
 
-
+    const screenModalRef = useRef<ScreenModalType>(null);
     const onClose = () => {
         setVal('')
         setLoading(false)
-        setVisible(false)
+        screenModalRef.current?.close()
     }
 
     useImperativeHandle(ref, () => ({
@@ -43,7 +43,7 @@ export default forwardRef((_, ref) => {
             console.log('open');
 
             setVal(param.value)
-            setVisible(true)
+            screenModalRef.current?.open()
             onFinishRef.current = param.callback
         },
     }));
@@ -54,8 +54,7 @@ export default forwardRef((_, ref) => {
         setVal(validText);
     };
 
-    return <BaseModal visible={visible} onClose={onClose} title={t('profile.title_username')} styles={{ flex: 1 }}>
-
+    return <ScreenModal ref={screenModalRef} title={t('profile.title_username')}>
         <View style={{
             flex: 1,
             display: 'flex',
@@ -79,7 +78,7 @@ export default forwardRef((_, ref) => {
                     style={{
                         height: verticalScale(44),
                         color: themeColor.text,
-                        backgroundColor: themeColor.secondaryBackground,
+                        backgroundColor: themeColor.background,
                         width: '100%',
                         borderRadius: scale(12),
                         paddingLeft: scale(14)
@@ -152,10 +151,9 @@ export default forwardRef((_, ref) => {
                 </View>
             </View>
 
-
-
             <Button
-                style={{
+                size="large"
+                containerStyle={{
                     ...styles.nextButton,
                     backgroundColor: themeColor.primary,
                     marginBottom: scale(12)
@@ -176,14 +174,14 @@ export default forwardRef((_, ref) => {
                         .finally(() => {
                             onClose()
                         })
-                }}  >
-                <Text style={styles.nextButtonLabel}>
-                    {t('common.btn_submit')}
-                </Text>
+                }}
+                label={t('common.btn_submit')}
+                textStyle={styles.nextButtonLabel}
+            >
             </Button>
         </View>
 
-    </BaseModal>
+    </ScreenModal>
 })
 
 

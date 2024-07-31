@@ -4,6 +4,7 @@
 import { IModel } from "@repo/enums";
 import { Button } from "app/components";
 import Icon from "app/components/Icon";
+import { ScreenModal, ScreenModalType } from "app/components/ScreenModal";
 import BaseModal from "app/components/base-modal";
 import { AuthService } from "app/services/auth.service";
 import { ColorsState } from "app/stores/system";
@@ -32,13 +33,15 @@ export default forwardRef((_, ref) => {
 
     const themeColor = useRecoilValue(ColorsState)
     const [val, setVal] = useState<number>(IModel.IUser.Gender.UNKNOWN)
-    const [visible, setVisible] = useState<boolean>(false)
     const [loading, setLoading] = useState<boolean>(false)
     const onFinishRef = useRef<(v: number) => void>()
+
+    const screenModalRef = useRef<ScreenModalType>(null);
+
     const onClose = () => {
         setVal(IModel.IUser.Gender.UNKNOWN)
         setLoading(false)
-        setVisible(false)
+        screenModalRef.current?.close()
     }
 
     useImperativeHandle(ref, () => ({
@@ -47,7 +50,7 @@ export default forwardRef((_, ref) => {
             callback: (value: number) => void
         }) => {
             setVal(param.value)
-            setVisible(true)
+            screenModalRef.current?.open()
             onFinishRef.current = param.callback
         },
     }));
@@ -103,50 +106,60 @@ export default forwardRef((_, ref) => {
         setVal(chooseVal)
     }
 
-    return <BaseModal visible={visible} onClose={onClose} title={t('profile.title_choose_gender')} styles={{
-        padding: scale(12),
-        flex: 1,
-        display: 'flex',
-        flexDirection: 'column'
-    }}>
-
-        <View style={{
-            flex: 1,
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            paddingHorizontal: scale(24),
-            marginTop: scale(24)
-        }}>
-            {renderMale()}
-            {renderFemale()}
-        </View>
-        <Button
+    // return <BaseModal visible={visible} onClose={onClose} title={t('profile.title_choose_gender')} styles={{
+    //     padding: scale(12),
+    //     flex: 1,
+    //     display: 'flex',
+    //     flexDirection: 'column'
+    // }}>
+    return <ScreenModal ref={screenModalRef} title={t('profile.title_choose_gender')} >
+        <View
             style={{
-                backgroundColor: themeColor.primary,
-                marginBottom: scale(14),
-                borderRadius: scale(12)
-            }}
-            onPress={async () => {
-                if (loading) {
-                    return;
-                }
-                setLoading(true);
+                flex: 1,
+                padding: scale(14)
+            }}>
+            <View style={{
+                flex: 1,
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                paddingHorizontal: scale(12),
+                marginTop: scale(24)
+            }}>
+                {renderMale()}
+                {renderFemale()}
+            </View>
+            <Button
+                size="large"
+                containerStyle={{
+                    backgroundColor: themeColor.primary,
+                    marginBottom: scale(14),
+                    borderRadius: scale(12)
+                }}
+                onPress={async () => {
+                    if (loading) {
+                        return;
+                    }
+                    setLoading(true);
 
-                await AuthService.updateGender(val)
-                    .then(() => {
-                        onFinishRef.current && onFinishRef.current(val)
-                    }).catch(() => { })
-                    .finally(() => {
-                        onClose()
-                    })
-            }}  >
-            <Text style={{
-                ...styles.nextButtonLabel,
-                color: themeColor.textChoosed
-            }}> {t('common.btn_submit')}</Text>
-        </Button>
-    </BaseModal>
+                    await AuthService.updateGender(val)
+                        .then(() => {
+                            onFinishRef.current && onFinishRef.current(val)
+                        }).catch(() => { })
+                        .finally(() => {
+                            onClose()
+                        })
+                }}
+                label={t('common.btn_submit')}
+                textStyle={{
+                    ...styles.nextButtonLabel,
+                    color: themeColor.textChoosed
+                }}
+            >
+            </Button>
+        </View>
+
+    </ScreenModal>
 })
 
 

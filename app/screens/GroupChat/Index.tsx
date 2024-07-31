@@ -91,7 +91,7 @@ export const GroupChatScreen = ({ navigation, route }: Props) => {
         console.log(_chatItem);
         chatItemRef.current = _chatItem
         setChatItem(_chatItem)
-        groupIdRef.current = _chatItem.sourceId ?? ''
+        groupIdRef.current = _chatItem.sourceId
         console.log('羣id', groupIdRef.current)
         await loadGroup()
         loadMembers();
@@ -134,7 +134,6 @@ export const GroupChatScreen = ({ navigation, route }: Props) => {
                     renderRight={() => {
                         return <View style={{
                             height: '100%',
-                            justifyContent: 'center',
                             alignItems: 'center',
                             display: 'flex',
                             flexDirection: 'row',

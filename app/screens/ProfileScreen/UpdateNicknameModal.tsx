@@ -1,10 +1,9 @@
 import { Button } from "app/components";
 import Icon from "app/components/Icon";
-import BaseModal from "app/components/base-modal";
+import { ScreenModal, ScreenModalType } from "app/components/ScreenModal";
 import { AuthService } from "app/services/auth.service";
 import { ColorsState } from "app/stores/system";
 import { scale } from "app/utils/size";
-import { Image } from "expo-image";
 import { forwardRef, useImperativeHandle, useRef, useState } from "react"
 import { useTranslation } from "react-i18next";
 import { StyleSheet, Text, View, TextInput } from "react-native"
@@ -23,17 +22,16 @@ export interface UpdateNicknameRef {
 export default forwardRef((_, ref) => {
     const maxLength = 150
     const { t } = useTranslation('screens')
-    const [visible, setVisible] = useState<boolean>(false)
     const [loading, setLoading] = useState<boolean>(false)
     const onFinishRef = useRef<(v: string) => void>()
-
+    const screenModalRef = useRef<ScreenModalType>(null);
     const themeColor = useRecoilValue(ColorsState)
 
     const [val, setVal] = useState('')
     const onClose = () => {
         setVal('')
         setLoading(false)
-        setVisible(false)
+        screenModalRef.current?.close()
     }
 
     useImperativeHandle(ref, () => ({
@@ -44,25 +42,22 @@ export default forwardRef((_, ref) => {
             console.log('open');
 
             setVal(param.value)
-            setVisible(true)
+            screenModalRef.current?.open()
             onFinishRef.current = param.callback
         },
     }));
 
-    return <BaseModal visible={visible} onClose={onClose} title={''} styles={{
-        flex: 1,
-        padding: scale(18)
-    }}>
+    return <ScreenModal ref={screenModalRef} >
         <View style={{
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            flex: 1
+            padding: scale(14)
         }}>
             <Text style={{
                 color: themeColor.title,
                 fontSize: scale(28),
-                fontFamily: '600',
+                fontWeight: '500',
                 alignSelf: 'flex-start'
             }}>
                 {t('profile.title_nickname')}
@@ -80,9 +75,10 @@ export default forwardRef((_, ref) => {
                     placeholderTextColor={themeColor.border}
                     maxLength={maxLength}
                     style={{
+                        fontSize: scale(16),
                         height: scale(44),
                         color: themeColor.text,
-                        backgroundColor: themeColor.secondaryBackground,
+                        backgroundColor: themeColor.background,
                         width: '100%',
                         borderRadius: scale(12),
                     }}
@@ -159,16 +155,19 @@ export default forwardRef((_, ref) => {
             </View>
 
 
+
         </View>
 
+
         <Button
-            style={{
+            size="large"
+            label={t('common.btn_submit')}
+            textStyle={styles.nextButtonLabel}
+            containerStyle={{
                 backgroundColor: themeColor.primary,
                 borderRadius: scale(12),
-                marginBottom: scale(14)
-            }}
-            pressedStyle={{
-                backgroundColor: themeColor.btnChoosed,
+                marginBottom: scale(14),
+                marginHorizontal: scale(12),
             }}
             onPress={async () => {
                 if (loading) {
@@ -186,11 +185,8 @@ export default forwardRef((_, ref) => {
                     .finally(() => {
                         onClose()
                     })
-            }} >
-            <Text style={styles.nextButtonLabel}> {t('common.btn_submit')}</Text>
-        </Button>
-
-    </BaseModal>
+            }} />
+    </ScreenModal>
 })
 
 

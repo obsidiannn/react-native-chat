@@ -29,7 +29,7 @@ const Navbar = (props: {
             return renderCenter()
         } else {
             if (title && title !== '') {
-                <View style={[$centerContainer]}>
+                return <View style={[$centerContainer]}>
                     <Text style={[
                         $centerText,
                         {
