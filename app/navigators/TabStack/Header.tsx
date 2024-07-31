@@ -1,11 +1,11 @@
-import { Text, TouchableOpacity, View } from 'react-native';
+import { TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ColorsState, ThemeState } from 'app/stores/system';
 import { useRecoilValue } from 'recoil';
 import { Image } from 'expo-image';
 import { s } from 'app/utils/size';
 import ScanModal, { ScanModalType } from 'app/components/ScanModal/ScanModal';
-import MyBusinessCardModal, { MyBusinessCardModalType } from 'app/components/MyBusinessCardModal/MyBusinessCardModal';
+import MyBusinessCardModal, { MyBusinessCardModalType } from './MyBusinessCardModal/MyBusinessCardModal';
 import SettingCenterModal, { SettingCenterModalType } from 'app/components/SettingCenterModal/SettingCenterModal';
 import { useRef } from 'react';
 import SelectMemberModal, { SelectMemberModalType, SelectMemberOption } from "app/components/SelectMemberModal/Index"

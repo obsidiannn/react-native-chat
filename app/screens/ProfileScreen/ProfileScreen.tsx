@@ -4,10 +4,10 @@ import { ColorsState, ThemeState } from "app/stores/system";
 import { s } from "app/utils/size";
 import { useTranslation } from "react-i18next";
 import { useRecoilState, useRecoilValue } from "recoil";
-import UpdateNickname, { UpdateNicknameRef } from "./update-nickname";
-import UpdateGender, { UpdateGenderRef } from "./update-gender";
-import UpdateSign, { UpdateSignRef } from "./update-sign";
-import UpdateUsername, { UpdateUsernameModalRef } from "./update-username";
+import UpdateNickname, { UpdateNicknameRef } from "./UpdateNicknameModal";
+import UpdateGender, { UpdateGenderRef } from "./UpdateGenderModal";
+import UpdateSign, { UpdateSignRef } from "./UpdateSignModal";
+import UpdateUsername, { UpdateUsernameModalRef } from "./UpdateUsernameModal";
 import toast from "app/utils/toast";
 import { IModel } from "@repo/enums";
 import { AuthService } from "app/services/auth.service";
@@ -20,6 +20,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Navbar from "app/components/Navbar";
 import { CardMenu } from "app/components/CardMenu/CardMenu";
 import { Text, View } from "react-native";
+import { Icon } from "app/components/Icon/Icon";
 export const ProfileScreen = () => {
     const insets = useSafeAreaInsets();
     const $colors = useRecoilValue(ColorsState);
@@ -78,7 +79,7 @@ export const ProfileScreen = () => {
         }}>
             <CardMenu items={[
                 {
-                    icon: $theme == "dark" ? require('./edit-dark.png') : require('./edit-light.png'),
+                    icon: <Icon name={$theme == "dark" ? "editDark" : "editLight"} />,
                     title: "昵称",
                     onPress: () => {
                         updateNicknameModalRef.current?.open({
@@ -95,7 +96,7 @@ export const ProfileScreen = () => {
                     theme: $theme,
                 },
                 {
-                    icon: $theme == "dark" ? require('./edit-dark.png') : require('./edit-light.png'),
+                    icon:<Icon name={$theme == "dark" ? "editDark" : "editLight"} />,
                     title: "用户名",
                     onPress: () => {
                         updateUsernameModalRef.current?.open({
@@ -112,7 +113,7 @@ export const ProfileScreen = () => {
                     theme: $theme,
                 },
                 {
-                    icon: $theme == "dark" ? require('./edit-dark.png') : require('./edit-light.png'),
+                    icon: <Icon name={$theme == "dark" ? "genderDark" : "genderLight"} />,
                     title: "性别",
                     onPress: () => {
                         updateGenderModalRef.current?.open({
@@ -129,7 +130,7 @@ export const ProfileScreen = () => {
                     theme: $theme,
                 },
                 {
-                    icon: $theme == "dark" ? require('./edit-dark.png') : require('./edit-light.png'),
+                    icon: <Icon name={$theme == "dark" ? "signDark" : "signLight"} />,
                     title: "简介",
                     onPress: () => {
                         updateSignModalRef.current?.open({

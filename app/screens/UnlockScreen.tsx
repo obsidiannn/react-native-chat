@@ -5,12 +5,11 @@ import { s } from "app/utils/size"
 import { Text, View } from "react-native"
 import { useRecoilValue, useSetRecoilState } from "recoil"
 import { useState } from "react";
-import { AuthService } from "app/services/auth.service";
 import { PasswordInput } from "app/components/PasswordInput/PasswordInput"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
-import { generatePrivateKey, Wallet } from "app/utils/wallet"
+import {  Wallet } from "app/utils/wallet"
 import { AuthUser, AuthWallet } from "app/stores/auth"
-import { readPriKey, setNow, writePriKey } from "app/utils/account"
+import { readPriKey, setNow } from "app/utils/account"
 import { Init as DBInit } from "app/utils/database";
 import { NativeStackScreenProps } from "@react-navigation/native-stack"
 
@@ -91,11 +90,11 @@ export const UnlockScreen = ({navigation}:Props) => {
           setNow(priKey);
           await DBInit(global.wallet.getAddress());
           const user = await LocalUserService.findByAddr(global.wallet.getAddress())
+          console.log("本地用户", user);
           if(user){
             setAuthUser(user);
           }
           setAuthWallet(global.wallet);
-          
           navigation.replace('TabStack');
         }} label="登录" type="primary" />
       </View>

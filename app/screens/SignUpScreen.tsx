@@ -106,9 +106,10 @@ export const SignUpScreen = ({navigation}:Props) => {
           global.wallet = new Wallet(priKey);
           await DBInit(global.wallet.getAddress());
           AuthService.signUp().then(async user => {
-            console.log(user);
+            console.log("注册用户的信息@@@@@",user);
             const result = await writePriKey(password, priKey);
             if(result){
+              console.log("写入成功");
               setAuthWallet(global.wallet);
               setNow(priKey);
               if(global.wallet){

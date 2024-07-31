@@ -1,9 +1,3 @@
-/**
- * The app navigator (formerly "AppNavigator" and "MainNavigator") is used for the primary
- * navigation flows of your app.
- * Generally speaking, it will contain an auth flow (registration, login, forgot password)
- * and a "main" flow which the user will use once logged in.
- */
 import {
   LinkingOptions,
   NavigationContainer,
@@ -36,15 +30,10 @@ import { SystemService } from "app/services/system.service";
 import { App } from "types/app";
 
 
-/**
- * This is a list of all the route names that will exit the app if the back button
- * is pressed while in that screen. Only affects Android.
- */
 const exitRoutes = Config.exitRoutes
 
 export type AppStackScreenProps<T extends keyof App.StackParamList> = NativeStackScreenProps<App.StackParamList, T>
 
-// Documentation: https://reactnavigation.org/docs/stack-navigator/
 const Stack = createNativeStackNavigator<App.StackParamList>()
 
 const AppStack = () => {
@@ -54,6 +43,42 @@ const AppStack = () => {
 
   const setAuthWallet = useSetRecoilState(AuthWallet)
   const setNetworkState = useSetRecoilState(NetworkState);
+  const loadOnlineData = useCallback(() => {
+    NetInfo.fetch().then(async (state) => {
+      if (state.isConnected) {
+        await SystemService.refreshNodes()
+        setNetworkState(true)
+        AuthService.getInfo().then((v) => {
+          setAuthUser(v)
+          AppState.addEventListener('change', nextAppState => {
+            socketContext.setAppState(nextAppState);
+            if (nextAppState == "background") {
+              // 关闭socket
+              socketContext.close();
+            }
+            if (nextAppState == "active") {
+              // 打开socket
+              socketContext.init(v);
+            }
+          });
+          socketContext.init(v);
+        }).catch(e => console.log(e))
+        // 刷新请求地址
+        // 上报firebase token
+        // 连接websocket
+        chatService.mineChatList().then((res) => {
+          if (res !== null && res.length > 0) {
+            console.log('change chat detail');
+            setChatsStore(res)
+            chatService.batchSaveLocal(res)
+          }
+        })
+
+      } else {
+        setNetworkState(false)
+      }
+    })
+  },[])
   const init = useCallback(async () => {
     await KVInit();
     const now = getNow()
@@ -71,51 +96,13 @@ const AppStack = () => {
       })
       let currentUser: IUser | undefined = undefined
       const user = await LocalUserService.findByAddr(global.wallet.getAddress())
+
+      console.log('本地用户信息', user)
       if (user) {
-        console.log('本地用户信息', user)
         setAuthUser(user)
         currentUser = user
       }
-      NetInfo.fetch().then(async (state) => {
-        if (state.isConnected) {
-          await SystemService.refreshNodes()
-          console.log('节点刷新成功');
-          setNetworkState(true)
-          AuthService.getInfo().then((v) => {
-            console.log('当前登陆人', v);
-            currentUser = v
-            setAuthUser(v)
-
-            AppState.addEventListener('change', nextAppState => {
-              console.log('@@@@@@@@@@@@@@应用状态AppState', nextAppState);
-              socketContext.setAppState(nextAppState);
-              if (nextAppState == "background") {
-                // 关闭socket
-                socketContext.close();
-              }
-              if (nextAppState == "active") {
-                // 打开socket
-                socketContext.init(currentUser);
-              }
-            });
-            socketContext.init(currentUser);
-          }).catch(e => console.log(e))
-          // 刷新请求地址
-          // 上报firebase token
-          // 连接websocket
-          chatService.mineChatList().then((res) => {
-            if (res !== null && res.length > 0) {
-              console.log('change chat detail');
-              setChatsStore(res)
-              chatService.batchSaveLocal(res)
-            }
-          })
-
-        } else {
-          setNetworkState(false)
-        }
-      })
-
+      loadOnlineData();
     }
   }, [])
   const setThemeState = useSetRecoilState(ThemeState);

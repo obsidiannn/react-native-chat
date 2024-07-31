@@ -6,18 +6,20 @@ import { s } from "app/utils/size"
 import { Text, TextInput, TouchableOpacity, View } from "react-native"
 import { useRecoilValue } from "recoil"
 import * as Clipboard from 'expo-clipboard';
-import { useState } from "react"
+import { useRef, useState } from "react"
 import { StackScreenProps } from "@react-navigation/stack"
 import * as DocumentPicker from 'expo-document-picker';
 import * as FileSystem from 'expo-file-system';
 import toast from "app/utils/toast"
 import { restore } from "app/utils/account"
 import { App } from "types/app"
+import ConfirmModal, { ConfirmModalType } from "app/components/ConfirmModal"
 type Props = StackScreenProps<App.StackParamList, 'SignInScreen'>;
-export const SignInScreen = ({navigation}: Props) => {
+export const SignInScreen = ({ navigation }: Props) => {
   const $colors = useRecoilValue(ColorsState)
   const [priKey, setPriKey] = useState('');
   const [ready, setReady] = useState(false);
+  const confirmModalRef = useRef<ConfirmModalType>(null);
   return <Screen preset="fixed" safeAreaEdges={["top"]} backgroundColor={$colors.background}>
     <View style={{ flex: 1 }}>
       <Navbar title="登录" />
@@ -42,7 +44,7 @@ export const SignInScreen = ({navigation}: Props) => {
           width: s(343),
           height: s(48),
           marginHorizontal: s(16),
-          marginTop:s(30),
+          marginTop: s(30),
           marginBottom: s(71)
         }}>
           <TouchableOpacity onPress={async () => {
@@ -52,7 +54,7 @@ export const SignInScreen = ({navigation}: Props) => {
           }} style={{
             flex: 1,
             flexDirection: "row",
-            justifyContent:"center"
+            justifyContent: "center"
           }}>
             <Text style={{
               color: $colors.text,
@@ -83,20 +85,28 @@ export const SignInScreen = ({navigation}: Props) => {
           marginTop: s(10),
         }}>
           <BlockButton onPress={async () => {
-            const result = await DocumentPicker.getDocumentAsync({
-              copyToCacheDirectory: true
-          })
-          if (result.assets) {
-              const content = await FileSystem.readAsStringAsync(result.assets[0].uri, {
-                  encoding: FileSystem.EncodingType.UTF8
-              })
-              if(restore(content)){
-                  toast("导入成功!");
-                  setTimeout(() => {
-                    navigation.navigate("UnlockScreen");
-                  }, 1000);
+            confirmModalRef.current?.open({
+              desc: "是否导入备份文件？",
+              title: "导入后将覆盖本地数据",
+              onCancel: () => { },
+              onSubmit: async () => {
+                const result = await DocumentPicker.getDocumentAsync({
+                  copyToCacheDirectory: true
+                })
+                if (result.assets) {
+                  const content = await FileSystem.readAsStringAsync(result.assets[0].uri, {
+                    encoding: FileSystem.EncodingType.UTF8
+                  })
+                  if (restore(content)) {
+                    toast("导入成功!");
+                    setTimeout(() => {
+                      navigation.navigate("UnlockScreen");
+                    }, 1000);
+                  }
+                }
               }
-          }
+            })
+            
           }} label="导入备份文件" />
         </View>
         <View style={{
@@ -109,5 +119,6 @@ export const SignInScreen = ({navigation}: Props) => {
         </View>
       </View>
     </View>
+    <ConfirmModal ref={confirmModalRef} />
   </Screen>
 }

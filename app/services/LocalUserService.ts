@@ -11,13 +11,16 @@ export class LocalUserService {
             ...data,
             refreshAt: dayjs().unix()
         }
+        console.log("add user", data);
         const old = await GetDB().query.users.findFirst({
             where: eq(users.id, data.id)
         })
+        console.log("old user", old);
         if (old) {
             const items = await GetDB().update(users).set(data).where(eq(users.id, data.id)).returning();
             return items[0];
         }
+        console.log("新增 user", old);
         const items = await GetDB().insert(users).values([data]).returning();
         return items[0];
     }

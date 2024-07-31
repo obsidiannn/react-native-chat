@@ -5,9 +5,11 @@ import { SYSTEM_API_URL } from "@env";
 export class SystemService {
     static GetApiUrlByCache = () => {
         const apiUrl = globalStorage.get('string', 'NOW_API_URL')
+        console.log("@@@@@@@@apiUrl",apiUrl)
         if (apiUrl) {
             return apiUrl as string;
         }
+        console.log("@@@@@@@@apiUrl",SYSTEM_API_URL)
         return SYSTEM_API_URL;
     }
     static GetApiUrl = () => {
@@ -24,9 +26,6 @@ export class SystemService {
 
 
     static refreshNodes = () => {
-        const apiUrl = SystemService.GetApiUrlByCache()
-
-        console.log("初始化節點3", apiUrl)
         return new Promise((resolve, reject) => {
             getLists().then(rep => {
                 console.log('api list:', rep);

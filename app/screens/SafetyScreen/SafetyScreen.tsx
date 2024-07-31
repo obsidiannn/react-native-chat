@@ -9,12 +9,20 @@ import { CardMenu } from "app/components/CardMenu/CardMenu"
 import ConfirmModal, { ConfirmModalType } from "app/components/ConfirmModal"
 import { useRef } from "react"
 import { globalKV, globalStorage } from "app/utils/kv-tool"
-import RNRestart from 'react-native-restart'; 
+import RNRestart from 'react-native-restart';
+import messageSendService from "app/services/message-send.service"
+import { useTranslation } from "react-i18next"
+import toast from "app/utils/toast"
+import { Icon } from "app/components/Icon/Icon"
+import { BackupPriKeyModal, BackupPriKeyModalType } from "./BackupPriKeyModal"
+
 export const SafetyScreen = () => {
     const insets = useSafeAreaInsets();
     const $colors = useRecoilValue(ColorsState);
     const $theme = useRecoilValue(ThemeState);
+    const { t } = useTranslation('screens')
     const confirmModalRef = useRef<ConfirmModalType>(null);
+    const backupPriKeyModalRef = useRef<BackupPriKeyModalType>(null);
     return <View style={{
         flex: 1,
         paddingTop: insets.top,
@@ -39,16 +47,15 @@ export const SafetyScreen = () => {
             paddingTop: s(30)
         }}>
             <CardMenu items={[
-                // {
-                //     icon: $theme == "dark" ? require('./edit-dark.png') : require('./edit-light.png'),
-                //     title: "备份私钥",
-                //     onPress: () => {
-                        
-                //     },
-                //     theme: $theme,
-                // },
                 {
-                    icon: $theme == "dark" ? require('./edit-dark.png') : require('./edit-light.png'),
+                    icon: <Icon name={$theme == "dark" ? "backupDark" : "backupLight"} />,
+                    title: "备份私钥",
+                    onPress: () => {
+                        backupPriKeyModalRef.current?.open()
+                    },
+                },
+                {
+                    icon: <Icon name={$theme == "dark" ? "quitDark" : "quitLight"} />,
                     title: "退出所有群聊",
                     onPress: () => {
                         confirmModalRef.current?.open({
@@ -59,29 +66,32 @@ export const SafetyScreen = () => {
                             }
                         })
                     },
-                    theme: $theme,
                 },
                 {
-                    icon: $theme == "dark" ? require('./edit-dark.png') : require('./edit-light.png'),
+                    icon: <Icon name={$theme == "dark" ? "trashDark" : "trashLight"} />,
                     title: "清空所有消息",
                     onPress: () => {
                         confirmModalRef.current?.open({
                             desc: "是否清空所有消息？",
                             title: "清空所有消息",
                             onCancel: () => { },
-                            onSubmit: () => {
+                            onSubmit: async () => {
+                                await messageSendService.clearMineMessageAll()
+                                toast(t('success_operation'))
                             }
                         })
-                    },
-                    theme: $theme,
+                    }
                 },
             ]} />
             <CardMenu style={{
                 marginTop: s(20),
             }} items={[
                 {
-                    icon: $theme == "dark" ? require('./edit-dark.png') : require('./edit-light.png'),
+                    icon:  <Icon name={$theme == "dark" ? "removeUserDark" : "removeUserRed"} />,
                     title: "删除所有好友",
+                    textStyle: {
+                        color: "#FB3737"
+                    },
                     onPress: () => {
                         confirmModalRef.current?.open({
                             desc: "是否删除所有好友？",
@@ -91,11 +101,14 @@ export const SafetyScreen = () => {
                             }
                         })
                     },
-                    theme: $theme,
+                    rightArrow: null,
                 },
                 {
-                    icon: $theme == "dark" ? require('./edit-dark.png') : require('./edit-light.png'),
+                    icon: <Icon name={$theme == "dark" ? "restartDark" : "restartRed"} />,
                     title: "重置应用",
+                    textStyle: {
+                        color: "#FB3737"
+                    },
                     onPress: () => {
                         confirmModalRef.current?.open({
                             desc: "是否重置应用？",
@@ -108,11 +121,12 @@ export const SafetyScreen = () => {
                             }
                         })
                     },
-                    theme: $theme,
+                    rightArrow: null,
                 },
             ]} />
         </View>
-        <ConfirmModal ref={confirmModalRef}/>
+        <ConfirmModal ref={confirmModalRef} />
+        <BackupPriKeyModal ref={backupPriKeyModalRef}/>
     </View>
 }
 

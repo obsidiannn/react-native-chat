@@ -8,6 +8,7 @@ import { s } from "app/utils/size"
 import { navigate } from "app/navigators"
 import { CardMenu } from "app/components/CardMenu/CardMenu"
 import AvatarComponent from "app/components/Avatar"
+import { Icon } from "app/components/Icon/Icon"
 export const UserCenterScreen = () => {
     const insets = useSafeAreaInsets();
     const $colors = useRecoilValue(ColorsState);
@@ -53,24 +54,21 @@ export const UserCenterScreen = () => {
             </View>
             <CardMenu items={[
                 {
-                    icon: $theme == "dark" ? require('./edit-dark.png') : require('./edit-light.png'),
+                    icon: <Icon name={$theme == "dark" ? "editDark" : "editLight"} />,
                     title: "编辑资料",
                     onPress: () => {
                         navigate("ProfileScreen")
                     },
-                    theme: $theme,
                 },
                 {
-                    icon: $theme == "dark" ? require('./safe-dark.png') : require('./safe-light.png'),
+                    icon: <Icon name={$theme == "dark" ? "safeKeyDark" : "safeKeyLight"} />,
                     title: "安全",
                     onPress: () => navigate("SafetyScreen"),
-                    theme: $theme,
                 },
                 {
-                    icon: $theme == "dark" ? require('./setting-dark.png') : require('./setting-light.png'),
+                    icon: <Icon name={$theme == "dark" ? "settingDark" : "settingLight"} />,
                     title: "设置",
                     onPress: () => navigate("SettingScreen"),
-                    theme: $theme,
                 },
             ]} />
         </View>

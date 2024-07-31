@@ -1,18 +1,17 @@
 import { s } from "app/utils/size";
-import { Image } from "expo-image";
-import dark from "./dark";
-import light from "./light";
-export type IconNameType = "arrowRight"
+import { Image, ImageStyle } from "expo-image";
+import * as icons from "./icons";
+export type IconNameType = keyof typeof icons;
 export interface IconProps {
     name: IconNameType;
     size?: number;
-    theme?: "dark" | "light";
+    style?: ImageStyle;
 }
-export const Icon = (props:IconProps) => {
-    const { theme="dark",size=24, name } = props;
-    const $icon = theme==="dark"? dark[name] : light[name];
-    return <Image style={{
-        width: s(size),
-        height: s(size),
-    }} source={$icon} />
+export const Icon = (props: IconProps) => {
+    const { size = 24, name } = props;
+    const $icon = icons[name];
+    return <Image style={[
+        {width: s(size),height: s(size)},
+        props.style
+    ]} source={$icon} />
 }

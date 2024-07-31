@@ -1,20 +1,19 @@
 
-import { Text, View, ViewStyle } from "react-native";
+import { Text, TextStyle, View, ViewStyle } from "react-native";
 import { useRecoilValue } from "recoil";
 import { ColorsState } from "app/stores/system";
 import { s } from "app/utils/size";
-import { Image } from "expo-image";
 import { ReactNode } from "react";
 import { Icon } from "../Icon/Icon";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
 export interface OptionItemProps {
     title: string;
-    icon: any;
+    icon?: ReactNode;
     onPress: () => void;
     style?: ViewStyle;
+    textStyle?: TextStyle;
     rightArrow?: ReactNode;
-    theme: "dark" | "light";
 }
 export const OptionItem = (props: OptionItemProps) => {
     const $colors = useRecoilValue(ColorsState);
@@ -33,17 +32,16 @@ export const OptionItem = (props: OptionItemProps) => {
             flexDirection: "row",
             alignItems: "center"
         }}>
-            <Image style={{
-                width: s(24),
-                height: s(24),
-                marginRight: s(10)
-            }} source={props.icon} />
-            <Text style={{
-                color: $colors.text,
-                fontSize: s(15),
-                fontWeight: "400",
-            }}>{props.title}</Text>
+            {props.icon}
+            <Text style={[
+                {
+                    color: $colors.text,
+                    fontSize: s(15),
+                    fontWeight: "400",
+                },
+                props.textStyle
+            ]}>{props.title}</Text>
         </View>
-        <Icon name="arrowRight" theme={props.theme} />
+        {props.rightArrow===undefined?<Icon name="arrowRight" />:props.rightArrow}
     </TouchableOpacity>
 }
