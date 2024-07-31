@@ -69,7 +69,7 @@ export const DiscoverScreen = ({ navigation }: Props) => {
                 keyExtractor={(item, i) => { return "group_" + item.id.toString() }}
                 onEndReached={() => {
                     console.log('reach');
-                    if (pageState.total > data.length || data.length <= 0) {
+                    if (data && (pageState.total > data.length || data.length <= 0)) {
                         init(pageState.keyword, pageState.page + 1, true)
                         setPageState({ ...pageState, page: pageState.page + 1 })
                     }

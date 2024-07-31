@@ -10,6 +10,7 @@ import {
 import quickCrypto from "app/utils/quick-crypto";
 import { IModel } from "@repo/enums";
 import { LocalMessageService } from "./LocalMessageService";
+import search from "app/api/discovery/search";
 
 const quit = async (gid: string) => {
     return true;
@@ -22,13 +23,19 @@ const searchGroup = async (keyword: string, page: number, limit: number = 10): P
     items: GroupDetailItem[],
     total: number
 }> => {
-    const groupIdsResp = await groupApi.searchGroup({ keyword })
+    page = page <= 0 ? 1 : page
+    const groupIdsResp = await search.query({
+        keyword,
+        page,
+        limit,
+        type: 0
+    })
     const groupIds = groupIdsResp.items ?? []
     if (groupIds.length > 0) {
         const result = await groupApi.groupDetail({ ids: groupIds })
         return { items: result.items, total: groupIdsResp.total }
     }
-    return []
+    return { items: [], total: 0 }
 }
 
 const changeAliasByManage = () => {
