@@ -4,7 +4,7 @@ import BottomOptionModal, { BottomOptionModalType } from "./BottomOptionModal"
 import { Image, ImageStyle } from "expo-image";
 import { useTranslation } from 'react-i18next';
 import { chooseImage } from "app/services/file.service";
-import { scale } from "app/utils/size";
+import { s } from "app/utils/size";
 import { useRecoilValue } from "recoil";
 import { ColorsState } from "app/stores/system";
 
@@ -56,14 +56,14 @@ export default (props: {
         <TouchableOpacity style={{
             ...styles.container,
             backgroundColor: themeColor.primary,
-            
+
             width: size ,
             height: size
         }} onPress={() => {
             bottomOptionModalRef.current?.open();
         }}>
             {props.avatar ? <Image source={props.avatar} style={{
-                borderRadius: scale(32),
+                borderRadius: s(32),
                 ...(props.border ? styles.border : null),
                 width: size,
                 height: size
@@ -75,7 +75,7 @@ export default (props: {
 }
 const styles = StyleSheet.create({
     border: {
-        borderWidth: scale(3),
+        borderWidth: s(3),
         borderStartColor: 'red',
         borderEndColor: '#890084',
         borderTopColor: '#8A0184',
@@ -85,16 +85,16 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
-        borderRadius: scale(32),
+        borderRadius: s(32),
     },
 
     icon: {
         zIndex: 1,
         position: 'absolute',
-        bottom: scale(0),
-        right: scale(0),
-        width: scale(22),
-        height: scale(22),
-        borderRadius: scale(11),
+        bottom: s(0),
+        right: s(0),
+        width: s(22),
+        height: s(22),
+        borderRadius: s(11),
     }
 });

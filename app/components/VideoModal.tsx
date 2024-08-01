@@ -4,7 +4,7 @@ import { Video } from 'expo-av'
 import { MessageType } from "./chat-ui";
 import BaseModal from "./base-modal";
 import fileService from "app/services/file.service";
-import { scale } from "app/utils/size";
+import { s } from "app/utils/size";
 import toast from "app/utils/toast";
 
 export interface IVideoPreviewModal {
@@ -85,7 +85,7 @@ export default forwardRef((_, ref) => {
 
 var styles = StyleSheet.create({
     loadingStyle: {
-        fontSize: scale(30),
+        fontSize: s(30),
         textAlign: 'center',
         verticalAlign: 'middle'
     },

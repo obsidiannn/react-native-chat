@@ -1,5 +1,5 @@
 import { ColorsState } from "app/stores/system";
-import { scale, verticalScale } from "app/utils/size";
+import { s, verticalScale } from "app/utils/size";
 import { forwardRef, useImperativeHandle, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Modal, Text, TextInput, TouchableOpacity, View } from "react-native";
@@ -41,39 +41,39 @@ export default forwardRef((_, ref) => {
             backgroundColor: '#00000066',
             justifyContent: 'center',
             alignItems: 'center',
-            paddingHorizontal: scale(15),
+            paddingHorizontal: s(15),
             flexDirection: 'row',
         }}>
             <View style={{
                 flex: 1,
                 backgroundColor: themeColor.background,
                 paddingVertical: verticalScale(24),
-                paddingHorizontal: scale(14),
-                borderRadius: scale(15),
+                paddingHorizontal: s(14),
+                borderRadius: s(15),
             }}>
                 <Text style={{
-                    fontSize: scale(16),
+                    fontSize: s(16),
                     fontWeight: '500',
                     textAlign: 'center',
                     color: themeColor.title
                 }}>{option.title}</Text>
                 <Text style={{
                     color: themeColor.secondaryText,
-                    fontSize: scale(14),
+                    fontSize: s(14),
                     fontWeight: '400',
                     textAlign: 'center',
                     marginTop: verticalScale(9),
                     marginBottom: verticalScale(24),
-                    paddingHorizontal: scale(15),
+                    paddingHorizontal: s(15),
                 }}>{option.desc}</Text>
 
                 <TextInput value={value} placeholder={option.placeholder}
                     style={{
                         color: themeColor.text,
                         backgroundColor: themeColor.secondaryBackground,
-                        fontSize: scale(16),
-                        marginHorizontal: scale(24),
-                        marginBottom: scale(14)
+                        fontSize: s(16),
+                        marginHorizontal: s(24),
+                        marginBottom: s(14)
                     }}
                     cursorColor={themeColor.text}
                     onChangeText={(v) => {
@@ -91,7 +91,7 @@ export default forwardRef((_, ref) => {
                 }}>
                     <Text style={{
                         color: '#D90000',
-                        fontSize: scale(16),
+                        fontSize: s(16),
                         fontWeight: '500',
                     }}>{t('confirm.btn_submit')}</Text>
                 </TouchableOpacity>
@@ -106,7 +106,7 @@ export default forwardRef((_, ref) => {
                     justifyContent: 'center',
                 }}>
                     <Text style={{
-                        fontSize: scale(16),
+                        fontSize: s(16),
                         fontWeight: '500',
                     }}>{t('confirm.btn_cancel')}</Text>
                 </TouchableOpacity>

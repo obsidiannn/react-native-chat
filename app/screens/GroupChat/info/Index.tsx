@@ -16,11 +16,11 @@ import EventManager from 'app/services/event-manager.service'
 import { useTranslation } from 'react-i18next';
 import { IModel } from "@repo/enums";
 import toast from "app/utils/toast";
-import { scale } from "app/utils/size";
+import { s } from "app/utils/size";
 import messageSendService from "app/services/message-send.service";
 import quickCrypto from "app/utils/quick-crypto";
 import BaseModal from "app/components/base-modal";
-import { useRecoilState, useRecoilValue } from "recoil";
+import {  useRecoilValue } from "recoil";
 import { ColorsState, ThemeState } from "app/stores/system"
 import { Icon } from "app/components/Icon/Icon";
 import { colors } from "app/theme";
@@ -199,15 +199,15 @@ export default forwardRef((_, ref) => {
 
     return <BaseModal visible={visible} onClose={() => { setVisible(false) }} title="群设置" styles={{
         backgroundColor: themeColor.secondaryBackground,
-        paddingTop: scale(24),
+        paddingTop: s(24),
         flex: 1
     }}>
         <ScrollView style={{
             flex: 1,
-            borderTopLeftRadius: scale(24),
-            borderTopRightRadius: scale(24),
+            borderTopLeftRadius: s(24),
+            borderTopRightRadius: s(24),
             backgroundColor: themeColor.background,
-            padding: scale(15),
+            padding: s(15),
         }}>
             {/* 群信息 */}
             <MenuItem label={t('groupChat.title_group_info')}
@@ -369,9 +369,9 @@ export default forwardRef((_, ref) => {
                             }
                         });
                     }} style={{
-                        height: scale(50),
-                        marginVertical: scale(24),
-                        borderRadius: scale(12)
+                        height: s(50),
+                        marginVertical: s(24),
+                        borderRadius: s(12)
                     }} >
                         <Text>{t('groupChat.title_drop_group')}</Text>
                     </Button>
@@ -421,6 +421,6 @@ export default forwardRef((_, ref) => {
 
 const styles = StyleSheet.create({
     bottomLine: {
-        borderBottomWidth: scale(0.5),
+        borderBottomWidth: s(0.5),
     }
 })

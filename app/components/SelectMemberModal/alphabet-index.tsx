@@ -1,5 +1,5 @@
 import { colors } from "app/theme";
-import { scale } from "app/utils/size";
+import { s } from "app/utils/size";
 import { useRef, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -57,10 +57,10 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     itemContainer: {
-        width: scale(16),
-        height: scale(16),
+        width: s(16),
+        height: s(16),
         display: 'flex',
-        borderRadius: scale(8),
+        borderRadius: s(8),
         alignItems: 'center',
         justifyContent: 'center',
         marginTop: 1

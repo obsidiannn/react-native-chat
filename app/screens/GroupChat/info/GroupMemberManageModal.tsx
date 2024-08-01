@@ -1,6 +1,6 @@
 import BaseModal from "app/components/base-modal";
 import { ColorsState, ThemeState } from "app/stores/system"
-import { scale } from "app/utils/size";
+import { s } from "app/utils/size";
 import { forwardRef, useContext, useImperativeHandle, useRef, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { useRecoilValue } from "recoil";
@@ -50,15 +50,15 @@ export default forwardRef((_, ref) => {
 
     return <BaseModal visible={visible} onClose={onClose} title="群设置" styles={{
         backgroundColor: themeColor.secondaryBackground,
-        paddingTop: scale(24),
+        paddingTop: s(24),
         flex: 1
     }}>
         <View style={{
             flex: 1,
-            borderTopLeftRadius: scale(24),
-            borderTopRightRadius: scale(24),
+            borderTopLeftRadius: s(24),
+            borderTopRightRadius: s(24),
             backgroundColor: themeColor.background,
-            padding: scale(15),
+            padding: s(15),
         }}>
             {/* 查看个人资料 */}
             <MenuItem label={t('groupChat.btn_user_profile')}
@@ -157,6 +157,6 @@ export default forwardRef((_, ref) => {
 
 const styles = StyleSheet.create({
     bottomLine: {
-        borderBottomWidth: scale(0.5),
+        borderBottomWidth: s(0.5),
     }
 })

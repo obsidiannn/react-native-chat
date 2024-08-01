@@ -7,7 +7,7 @@ import friendApplyService from "app/services/friend-apply.service";
 import { IUser } from "drizzle/schema";
 import { useRecoilValue } from "recoil";
 import { useTranslation } from 'react-i18next';
-import { s, scale, verticalScale } from "app/utils/size";
+import { s, verticalScale } from "app/utils/size";
 import Navbar from "app/components/Navbar";
 import { Button } from "app/components";
 import { AuthUser } from "app/stores/auth";
@@ -62,7 +62,7 @@ export const InviteInfoScreen = ({ navigation, route }: Props) => {
                         backgroundColor: '#F8F8F8',
                         width: '100%',
                         borderRadius: verticalScale(16),
-                        paddingHorizontal: scale(15),
+                        paddingHorizontal: s(15),
                         paddingVertical: verticalScale(17),
                         marginTop: verticalScale(10),
                     }}>
@@ -79,7 +79,7 @@ export const InviteInfoScreen = ({ navigation, route }: Props) => {
                         borderColor: '#F4F4F4',
                         display: 'flex',
                         flexDirection: 'row',
-                        paddingHorizontal: scale(15),
+                        paddingHorizontal: s(15),
                         marginTop: verticalScale(20),
                     }}>
                         <TextInput value={remark} onChangeText={(v) => setRemark(v)} placeholder={t('placeholder_remark')} style={{
@@ -88,7 +88,7 @@ export const InviteInfoScreen = ({ navigation, route }: Props) => {
                         <Image source={require('assets/icons/edit.svg')} style={{
                             width: verticalScale(20),
                             height: verticalScale(20),
-                            marginLeft: scale(15),
+                            marginLeft: s(15),
                             marginTop: verticalScale(15),
                         }} />
                     </View> : null}
@@ -126,7 +126,7 @@ export const InviteInfoScreen = ({ navigation, route }: Props) => {
             </ScrollView>
         </View>
     );
-}; 
+};
 
 const styles = StyleSheet.create({
     container: {
@@ -134,11 +134,11 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
     },
     infoContainer: {
-        paddingHorizontal: scale(15),
+        paddingHorizontal: s(15),
         paddingTop: verticalScale(21)
     },
     actionContainer: {
-        paddingHorizontal: scale(23),
+        paddingHorizontal: s(23),
         marginTop: verticalScale(100),
     },
     accpetButton: {

@@ -1,6 +1,6 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native"
 import { Image } from "expo-image";
-import { scale } from "app/utils/size";
+import { s } from "app/utils/size";
 
 interface IContactListItemProps {
     icon: string|null;
@@ -42,28 +42,28 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
     },
     iconContainer: {
-        width: scale(57),
-        paddingVertical: scale(14),
+        width: s(57),
+        paddingVertical: s(14),
         display: 'flex',
         justifyContent: 'center',
     },
     icon: {
-        width: scale(40),
-        height: scale(40),
-        borderRadius: scale(20),
-        marginRight: scale(10),
+        width: s(40),
+        height: s(40),
+        borderRadius: s(20),
+        marginRight: s(10),
         borderWidth: 1,
         borderColor: '#F0F0F0'
     },
     badgeContainer: {
         position: 'absolute',
-        top: scale(12),
-        left: scale(32),
-        width: scale(20),
-        height: scale(20),
+        top: s(12),
+        left: s(32),
+        width: s(20),
+        height: s(20),
         borderWidth: 1,
         borderColor: '#ffffffcc',
-        borderRadius: scale(11),
+        borderRadius: s(11),
         backgroundColor: '#FF3D00',
         display: 'flex',
         justifyContent: 'center',
@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
     },
     rightContainer: {
-        width: scale(260),
+        width: s(260),
         flex: 1,
         display: 'flex',
         flexDirection: 'row',
@@ -102,6 +102,6 @@ const styles = StyleSheet.create({
         color: '#999',
         fontWeight: '400',
         fontSize: 12,
-        marginRight: scale(6),
+        marginRight: s(6),
     }
 });

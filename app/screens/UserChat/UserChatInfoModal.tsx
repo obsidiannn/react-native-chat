@@ -7,7 +7,7 @@ import { ChatDetailItem, ClearChatMessageEvent } from "@repo/types";
 import { IModel } from "@repo/enums";
 import EventManager from 'app/services/event-manager.service'
 import chatApi from "app/api/chat/chat";
-import { scale } from "app/utils/size";
+import { s } from "app/utils/size";
 import Navbar from "app/components/Navbar";
 import { colors } from "app/theme";
 import { Image } from "expo-image";
@@ -81,11 +81,11 @@ export const UserChatInfoModel = ({ navigation, route }) => {
         }}>
             <Navbar onLeftPress={onClose} />
             <View style={{
-                paddingHorizontal: scale(25),
-                marginTop: scale(20),
+                paddingHorizontal: s(25),
+                marginTop: s(20),
             }}>
                 <View style={{
-                    marginTop: scale(15),
+                    marginTop: s(15),
                 }}>
                     <ActionItem title={'查看个人资料'}
                         onPress={() => {
@@ -93,31 +93,31 @@ export const UserChatInfoModel = ({ navigation, route }) => {
                         }}
                         leftComponent={
                             <Image source={require('assets/icons/personal.svg')} style={{
-                                width: scale(20),
-                                height: scale(20),
-                                marginRight: scale(8)
+                                width: s(20),
+                                height: s(20),
+                                marginRight: s(8)
                             }} />
                         }
                         rightComponent={
                             <Image source={require('assets/icons/arrow-right-gray.svg')} style={{
-                                width: scale(20),
-                                height: scale(20),
+                                width: s(20),
+                                height: s(20),
                             }} />
                         } />
                 </View>
 
                 <View style={{
-                    marginTop: scale(15),
+                    marginTop: s(15),
                 }}>
                     <ActionItem title={'消息免打扰'}
                         leftComponent={
                             <Image source={require('assets/icons/off.svg')} style={{
-                                width: scale(20),
-                                height: scale(20),
-                                marginRight: scale(8)
+                                width: s(20),
+                                height: s(20),
+                                marginRight: s(8)
                             }} />
                         }
-                        rightComponent={<Switch height={scale(24)}
+                        rightComponent={<Switch height={s(24)}
                             onColor={colors.palette.primary} value={
                                 chat?.isMute === IModel.ICommon.ICommonBoolEnum.YES
                             } onValueChange={async (v) => {
@@ -128,17 +128,17 @@ export const UserChatInfoModel = ({ navigation, route }) => {
 
 
                 <View style={{
-                    marginTop: scale(15),
+                    marginTop: s(15),
                 }}>
                     <ActionItem title={t('chat.btn_chat_top')}
                         leftComponent={
                             <Image source={require('assets/icons/top.svg')} style={{
-                                width: scale(20),
-                                height: scale(20),
-                                marginRight: scale(8)
+                                width: s(20),
+                                height: s(20),
+                                marginRight: s(8)
                             }} />
                         }
-                        rightComponent={<Switch height={scale(24)} onColor={colors.palette.primary}
+                        rightComponent={<Switch height={s(24)} onColor={colors.palette.primary}
                             value={
                                 chat?.isTop === IModel.ICommon.ICommonBoolEnum.YES
                             }
@@ -155,27 +155,27 @@ export const UserChatInfoModel = ({ navigation, route }) => {
                 </View>
 
                 <View style={{
-                    marginTop: scale(15),
+                    marginTop: s(15),
                 }}>
                     <ActionItem title={'查找聊天内容'}
                         leftComponent={
                             <Image source={require('assets/icons/search.svg')} style={{
-                                width: scale(20),
-                                height: scale(20),
-                                marginRight: scale(8)
+                                width: s(20),
+                                height: s(20),
+                                marginRight: s(8)
                             }} />
                         }
                         rightComponent={<Image source={require('assets/icons/arrow-right-gray.svg')} style={{
-                            width: scale(20),
-                            height: scale(20),
+                            width: s(20),
+                            height: s(20),
                         }} />} />
                 </View>
 
                 <View style={{
-                    marginTop: scale(15),
-                    paddingTop: scale(15),
+                    marginTop: s(15),
+                    paddingTop: s(15),
                     borderTopColor: colors.palette.gray200,
-                    borderTopWidth: scale(0.5)
+                    borderTopWidth: s(0.5)
                 }}>
                     <ActionItem onPress={() => {
                         confirmModalRef.current?.open({
@@ -193,14 +193,14 @@ export const UserChatInfoModel = ({ navigation, route }) => {
                     }} title={t('chat.btn_message_delete')} textColor="#FB3737"
                         leftComponent={
                             <Image source={require('assets/icons/close.svg')} style={{
-                                width: scale(20),
-                                height: scale(20),
-                                marginRight: scale(8)
+                                width: s(20),
+                                height: s(20),
+                                marginRight: s(8)
                             }} />
                         }
                         rightComponent={<Image source={require('assets/icons/arrow-right-gray.svg')} style={{
-                            width: scale(20),
-                            height: scale(20),
+                            width: s(20),
+                            height: s(20),
                         }} />} />
                 </View>
             </View>

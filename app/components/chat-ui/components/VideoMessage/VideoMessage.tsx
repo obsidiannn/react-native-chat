@@ -4,7 +4,7 @@ import { Image } from 'expo-image'
 import { MessageType, Size } from '../../types'
 import { formatBytes, formatDuration, ThemeContext, UserContext } from '../../utils'
 import styles from './styles'
-import { scale } from 'app/utils/size'
+import { s } from 'app/utils/size'
 
 export interface VideoMessageProps {
     message: MessageType.DerivedVideo
@@ -66,8 +66,8 @@ export const VideoMessage = ({ message, messageWidth }: VideoMessageProps) => {
                 <Image source={require('../../assets/play.svg')}
                     style={{
                         alignSelf: 'center',
-                        width: scale(64),
-                        height: scale(64)
+                        width: s(64),
+                        height: s(64)
                     }} />
                 <Text style={durationText}>{formatDuration(message.duration)}</Text>
             </ImageBackground>

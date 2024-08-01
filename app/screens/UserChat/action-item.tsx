@@ -1,7 +1,7 @@
 
 import { ColorValue, StyleSheet, Text, TouchableWithoutFeedback, View, ViewStyle } from "react-native";
 import { ReactNode } from "react";
-import { scale } from "app/utils/size";
+import { s } from "app/utils/size";
 
 
 export default (props: {
@@ -27,9 +27,9 @@ export default (props: {
 
 const styles = StyleSheet.create({
     container: {
-        height: scale(50),
-        borderRadius: scale(14),
-        paddingHorizontal: scale(15),
+        height: s(50),
+        borderRadius: s(14),
+        paddingHorizontal: s(15),
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
     },
     text: {
         flex: 1,
-        fontSize: scale(15),
+        fontSize: s(15),
         fontWeight: '400',
     }
 });

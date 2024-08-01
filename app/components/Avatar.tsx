@@ -1,5 +1,5 @@
 import { colors } from "app/theme"
-import { scale } from "app/utils/size"
+import { s } from "app/utils/size"
 import { Image, ImageStyle } from "expo-image"
 import { StyleSheet, View } from "react-native"
 
@@ -26,7 +26,7 @@ const AvatarComponent = (props: AvatarProps) => {
                 borderRadius: props.width
             } : {}),
             ...(props.enableAvatarBorder ? {
-                borderWidth: scale(3),
+                borderWidth: s(3),
                 borderStartColor: 'red',
                 borderEndColor: '#890084',
                 borderTopColor: '#8A0184',
@@ -50,11 +50,11 @@ const AvatarComponent = (props: AvatarProps) => {
 
 const styles = StyleSheet.create({
     defaultAvatar: {
-        width: scale(48),
-        height: scale(48),
+        width: s(48),
+        height: s(48),
         display: 'flex',
         justifyContent: 'center',
-        borderRadius: scale(24),
+        borderRadius: s(24),
 
     },
     badgeContainer: {
@@ -62,10 +62,10 @@ const styles = StyleSheet.create({
         bottom: 0,
         right: 15,
         alignSelf: 'flex-end',
-        padding: scale(6),
+        padding: s(6),
         borderColor: '#ffffff',
-        borderWidth: scale(2),
-        borderRadius: scale(12),
+        borderWidth: s(2),
+        borderRadius: s(12),
         backgroundColor: colors.palette.gray400,
     },
 })

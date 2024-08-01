@@ -1,13 +1,10 @@
-
-
-
 import { IModel } from "@repo/enums";
 import { Button } from "app/components";
 import { Icon } from "app/components/Icon/Icon";
 import { ScreenModal, ScreenModalType } from "app/components/ScreenModal";
 import { AuthService } from "app/services/auth.service";
 import { ColorsState, ThemeState } from "app/stores/system"
-import { scale } from "app/utils/size";
+import { s } from "app/utils/size";
 import { Image } from "expo-image";
 import { forwardRef, useImperativeHandle, useRef, useState } from "react"
 import { useTranslation } from "react-i18next";
@@ -64,13 +61,13 @@ export const UpdateGenderModal= forwardRef((_, ref) => {
                     <>
                         <Image source={require('assets/images/male.png')} style={styles.gender_image} contentFit="fill" />
                         <Icon name={$theme === 'dark' ? 'checkedDark':'checkedLight'} style={{
-                            width: scale(24), height: scale(24),
-                            marginTop: scale(-12)
+                            width: s(24), height: s(24),
+                            marginTop: s(-12)
                         }} />
                     </> :
                     <>
                         <Image source={require('assets/images/male-default.png')} style={styles.gender_image} contentFit="fill" />
-                        <View style={{ width: scale(12), height: scale(12) }}></View>
+                        <View style={{ width: s(12), height: s(12) }}></View>
                     </>
             }
             <Text style={styles.gender_label}>{t('profile.status_gender_male')}</Text>
@@ -88,13 +85,13 @@ export const UpdateGenderModal= forwardRef((_, ref) => {
                     <>
                         <Image source={require('assets/images/female.png')} style={styles.gender_image} contentFit="fill" />
                         <Icon name={$theme === 'dark' ? 'checkedDark':'checkedLight'} style={{
-                            width: scale(24), height: scale(24),
-                            marginTop: scale(-12)
+                            width: s(24), height: s(24),
+                            marginTop: s(-12)
                         }} />
                     </> :
                     <>
                         <Image source={require('assets/images/female-default.png')} style={styles.gender_image} contentFit="fill" />
-                        <View style={{ width: scale(12), height: scale(12) }}></View>
+                        <View style={{ width: s(12), height: s(12) }}></View>
                     </>
             }
             <Text style={styles.gender_label}>{t('profile.status_gender_female')}</Text>
@@ -109,15 +106,15 @@ export const UpdateGenderModal= forwardRef((_, ref) => {
         <View
             style={{
                 flex: 1,
-                padding: scale(14)
+                padding: s(14)
             }}>
             <View style={{
                 flex: 1,
                 display: 'flex',
                 flexDirection: 'row',
                 justifyContent: 'space-between',
-                paddingHorizontal: scale(12),
-                marginTop: scale(24)
+                paddingHorizontal: s(12),
+                marginTop: s(24)
             }}>
                 {renderMale()}
                 {renderFemale()}
@@ -126,8 +123,8 @@ export const UpdateGenderModal= forwardRef((_, ref) => {
                 size="large"
                 containerStyle={{
                     backgroundColor: themeColor.primary,
-                    marginBottom: scale(14),
-                    borderRadius: scale(12)
+                    marginBottom: s(14),
+                    borderRadius: s(12)
                 }}
                 onPress={async () => {
                     if (loading) {
@@ -158,31 +155,31 @@ export const UpdateGenderModal= forwardRef((_, ref) => {
 
 const styles = StyleSheet.create({
     paragraph: {
-        fontSize: scale(14)
+        fontSize: s(14)
     },
     nextButton: {
-        height: scale(50),
+        height: s(50),
         width: '100%',
-        marginTop: scale(64),
-        borderRadius: scale(16),
+        marginTop: s(64),
+        borderRadius: s(16),
     },
     nextButtonLabel: {
         fontSize: 16,
         fontWeight: '700',
     },
     gender_label: {
-        fontSize: scale(16),
+        fontSize: s(16),
         fontWeight: '700',
-        marginTop: scale(8)
+        marginTop: s(8)
     },
     gender_choose: {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        padding: scale(4)
+        padding: s(4)
     },
     gender_image: {
-        width: scale(120),
-        height: scale(170)
+        width: s(120),
+        height: s(170)
     }
 })

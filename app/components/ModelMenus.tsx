@@ -1,5 +1,5 @@
 import { ColorsState } from "app/stores/system";
-import { scale } from "app/utils/size";
+import { s } from "app/utils/size";
 import { Image } from "expo-image";
 import { forwardRef, useImperativeHandle, useState } from "react";
 import { Modal, StyleSheet, Text, View, TouchableOpacity } from "react-native";
@@ -46,30 +46,30 @@ export default forwardRef((_, ref) => {
             }}>
                 {
                     menus.map((m, i) => {
-                        return <TouchableOpacity 
+                        return <TouchableOpacity
                             key={m.title + 'menu'}
                         style={{
                             ...styles.menuItem,
                             ...(i === menus.length - 1 ? {
                             } : {
                                 borderBottomColor: themeColor.border,
-                                borderBottomWidth: scale(0.5)
+                                borderBottomWidth: s(0.5)
                             })
                         }} onPress={()=>{
                             close()
                             m.onPress()
                         }}>
                             <Image source={m.icon} style={{
-                                width: scale(18), height: scale(18),marginRight: scale(8)
+                                width: s(18), height: s(18),marginRight: s(8)
                             }} />
                             <Text>{m.title}</Text>
                         </TouchableOpacity>
                     })
                 }
             </View>
-            <View style={{ alignItems: 'center', margin: scale(32), }}>
+            <View style={{ alignItems: 'center', margin: s(32), }}>
                 <TouchableOpacity onPress={close} >
-                    <Image source={require('assets/icons/close-opacity.svg')} style={{ width: scale(36), height: scale(36) }} />
+                    <Image source={require('assets/icons/close-opacity.svg')} style={{ width: s(36), height: s(36) }} />
                 </TouchableOpacity>
             </View>
         </View>
@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'column',
         alignContent: 'center',
-        paddingHorizontal: scale(16),
+        paddingHorizontal: s(16),
     },
     overlay: {
         ...StyleSheet.absoluteFillObject,
@@ -91,14 +91,14 @@ const styles = StyleSheet.create({
         zIndex: -1,
     },
     menuArea: {
-        paddingHorizontal: scale(36),
-        paddingVertical: scale(14),
-        borderRadius: scale(20),
+        paddingHorizontal: s(36),
+        paddingVertical: s(14),
+        borderRadius: s(20),
         marginTop: '40%'
     },
 
     menuItem: {
-        paddingVertical: scale(24),
+        paddingVertical: s(24),
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center'

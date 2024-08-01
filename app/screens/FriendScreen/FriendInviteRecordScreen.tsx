@@ -13,7 +13,7 @@ import { useTranslation } from 'react-i18next';
 import { App } from "types/app";
 import { useRecoilValue } from "recoil";
 import { AuthUser } from "app/stores/auth";
-import { scale } from "app/utils/size";
+import { s } from "app/utils/size";
 import { navigate } from "app/navigators";
 
 
@@ -94,13 +94,13 @@ export const FriendInviteRecordScreen = ({ navigation }: Props) => {
                         }
                         return <InviteItem user={item.user} item={item.friendApply} isLast={index === items.length - 1} />
                     }}
-                    estimatedItemSize={scale(76)}
+                    estimatedItemSize={s(76)}
                 >
                 </FlashList>
             </View>
         </View>
     );
-}; 
+};
 
 const styles = StyleSheet.create({
     container: {

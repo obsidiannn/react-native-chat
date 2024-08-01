@@ -6,7 +6,7 @@ import InfoCard from "./components/info-card";
 import { IUser } from "drizzle/schema";
 import chatService from "app/services/chat.service";
 import { useTranslation } from 'react-i18next';
-import { scale, verticalScale } from "app/utils/size";
+import { s, verticalScale } from "app/utils/size";
 import { useRecoilValue } from "recoil";
 import { ColorsState } from "app/stores/system";
 import { navigate } from "app/navigators";
@@ -58,8 +58,8 @@ export default forwardRef((_, ref) => {
                     </View>
                     <View style={{
                         flex: 1,
-                        width: scale(343),
-                        paddingHorizontal: scale(16),
+                        width: s(343),
+                        paddingHorizontal: s(16),
                         alignItems: 'center',
                         marginTop: verticalScale(40),
                         backgroundColor:"red"

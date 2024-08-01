@@ -9,7 +9,7 @@ import groupService from "app/services/group.service";
 import userService from "app/services/user.service";
 import { App } from "types/app";
 import Navbar from "app/components/Navbar";
-import { scale } from "app/utils/size";
+import { s } from "app/utils/size";
 import { Image } from "expo-image";
 import { Button } from "app/components";
 import chatService from "app/services/chat.service";
@@ -68,11 +68,11 @@ export const GroupInfoScreen = ({ navigation, route }: Props) => {
                 }} />
             </View>
             <View style={{
-                paddingHorizontal: scale(15),
-                paddingTop: scale(20)
+                paddingHorizontal: s(15),
+                paddingTop: s(20)
             }}>
                 <View style={{
-                    padding: scale(15),
+                    padding: s(15),
                     backgroundColor: '#ffffff',
                     // 生成陰影
                     shadowColor: "#000",
@@ -83,7 +83,7 @@ export const GroupInfoScreen = ({ navigation, route }: Props) => {
                     shadowOpacity: 0.1,
                     shadowRadius: 1,
                     elevation: 1,
-                    borderRadius: scale(15),
+                    borderRadius: s(15),
                     borderWidth: 1,
                     borderColor: '#EFF0F1',
                 }}>
@@ -97,21 +97,21 @@ export const GroupInfoScreen = ({ navigation, route }: Props) => {
                         }}>
 
                             <Image style={{
-                                width: scale(50),
-                                height: scale(50),
-                                borderRadius: scale(25),
+                                width: s(50),
+                                height: s(50),
+                                borderRadius: s(25),
                                 borderWidth: 1,
                                 borderColor: '#EAEDEF',
-                                marginRight: scale(15),
+                                marginRight: s(15),
                             }} source={group?.avatar} />
                             <View>
                                 <Text style={{
-                                    fontSize: scale(16),
+                                    fontSize: s(16),
                                     fontWeight: '400',
                                     color: '#333333',
                                 }}>{group?.name}</Text>
                                 <Text style={{
-                                    fontSize: scale(13),
+                                    fontSize: s(13),
                                     fontWeight: '400',
                                     color: '#999999',
                                 }}>
@@ -134,8 +134,8 @@ export const GroupInfoScreen = ({ navigation, route }: Props) => {
                                 applyJoinModalRef.current?.open(group?.id ?? 0);
                             }
                         }} style={{
-                            borderRadius: scale(15),
-                            padding: scale(4),
+                            borderRadius: s(15),
+                            padding: s(4),
                             backgroundColor: themeColor.primary
                         }} >
                             <Text style={{color: themeColor.textChoosed}}>{((group?.role ?? -1) > 0) ? "進入" : "加入"}</Text>
@@ -143,8 +143,8 @@ export const GroupInfoScreen = ({ navigation, route }: Props) => {
 
                     </View>
                     <View style={{
-                        marginTop: scale(12),
-                        padding: scale(12),
+                        marginTop: s(12),
+                        padding: s(12),
                         display: 'flex',
                         flexDirection: 'row',
                         alignItems: 'center',
@@ -153,18 +153,18 @@ export const GroupInfoScreen = ({ navigation, route }: Props) => {
                         {
                             (groupMemberPage?.items ?? []).map(m => {
                                 return <Image style={{
-                                    width: scale(40),
-                                    height: scale(40),
-                                    borderRadius: scale(25),
+                                    width: s(40),
+                                    height: s(40),
+                                    borderRadius: s(25),
                                     borderWidth: 1,
                                     borderColor: '#EAEDEF',
-                                    marginLeft: scale(-15)
+                                    marginLeft: s(-15)
                                 }} key={m.id} source={fileService.getFullUrl(m.avatar ?? '')} />
                             })
                         }
                         <Text style={{
-                            marginLeft: scale(8),
-                            fontSize: scale(14),
+                            marginLeft: s(8),
+                            fontSize: s(14),
                             fontWeight: '400',
                         }}>{groupMemberPage?.total ?? 0}{t('groupChat.group_member_joined')}</Text>
                     </View>

@@ -1,4 +1,4 @@
-import { scale, verticalScale } from "app/utils/size";
+import { s, verticalScale } from "app/utils/size";
 import { forwardRef, useImperativeHandle, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Modal, Text, TouchableOpacity, View, ViewStyle } from "react-native";
@@ -30,7 +30,7 @@ export default forwardRef((_, ref) => {
             backgroundColor: '#00000066',
             justifyContent: 'center',
             alignItems: 'center',
-            paddingHorizontal: scale(15),
+            paddingHorizontal: s(15),
             flexDirection: 'row',
         }}>
             <View style={{
@@ -38,21 +38,21 @@ export default forwardRef((_, ref) => {
                 backgroundColor: 'white',
                 paddingTop: verticalScale(34),
                 paddingBottom: verticalScale(13),
-                borderRadius: scale(15),
+                borderRadius: s(15),
             }}>
                 <Text style={{
-                    fontSize: scale(16),
+                    fontSize: s(16),
                     fontWeight: '500',
                     textAlign: 'center',
                 }}>{option.title}</Text>
                 <Text style={{
                     color: '#999999',
-                    fontSize: scale(14),
+                    fontSize: s(14),
                     fontWeight: '400',
                     textAlign: 'center',
                     marginTop: verticalScale(9),
                     marginBottom: verticalScale(24),
-                    paddingHorizontal: scale(15),
+                    paddingHorizontal: s(15),
                 }}>{option.desc}</Text>
                 <TouchableOpacity onPress={() => {
                     setVisible(false)
@@ -66,7 +66,7 @@ export default forwardRef((_, ref) => {
                 }}>
                     <Text style={{
                         color: '#D90000',
-                        fontSize: scale(16),
+                        fontSize: s(16),
                         fontWeight: '500',
                     }}>{t('confirm.btn_submit')}</Text>
                 </TouchableOpacity>
@@ -81,7 +81,7 @@ export default forwardRef((_, ref) => {
                     justifyContent: 'center',
                 }}>
                     <Text style={{
-                        fontSize: scale(16),
+                        fontSize: s(16),
                         fontWeight: '500',
                     }}>{t('confirm.btn_cancel')}</Text>
                 </TouchableOpacity>

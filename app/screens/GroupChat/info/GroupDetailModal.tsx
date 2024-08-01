@@ -1,8 +1,8 @@
 import { forwardRef, useCallback, useContext, useImperativeHandle, useRef, useState } from "react";
-import { GroupDetailItem, GroupMemberItemVO } from "@repo/types";
+
 import BaseModal from "app/components/base-modal";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { scale } from "app/utils/size";
+import { s } from "app/utils/size";
 import { useRecoilValue } from "recoil";
 import { ColorsState, ThemeState } from "app/stores/system"
 import AvatarX from "app/components/AvatarX";
@@ -98,10 +98,10 @@ export default forwardRef((_, ref) => {
     return <BaseModal visible={visible} onClose={onClose} title={""} animationType="slide" styles={{
         flex: 1,
         backgroundColor: themeColor.secondaryBackground,
-        paddingTop: scale(36),
+        paddingTop: s(36),
     }}
         renderRight={
-            <TouchableOpacity style={{ backgroundColor: themeColor.background, padding: scale(4), borderRadius: scale(8) }}
+            <TouchableOpacity style={{ backgroundColor: themeColor.background, padding: s(4), borderRadius: s(8) }}
             >
                 <Icon name={$theme === 'dark'? "shareDark":"shareLight"} />
             </TouchableOpacity>
@@ -110,15 +110,15 @@ export default forwardRef((_, ref) => {
     >
         <View style={{
             flex: 1,
-            borderTopLeftRadius: scale(24),
-            borderTopRightRadius: scale(24),
+            borderTopLeftRadius: s(24),
+            borderTopRightRadius: s(24),
             backgroundColor: themeColor.background,
-            padding: scale(15),
+            padding: s(15),
             display: 'flex',
             flexDirection: 'column'
         }}>
             <View style={{
-                marginTop: scale(-48)
+                marginTop: s(-48)
             }}>
                 {
                     groupContext.selfMember.role < IModel.IGroup.IGroupMemberRoleEnum.MEMBER ?
@@ -160,7 +160,7 @@ export default forwardRef((_, ref) => {
                     }}
                 />
                 {groupContext.selfMember && groupContext.selfMember.role < IModel.IGroup.IGroupMemberRoleEnum.MEMBER ?
-                    <TouchableOpacity style={{ backgroundColor: themeColor.secondaryBackground, padding: scale(4), borderRadius: scale(8) }}
+                    <TouchableOpacity style={{ backgroundColor: themeColor.secondaryBackground, padding: s(4), borderRadius: s(8) }}
                         onPress={changeName}
                     >
                         {editing ? <Icon name={$theme == "dark" ? "checkDark":"checkLight"} /> : <Icon name={$theme == "dark" ? "changeDark":"changeLight"}  />}
@@ -168,7 +168,7 @@ export default forwardRef((_, ref) => {
                     null
                 }
             </View>
-            <View style={{ marginBottom: scale(14) }}>
+            <View style={{ marginBottom: s(14) }}>
                 <Text>{groupContext.group.desc}</Text>
             </View>
             <View style={{
@@ -192,7 +192,7 @@ export default forwardRef((_, ref) => {
                             <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                                 <AvatarX uri={item.avatar} online={isOnline(1)} border />
                                 <View>
-                                    <Text style={{ color: themeColor.title, fontSize: scale(16), fontWeight: '500' }}>{item.a}</Text>
+                                    <Text style={{ color: themeColor.title, fontSize: s(16), fontWeight: '500' }}>{item.a}</Text>
                                     <Text style={{ color: colors.palette.gray400 }}>{item.sign}</Text>
                                 </View>
                             </View>
@@ -208,7 +208,7 @@ export default forwardRef((_, ref) => {
             </ScrollView>
             <Button style={{
                 backgroundColor: themeColor.primary,
-                borderRadius: scale(14),
+                borderRadius: s(14),
             }}
                 pressedStyle={{
                     backgroundColor: themeColor.btnChoosed
@@ -262,23 +262,23 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
     },
     input: {
-        fontSize: scale(32),
+        fontSize: s(32),
         fontWeight: '500',
-        borderRadius: scale(12),
-        marginVertical: scale(16)
+        borderRadius: s(12),
+        marginVertical: s(16)
     },
     switchLine: {
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        padding: scale(12)
+        padding: s(12)
     },
     memberItem: {
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        paddingVertical: scale(12)
+        paddingVertical: s(12)
     }
 });

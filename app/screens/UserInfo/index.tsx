@@ -11,7 +11,7 @@ import chatService from "app/services/chat.service";
 import { useTranslation } from 'react-i18next';
 import { App } from "types/app";
 import Navbar from "app/components/Navbar";
-import { scale, verticalScale } from "app/utils/size";
+import { s, verticalScale } from "app/utils/size";
 import { useRecoilValue } from "recoil";
 import { ColorsState, ThemeState } from "app/stores/system"
 import {Icon} from "app/components/Icon/Icon";
@@ -84,12 +84,12 @@ export const UserInfoScreen = ({ navigation, route }: Props) => {
                 <View style={{ flex: 1 }}>
                     <View style={{
                         backgroundColor: themeColor.secondaryBackground,
-                        paddingTop: scale(48)
+                        paddingTop: s(48)
                     }}>
                         <InfoCard user={user} />
                     </View>
                     <View style={{
-                        paddingHorizontal: scale(16),
+                        paddingHorizontal: s(16),
                         alignItems: 'center',
                         marginTop: verticalScale(40),
                     }}>

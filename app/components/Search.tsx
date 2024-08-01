@@ -2,7 +2,7 @@ import { TouchableOpacity, View } from "react-native"
 import { Icon } from "./Icon/Icon"
 import { useState } from "react"
 import { TextInput } from "react-native-gesture-handler"
-import { s, scale } from "app/utils/size"
+import { s } from "app/utils/size"
 
 export interface SearchProps {
     onSearch: (val: string) => Promise<void>
@@ -21,13 +21,13 @@ export const Search = (props: SearchProps) => {
         {visible ? <TextInput value={label}
             cursorColor={props.color.text}
             style={{
-                width: scale(120),
+                width: s(120),
                 color: props.color.text,
                 backgroundColor: props.color.background,
-                fontSize: scale(12),
-                marginRight: scale(12),
-                borderRadius: scale(8),
-                height: scale(32)
+                fontSize: s(12),
+                marginRight: s(12),
+                borderRadius: s(8),
+                height: s(32)
             }}
             onChangeText={(v) => {
                 setLabel(v)
@@ -42,8 +42,8 @@ export const Search = (props: SearchProps) => {
             }}
             style={{
                 backgroundColor: props.color.background,
-                padding: scale(8),
-                borderRadius: scale(8),
+                padding: s(8),
+                borderRadius: s(8),
             }}>
             <Icon name={props.theme === 'dark'?'searchDark':'searchLight'} />
         </TouchableOpacity>

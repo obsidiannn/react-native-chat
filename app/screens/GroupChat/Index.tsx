@@ -15,7 +15,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { App } from "types/app";
 import { AuthUser } from "app/stores/auth";
 import toast from "app/utils/toast";
-import { scale } from "app/utils/size";
+import { s } from "app/utils/size";
 import { colors } from "app/theme";
 import GroupInfoModal, { GroupInfoModalType } from './info/Index'
 import { ColorsState } from "app/stores/system";
@@ -141,14 +141,14 @@ export const GroupChatScreen = ({ navigation, route }: Props) => {
 
                             <TouchableOpacity style={{
                                 backgroundColor: themeColor.background,
-                                borderRadius: scale(10)
+                                borderRadius: s(10)
                             }}
                                 onPress={() => {
                                     groupInfoModalRef.current?.open()
                                 }}>
                                 <Image source={require('assets/icons/more.svg')} style={{
-                                    width: scale(32),
-                                    height: scale(32),
+                                    width: s(32),
+                                    height: s(32),
                                     tintColor: colors.palette.gray800
                                 }} />
                             </TouchableOpacity>
@@ -173,4 +173,4 @@ export const GroupChatScreen = ({ navigation, route }: Props) => {
         </View>
 
     )
-} 
+}

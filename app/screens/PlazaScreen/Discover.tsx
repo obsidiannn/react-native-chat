@@ -1,7 +1,7 @@
 import { StackScreenProps } from "@react-navigation/stack";
 import { FlashList } from "@shopify/flash-list";
 import Navbar from "app/components/Navbar";
-import { scale } from "app/utils/size";
+import { s } from "app/utils/size";
 import { useCallback, useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native"
 import { App } from "types/app";
@@ -58,9 +58,9 @@ export const DiscoverScreen = ({ navigation }: Props) => {
     }
 
     return <View style={{ flex: 1, backgroundColor: themeColor.background }}>
-        <Navbar renderRight={renderSearch} rightStyle={{ flex: 1, alignItems: 'flex-end', marginRight: scale(12) }} />
+        <Navbar renderRight={renderSearch} rightStyle={{ flex: 1, alignItems: 'flex-end', marginRight: s(12) }} />
         <View style={{
-            padding: scale(12),
+            padding: s(12),
             flex: 1,
         }}>
             <FlashList
@@ -74,9 +74,9 @@ export const DiscoverScreen = ({ navigation }: Props) => {
                         setPageState({ ...pageState, page: pageState.page + 1 })
                     }
                 }}
-                estimatedItemSize={scale(40)}
+                estimatedItemSize={s(40)}
                 renderItem={({ item, index }) => {
-                    return <View style={{ padding: scale(8) }} key={item.id}>
+                    return <View style={{ padding: s(8) }} key={item.id}>
                         <GroupCard group={item} onPress={() => {
                             navigation.navigate('GroupInfoScreen', {
                                 group: item

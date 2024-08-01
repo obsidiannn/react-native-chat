@@ -7,7 +7,7 @@ import FriendView from "./Friends";
 import GroupView from "./GroupChats";
 import { colors } from "../../theme/colors";
 import { Button } from "app/components";
-import { scale } from "app/utils/size";
+import { s } from "app/utils/size";
 import { useTranslation } from "react-i18next";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { ColorsState } from "app/stores/system";
@@ -119,29 +119,29 @@ const styles = StyleSheet.create({
         flex: 1,
         display: 'flex',
         flexDirection: 'column',
-        paddingHorizontal: scale(18),
+        paddingHorizontal: s(18),
     },
     topContainer: {
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
-        padding: scale(18),
+        padding: s(18),
         paddingLeft: 0
     },
     tabButton: {
-        fontSize: scale(10),
-        marginRight: scale(18),
+        fontSize: s(10),
+        marginRight: s(18),
         padding: 0,
-        paddingVertical: scale(8),
+        paddingVertical: s(8),
         display: 'flex',
         flexDirection: 'row',
         minHeight: 0,
-        borderRadius: scale(12),
+        borderRadius: s(12),
         borderWidth: 0
     },
 
     btnTextDefault: {
-        fontSize: scale(14),
+        fontSize: s(14),
         fontWeight: 400,
     },
-})  
+})

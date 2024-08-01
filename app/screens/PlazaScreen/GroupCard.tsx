@@ -4,7 +4,7 @@ import { Icon } from "app/components/Icon/Icon"
 import fileService from "app/services/file.service"
 import { AuthUser } from "app/stores/auth"
 import { ColorsState, ThemeState } from "app/stores/system"
-import { scale } from "app/utils/size"
+import { s } from "app/utils/size"
 import { ImageBackground, Platform, Pressable, StyleSheet, Text, View } from "react-native"
 import { useRecoilValue } from "recoil"
 
@@ -27,25 +27,25 @@ export const GroupCard = (props: GroupCardProps) => {
             resizeMode="cover"
             source={{ uri: fileService.getFullUrl(group?.cover ?? '') }} style={{
                 ...styles.container,
-                paddingTop: scale(36),
+                paddingTop: s(36),
                 // backgroundColor: themeColor.primary
             }}>
             <View style={{
                 display: 'flex', flexDirection: 'column',
                 backgroundColor: themeColor.background,
-                padding: scale(14), width: '100%',
-                borderTopRightRadius: scale(20), borderTopLeftRadius: scale(20)
+                padding: s(14), width: '100%',
+                borderTopRightRadius: s(20), borderTopLeftRadius: s(20)
 
             }}>
                 <AvatarComponent
                     url={fileService.getFullUrl(authUser?.avatar ?? '')}
-                    enableAvatarBorder style={{ marginTop: scale(-32) }}
+                    enableAvatarBorder style={{ marginTop: s(-32) }}
                     width={64}
                     height={64}
                 />
                 <View style={{}}>
                     <Text style={{ ...styles.title, color: themeColor.title }}>{group?.name ?? ''}</Text>
-                    <Text style={{ fontSize: scale(14), color: themeColor.secondaryText, }}>{group?.desc ?? ''}</Text>
+                    <Text style={{ fontSize: s(14), color: themeColor.secondaryText, }}>{group?.desc ?? ''}</Text>
                 </View>
                 <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                     <Icon name={$theme==='dark'?"peoplesDark":"peoplesLight"}/>
@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         alignItems: 'center',
         backgroundColor: '#ffffff',
-        borderRadius: scale(24),
+        borderRadius: s(24),
         overflow: 'hidden',
         ...Platform.select({
             ios: {
@@ -89,15 +89,15 @@ const styles = StyleSheet.create({
         }),
     },
     title: {
-        fontSize: scale(18),
+        fontSize: s(18),
         fontWeight: '500',
-        marginVertical: scale(8)
+        marginVertical: s(8)
     },
     tag: {
-        padding: scale(6),
-        borderRadius: scale(18),
-        borderWidth: scale(0.5),
-        margin: scale(6)
+        padding: s(6),
+        borderRadius: s(18),
+        borderWidth: s(0.5),
+        margin: s(6)
     }
 
 })

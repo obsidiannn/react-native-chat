@@ -4,7 +4,7 @@ import { Icon } from "app/components/Icon/Icon";
 import { ScreenModal, ScreenModalType } from "app/components/ScreenModal";
 import { AuthService } from "app/services/auth.service";
 import { ColorsState, ThemeState } from "app/stores/system"
-import { scale, verticalScale } from "app/utils/size";
+import { s, verticalScale } from "app/utils/size";
 import { forwardRef, useImperativeHandle, useRef, useState } from "react"
 import { useTranslation } from "react-i18next";
 import { StyleSheet, Text, View, TextInput } from "react-native"
@@ -52,9 +52,9 @@ export const UpdateSignModal = forwardRef((_, ref) => {
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            padding: scale(20),
-            borderTopEndRadius: scale(24),
-            borderTopStartRadius: scale(24),
+            padding: s(20),
+            borderTopEndRadius: s(24),
+            borderTopStartRadius: s(24),
             backgroundColor: themeColor.background
         }}>
             <View style={{
@@ -75,11 +75,11 @@ export const UpdateSignModal = forwardRef((_, ref) => {
                     maxLength={maxLength}
                     style={{
                         minHeight: verticalScale(100),
-                        padding: scale(15),
+                        padding: s(15),
                         color: themeColor.text,
                         backgroundColor: themeColor.secondaryBackground,
                         width: '100%',
-                        borderRadius: scale(12),
+                        borderRadius: s(12),
                     }}
                     onChangeText={(v) => {
                         setVal(v)
@@ -89,22 +89,22 @@ export const UpdateSignModal = forwardRef((_, ref) => {
                 <Text style={{
                     color: themeColor.border,
                     alignSelf: 'flex-end',
-                    fontSize: scale(12),
-                    marginVertical: scale(8),
-                    marginRight: scale(4)
+                    fontSize: s(12),
+                    marginVertical: s(8),
+                    marginRight: s(4)
                 }}>
                     {val.length}/{maxLength}
                 </Text>
 
 
                 <View style={{
-                    marginTop: scale(24),
+                    marginTop: s(24),
                     display: 'flex',
                     flexDirection: 'row',
                     alignItems: 'stretch',
                     alignSelf: 'flex-start'
                 }}>
-                    <View style={{ alignItems: 'center', padding: scale(4) }}>
+                    <View style={{ alignItems: 'center', padding: s(4) }}>
                         <Icon name={$theme === 'dark'?'pointDark':'pointLight'} />
                     </View>
                     <Text style={{
@@ -117,13 +117,13 @@ export const UpdateSignModal = forwardRef((_, ref) => {
                 </View>
 
                 <View style={{
-                    marginTop: scale(24),
+                    marginTop: s(24),
                     display: 'flex',
                     flexDirection: 'row',
                     alignItems: 'stretch',
                     alignSelf: 'flex-start'
                 }}>
-                    <View style={{ alignItems: 'center', padding: scale(4) }}>
+                    <View style={{ alignItems: 'center', padding: s(4) }}>
                         <Icon name={$theme === 'dark'?'pointDark':'pointLight'} />
                     </View>
                     <Text style={{
@@ -136,13 +136,13 @@ export const UpdateSignModal = forwardRef((_, ref) => {
                 </View>
 
                 <View style={{
-                    marginTop: scale(24),
+                    marginTop: s(24),
                     display: 'flex',
                     flexDirection: 'row',
                     alignItems: 'stretch',
                     alignSelf: 'flex-start'
                 }}>
-                    <View style={{ alignItems: 'center', padding: scale(4) }}>
+                    <View style={{ alignItems: 'center', padding: s(4) }}>
                         <Icon name={$theme === 'dark'?'pointDark':'pointLight'} />
                     </View>
                     <Text style={{
@@ -160,7 +160,7 @@ export const UpdateSignModal = forwardRef((_, ref) => {
                 containerStyle={{
                     ...styles.nextButton,
                     backgroundColor: themeColor.primary,
-                    marginBottom: scale(14),
+                    marginBottom: s(14),
                 }}
                 onPress={async () => {
                     if (loading) {
@@ -191,13 +191,13 @@ export const UpdateSignModal = forwardRef((_, ref) => {
 
 const styles = StyleSheet.create({
     paragraph: {
-        fontSize: scale(14)
+        fontSize: s(14)
     },
     nextButton: {
-        height: scale(50),
+        height: s(50),
         width: '100%',
-        marginTop: scale(64),
-        borderRadius: scale(16),
+        marginTop: s(64),
+        borderRadius: s(16),
     },
     nextButtonLabel: {
         color: 'white',

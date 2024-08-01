@@ -1,4 +1,4 @@
-import { scale } from "app/utils/size"
+import { s } from "app/utils/size"
 import { Image } from "expo-image"
 import { Text, View,Platform, Pressable } from "react-native"
 
@@ -16,7 +16,7 @@ const BannerComponent = (props: BannerProperty) => {
         alignItems: 'center',
         justifyContent: 'space-between',
         backgroundColor: '#ffffff',
-        borderRadius: scale(12),
+        borderRadius: s(12),
         ...Platform.select({
             ios: {
               shadowColor: '#000',
@@ -30,15 +30,15 @@ const BannerComponent = (props: BannerProperty) => {
           }),
     }}>
         <View style={{
-            marginHorizontal: scale(16)
+            marginHorizontal: s(16)
         }}>
-            <Text style={{fontSize: scale(18),fontWeight: 500,marginBottom: scale(4)}}>{props.label}</Text>
-            <Text style={{fontSize: scale(16),color: '#777777'}}>{props.describe}</Text>
+            <Text style={{fontSize: s(18),fontWeight: 500,marginBottom: s(4)}}>{props.label}</Text>
+            <Text style={{fontSize: s(16),color: '#777777'}}>{props.describe}</Text>
         </View>
         <Image source={require('assets/images/banner.png')}
             contentFit="contain"
-            style={{ 
-                height: scale(66),
+            style={{
+                height: s(66),
                 aspectRatio:1.6
             }}
         />

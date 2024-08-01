@@ -1,4 +1,4 @@
-import { scale } from "app/utils/size";
+import { s } from "app/utils/size";
 import { Image } from "expo-image";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native"
 import AvatarComponent from "./Avatar";
@@ -22,12 +22,12 @@ export default (props: IContactListItemProps) => {
     const renderPoint = () => {
         if (props.inhibite) {
             return <Image source={require('assets/icons/inhibite.svg')} style={{
-                width: scale(20), height: scale(20)
+                width: s(20), height: s(20)
             }} />
         }
         if (props.badgeNumber && props.badgeNumber > 0) {
             return <Image source={require('assets/icons/red-point.svg')} style={{
-                width: scale(6), height: scale(6)
+                width: s(6), height: s(6)
             }} />
         }
         return null
@@ -63,7 +63,7 @@ export default (props: IContactListItemProps) => {
                 <Text style={styles.subTitle}>{props.subTitle}</Text>
                 <View style={{
                     ...styles.subTitleContainer,
-                    minWidth: scale(20)
+                    minWidth: s(20)
                 }}>
                     {renderPoint()}
                 </View>
@@ -74,33 +74,33 @@ export default (props: IContactListItemProps) => {
 
 const styles = StyleSheet.create({
     container: {
-        height: scale(76),
+        height: s(76),
         width: '100%',
         display: 'flex',
         flexDirection: 'row',
     },
     iconContainer: {
-        width: scale(57),
-        height: scale(76),
+        width: s(57),
+        height: s(76),
         display: 'flex',
         justifyContent: 'center',
     },
     icon: {
-        width: scale(48),
-        height: scale(48),
-        borderRadius: scale(24),
-        marginRight: scale(10),
+        width: s(48),
+        height: s(48),
+        borderRadius: s(24),
+        marginRight: s(10),
         borderWidth: 1,
         borderColor: '#F0F0F0'
     },
     badgeContainer: {
         position: 'absolute',
-        top: scale(12),
-        left: scale(32),
-        width: scale(20),
-        height: scale(20),
+        top: s(12),
+        left: s(32),
+        width: s(20),
+        height: s(20),
         borderColor: '#ffffffcc',
-        borderRadius: scale(11),
+        borderRadius: s(11),
         backgroundColor: '#FF3D00',
         display: 'flex',
         justifyContent: 'center',
@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
     },
     rightContainer: {
-        width: scale(260),
+        width: s(260),
         flex: 1,
         display: 'flex',
         flexDirection: 'row',
@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
         fontWeight: '600',
         fontSize: 16,
         color: '#000000',
-        marginBottom: scale(8)
+        marginBottom: s(8)
     },
     describe: {
         fontWeight: '400',
@@ -146,6 +146,6 @@ const styles = StyleSheet.create({
         color: '#999',
         fontWeight: '400',
         fontSize: 12,
-        marginRight: scale(12),
+        marginRight: s(12),
     }
 });

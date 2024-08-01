@@ -1,5 +1,5 @@
 import { colors } from "app/theme";
-import { scale } from "app/utils/size";
+import { s } from "app/utils/size";
 import { Image } from "expo-image";
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 
@@ -20,37 +20,37 @@ export default (props: {
 };
 const styles = StyleSheet.create({
     container: {
-        borderRadius: scale(16),
+        borderRadius: s(16),
         borderWidth: 1,
         borderColor: '#F4F4F4',
         backgroundColor: '#F8F8F8',
-        padding: scale(15),
+        padding: s(15),
         display: 'flex',
         flexDirection: 'row',
     },
     avatarContainer: {
-        width: scale(50),
-        marginRight: scale(20),
+        width: s(50),
+        marginRight: s(20),
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center'
     },
     avatar: {
-        width: scale(50),
-        height: scale(50),
-        borderRadius: scale(25),
+        width: s(50),
+        height: s(50),
+        borderRadius: s(25),
         borderWidth: 1,
         borderColor: '#F0F0F0',
     },
     name: {
         textAlign: 'center',
-        marginTop: scale(4),
+        marginTop: s(4),
         color: colors.palette.gray600,
-        fontSize: scale(12)
+        fontSize: s(12)
     },
     icon: {
-        width: scale(50),
-        height: scale(50),
+        width: s(50),
+        height: s(50),
     },
 });

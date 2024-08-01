@@ -1,5 +1,5 @@
 import { ColorsState } from "app/stores/system"
-import { scale } from "app/utils/size"
+import { s } from "app/utils/size"
 import { View, Text } from "react-native"
 import { useRecoilValue } from "recoil"
 export interface HomeTitleProps {
@@ -14,11 +14,11 @@ const HomeTitle = (props: HomeTitleProps) => {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        paddingVertical: scale(24)
+        paddingVertical: s(24)
     }}>
         <Text style={{
             fontWeight: 600,
-            fontSize: scale(32),
+            fontSize: s(32),
             color: themeColor.title
         }}>
             {props.title}

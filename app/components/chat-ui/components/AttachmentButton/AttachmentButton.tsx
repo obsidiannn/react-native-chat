@@ -10,7 +10,7 @@ import {
 
 import { Image } from 'expo-image'
 import { ThemeContext, translate } from '../../utils'
-import { scale } from 'app/utils/size'
+import { s } from 'app/utils/size'
 import { colors } from 'app/theme'
 
 export interface AttachmentButtonAdditionalProps {
@@ -43,8 +43,8 @@ export const AttachmentButton = ({
       {theme.icons?.attachmentButtonIcon?.() ?? (
         <View style={{
           backgroundColor: theme.colors.secondary,
-          padding: scale(8),
-          borderRadius: scale(24)
+          padding: s(8),
+          borderRadius: s(24)
         }}>
           <Image
             source={require('../../assets/plus.svg')}

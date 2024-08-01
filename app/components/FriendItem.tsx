@@ -3,7 +3,7 @@ import { Image } from "expo-image";
 import { IServer } from "@repo/types";
 import { useTranslation } from 'react-i18next';
 import { navigate } from "app/navigators";
-import { scale } from "app/utils/size";
+import { s } from "app/utils/size";
 import { colors } from "app/theme";
 import AvatarComponent from "./Avatar";
 import strUtil from "app/utils/str-util";
@@ -26,7 +26,7 @@ export default (props: {
     }} style={{
         ...styles.container,
     }}>
-        <AvatarComponent url={props.item.avatar} online={false} /> 
+        <AvatarComponent url={props.item.avatar} online={false} />
         <View style={{
             ...styles.rightContainer,
             borderBottomColor: isLast ? 'white' : '#F4F4F4',
@@ -55,12 +55,12 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     avatar: {
-        width: scale(50),
-        height: scale(50),
-        borderRadius: scale(25),
+        width: s(50),
+        height: s(50),
+        borderRadius: s(25),
         borderWidth: 1,
         borderColor: '#F0F0F0',
-        marginRight: scale(15),
+        marginRight: s(15),
     },
     rightContainer: {
         flex: 1,
@@ -71,12 +71,12 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
     },
     name: {
-        fontSize: scale(16),
+        fontSize: s(16),
         fontWeight: '400',
         color: '#000',
     },
     icon: {
-        width: scale(20),
-        height: scale(20),
+        width: s(20),
+        height: s(20),
     }
 });

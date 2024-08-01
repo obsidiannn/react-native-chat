@@ -11,7 +11,7 @@ import fileService from "app/services/file.service";
 import LoadingModal, { LoadingModalType } from "app/components/loading-modal";
 import { useTranslation } from 'react-i18next';
 import toast from "app/utils/toast";
-import { scale } from "app/utils/size";
+import { s } from "app/utils/size";
 import { colors } from "app/theme";
 import { App } from "types/app";
 import quickCrypto from "app/utils/quick-crypto";
@@ -93,8 +93,8 @@ export const GroupCreateScreen = ({ route, navigation }: Props) => {
         }}>
             <Navbar title={t('groupCreate.title_group_create')} />
             <View style={{
-                paddingHorizontal: scale(15),
-                paddingTop: scale(20),
+                paddingHorizontal: s(15),
+                paddingTop: s(20),
                 backgroundColor: themeColor.background
             }}>
                 <AvatarUpload
@@ -128,15 +128,15 @@ export const GroupCreateScreen = ({ route, navigation }: Props) => {
 
                 }}>
                     <View style={{
-                        borderRadius: scale(24),
+                        borderRadius: s(24),
                         borderColor: themeColor.border,
                         borderWidth: 1,
                         borderStyle: 'dashed',
-                        margin: scale(12)
+                        margin: s(12)
                     }}>
                         <Image source={require('assets/icons/plus.svg')} style={{
-                            width: scale(24),
-                            height: scale(24),
+                            width: s(24),
+                            height: s(24),
                             tintColor: themeColor.border
                         }} />
                     </View>
@@ -154,9 +154,9 @@ export const GroupCreateScreen = ({ route, navigation }: Props) => {
                     style={{
                         ...styles.input,
                         textAlignVertical: 'top',
-                        padding: scale(15),
+                        padding: s(15),
                         backgroundColor: themeColor.secondaryBackground,
-                        fontSize: scale(16),
+                        fontSize: s(16),
                         color: themeColor.text
                     }}
                     value={createState?.describe}
@@ -176,11 +176,11 @@ export const GroupCreateScreen = ({ route, navigation }: Props) => {
                         alignItems: 'center'
                     }}>
                         <Image source={require('assets/icons/lock-open.svg')} style={{
-                            width: scale(28),
-                            height: scale(28),
+                            width: s(28),
+                            height: s(28),
                             tintColor: themeColor.text
                         }} />
-                        <Text style={{ fontSize: scale(16) }}>公开</Text>
+                        <Text style={{ fontSize: s(16) }}>公开</Text>
                     </View>
                     <Switch value={createState.searchType === '1'}
                         thumbColor={'#ffffff'}
@@ -203,13 +203,13 @@ export const GroupCreateScreen = ({ route, navigation }: Props) => {
                         alignItems: 'flex-start'
                     }}>
                         <Image source={require('assets/icons/lock-off.svg')} style={{
-                            width: scale(28),
-                            height: scale(28),
+                            width: s(28),
+                            height: s(28),
                             tintColor: themeColor.text
                         }} />
                         <View>
-                            <Text style={{ fontSize: scale(16),marginBottom: scale(4) }}>加密（不可更改）</Text>
-                            <Text style={{ fontSize: scale(14),color: themeColor.secondaryText }}>不加密，用户将直接可以加入群聊</Text>
+                            <Text style={{ fontSize: s(16),marginBottom: s(4) }}>加密（不可更改）</Text>
+                            <Text style={{ fontSize: s(14),color: themeColor.secondaryText }}>不加密，用户将直接可以加入群聊</Text>
                         </View>
                     </View>
                     <Switch value={createState.isEnc}
@@ -228,9 +228,9 @@ export const GroupCreateScreen = ({ route, navigation }: Props) => {
 
 
                 <Button onPress={doGroupCreate} style={{
-                    marginTop: scale(40),
-                    height: scale(50),
-                    borderRadius: scale(15),
+                    marginTop: s(40),
+                    height: s(50),
+                    borderRadius: s(15),
                     backgroundColor: themeColor.primary
                 }} >
                     <Text style={{
@@ -251,9 +251,9 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
     },
     sub_area: {
-        padding: scale(15),
-        paddingVertical: scale(32),
-        borderRadius: scale(15),
+        padding: s(15),
+        paddingVertical: s(32),
+        borderRadius: s(15),
         borderWidth: 1,
         borderStyle: 'dashed',
         display: 'flex',
@@ -262,17 +262,17 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     input: {
-        fontSize: scale(32),
+        fontSize: s(32),
         fontWeight: '500',
-        borderRadius: scale(12),
-        marginVertical: scale(24)
+        borderRadius: s(12),
+        marginVertical: s(24)
     },
     switchLine: {
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        padding: scale(12)
+        padding: s(12)
     }
 }
 );
