@@ -2,7 +2,7 @@ import { Pressable, StyleProp, Text, TextStyle, View, ViewStyle } from "react-na
 import React from "react";
 import { Image, ImageStyle } from "expo-image";
 import { goBack } from "app/navigators";
-import { s, scale } from "app/utils/size";
+import { s } from "app/utils/size";
 import { ColorsState, ThemeState } from "app/stores/system";
 import { useRecoilValue } from "recoil";
 const Navbar = (props: {
@@ -84,23 +84,23 @@ const Navbar = (props: {
     </View>
 }
 const $container: ViewStyle = {
-    height: scale(45),
+    height: s(45),
     display: 'flex',
     flexDirection: 'row',
     width: '100%',
     alignItems: 'center',
 }
 const $leftContainer: ViewStyle = {
-    height: scale(45),
+    height: s(45),
     width: '20%',
     display: 'flex',
     alignItems: 'flex-start',
     justifyContent: 'center',
-    paddingLeft: scale(16),
+    paddingLeft: s(16),
 }
 const $leftIconContainer: ViewStyle = {
-    width: scale(32),
-    height: scale(32),
+    width: s(32),
+    height: s(32),
     borderRadius: s(10),
     display: 'flex',
     alignItems: 'center',

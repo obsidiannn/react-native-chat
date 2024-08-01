@@ -2,7 +2,7 @@ import { forwardRef, useImperativeHandle, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import BaseModal from "./base-modal";
-import { scale, verticalScale } from "app/utils/size";
+import { s, verticalScale } from "app/utils/size";
 import { Button } from "./Button";
 import { useRecoilValue } from "recoil";
 import { ColorsState } from "app/stores/system";
@@ -33,7 +33,7 @@ export default forwardRef<ApplyJoinModalRef>((_, ref) => {
 
     const { t } = useTranslation('screens')
 
-    return <BaseModal animationType="slide" visible={visible} onClose={onClose} title={t('groupChat.title_apply_join')} styles={{ flex: 1,padding: scale(12) }}>
+    return <BaseModal animationType="slide" visible={visible} onClose={onClose} title={t('groupChat.title_apply_join')} styles={{ flex: 1,padding: s(12) }}>
         <View style={styles.contentContainer} >
             <View style={styles.inputContainer}>
                 <TextInput
@@ -53,7 +53,7 @@ export default forwardRef<ApplyJoinModalRef>((_, ref) => {
             style={{
                 ...styles.button,
                 backgroundColor: themeColor.primary,
-                marginBottom: scale(24)
+                marginBottom: s(24)
             }} onPress={async () => {
                 if (state) {
                     return;
@@ -87,11 +87,11 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     inputContainer: {
-        padding: scale(15),
+        padding: s(15),
         borderColor: '#F4F4F4',
         borderWidth: 1,
         backgroundColor: '#F8F8F8',
-        borderRadius: scale(16),
+        borderRadius: s(16),
         marginTop: verticalScale(20),
     },
     input: {
@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
     },
     buttonContainer: {
         flex: 1,
-        paddingHorizontal: scale(23),
+        paddingHorizontal: s(23),
         marginTop: verticalScale(20),
     },
     button: {

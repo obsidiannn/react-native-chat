@@ -9,7 +9,7 @@ import PagerView from "react-native-pager-view"
 import { useRef, useState } from "react"
 import { colors } from "app/theme"
 import { useTranslation } from "react-i18next"
-import { scale } from "app/utils/size"
+import { s } from "app/utils/size"
 import BannerComponent from "app/components/Banner"
 type Props = StackScreenProps<App.StackParamList, 'PlazaScreen'>;
 export const PlazaScreen = ({ navigation }: Props) => {
@@ -72,7 +72,7 @@ export const PlazaScreen = ({ navigation }: Props) => {
   }]}>
     <BannerComponent label="邀请好友" describe="分享一个链接" onPress={() => {
       console.log('press');
-      
+
       navigation.navigate('DiscoverScreen')
     }} />
     <View style={styles.topContainer}>
@@ -110,31 +110,31 @@ const styles = StyleSheet.create({
     flex: 1,
     display: 'flex',
     flexDirection: 'column',
-    paddingHorizontal: scale(18),
-    paddingTop: scale(14)
+    paddingHorizontal: s(18),
+    paddingTop: s(14)
   },
   topContainer: {
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    padding: scale(18),
+    padding: s(18),
     paddingLeft: 0
   },
   tabButton: {
-    fontSize: scale(10),
-    marginRight: scale(18),
+    fontSize: s(10),
+    marginRight: s(18),
     padding: 0,
-    paddingVertical: scale(8),
+    paddingVertical: s(8),
     display: 'flex',
     flexDirection: 'row',
     minHeight: 0,
-    borderRadius: scale(12),
+    borderRadius: s(12),
     borderWidth: 0
 
   },
 
   btnTextDefault: {
-    fontSize: scale(14),
+    fontSize: s(14),
     fontWeight: 400,
   },
-})  
+})

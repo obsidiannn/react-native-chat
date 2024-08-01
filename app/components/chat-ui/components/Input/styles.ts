@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native'
 
 import { Theme } from '../../types'
-import { scale } from 'app/utils/size'
+import { s } from 'app/utils/size'
 
 export default ({ theme }: { theme: Theme }) =>
   StyleSheet.create({
@@ -11,8 +11,8 @@ export default ({ theme }: { theme: Theme }) =>
       paddingHorizontal: 20,
       paddingVertical: 10,
       backgroundColor: theme.colors.inputValueBackground,
-      borderRadius: scale(36),
-      margin: scale(12)
+      borderRadius: s(36),
+      margin: s(12)
     },
     input: {
       ...theme.fonts.inputTextStyle,

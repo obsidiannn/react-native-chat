@@ -1,9 +1,9 @@
 import { Button } from "app/components";
-import { Icon } from "app/components/Icon";
+import { Icon } from "app/components/Icon/Icon";
 import { ScreenModal, ScreenModalType } from "app/components/ScreenModal";
 import { AuthService } from "app/services/auth.service";
-import { ColorsState } from "app/stores/system";
-import { scale } from "app/utils/size";
+import { ColorsState, ThemeState } from "app/stores/system"
+import { s } from "app/utils/size";
 import { forwardRef, useImperativeHandle, useRef, useState } from "react"
 import { useTranslation } from "react-i18next";
 import { StyleSheet, Text, View, TextInput } from "react-native"
@@ -26,7 +26,7 @@ export const UpdateNickNameModal = forwardRef((_, ref) => {
     const onFinishRef = useRef<(v: string) => void>()
     const screenModalRef = useRef<ScreenModalType>(null);
     const themeColor = useRecoilValue(ColorsState)
-
+    const $theme = useRecoilValue(ThemeState)
     const [val, setVal] = useState('')
     const onClose = () => {
         setVal('')
@@ -53,11 +53,11 @@ export const UpdateNickNameModal = forwardRef((_, ref) => {
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
-                padding: scale(14)
+                padding: s(14)
             }}>
                 <Text style={{
                     color: themeColor.title,
-                    fontSize: scale(28),
+                    fontSize: s(28),
                     fontWeight: '500',
                     alignSelf: 'flex-start'
                 }}>
@@ -68,7 +68,7 @@ export const UpdateNickNameModal = forwardRef((_, ref) => {
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'center',
-                    marginTop: scale(22)
+                    marginTop: s(22)
                 }}>
                     <TextInput
                     // placeholder={t('profile.placeholder_nickname')}
@@ -76,12 +76,12 @@ export const UpdateNickNameModal = forwardRef((_, ref) => {
                     // maxLength={maxLength}
 
                     // style={{
-                    //     fontSize: scale(16),
-                    //     height: scale(44),
+                    //     fontSize: s(16),
+                    //     height: s(44),
                     //     color: themeColor.text,
                     //     backgroundColor: themeColor.background,
                     //     width: '100%',
-                    //     borderRadius: scale(12),
+                    //     borderRadius: s(12),
                     // }}
                     // onChangeText={(v) => setVal(v)}
                     // value={val}
@@ -89,9 +89,9 @@ export const UpdateNickNameModal = forwardRef((_, ref) => {
                     <Text style={{
                         color: themeColor.border,
                         alignSelf: 'flex-end',
-                        fontSize: scale(12),
-                        marginVertical: scale(8),
-                        marginRight: scale(4)
+                        fontSize: s(12),
+                        marginVertical: s(8),
+                        marginRight: s(4)
                     }}>
                         {val.length}/{maxLength}
                     </Text>
@@ -99,14 +99,15 @@ export const UpdateNickNameModal = forwardRef((_, ref) => {
                 </View>
 
                 <View style={{
-                    marginTop: scale(32),
+                    marginTop: s(32),
                     display: 'flex',
                     flexDirection: 'row',
                     alignItems: 'stretch',
-                    padding: scale(12),
+                    padding: s(12),
                 }}>
-                    <View style={{ alignItems: 'center', padding: scale(4) }}>
-                        <Icon path={require("assets/icons/point.svg")} width={8} height={8} />
+                    <View style={{ alignItems: 'center', padding: s(4) }}>
+                        <Icon name={$theme === 'dark'?'pointDark':'pointLight'} />
+
                     </View>
                     <Text style={{
                         ...styles.paragraph,
@@ -121,10 +122,10 @@ export const UpdateNickNameModal = forwardRef((_, ref) => {
                     display: 'flex',
                     flexDirection: 'row',
                     alignItems: 'stretch',
-                    padding: scale(12)
+                    padding: s(12)
                 }}>
-                    <View style={{ alignItems: 'center', padding: scale(4) }}>
-                        <Icon path={require("assets/icons/point.svg")} width={8} height={8} />
+                    <View style={{ alignItems: 'center', padding: s(4) }}>
+                        <Icon name={$theme === 'dark'?'pointDark':'pointLight'} />
                     </View>
                     <Text style={{
                         ...styles.paragraph,
@@ -139,10 +140,10 @@ export const UpdateNickNameModal = forwardRef((_, ref) => {
                     display: 'flex',
                     flexDirection: 'row',
                     alignItems: 'stretch',
-                    padding: scale(12)
+                    padding: s(12)
                 }}>
-                    <View style={{ alignItems: 'center', padding: scale(4) }}>
-                        <Icon path={require("assets/icons/point.svg")} width={8} height={8} />
+                    <View style={{ alignItems: 'center', padding: s(4) }}>
+                        <Icon name={$theme === 'dark'?'pointDark':'pointLight'} />
                     </View>
                     <Text style={{
                         ...styles.paragraph,
@@ -164,9 +165,9 @@ export const UpdateNickNameModal = forwardRef((_, ref) => {
                 textStyle={styles.nextButtonLabel}
                 containerStyle={{
                     backgroundColor: themeColor.primary,
-                    borderRadius: scale(12),
-                    marginBottom: scale(14),
-                    marginHorizontal: scale(12),
+                    borderRadius: s(12),
+                    marginBottom: s(14),
+                    marginHorizontal: s(12),
                 }}
                 onPress={async () => {
                     if (loading) {
@@ -192,13 +193,13 @@ export const UpdateNickNameModal = forwardRef((_, ref) => {
 
 const styles = StyleSheet.create({
     paragraph: {
-        fontSize: scale(14)
+        fontSize: s(14)
     },
     nextButton: {
-        height: scale(50),
+        height: s(50),
         width: '100%',
-        marginTop: scale(64),
-        borderRadius: scale(16),
+        marginTop: s(64),
+        borderRadius: s(16),
     },
     nextButtonLabel: {
         color: 'white',

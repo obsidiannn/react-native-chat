@@ -1,7 +1,7 @@
 import Navbar from "app/components/Navbar";
 import { navigate } from "app/navigators";
 import { colors } from "app/theme";
-import { scale } from "app/utils/size";
+import { s } from "app/utils/size";
 import { useSafeAreaInsetsStyle } from "app/utils/useSafeAreaInsetsStyle";
 import { Image } from "expo-image";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -88,8 +88,8 @@ export const UserChatScreen = ({ navigation, route }: Props) => {
                         })
                     }}>
                         <Image source={require('assets/icons/more.svg')} style={{
-                            width: scale(32),
-                            height: scale(32),
+                            width: s(32),
+                            height: s(32),
                         }} />
                     </TouchableOpacity>
                 </View>
@@ -110,14 +110,14 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
-        padding: scale(18),
+        padding: s(18),
         paddingLeft: 0
     },
     tabButton: {
-        fontSize: scale(10),
-        marginRight: scale(18),
+        fontSize: s(10),
+        marginRight: s(18),
         padding: 0,
-        paddingVertical: scale(8),
+        paddingVertical: s(8),
         display: 'flex',
         flexDirection: 'row',
         minHeight: 0

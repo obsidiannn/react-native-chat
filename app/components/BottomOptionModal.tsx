@@ -1,4 +1,4 @@
-import { scale, verticalScale } from "app/utils/size";
+import { s, verticalScale } from "app/utils/size";
 import { forwardRef, useImperativeHandle, useState } from "react";
 import { Modal, Pressable, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -33,8 +33,8 @@ export default forwardRef((props: BottomOptionModalProps, ref) => {
                 flex: 1,
                 backgroundColor: 'white',
                 paddingTop: verticalScale(13),
-                borderTopLeftRadius: scale(15),
-                borderTopRightRadius: scale(15),
+                borderTopLeftRadius: s(15),
+                borderTopRightRadius: s(15),
                 paddingBottom: insets.bottom,
             }}>
                 <View style={{
@@ -52,7 +52,7 @@ export default forwardRef((props: BottomOptionModalProps, ref) => {
                         }} key={index}>
                             <Text style={{
                                 color: '#333',
-                                fontSize: scale(16),
+                                fontSize: s(16),
                                 fontWeight: '500',
                             }}>{item.title}</Text>
                         </Pressable>
@@ -68,7 +68,7 @@ export default forwardRef((props: BottomOptionModalProps, ref) => {
                     }}>
                         <Text style={{
                             color: '#D90000',
-                            fontSize: scale(16),
+                            fontSize: s(16),
                             fontWeight: '500',
                         }}>取消</Text>
                     </Pressable>

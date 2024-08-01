@@ -4,7 +4,7 @@ import { Image } from "expo-image";
 import { IUser } from "drizzle/schema";
 import { useTranslation } from 'react-i18next';
 import toast from "app/utils/toast";
-import { scale, verticalScale } from "app/utils/size";
+import { s, verticalScale } from "app/utils/size";
 import { isOnline } from "app/utils/account";
 import { IModel } from "@repo/enums";
 import { colors } from "app/theme";
@@ -24,7 +24,7 @@ export default (props: {
     }}>
         <View style={styles.infoBox}>
             <View style={{
-                marginTop: scale(-40)
+                marginTop: s(-40)
             }}>
                 <AvatarX size={72} online={isOnline(user.updatedAt?.valueOf() ?? 0)} border={true} uri={user.avatar ?? ""} />
             </View>
@@ -35,8 +35,8 @@ export default (props: {
                         (
                             <Image source={user.gender === IModel.IUser.Gender.MALE ? require('assets/icons/male.svg') : require('assets/icons/female.svg')}
                                 style={{
-                                    width: scale(36),
-                                    height: scale(36)
+                                    width: s(36),
+                                    height: s(36)
                                 }}
                             />
                         ) : null
@@ -56,7 +56,7 @@ export default (props: {
             <Text style={{
                 ...styles.signText,
                 color: colors.palette.gray500,
-                paddingVertical: scale(12)
+                paddingVertical: s(12)
             }}>{!user.sign ? t('userInfo.label_empty') : user.sign}</Text>
         </View>
     </View>
@@ -64,8 +64,8 @@ export default (props: {
 
 const styles = StyleSheet.create({
     container: {
-        borderRadius: scale(16),
-        padding: scale(16),
+        borderRadius: s(16),
+        padding: s(16),
     },
     infoBox: {
         display: 'flex',
@@ -77,10 +77,10 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
-        marginTop: scale(24)
+        marginTop: s(24)
     },
     nameText: {
-        fontSize: scale(30),
+        fontSize: s(30),
         fontWeight: '500',
         color: '#000',
     },
@@ -88,31 +88,31 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
-        marginTop: scale(24),
-        padding: scale(4)
+        marginTop: s(24),
+        padding: s(4)
     },
 
     copyIcon: {
-        width: scale(24),
-        height: scale(24),
+        width: s(24),
+        height: s(24),
     },
     line: {
         height: 1,
         backgroundColor: '#ECECEC',
-        marginLeft: scale(50),
+        marginLeft: s(50),
         marginTop: verticalScale(15),
         marginBottom: verticalScale(10),
     },
     signContainer: {
-        padding: scale(12),
-        minHeight: scale(64),
+        padding: s(12),
+        minHeight: s(64),
         backgroundColor: colors.palette.gray100,
-        marginTop: scale(24),
-        borderRadius: scale(14)
+        marginTop: s(24),
+        borderRadius: s(14)
 
     },
     signText: {
-        fontSize: scale(16),
+        fontSize: s(16),
         fontWeight: '400',
         flexWrap: 'wrap'
     }

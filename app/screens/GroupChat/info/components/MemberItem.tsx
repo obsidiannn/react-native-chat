@@ -1,4 +1,4 @@
-import { scale } from "app/utils/size";
+import { s } from "app/utils/size";
 import { Image } from "expo-image";
 import { Text, TouchableOpacity } from "react-native";
 
@@ -10,21 +10,21 @@ export default (props: {
     return <TouchableOpacity onPress={props.onPress} style={{
         display: 'flex',
         alignItems: 'center',
-        marginRight: scale(10),
-        marginTop: scale(10),
+        marginRight: s(10),
+        marginTop: s(10),
     }}>
         <Image source={props.avatar} style={{
-            width: scale(50),
-            height: scale(50),
-            borderRadius: scale(25),
+            width: s(50),
+            height: s(50),
+            borderRadius: s(25),
             borderWidth: 1,
             borderColor: '#F0F0F0',
         }} />
         <Text numberOfLines={1} style={{
-            fontSize: scale(12),
+            fontSize: s(12),
             fontWeight: '400',
             color: '#666',
-            marginTop: scale(7),
+            marginTop: s(7),
         }}>{props.text}</Text>
     </TouchableOpacity>
 }

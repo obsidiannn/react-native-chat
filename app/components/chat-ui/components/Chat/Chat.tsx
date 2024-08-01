@@ -38,7 +38,7 @@ import styles from './styles'
 import AccessoryView from './AccessoryView'
 import { ImageSource } from 'react-native-image-viewing/dist/@types'
 import { Button } from 'app/components/Button'
-import { scale } from 'app/utils/size'
+import { s } from 'app/utils/size'
 // import { KeyboardAwareScrollView,KeyboardProvider } from 'react-native-keyboard-controller'
 
 // Untestable
@@ -279,10 +279,10 @@ export const Chat = ({
 
   const renderImageDownload = ({ imageIndex }: { imageIndex: number }) => {
     return <Button style={{
-      marginBottom: scale(16),
+      marginBottom: s(16),
       width: '50%',
       alignSelf: 'center',
-      borderRadius: scale(12),
+      borderRadius: s(12),
       backgroundColor: 'rgba(100,100,150,0.5)',
       opacity: 0.9,
     }} onPress={async () => {
@@ -312,14 +312,14 @@ export const Chat = ({
     const currentToolOpen = !toolOpen
     Keyboard.dismiss()
     setToolOpen(currentToolOpen)
-    // && keyboardState.h <= 0 
+    // && keyboardState.h <= 0
   }
 
   const renderItem = React.useCallback(
     ({ item: message }: { item: MessageType.DerivedAny; index: number }) => {
       const messageWidth =
         showUserAvatars &&
-          message.type !== 'dateHeader' 
+          message.type !== 'dateHeader'
           // && message.author.id !== user.id
           ? Math.floor(Math.min(size.width * 0.70, 440))
           : Math.floor(Math.min(size.width * 0.72, 440))

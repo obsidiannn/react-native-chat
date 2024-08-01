@@ -7,9 +7,7 @@ import friendApplyService from "app/services/friend-apply.service";
 import Navbar from "app/components/Navbar";
 import { Button } from "app/components";
 import toast from "app/utils/toast";
-import { scale, verticalScale } from "app/utils/size";
-import { useRecoilValue } from "recoil";
-import { ColorsState } from "app/stores/system";
+import { s, verticalScale } from "app/utils/size";
 
 type Props = StackScreenProps<App.StackParamList, 'InviteFriendScreen'>;
 export const InviteFriendScreen = ({ navigation, route }: Props) => {
@@ -71,12 +69,12 @@ const styles = StyleSheet.create({
     },
     inputContainer: {
         height: '50%',
-        padding: scale(15),
+        padding: s(15),
         borderColor: '#F4F4F4',
         borderWidth: 1,
         backgroundColor: '#F8F8F8',
-        marginHorizontal: scale(15),
-        borderRadius: scale(16),
+        marginHorizontal: s(15),
+        borderRadius: s(16),
         marginTop: verticalScale(20),
     },
     input: {
@@ -86,7 +84,7 @@ const styles = StyleSheet.create({
         height: verticalScale(82),
     },
     buttonContainer: {
-        paddingHorizontal: scale(23),
+        paddingHorizontal: s(23),
         marginTop: verticalScale(30),
     },
     button: {

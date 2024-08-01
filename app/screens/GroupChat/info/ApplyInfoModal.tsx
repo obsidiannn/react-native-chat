@@ -39,7 +39,7 @@ export default forwardRef((props: {
     }
     return <BaseModal visible={visible} onClose={onClose} title={t('title_apply_info')} animationType="slide">
         <View>
-            <View style={{ paddingHorizontal: scale(15), paddingTop: verticalScale(21) }}>
+            <View style={{ paddingHorizontal: s(15), paddingTop: verticalScale(21) }}>
                 <View style={{
                     height: verticalScale(82),
                     borderWidth: 1,
@@ -50,7 +50,7 @@ export default forwardRef((props: {
                     display: 'flex',
                     flexDirection: 'row',
                     alignItems: 'center',
-                    paddingHorizontal: scale(15),
+                    paddingHorizontal: s(15),
                 }}>
                     <Image style={{
                         width: verticalScale(50),
@@ -58,7 +58,7 @@ export default forwardRef((props: {
                         borderRadius: verticalScale(25),
                         borderWidth: 1,
                         borderColor: '#F0F0F0',
-                        marginRight: scale(15),
+                        marginRight: s(15),
                     }} source={item?.avatar} />
                     <View>
                         <Text style={{ fontSize: 16, fontWeight: '500', color: '#000' }}>{item?.name}</Text>
@@ -85,7 +85,7 @@ export default forwardRef((props: {
                     backgroundColor: '#F8F8F8',
                     width: '100%',
                     borderRadius: verticalScale(16),
-                    paddingHorizontal: scale(15),
+                    paddingHorizontal: s(15),
                     paddingVertical: verticalScale(17),
                     marginTop: verticalScale(10),
                 }}>
@@ -96,7 +96,7 @@ export default forwardRef((props: {
                 </View>
             </View>
             <View style={{
-                paddingHorizontal: scale(23),
+                paddingHorizontal: s(23),
             }}>
                 {item?.status === IModel.IGroup.IGroupMemberStatus.PENDING ? <>
                     <Button style={{
@@ -155,7 +155,7 @@ export default forwardRef((props: {
 
                             // .finally(()=>{
                             //     setLoading(false);
-                            //    
+                            //
                             // })
 
                         }} >

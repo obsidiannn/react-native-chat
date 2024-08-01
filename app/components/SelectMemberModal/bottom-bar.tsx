@@ -1,4 +1,4 @@
-import { scale, verticalScale } from "app/utils/size";
+import { s, verticalScale } from "app/utils/size";
 import { StyleSheet, Text, View } from "react-native";
 import { Button } from "../Button";
 import Checkbox from "expo-checkbox";
@@ -13,7 +13,7 @@ export default (props: {
 
     return <View style={styles.container}>
         <Checkbox style={{
-            borderRadius: scale(15)
+            borderRadius: s(15)
         }} color={props.primary} value={props.checkedAll} onValueChange={(value) => props.onCheckedAllChange(value)} />
         <Button style={{
             ...styles.button,
@@ -33,15 +33,15 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        paddingHorizontal: scale(15),
+        paddingHorizontal: s(15),
     },
     button: {
-        borderRadius: scale(10),
-        padding: scale(16),
-        height: scale(32)
+        borderRadius: s(10),
+        padding: s(16),
+        height: s(32)
     },
     buttonLabel: {
-        fontSize: scale(14),
+        fontSize: s(14),
         fontWeight: '500',
     }
 });

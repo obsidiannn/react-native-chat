@@ -5,7 +5,7 @@ import fileService from "app/services/file.service"
 import friendService from "app/services/friend.service";
 import userService from "app/services/user.service";
 import { ColorsState } from "app/stores/system";
-import { scale } from "app/utils/size";
+import { s } from "app/utils/size";
 import { Image } from "expo-image";
 import { useCallback, useState } from "react";
 import { View, StyleSheet, TextInput, Pressable, ScrollView } from "react-native";
@@ -95,14 +95,14 @@ export const AddFriendModal = () => {
                     value={keyword}
                 />
                 <Pressable style={{
-                  
+
                 }} onPress={() => {
                     console.log('search');
                     search(keyword, false)
                 }}>
                     <Image source={require('assets/icons/query-search.svg')} style={{
-                        width: scale(20),
-                        height: scale(20),
+                        width: s(20),
+                        height: s(20),
                     }} />
                 </Pressable>
             </View>
@@ -117,33 +117,33 @@ export const AddFriendModal = () => {
 const styles = StyleSheet.create({
     mainContainer: {
         flex: 1,
-        padding: scale(14),
-        paddingTop: scale(24),
+        padding: s(14),
+        paddingTop: s(24),
         display: 'flex',
-        marginTop: scale(24),
-        borderTopLeftRadius: scale(32),
-        borderTopRightRadius: scale(32)
+        marginTop: s(24),
+        borderTopLeftRadius: s(32),
+        borderTopRightRadius: s(32)
     },
-  
+
     queryView: {
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        borderRadius: scale(32),
-        paddingVertical: scale(14),
-        paddingRight: scale(24),
-        paddingLeft: scale(14),
+        borderRadius: s(32),
+        paddingVertical: s(14),
+        paddingRight: s(24),
+        paddingLeft: s(14),
     },
     input: {
         width: '85%',
         fontSize: 16,
         fontWeight: '500',
-        marginRight: scale(4),
-        paddingLeft: scale(12)
+        marginRight: s(4),
+        paddingLeft: s(12)
     },
     contentContainer: {
         flex: 1,
-        paddingTop: scale(15),
+        paddingTop: s(15),
     },
 })

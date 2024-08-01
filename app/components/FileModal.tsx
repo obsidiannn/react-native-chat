@@ -5,7 +5,7 @@ import * as Sharing from 'expo-sharing';
 import BaseModal from "./base-modal";
 import { MessageType } from "./chat-ui";
 import { colors } from "app/theme";
-import { bytesToSize, scale } from "app/utils/size";
+import { bytesToSize, s } from "app/utils/size";
 import toast from "app/utils/toast";
 import { Image } from "expo-image";
 import { Button } from "./Button";
@@ -85,24 +85,24 @@ export default forwardRef((_, ref) => {
         <View style={{
             flex: 1,
             alignItems: 'center',
-            paddingHorizontal: scale(25),
+            paddingHorizontal: s(25),
         }}>
             <Image source={require('assets/icons/file-unknown.svg')} style={{
-                width: scale(60),
-                height: scale(60),
-                marginTop: scale(72),
+                width: s(60),
+                height: s(60),
+                marginTop: s(72),
             }} />
             <Text style={{
-                fontSize: scale(16),
+                fontSize: s(16),
                 color: '#333',
                 fontWeight: '600',
-                marginTop: scale(8),
+                marginTop: s(8),
             }}>{file?.name}</Text>
             <Text style={{
-                fontSize: scale(14),
+                fontSize: s(14),
                 color: '#999',
                 fontWeight: '400',
-                marginTop: scale(10),
+                marginTop: s(10),
             }}>文件大小：{bytesToSize(file?.size ?? 0)}</Text>
             <Button disabled={loading} onPress={() => {
                 if (loading) {
@@ -123,9 +123,9 @@ export default forwardRef((_, ref) => {
                 }
 
             }} style={{
-                marginTop: scale(239),
-                height: scale(50),
-                borderRadius: scale(16),
+                marginTop: s(239),
+                height: s(50),
+                borderRadius: s(16),
                 display: 'flex',
                 width: '100%',
                 backgroundColor: colors.palette.primary
@@ -133,7 +133,7 @@ export default forwardRef((_, ref) => {
                 downloaded ? (loading ? '解密中' : '分享') : (loading ? '下載中' : '保存到本地')
             }>
                 {loading ? <ActivityIndicator color="white" style={{
-                    marginRight: scale(5),
+                    marginRight: s(5),
                 }} animating={loading} /> : null}
             </Button>
         </View>

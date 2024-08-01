@@ -6,7 +6,7 @@ import AplphabetIndex from "./alphabet-index";
 import { FlashList } from "@shopify/flash-list";
 import ListItemComponent from "./list-item";
 import Navbar from "../Navbar";
-import { scale } from "app/utils/size";
+import { s } from "app/utils/size";
 import { useRecoilValue } from "recoil";
 import { ColorsState } from "app/stores/system";
 
@@ -84,7 +84,7 @@ export default forwardRef((props: SelectMemberModalProps, ref) => {
                         data={options}
                         ref={flashListRef}
                         keyExtractor={(item, i) => { return item.id }}
-                        estimatedItemSize={scale(60)}
+                        estimatedItemSize={s(60)}
                         renderItem={({ item, index }) => {
                             let isLast = index === options.length - 1;
                             return <ListItemComponent
@@ -102,7 +102,7 @@ export default forwardRef((props: SelectMemberModalProps, ref) => {
                     />
                 </View>
                 <View style={{
-                    width: scale(24),
+                    width: s(24),
                 }}>
                     <AplphabetIndex contactAlphabetIndex={contactAlphabetIndex} onScrollToIndex={(v) => {
                         flashListRef.current?.scrollToIndex({

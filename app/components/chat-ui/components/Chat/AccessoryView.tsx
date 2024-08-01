@@ -2,7 +2,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
 import { ChatUiToolsKitProps } from "../../types";
 import { Image } from "expo-image";
-import { scale, verticalScale } from "app/utils/size";
+import { s, verticalScale } from "app/utils/size";
 import { colors } from "app/theme";
 
 export interface InputToolsProps {
@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
     item: {
         width: '25%',
         alignItems: 'center',
-        paddingVertical: scale(12),
+        paddingVertical: s(12),
         display: 'flex',
         flexDirection: 'column',
     },
@@ -46,15 +46,15 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     icon: {
-        width: scale(46),
-        height: scale(46),
-        borderRadius: scale(10),
+        width: s(46),
+        height: s(46),
+        borderRadius: s(10),
 
     },
     title: {
         color: '#52525b',
-        fontSize: scale(12),
-        marginTop: scale(4),
+        fontSize: s(12),
+        marginTop: s(4),
         textAlign: 'center',
         marginVertical: verticalScale(5),
     }

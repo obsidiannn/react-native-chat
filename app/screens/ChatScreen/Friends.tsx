@@ -2,7 +2,7 @@ import { FlashList } from "@shopify/flash-list"
 import ConversationItem, { IContactListItemProps } from "app/components/ConversationItem"
 import { EmptyComponent } from "app/components/EmptyComponent"
 import LoadingComponent from "app/components/Loading"
-import { scale } from "app/utils/size"
+import { s } from "app/utils/size"
 import { useState } from "react"
 import { StyleSheet, View } from "react-native"
 import { useRecoilValue } from "recoil"
@@ -30,7 +30,7 @@ const FriendListView = (props: { contacts: IUser[] }) => {
         navigate("FriendInviteRecordScreen")
       }} icon={require('assets/icons/friend-add.svg')} bottomLine={props.contacts.length > 1} title="新的好友" />
       <View style={{
-        marginBottom: scale(14)
+        marginBottom: s(14)
       }}></View>
       {
         renderState()
@@ -48,7 +48,7 @@ const FriendListView = (props: { contacts: IUser[] }) => {
           // ref={listRef}
           showsVerticalScrollIndicator={false}
           keyExtractor={(item) => "friend" + item.id.toString()}
-          estimatedItemSize={scale(76)}
+          estimatedItemSize={s(76)}
           data={props.contacts}
           renderItem={({ item, index }) => {
             return <ContractListItem onPress={async () => {

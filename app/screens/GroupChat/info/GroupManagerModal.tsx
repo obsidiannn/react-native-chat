@@ -7,12 +7,12 @@ import { GroupChatUiContext } from "../context";
 import BaseModal from "app/components/base-modal";
 import { useTranslation } from "react-i18next";
 import { IModel } from "@repo/enums";
-import { scale } from "app/utils/size";
+import { s } from "app/utils/size";
 import { colors } from "app/theme";
-import Icon from "app/components/Icon";
+import { Icon } from "app/components/Icon/Icon";
 import AvatarComponent from "app/components/Avatar";
 import { useRecoilValue } from "recoil";
-import { ColorsState } from "app/stores/system";
+import { ColorsState, ThemeState } from "app/stores/system"
 
 export interface GroupManagerModalRef {
   open: (groupId: number) => void;
@@ -27,6 +27,7 @@ export default forwardRef((props: {
   const selectMemberModalRef = useRef<SelectMemberModalType>(null)
   const themeColor = useRecoilValue(ColorsState)
   const { t } = useTranslation('screens')
+  const $theme = useRecoilValue(ThemeState);
   const managerDescribe = [
     t('groupChat.label_manager_1'),
     t('groupChat.label_manager_2'),
@@ -56,42 +57,42 @@ export default forwardRef((props: {
   return <BaseModal visible={visible} onClose={onClose} title={'管理員'} animationType="slide" styles={{
     flex: 1,
     backgroundColor: themeColor.secondaryBackground,
-    paddingTop: scale(24),
+    paddingTop: s(24),
   }} >
     <ScrollView style={{
       ...styles.mainContainer,
       backgroundColor: themeColor.background,
-      borderTopLeftRadius: scale(24),
-      borderTopRightRadius: scale(24),
+      borderTopLeftRadius: s(24),
+      borderTopRightRadius: s(24),
     }}>
       <View style={{ marginTop: "5%" }}>
         {
           managerDescribe.map(
             (e, i) => {
               return <View style={styles.groupDescribe} key={"label_" + i}>
-                <Icon path={require('assets/icons/bell.svg')} width={14} height={14} />
-                <Text style={{ color: "#6b7280", margin: scale(5) }} key={i}> {e} </Text>
+                <Icon name={$theme==='dark'?"bellDark":"bellLight"} />
+                <Text style={{ color: "#6b7280", margin: s(5) }} key={i}> {e} </Text>
               </View>
             }
           )
         }
       </View>
 
-      <View style={{ marginBottom: scale(12) }}>
+      <View style={{ marginBottom: s(12) }}>
         <View style={styles.managerList}>
           {
             managers.map((e, i) => {
               return <View style={{
                 ...styles.managerItem,
-                marginTop: i === 0 ? 0 : scale(14)
+                marginTop: i === 0 ? 0 : s(14)
               }} key={e.id + "member"}>
                 <View style={{ flexDirection: "row", alignItems: "center" }}>
                   <AvatarComponent url={e.avatar} enableAvatarBorder />
-                  <Text style={{ ...styles.memberText, marginLeft: scale(10), color: themeColor.text }}>{e.name}</Text>
+                  <Text style={{ ...styles.memberText, marginLeft: s(10), color: themeColor.text }}>{e.name}</Text>
                 </View>
 
                 <TouchableOpacity
-                  style={{ padding: scale(4) }}
+                  style={{ padding: s(4) }}
                   onPress={async () => {
                     await groupService.adminRemove({
                       id: groupId ?? -1,
@@ -101,7 +102,7 @@ export default forwardRef((props: {
                   }}>
                   <Image source={require('assets/icons/destory.svg')}
                     style={{
-                      width: scale(28), height: scale(28),
+                      width: s(28), height: s(28),
                       tintColor: colors.palette.gray400
                     }} />
                 </TouchableOpacity>
@@ -152,14 +153,14 @@ export default forwardRef((props: {
           }}
         >
           <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-            <Icon path={require('assets/icons/circle-plus-primary.svg')} width={48} height={48} />
+            <Icon name={$theme==='dark'?"plusAddDark":"plusAddLight"} size={48} />
             <Text style={{
               ...styles.memberText,
               color: themeColor.text,
-              marginLeft: scale(10)
+              marginLeft: s(10)
             }}>{t('groupChat.btn_add_manager')}</Text>
           </View>
-          <Icon path={require("assets/icons/arrow-right-gray.svg")} />
+          <Icon name={"arrowRight"} />
         </TouchableOpacity>
 
       </View>
@@ -183,56 +184,56 @@ const styles = StyleSheet.create({
 
   titleStyle: {
     color: "black",
-    marginLeft: scale(30),
+    marginLeft: s(30),
     marginTop: "5%",
     marginBottom: "5%",
     fontWeight: "bold",
-    fontSize: scale(16)
+    fontSize: s(16)
   },
   groupDescribe: {
     backgroundColor: "#f3f4f6",
-    padding: scale(12),
-    borderRadius: scale(15),
-    marginTop: scale(8),
+    padding: s(12),
+    borderRadius: s(15),
+    marginTop: s(8),
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center'
   },
   managerList: {
     // backgroundColor:"yellow",
-    marginTop: scale(18)
+    marginTop: s(18)
   },
   managerItem: {
 
-    borderRadius: scale(15),
-    paddingVertical: scale(12),
+    borderRadius: s(15),
+    paddingVertical: s(12),
     display: 'flex',
     flexDirection: "row",
     justifyContent: 'space-between',
     alignItems: 'center'
   },
   avatar: {
-    width: scale(50),
-    height: scale(50),
-    borderRadius: scale(25),
+    width: s(50),
+    height: s(50),
+    borderRadius: s(25),
     borderWidth: 1,
     borderColor: '#F0F0F0',
   },
 
 
   button: {
-    marginTop: scale(40),
-    marginBottom: scale(40),
-    borderRadius: scale(15),
-    paddingVertical: scale(15),
+    marginTop: s(40),
+    marginBottom: s(40),
+    borderRadius: s(15),
+    paddingVertical: s(15),
     justifyContent: 'center',
   },
   buttonFont: {
-    fontSize: scale(14),
+    fontSize: s(14),
     textAlign: "center"
   },
   memberText: {
-    fontSize: scale(16),
+    fontSize: s(16),
     fontWeight: "500",
   }
 

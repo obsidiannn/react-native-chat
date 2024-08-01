@@ -1,4 +1,4 @@
-import { scale } from "app/utils/size"
+import { s } from "app/utils/size"
 import { View, ActivityIndicator, Text } from "react-native"
 
 const LoadingComponent = (props: {
@@ -11,7 +11,7 @@ const LoadingComponent = (props: {
         justifyContent: 'center'
     }}>
         <ActivityIndicator size="large" color="black" />
-        <Text style={{ fontWeight: 400, marginTop: scale(28) }}>
+        <Text style={{ fontWeight: 400, marginTop: s(28) }}>
             {props.label ?? '加载中，稍等片刻...'}
         </Text>
     </View>

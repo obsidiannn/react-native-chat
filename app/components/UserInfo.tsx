@@ -3,7 +3,7 @@ import * as clipboard from 'expo-clipboard';
 import { Image } from "expo-image";
 import { IUser } from "drizzle/schema";
 import { useTranslation } from 'react-i18next';
-import { scale, verticalScale } from "app/utils/size";
+import { s, verticalScale } from "app/utils/size";
 import toast from "app/utils/toast";
 export default (props: {
     user: IUser;
@@ -14,7 +14,7 @@ export default (props: {
         <View style={{
             display: 'flex',
             flexDirection: 'column',
-            padding: scale(8),
+            padding: s(8),
             justifyContent: 'center'
         }}>
             <Text style={styles.nameText}>{props.user.nickName}</Text>
@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
-        paddingHorizontal: scale(15),
+        paddingHorizontal: s(15),
     },
     avatar: {
         width: verticalScale(50),
@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
         borderRadius: verticalScale(25),
         borderWidth: 1,
         borderColor: '#F0F0F0',
-        marginRight: scale(15),
+        marginRight: s(15),
     },
     nameText: {
         fontSize: 16,

@@ -16,13 +16,13 @@ export const EmptyComponent = (props: EmptyProps) => {
         justifyContent: 'center'
     }}>
         <Image source={require('assets/icons/empty.svg')} contentFit="fill" style={{
-            width: scale(36),
-            height: scale(72),
+            width: s(36),
+            height: s(72),
         }} />
-        <Text style={{ fontWeight: 500, marginTop: scale(8) }}>
+        <Text style={{ fontWeight: 500, marginTop: s(8) }}>
             {props.label ?? '目前没有打开的社区'}
         </Text>
-        <Text style={{ marginTop: scale(4) }}>
+        <Text style={{ marginTop: s(4) }}>
             但感觉良好
         </Text>
     </View>

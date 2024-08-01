@@ -1,13 +1,13 @@
 import BaseModal from "app/components/base-modal";
-import { ColorsState } from "app/stores/system";
-import { scale } from "app/utils/size";
+import { ColorsState, ThemeState } from "app/stores/system"
+import { s } from "app/utils/size";
 import { forwardRef, useContext, useImperativeHandle, useRef, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { useRecoilValue } from "recoil";
 import MenuItem from "./components/MenuItem";
 import { useTranslation } from "react-i18next";
-import Icon from "app/components/Icon";
 import { ConfirmModal,ConfirmModalType } from "app/components/ConfirmModal";
+import { Icon } from "app/components/Icon/Icon";
 import { GroupMemberItemVO } from "../../../../../../packages/types/dist/client/group";
 import { IModel } from "@repo/enums";
 import UserInfoModal, { UserInfoModalType } from "app/screens/UserInfo/UserInfoModal";
@@ -31,6 +31,8 @@ export default forwardRef((_, ref) => {
     const { t } = useTranslation('screens')
     const [member, setMember] = useState<GroupMemberItemVO | null>(null)
     const [self, setSelf] = useState<GroupMemberItemVO | null>(null)
+    const $theme = useRecoilValue(ThemeState);
+
     const onClose = () => {
         setMember(null)
         setSelf(null)
@@ -47,20 +49,20 @@ export default forwardRef((_, ref) => {
 
     return <BaseModal visible={visible} onClose={onClose} title="群设置" styles={{
         backgroundColor: themeColor.secondaryBackground,
-        paddingTop: scale(24),
+        paddingTop: s(24),
         flex: 1
     }}>
         <View style={{
             flex: 1,
-            borderTopLeftRadius: scale(24),
-            borderTopRightRadius: scale(24),
+            borderTopLeftRadius: s(24),
+            borderTopRightRadius: s(24),
             backgroundColor: themeColor.background,
-            padding: scale(15),
+            padding: s(15),
         }}>
             {/* 查看个人资料 */}
             <MenuItem label={t('groupChat.btn_user_profile')}
-                leftIcon={<Icon path={require('assets/icons/user-profile.svg')} width={16} height={20} />}
-                rightComponent={<Icon path={require('assets/icons/arrow-right-gray.svg')} />}
+                leftIcon={<Icon name={$theme === 'dark'?"profileDark":"profileLight"} />}
+                rightComponent={<Icon name={"arrowRight"} />}
                 onPress={() => {
                     userInfoModalRef.current?.open(member?.uid ?? -1, self?.uid ?? 0)
                 }}
@@ -69,7 +71,7 @@ export default forwardRef((_, ref) => {
                 // 添加群备注
                 (self?.uid === member?.uid || (self?.role ?? IModel.IGroup.IGroupMemberRoleEnum.MEMBER) < IModel.IGroup.IGroupMemberRoleEnum.MEMBER) ?
                     <MenuItem label={t('groupChat.btn_change_alias')}
-                        leftIcon={<Icon path={require('assets/icons/pencel.svg')} width={20} height={20} />}
+                        leftIcon={<Icon name={$theme === 'dark'?"editDark":"editLight"} />}
                         onPress={() => {
                             confirmInputModalRef.current?.open({
                                 title: t('groupChat.btn_change_alias'),
@@ -124,7 +126,7 @@ export default forwardRef((_, ref) => {
                                     }
                                 });
                             }}
-                            leftIcon={<Icon path={require('assets/icons/remove.svg')} width={20} height={20} color="#FB3737" />}
+                            leftIcon={<Icon name={$theme ==='dark'?"trashDark":"trashLight"} />}
                         />
                         <MenuItem label={t('groupChat.btn_block_user')} labelColor="#FB3737"
                             onPress={() => {
@@ -136,7 +138,7 @@ export default forwardRef((_, ref) => {
                                     }
                                 });
                             }}
-                            leftIcon={<Icon path={require('assets/icons/block.svg')} width={20} height={20} color="#FB3737" />}
+                            leftIcon={<Icon name={"blockRed"}/>}
                         />
                     </> : null
             }
@@ -154,6 +156,6 @@ export default forwardRef((_, ref) => {
 
 const styles = StyleSheet.create({
     bottomLine: {
-        borderBottomWidth: scale(0.5),
+        borderBottomWidth: s(0.5),
     }
 })

@@ -2,7 +2,7 @@
 import { Pressable, TouchableOpacity, StyleSheet, Text, View, GestureResponderEvent, Platform } from "react-native"
 import { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import { MessageType } from "./chat-ui";
-import { scale } from "app/utils/size";
+import { s } from "app/utils/size";
 import { Image } from "expo-image";
 
 
@@ -106,8 +106,8 @@ const styles = StyleSheet.create({
         // alignItems: 'center',
         alignSelf: 'center',
         // justifyContent: 'space-around',
-        padding: scale(8),
-        borderRadius: scale(16),
+        padding: s(8),
+        borderRadius: s(16),
         borderBottomEndRadius: 0,
         ...Platform.select({
             ios: {
@@ -123,9 +123,9 @@ const styles = StyleSheet.create({
 
     },
     line_button_style: {
-        padding: scale(8),
+        padding: s(8),
         alignItems: 'center',
-        marginRight: scale(6)
+        marginRight: s(6)
     },
     icon_btn: {
         width: 32, height: 32,

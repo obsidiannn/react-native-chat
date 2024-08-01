@@ -1,7 +1,7 @@
 import { FlashList } from "@shopify/flash-list"
 import { EmptyComponent } from "app/components/EmptyComponent"
 import LoadingComponent from "app/components/Loading"
-import { scale } from "app/utils/size"
+import { s } from "app/utils/size"
 import { useState } from "react"
 import { StyleSheet, Text, View, ActivityIndicator } from "react-native"
 import { useRecoilValue } from "recoil"
@@ -29,7 +29,7 @@ const GroupListView = (props: { groups: GroupSingleItem[] }) => {
                 navigate("FriendInviteRecordScreen")
             }} icon={require('assets/icons/group-add.svg')} title="群组等待验证" />
             <View style={{
-                marginBottom: scale(14)
+                marginBottom: s(14)
             }} />
             {
                 renderState()
@@ -47,7 +47,7 @@ const GroupListView = (props: { groups: GroupSingleItem[] }) => {
                     // ref={listRef}
                     showsVerticalScrollIndicator={false}
                     keyExtractor={(item) => "group" + item.id.toString()}
-                    estimatedItemSize={scale(76)}
+                    estimatedItemSize={s(76)}
                     data={props.groups}
                     renderItem={({ item, index }) => {
                         return <ContractListItem

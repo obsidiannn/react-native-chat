@@ -6,7 +6,7 @@ import QRCode from 'react-native-qrcode-svg';
 import ViewShot, { captureRef } from "react-native-view-shot";
 import BaseModal from "app/components/base-modal";
 import { useTranslation } from "react-i18next";
-import { scale } from "app/utils/size";
+import { s } from "app/utils/size";
 import { Button } from "app/components";
 import toast from "app/utils/toast";
 import { useRecoilValue } from "recoil";
@@ -43,12 +43,12 @@ export default forwardRef((_, ref) => {
     }
     return <BaseModal visible={visible} onClose={onClose} title={'群二维码'} animationType="slide" >
         <View style={{
-            paddingHorizontal: scale(15),
+            paddingHorizontal: s(15),
         }}>
             <View style={{
-                borderRadius: scale(16),
-                padding: scale(15),
-                marginTop: scale(30),
+                borderRadius: s(16),
+                padding: s(15),
+                marginTop: s(30),
             }}>
                 <View style={{
                     display: 'flex',
@@ -56,25 +56,25 @@ export default forwardRef((_, ref) => {
                     alignItems: 'center',
                 }}>
                     <Image source={group?.avatar} style={{
-                        width: scale(50),
-                        height: scale(50),
-                        borderRadius: scale(10),
+                        width: s(50),
+                        height: s(50),
+                        borderRadius: s(10),
                         borderWidth: 1,
                         borderColor: themeColor.border,
-                        marginRight: scale(10),
+                        marginRight: s(10),
                     }} />
                     <Text style={{
-                        fontSize: scale(24),
+                        fontSize: s(24),
                         color: themeColor.text,
                         fontWeight: '400',
                     }}>{group?.name}
-                        <Text style={{ fontSize: scale(14), color: colors.palette.gray400, fontWeight: '400', marginHorizontal: scale(12) }}>({count}人)</Text>
+                        <Text style={{ fontSize: s(14), color: colors.palette.gray400, fontWeight: '400', marginHorizontal: s(12) }}>({count}人)</Text>
                     </Text>
                 </View>
                 <ViewShot ref={viewRef} style={{
-                    padding: scale(14),
-                    borderRadius: scale(16),
-                    marginTop: scale(40),
+                    padding: s(14),
+                    borderRadius: s(16),
+                    marginTop: s(40),
                     backgroundColor: 'white',
                     shadowColor: "#000",
                     shadowOffset: {
@@ -107,13 +107,13 @@ export default forwardRef((_, ref) => {
                         });
                     }}
                         style={{
-                            height: scale(42),
-                            marginTop: scale(40),
-                            borderRadius: scale(21),
+                            height: s(42),
+                            marginTop: s(40),
+                            borderRadius: s(21),
                             backgroundColor: themeColor.primary
                         }} >
                         <Text style={{
-                            fontSize: scale(14),
+                            fontSize: s(14),
                             fontWeight: '700',
                             color: themeColor.textChoosed
                         }}>

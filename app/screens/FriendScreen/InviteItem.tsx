@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { IModel } from "@repo/enums";
 import { navigate } from "app/navigators";
 import { IServer } from "@repo/types";
-import { scale } from "app/utils/size";
+import { s } from "app/utils/size";
 dayjs.extend(relativeTime)
 export default (props: {
     item: IServer.IFriendApply,
@@ -55,23 +55,23 @@ export default (props: {
 
 const styles = StyleSheet.create({
     container: {
-        height: scale(76),
+        height: s(76),
         width: '100%',
-        paddingHorizontal: scale(16),
+        paddingHorizontal: s(16),
         display: 'flex',
         flexDirection: 'row',
     },
     avatarContainer: {
-        width: scale(57),
-        height: scale(76),
+        width: s(57),
+        height: s(76),
         display: 'flex',
         justifyContent: 'center',
     },
     avatar: {
-        width: scale(48),
-        height: scale(48),
-        borderRadius: scale(24),
-        marginRight: scale(10),
+        width: s(48),
+        height: s(48),
+        borderRadius: s(24),
+        marginRight: s(10),
         borderWidth: 1,
         borderColor: '#F0F0F0'
     },
@@ -101,6 +101,6 @@ const styles = StyleSheet.create({
         fontWeight: '400',
         fontSize: 12,
         textAlign: 'left',
-        marginRight: scale(6),
+        marginRight: s(6),
     }
 });

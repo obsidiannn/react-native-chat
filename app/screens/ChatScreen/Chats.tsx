@@ -28,7 +28,7 @@ const ChatView = () => {
                 keyExtractor={(item) => item.id}
                 data={chats}
                 renderItem={({ item, index }) => renderItem(item, index === chats.length - 1)}
-                estimatedItemSize={scale(76)}
+                estimatedItemSize={s(76)}
                 showsVerticalScrollIndicator={false}
             />
         </View>
@@ -62,7 +62,7 @@ const ChatView = () => {
     }
     /**
      * 点击跳转
-     * @param item 
+     * @param item
      */
     const itemPress = (item: ChatDetailItem) => {
         if (item.type === IModel.IChat.IChatTypeEnum.NORMAL) {

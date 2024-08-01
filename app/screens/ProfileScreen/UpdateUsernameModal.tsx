@@ -1,12 +1,12 @@
+import { StyleSheet, Text, View, TextInput } from "react-native"
 import { Button } from "app/components";
-import Icon from "app/components/Icon";
+import {Icon} from "app/components/Icon/Icon";
 import { ScreenModal, ScreenModalType } from "app/components/ScreenModal";
 import { AuthService } from "app/services/auth.service";
 import { ColorsState } from "app/stores/system";
-import { scale, verticalScale } from "app/utils/size";
+import { s, verticalScale } from "app/utils/size";
 import { forwardRef, useImperativeHandle, useRef, useState } from "react"
 import { useTranslation } from "react-i18next";
-import { StyleSheet, Text, View, TextInput } from "react-native"
 import { useRecoilValue } from "recoil";
 
 
@@ -19,7 +19,7 @@ export interface UpdateUsernameModalRef {
     ) => void;
 
 }
-export const UpdateUserNameModal= forwardRef((_, ref) => {
+export default  forwardRef((_, ref) => {
     const maxLength = 60
     const { t } = useTranslation('screens')
     const [val, setVal] = useState('')
@@ -59,7 +59,7 @@ export const UpdateUserNameModal= forwardRef((_, ref) => {
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            paddingHorizontal: scale(16)
+            paddingHorizontal: s(16)
         }}>
             <View style={{
                 flex: 1,
@@ -67,7 +67,7 @@ export const UpdateUserNameModal= forwardRef((_, ref) => {
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
-                marginTop: scale(22)
+                marginTop: s(22)
             }}>
                 <TextInput
                     cursorColor={themeColor.text}
@@ -79,8 +79,8 @@ export const UpdateUserNameModal= forwardRef((_, ref) => {
                         color: themeColor.text,
                         backgroundColor: themeColor.background,
                         width: '100%',
-                        borderRadius: scale(12),
-                        paddingLeft: scale(14)
+                        borderRadius: s(12),
+                        paddingLeft: s(14)
                     }}
                     onChangeText={(v) => {
                         handleTextChange(v)
@@ -90,22 +90,22 @@ export const UpdateUserNameModal= forwardRef((_, ref) => {
                 <Text style={{
                     color: themeColor.border,
                     alignSelf: 'flex-end',
-                    fontSize: scale(12),
-                    marginVertical: scale(8),
-                    marginRight: scale(4)
+                    fontSize: s(12),
+                    marginVertical: s(8),
+                    marginRight: s(4)
                 }}>
                     {val.length}/{maxLength}
                 </Text>
 
                 <View style={{
-                    marginTop: scale(32),
+                    marginTop: s(32),
                     display: 'flex',
                     flexDirection: 'row',
                     alignItems: 'stretch',
-                    padding: scale(12)
+                    padding: s(12)
                 }}>
-                    <View style={{ alignItems: 'center', padding: scale(4) }}>
-                        <Icon path={require("assets/icons/point.svg")} width={8} height={8} />
+                    <View style={{ alignItems: 'center', padding: s(4) }}>
+                        <Icon name={"pointDark"} />
                     </View>
                     <Text style={{
                         ...styles.paragraph
@@ -119,10 +119,10 @@ export const UpdateUserNameModal= forwardRef((_, ref) => {
                     display: 'flex',
                     flexDirection: 'row',
                     alignItems: 'stretch',
-                    padding: scale(12)
+                    padding: s(12)
                 }}>
-                    <View style={{ alignItems: 'center', padding: scale(4) }}>
-                        <Icon path={require("assets/icons/point.svg")} width={8} height={8} />
+                    <View style={{ alignItems: 'center', padding: s(4) }}>
+                        <Icon name={"pointDark"} />
                     </View>
                     <Text style={{
                         ...styles.paragraph
@@ -136,10 +136,10 @@ export const UpdateUserNameModal= forwardRef((_, ref) => {
                     display: 'flex',
                     flexDirection: 'row',
                     alignItems: 'stretch',
-                    padding: scale(12)
+                    padding: s(12)
                 }}>
-                    <View style={{ alignItems: 'center', padding: scale(4) }}>
-                        <Icon path={require("assets/icons/point.svg")} width={8} height={8} />
+                    <View style={{ alignItems: 'center', padding: s(4) }}>
+                        <Icon name={"pointDark"} />
                     </View>
                     <Text style={{
                         ...styles.paragraph
@@ -155,7 +155,7 @@ export const UpdateUserNameModal= forwardRef((_, ref) => {
                 containerStyle={{
                     ...styles.nextButton,
                     backgroundColor: themeColor.primary,
-                    marginBottom: scale(12)
+                    marginBottom: s(12)
                 }}
                 onPress={async () => {
                     if (loading) {
@@ -186,13 +186,13 @@ export const UpdateUserNameModal= forwardRef((_, ref) => {
 
 const styles = StyleSheet.create({
     paragraph: {
-        fontSize: scale(14),
+        fontSize: s(14),
     },
     nextButton: {
-        height: scale(50),
+        height: s(50),
         width: '100%',
-        marginTop: scale(64),
-        borderRadius: scale(16),
+        marginTop: s(64),
+        borderRadius: s(16),
     },
     nextButtonLabel: {
         color: 'white',

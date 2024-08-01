@@ -1,5 +1,5 @@
 import { colors } from "app/theme"
-import { s, scale } from "app/utils/size"
+import { s } from "app/utils/size"
 import { ImageStyle } from "expo-image"
 import { View, ViewStyle } from "react-native"
 import { NetworkImage } from "./NetworkImage";
@@ -42,7 +42,7 @@ const $container: ViewStyle = {
     display: 'flex'
 }
 const $border: ViewStyle = {
-    borderWidth: scale(3),
+    borderWidth: s(3),
     borderStartColor: 'red',
     borderEndColor: '#890084',
     borderTopColor: '#8A0184',
@@ -57,10 +57,10 @@ const $badge: ViewStyle = {
     bottom: 0,
     right: 15,
     alignSelf: 'flex-end',
-    padding: scale(6),
+    padding: s(6),
     borderColor: '#ffffff',
-    borderWidth: scale(2),
-    borderRadius: scale(12),
+    borderWidth: s(2),
+    borderRadius: s(12),
     backgroundColor: colors.palette.gray400,
 };
 

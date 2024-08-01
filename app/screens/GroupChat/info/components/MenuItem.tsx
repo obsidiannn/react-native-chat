@@ -1,4 +1,4 @@
-import { scale, verticalScale } from "app/utils/size";
+import { s } from "app/utils/size";
 import { Image } from "expo-image";
 import { Pressable, Text, TouchableOpacity, View } from "react-native";
 
@@ -13,31 +13,31 @@ export default (props: {
     return <Pressable onPress={() => {
         props.onPress?.();
     }} style={{
-        borderRadius: scale(14),
+        borderRadius: s(14),
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        padding: scale(10),
-        paddingVertical: scale(16)
+        padding: s(10),
+        paddingVertical: s(16)
     }}>
         <View style={{
             display: 'flex',
             flexDirection: 'row',
             alignItems: 'center',
-            padding: scale(8),
+            padding: s(8),
         }}>
             {props.leftIcon}
             <Text style={{
-                fontSize: scale(15),
+                fontSize: s(15),
                 fontWeight: '400',
                 color: (props.labelColor ?? '#000'),
-                marginHorizontal: scale(6)
+                marginHorizontal: s(6)
             }}>{props.label}</Text>
         </View>
         {props.rightComponent ?? (props.icon ? <Image source={props.icon} style={{
-            width: scale(24),
-            height: scale(24),
+            width: s(24),
+            height: s(24),
         }} /> : null)}
 
     </Pressable>
