@@ -9,15 +9,26 @@ import { IModel } from "@repo/enums";
 
 export class LocalChatService {
 
-
     static queryPage() {
 
     }
-
-    static async findByIdIn(chatIds: string[]): Promise<IChat[]> {
+    // 不存在过期策略的chat list
+    static async findByIdInWithoutTimeout(chatIds: string[]): Promise<IChat[]> {
         if (chatIds.length <= 0)
             return []
         return await GetDB().select().from(chats).where(
+            and(
+                inArray(chats.id, chatIds),
+                gte(chats.refreshAt, delaySecond())
+            )
+        )
+    }
+    // 存在过期策略的chat list
+    static async findByIdInWithTimeout(chatIds: string[]): Promise<IChat[]> {
+        if (chatIds.length <= 0)
+            return []
+        const db = GetDB()
+        return db.select().from(chats).where(
             and(
                 inArray(chats.id, chatIds),
                 gte(chats.refreshAt, delaySecond())
@@ -46,9 +57,16 @@ export class LocalChatService {
         if (!db) {
             return
         }
-        const ids = entities.map(d => d.id)
-        await db.delete(chats).where(inArray(chats.id, ids)).returning({ deletedId: chats.id })
-        await db.insert(chats).values(entities);
+        const now = dayjs().unix()
+        await db.transaction(async (tx) => {
+            for (let index = 0; index < entities.length; index++) {
+                const e = entities[index];
+                await tx.insert(chats).values(e).onConflictDoUpdate({ target: chats.id, set: { ...e, refreshAt: now } })
+            }
+        });
+
+        console.log('[sqlite] chat save batch ', entities.length);
+
     }
 
     static async setTop(chatId: string, isTop: number) {

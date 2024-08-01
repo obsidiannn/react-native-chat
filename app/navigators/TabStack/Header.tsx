@@ -1,4 +1,4 @@
-import { TouchableOpacity, View } from 'react-native';
+import { Text, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ColorsState, ThemeState } from 'app/stores/system';
 import { useRecoilValue } from 'recoil';

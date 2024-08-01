@@ -3,7 +3,7 @@ import ConversationItem, { IContactListItemProps } from "app/components/Conversa
 import { EmptyComponent } from "app/components/EmptyComponent"
 import LoadingComponent from "app/components/Loading"
 import { formatDate } from "app/utils/formatDate"
-import { scale } from "app/utils/size"
+import { s } from "app/utils/size"
 import { useState } from "react"
 import { StyleSheet, Text, View, ActivityIndicator } from "react-native"
 import dayjs from 'dayjs'

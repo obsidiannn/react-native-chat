@@ -7,6 +7,7 @@ const getRelationList = async (userIds: number[]) => await createInstance(true).
   items: {
     userId: number;
     status: boolean;
+    chatId: string
   }[]
 };
 const updateRemark = async (id: number, remark: string): Promise<null> => await createInstance(true).post('/friends/updateRemark', { id, remark });

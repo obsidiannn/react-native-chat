@@ -1,4 +1,4 @@
-import { scale } from "app/utils/size"
+import { s } from "app/utils/size"
 import { Image } from "expo-image"
 import { StyleProp, Text, View, ViewStyle } from "react-native"
 

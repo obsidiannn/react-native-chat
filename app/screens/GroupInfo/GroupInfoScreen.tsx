@@ -122,7 +122,7 @@ export const GroupInfoScreen = ({ navigation, route }: Props) => {
                         </View>
                         <Button onPress={() => {
                             if ((group?.role ?? -1) > 0) {
-                                chatService.chatDetail(group?.chatId ?? '').then(res => {
+                                chatService.mineChatList(group?.chatId ?? '').then(res => {
                                     if (res.length > 0) {
                                         const chatItem = res[0]
                                         navigation.navigate('GroupChatScreen', {

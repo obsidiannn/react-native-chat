@@ -22,7 +22,6 @@ export const Init = async (name: string) => {
         location: Platform.OS === 'ios' ? IOS_LIBRARY_PATH : ANDROID_DATABASE_PATH,
         // encryptionKey: key
     });
-
     db = drizzle(sqlite, { schema });
     console.log('db migrate');
     return new Promise<void>(async (resolve, reject) => {

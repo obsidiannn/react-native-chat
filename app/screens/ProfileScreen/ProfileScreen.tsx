@@ -101,7 +101,7 @@ export const ProfileScreen = () => {
                     </View>,
                 },
                 {
-                    icon: <Icon name={$theme == "dark" ? "editDark" : "editLight"} />,
+                    icon: <Icon name={$theme == "dark" ? "profileDark" : "profileLight"} />,
                     title: t('profile.title_username'),
                     onPress: () => {
                         updateUsernameModalRef.current?.open({

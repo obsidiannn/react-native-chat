@@ -20,7 +20,7 @@ const dto2Entity = (dto: ChatDetailItem): IChat => {
         chatUserId: dto.chatUserId,
         // 免打扰 1-是 0-否 默认0
         isMute: dto.isMute,
-        describe: dto.describe
+        describe: dto.describe ?? ''
     }
     return entity
 }
@@ -28,7 +28,7 @@ const dto2Entity = (dto: ChatDetailItem): IChat => {
 const entity2Dto = (entity: IChat): ChatDetailItem => {
     const dto: ChatDetailItem = {
         id: entity.id,
-        creatorId: entity.creatorId,
+        creatorId: entity.creatorId ?? '',
         type: entity.type,
         status: entity.status,
         isEnc: entity.isEnc,
@@ -38,7 +38,7 @@ const entity2Dto = (entity: IChat): ChatDetailItem => {
         lastTime: entity.lastTime,
         createdAt: entity.createdAt,
         avatar: entity.avatar,
-        sourceId: entity.sourceId,
+        sourceId: Number(entity.sourceId ?? 0),
         chatAlias: entity.chatAlias,
         isTop: entity.isTop,
         chatUserId: entity.chatUserId,

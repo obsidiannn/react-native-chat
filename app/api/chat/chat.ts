@@ -1,11 +1,21 @@
 import { createInstance } from '../req';
 import {
   BaseIdsArrayReq, BaseArrayResp,
-  ChatListItem, ChatDetailItem, ChatRaiseTopReq,
+  ChatListItem, ChatDetailItem,
+  ChatRaiseTopReq, ChatSequenceItem
 } from "@repo/types";
+
+// 我的会话列表（id）有序
+const mineChatIdList = async (): Promise<BaseArrayResp<string>> => await createInstance(true).post('/chats/mine-id-list');
 
 // 获取我的会话列表
 const mineChatList = async (): Promise<BaseArrayResp<ChatListItem>> => await createInstance(true).post('/chats/mine-list');
+const chatByIds = async (chatIds: string[]):
+  Promise<BaseArrayResp<ChatDetailItem>> => await createInstance(true).post('/chats/chat-by-ids', { chatIds });
+
+const queryChatSequence = async (chatIds: string[]):
+  Promise<BaseArrayResp<ChatSequenceItem>> => await createInstance(true).post('/chats/chat-sequence', { chatIds });
+
 const findChatIdByUserId = async (userId: number): Promise<{ id: string }> => await createInstance(true).post('/chats/id-by-user', { userId })
 
 const mineChatDetailList = async (chatId?: string): Promise<BaseArrayResp<ChatDetailItem>> => await createInstance(true).post('/chats/mine-chat', { chatId: chatId })
@@ -22,11 +32,14 @@ const raiseTop = async (param: ChatRaiseTopReq): Promise<{ isTop: number }> => c
 const tokenRegister = async (param: { token: string }): Promise<void> => await createInstance(true).post('/chats/tokenRegister', param);
 
 export default {
+  mineChatIdList,
   mineChatList,
+  chatByIds,
   chatDetail,
   deleteChat,
   raiseTop,
   mineChatDetailList,
   findChatIdByUserId,
-  tokenRegister
+  tokenRegister,
+  queryChatSequence
 }

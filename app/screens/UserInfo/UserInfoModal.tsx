@@ -37,6 +37,7 @@ export default forwardRef((_, ref) => {
                         setUser({
                             ...u,
                             isFriend: item.status == true ? 1 : 0,
+                            chatId: item.chatId
                         } as IUser)
                     }
                 })
@@ -50,7 +51,7 @@ export default forwardRef((_, ref) => {
     return (
         <ScreenModal ref={screenModalRef} title="">
             {user ?
-                <View style={{ flex: 1,backgroundColor:"red" }}>
+                <View style={{ flex: 1, backgroundColor: "red" }}>
                     <View style={{
                         backgroundColor: themeColor.secondaryBackground,
                     }}>
@@ -62,7 +63,7 @@ export default forwardRef((_, ref) => {
                         paddingHorizontal: s(16),
                         alignItems: 'center',
                         marginTop: verticalScale(40),
-                        backgroundColor:"red"
+                        backgroundColor: "red"
                     }}>
                         {
                             selfId !== user?.id ?
@@ -74,19 +75,18 @@ export default forwardRef((_, ref) => {
                                                 userId: user.id
                                             })
                                         } else {
-                                            chatService.getChatIdByUserId(user.id).then(id => {
-                                                if (id !== null) {
-                                                    chatService.mineChatList(id).then(res => {
-                                                        if (res.length > 0) {
-                                                            console.log(res[0]);
-                                                            navigate('UserChatScreen', {
-                                                                item: res[0]
-                                                            })
-                                                        }
+                                            if (user.chatId && user.chatId !== '') {
+                                                chatService.mineChatList(user.chatId).then(res => {
+                                                    if (res.length > 0) {
+                                                        console.log(res[0]);
+                                                        navigate('UserChatScreen', {
+                                                            item: res[0]
+                                                        })
+                                                    }
 
-                                                    })
-                                                }
-                                            })
+                                                })
+                                            }
+
                                         }
                                     }}
                                     label={user.isFriend ? t('userInfo.label_start_chat') : t('userInfo.label_add_friend')}

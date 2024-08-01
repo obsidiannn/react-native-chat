@@ -258,7 +258,7 @@ const groupSingleInfo = async (ids: number[]) => {
         return result
     }
     const groups = await groupApi.groupSingleInfo({ ids: ids })
-    if (groups.items.length > 0) {
+    if (groups.items && groups.items.length > 0) {
         groups.items.forEach(g => {
             result.set(g.id, g)
         })
