@@ -11,7 +11,7 @@ import BlockButton from "app/components/BlockButton";
 import { StackScreenProps } from "@react-navigation/stack";
 import { Checkbox } from "./Checkbox";
 import { App } from "types/app";
-import ConfirmModal, { ConfirmModalType } from "app/components/ConfirmModal";
+import {ConfirmModal, ConfirmModalType } from "app/components/ConfirmModal";
 
 type Props = StackScreenProps<App.StackParamList, 'WelcomeScreen'>;
 export const WelcomeScreen = ({ navigation }: Props) => {
@@ -50,7 +50,7 @@ export const WelcomeScreen = ({ navigation }: Props) => {
           if (!protocolStatus) {
             confirmModalRef.current?.open({
               title:"确认阅读并同意相关协议",
-              desc: "确认阅读并同意相关协议",
+              content: "确认阅读并同意相关协议",
               onSubmit: () => {
                 navigation.navigate("UnlockScreen")
               }
@@ -65,7 +65,7 @@ export const WelcomeScreen = ({ navigation }: Props) => {
           if (!protocolStatus) {
             confirmModalRef.current?.open({
               title:"确认阅读并同意相关协议",
-              desc: "确认阅读并同意相关协议",
+              content: "确认阅读并同意相关协议",
               onSubmit: () => {
                 navigation.navigate("SignUpScreen")
               }

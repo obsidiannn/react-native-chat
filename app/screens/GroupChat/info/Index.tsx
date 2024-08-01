@@ -5,7 +5,7 @@ import MemberItem from "./components/MemberItem";
 import MenuItem from "./components/MenuItem";
 import QRcodeModal, { QRcodeModalRef } from "./QrcodeModal";
 import ApplyListModal, { ApplyListModalRef } from "./ApplyListModal";
-import ConfirmModal, { ConfirmModalType } from "app/components/ConfirmModal";
+import  {ConfirmModal, ConfirmModalType } from "app/components/ConfirmModal";
 import GoodManager, { GroupManagerModalRef } from "./GroupManagerModal";
 import { forwardRef, useCallback, useContext, useImperativeHandle, useMemo, useRef, useState } from "react";
 import SelectMemberModal, { SelectMemberModalType, SelectMemberOption } from "app/components/SelectMemberModal/Index"
@@ -302,7 +302,7 @@ export default forwardRef((_, ref) => {
                             onPress={() => {
                                 confirmModalRef.current?.open({
                                     title: t('groupChat.title_drop_message'),
-                                    desc: t('groupChat.title_drop_message_desc'),
+                                    content: t('groupChat.title_drop_message_desc'),
                                     onSubmit: () => {
                                         groupService.clearGroupMessages([groupContext.group.id], [groupContext.group?.chatId]).then(() => {
                                             const event: ClearChatMessageEvent = { chatId: groupContext.group.chatId, type: IModel.IClient.SocketTypeEnum.CLEAR_ALL_MESSAGE }
@@ -341,7 +341,7 @@ export default forwardRef((_, ref) => {
                         onPress={() => {
                             confirmModalRef.current?.open({
                                 title: t('groupChat.title_clear_message'),
-                                desc: t('groupChat.title_drop_message_desc'),
+                                content: t('groupChat.title_drop_message_desc'),
                                 onSubmit: () => {
                                     messageSendService.clearMineMessage([groupContext.group.chatId]).then(res => {
                                         const event: ClearChatMessageEvent = { chatId: groupContext.group.chatId, type: IModel.IClient.SocketTypeEnum.CLEAR_ALL_MESSAGE }
@@ -361,7 +361,7 @@ export default forwardRef((_, ref) => {
                     <Button onPress={() => {
                         confirmModalRef.current?.open({
                             title: t('groupChat.title_drop_group'),
-                            desc: t('groupChat.title_drop_group_desc'),
+                            content: t('groupChat.title_drop_group_desc'),
                             onSubmit: () => {
                                 console.log('解散羣聊');
                             }

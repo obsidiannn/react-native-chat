@@ -6,7 +6,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { s } from "app/utils/size"
 import Navbar from "app/components/Navbar"
 import { CardMenu } from "app/components/CardMenu/CardMenu"
-import ConfirmModal, { ConfirmModalType } from "app/components/ConfirmModal"
+import {ConfirmModal, ConfirmModalType } from "app/components/ConfirmModal"
 import { useRef } from "react"
 import { globalKV, globalStorage } from "app/utils/kv-tool"
 import RNRestart from 'react-native-restart';
@@ -59,7 +59,7 @@ export const SafetyScreen = () => {
                     title: "退出所有群聊",
                     onPress: () => {
                         confirmModalRef.current?.open({
-                            desc: "是否退出所有群聊？",
+                            content: "是否退出所有群聊？",
                             title: "退出所有群聊",
                             onCancel: () => { },
                             onSubmit: () => { }
@@ -71,7 +71,7 @@ export const SafetyScreen = () => {
                     title: "清空所有消息",
                     onPress: () => {
                         confirmModalRef.current?.open({
-                            desc: "是否清空所有消息？",
+                            content: "是否清空所有消息？",
                             title: "清空所有消息",
                             onCancel: () => { },
                             onSubmit: async () => {
@@ -93,7 +93,7 @@ export const SafetyScreen = () => {
                     },
                     onPress: () => {
                         confirmModalRef.current?.open({
-                            desc: "是否删除所有好友？",
+                            content: "是否删除所有好友？",
                             title: "删除所有好友",
                             onCancel: () => { },
                             onSubmit: () => {
@@ -110,7 +110,7 @@ export const SafetyScreen = () => {
                     },
                     onPress: () => {
                         confirmModalRef.current?.open({
-                            desc: "是否重置应用？",
+                            content: "是否重置应用？",
                             title: "重置应用",
                             onCancel: () => { },
                             onSubmit: () => {

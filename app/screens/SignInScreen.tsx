@@ -12,7 +12,7 @@ import * as FileSystem from 'expo-file-system';
 import toast from "app/utils/toast"
 import { restore } from "app/utils/account"
 import { App } from "types/app"
-import ConfirmModal, { ConfirmModalType } from "app/components/ConfirmModal"
+import {ConfirmModal, ConfirmModalType } from "app/components/ConfirmModal"
 type Props = StackScreenProps<App.StackParamList, 'SignInScreen'>;
 export const SignInScreen = ({ navigation }: Props) => {
   const $colors = useRecoilValue(ColorsState)
@@ -38,8 +38,8 @@ export const SignInScreen = ({ navigation }: Props) => {
         }}>
           <BlockButton onPress={async () => {
             confirmModalRef.current?.open({
-              desc: "是否导入备份文件？",
-              title: "导入后将覆盖已有的本地数据，导入后应用将重启。",
+              title: "是否导入备份文件？",
+              content: "导入后将覆盖已有的本地数据，导入后应用将重启。",
               onCancel: () => { },
               onSubmit: async () => {
                 const result = await DocumentPicker.getDocumentAsync({

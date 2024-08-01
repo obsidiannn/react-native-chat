@@ -1,6 +1,6 @@
 import { StyleSheet, View, Switch } from "react-native";
 import { useRef, useState, useContext, useMemo } from "react";
-import ConfirmModal, { ConfirmModalType } from "app/components/ConfirmModal";
+import  { ConfirmModal,ConfirmModalType } from "app/components/ConfirmModal";
 import messageSenderService from "app/services/message-send.service";
 import ActionItem from "./action-item";
 import { ChatDetailItem, ClearChatMessageEvent } from "@repo/types";
@@ -180,7 +180,7 @@ export const UserChatInfoModel = ({ navigation, route }) => {
                     <ActionItem onPress={() => {
                         confirmModalRef.current?.open({
                             title: t('chat.btn_message_delete'),
-                            desc: t('chat.btn_message_delete_desc'),
+                            content: t('chat.btn_message_delete_desc'),
                             onSubmit: () => {
                                 messageSenderService.clearMineMessage([chat?.id ?? ""]).then(() => {
                                     const event: ClearChatMessageEvent = { chatId: chat?.id ?? '', type: IModel.IClient.SocketTypeEnum.CLEAR_ALL_MESSAGE }

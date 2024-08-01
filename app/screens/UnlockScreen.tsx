@@ -1,4 +1,3 @@
-import BlockButton from "app/components/BlockButton"
 import Navbar from "app/components/Navbar"
 import { ColorsState } from "app/stores/system"
 import { s } from "app/utils/size"
@@ -15,7 +14,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack"
 
 import { App } from "types/app"
 import { LocalUserService } from "app/services/LocalUserService"
-import ConfirmModal, { ConfirmModalType } from "app/components/ConfirmModal"
+import  { ConfirmModal,ConfirmModalType } from "app/components/ConfirmModal"
 import toast from "app/utils/toast"
 import * as DocumentPicker from 'expo-document-picker';
 import * as FileSystem from 'expo-file-system';
@@ -112,7 +111,7 @@ export const UnlockScreen = ({navigation}:Props) => {
         }}>
           <Button type="secondary" size="large" fullWidth onPress={async () => {
             confirmModalRef.current?.open({
-              desc: "是否导入备份文件？",
+              content: "是否导入备份文件？",
               title: "导入后将覆盖已有的本地数据，导入后应用将重启。",
               onCancel: () => { },
               onSubmit: async () => {

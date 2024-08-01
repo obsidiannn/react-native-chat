@@ -7,7 +7,7 @@ import { useRecoilValue } from "recoil";
 import MenuItem from "./components/MenuItem";
 import { useTranslation } from "react-i18next";
 import Icon from "app/components/Icon";
-import ConfirmModal, { ConfirmModalType } from "app/components/ConfirmModal";
+import { ConfirmModal,ConfirmModalType } from "app/components/ConfirmModal";
 import { GroupMemberItemVO } from "../../../../../../packages/types/dist/client/group";
 import { IModel } from "@repo/enums";
 import UserInfoModal, { UserInfoModalType } from "app/screens/UserInfo/UserInfoModal";
@@ -115,7 +115,7 @@ export default forwardRef((_, ref) => {
                             onPress={() => {
                                 confirmModalRef.current?.open({
                                     title: t('groupChat.btn_kick_out'),
-                                    desc: t('groupChat.title_drop_message_desc'),
+                                    content: t('groupChat.title_drop_message_desc'),
                                     onSubmit: () => {
                                         groupService.kickOut({
                                             id: member?.groupId ?? 0,
@@ -130,7 +130,7 @@ export default forwardRef((_, ref) => {
                             onPress={() => {
                                 confirmModalRef.current?.open({
                                     title: t('groupChat.btn_block_user'),
-                                    desc: t('groupChat.title_drop_message_desc'),
+                                    content: t('groupChat.title_drop_message_desc'),
                                     onSubmit: () => {
 
                                     }

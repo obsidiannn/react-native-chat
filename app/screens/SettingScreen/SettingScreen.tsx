@@ -6,7 +6,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { s } from "app/utils/size"
 import Navbar from "app/components/Navbar"
 import { CardMenu } from "app/components/CardMenu/CardMenu"
-import ConfirmModal, { ConfirmModalType } from "app/components/ConfirmModal"
+import  {ConfirmModal, ConfirmModalType } from "app/components/ConfirmModal"
 import { useRef } from "react"
 import { quit } from "app/utils/account"
 import { navigate } from "app/navigators"
@@ -113,7 +113,7 @@ export const SettingScreen = ({ navigation }: Props) => {
                     title: "退出登录",
                     onPress: () => {
                         confirmModalRef.current?.open({
-                            desc: "是否退出登录？",
+                            content: "是否退出登录？",
                             title: "退出登录",
                             onCancel: () => { },
                             onSubmit: () => {
