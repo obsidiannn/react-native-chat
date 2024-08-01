@@ -21,15 +21,14 @@ import messageSendService from "app/services/message-send.service";
 import quickCrypto from "app/utils/quick-crypto";
 import BaseModal from "app/components/base-modal";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { ColorsState } from "app/stores/system";
-import Icon from "app/components/Icon";
+import { ColorsState, ThemeState } from "app/stores/system"
+import { Icon } from "app/components/Icon/Icon";
 import { colors } from "app/theme";
 import { ScrollView } from "react-native-gesture-handler";
 import GroupDetailModal, { GroupDetailModalType } from "./GroupDetailModal";
-import { ChatsStore } from "app/stores/auth";
+import {Image} from 'expo-image'
 
 import chatApi from "app/api/chat/chat";
-import group from "app/api/group/group";
 
 export interface GroupInfoModalType {
     open: () => void
@@ -41,6 +40,7 @@ export default forwardRef((_, ref) => {
     const [visible, setVisible] = useState(false)
     const themeColor = useRecoilValue(ColorsState)
 
+    const $theme = useRecoilValue(ThemeState);
     const qrcodeModalRef = useRef<QRcodeModalRef>(null);
     const applyListModalRef = useRef<ApplyListModalRef>(null);
     const confirmModalRef = useRef<ConfirmModalType>(null);
@@ -211,15 +211,17 @@ export default forwardRef((_, ref) => {
         }}>
             {/* 群信息 */}
             <MenuItem label={t('groupChat.title_group_info')}
-                leftIcon={<Icon path={require('assets/icons/group-info.svg')} width={16} height={20} />}
-                rightComponent={<Icon path={require('assets/icons/arrow-right-gray.svg')} />}
+                leftIcon={<Icon name={$theme==='dark'?"peoplesDark":"peoplesLight"}/>}
+                rightComponent={<Icon name={'arrowRight'}/>}
                 onPress={() => {
                     groupDetailModalRef.current?.open()
                 }}
             />
             <MenuItem label={t('groupChat.title_qrcode')}
-                leftIcon={<Icon path={require('assets/icons/qrcode.svg')} width={16} height={24} />}
-                rightComponent={<Icon path={require('assets/icons/arrow-right-gray.svg')} />}
+                leftIcon={<Image source={require('assets/icons/qrcode.svg')} style={{
+                    width:20,height: 20
+                }} />}
+                rightComponent={<Icon name={'arrowRight'}/>}
                 onPress={() => {
                     qrcodeModalRef.current?.open({
                         group: groupContext.group,
@@ -238,8 +240,8 @@ export default forwardRef((_, ref) => {
                             console.log("管理進入");
                             groupManagerModalRef.current?.open(groupContext.group?.id);
                         }}
-                        leftIcon={<Icon path={require('assets/icons/group-manager.svg')} width={16} height={20} />}
-                        rightComponent={<Icon path={require('assets/icons/arrow-right-gray.svg')} />} />
+                        leftIcon={<Icon name={$theme==='dark'?"userManageDark":"userManageLight"}/>}
+                        rightComponent={<Icon name={'arrowRight'}/>} />
                     : null
             }
             <View style={{
@@ -248,7 +250,7 @@ export default forwardRef((_, ref) => {
             }} />
 
             <MenuItem label={t('groupChat.title_top')}
-                leftIcon={<Icon path={require('assets/icons/top.svg')} width={16} height={16} />}
+                leftIcon={<Icon name={$theme==='dark'?"topDark":"topLight"}/>}
                 rightComponent={
                     <Switch value={switchState.isTop}
                         thumbColor={'#ffffff'}
@@ -270,7 +272,7 @@ export default forwardRef((_, ref) => {
                         }} />} />
 
             <MenuItem label={t('groupChat.title_inhibite')}
-                leftIcon={<Icon path={require('assets/icons/ignore.svg')} width={16} height={16} />}
+                leftIcon={<Icon name={$theme==='dark'?"ignoreDark":"ignoreLight"}/>}
                 rightComponent={<Switch value={switchState.isMute}
                     thumbColor={'#ffffff'}
                     trackColor={{
@@ -312,7 +314,7 @@ export default forwardRef((_, ref) => {
                                     }
                                 });
                             }}
-                            leftIcon={<Icon path={require('assets/icons/ignore.svg')} width={16} height={16} color="#FB3737" />}
+                            leftIcon={<Icon name={"blockRed"}/>}
                         />
                     </>
                     : null
@@ -332,7 +334,7 @@ export default forwardRef((_, ref) => {
                         }
                     });
                 }}
-                leftIcon={<Icon path={require('assets/icons/ignore.svg')} width={16} height={16} color="#FB3737" />}
+                leftIcon={<Icon name={"blockRed"}/>}
             />
 
             {
@@ -352,7 +354,7 @@ export default forwardRef((_, ref) => {
                                 }
                             });
                         }}
-                        leftIcon={<Icon path={require('assets/icons/delete.svg')} width={20} height={20} color="#FB3737" />}
+                        leftIcon={<Icon name={"trashRed"}/>}
                     /> : null
             }
 

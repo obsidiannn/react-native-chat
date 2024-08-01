@@ -10,7 +10,6 @@ import { scale, verticalScale } from "app/utils/size";
 import { useRecoilValue } from "recoil";
 import { ColorsState } from "app/stores/system";
 import { navigate } from "app/navigators";
-import { Button } from "app/components/Button";
 import { ScreenModal, ScreenModalType } from "app/components/ScreenModal";
 import BlockButton from "app/components/BlockButton";
 
@@ -103,4 +102,4 @@ export default forwardRef((_, ref) => {
 
 const styles = StyleSheet.create({
 
-}); 
+});

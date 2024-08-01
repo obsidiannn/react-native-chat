@@ -13,8 +13,8 @@ import { App } from "types/app";
 import Navbar from "app/components/Navbar";
 import { scale, verticalScale } from "app/utils/size";
 import { useRecoilValue } from "recoil";
-import { ColorsState } from "app/stores/system";
-import Icon from "app/components/Icon";
+import { ColorsState, ThemeState } from "app/stores/system"
+import {Icon} from "app/components/Icon/Icon";
 import { IModel } from "@repo/enums";
 import { Button } from "app/components";
 
@@ -25,6 +25,7 @@ export const UserInfoScreen = ({ navigation, route }: Props) => {
     const [user, setUser] = useState<IUser>();
     const { t } = useTranslation('screens')
     const themeColor = useRecoilValue(ColorsState)
+    const $theme = useRecoilValue(ThemeState)
     useEffect(() => {
         const unsubscribe = navigation.addListener('focus', async () => {
             const userId = route.params.userId;
@@ -47,7 +48,7 @@ export const UserInfoScreen = ({ navigation, route }: Props) => {
     const renderLabel = (isFriend: number) => {
         if (isFriend === IModel.ICommon.ICommonBoolEnum.YES) {
             return <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                <Icon path={require("assets/icons/chat-box.svg")} />
+                <Icon name={$theme === 'dark'?'chatDark':'chatLight'} />
                 <Text style={{
                     color: themeColor.textChoosed
                 }}>{t('userInfo.label_start_chat')}
@@ -55,7 +56,7 @@ export const UserInfoScreen = ({ navigation, route }: Props) => {
             </View>
         } else {
             return <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                <Icon path={require("assets/icons/chat-box.svg")} />
+                <Icon name={$theme === 'dark'?'chatDark':'chatLight'} />
                 <Text style={{
                     color: themeColor.textChoosed
                 }}>{t('userInfo.label_add_friend')}
@@ -129,4 +130,4 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: 'white',
     },
-}); 
+});

@@ -3,10 +3,10 @@
 
 import { IModel } from "@repo/enums";
 import { Button } from "app/components";
-import Icon from "app/components/Icon";
+import { Icon } from "app/components/Icon/Icon";
 import { ScreenModal, ScreenModalType } from "app/components/ScreenModal";
 import { AuthService } from "app/services/auth.service";
-import { ColorsState } from "app/stores/system";
+import { ColorsState, ThemeState } from "app/stores/system"
 import { scale } from "app/utils/size";
 import { Image } from "expo-image";
 import { forwardRef, useImperativeHandle, useRef, useState } from "react"
@@ -29,6 +29,7 @@ export const UpdateGenderModal= forwardRef((_, ref) => {
     const { t } = useTranslation('screens')
 
 
+    const $theme = useRecoilValue(ThemeState);
 
     const themeColor = useRecoilValue(ColorsState)
     const [val, setVal] = useState<number>(IModel.IUser.Gender.UNKNOWN)
@@ -62,7 +63,7 @@ export const UpdateGenderModal= forwardRef((_, ref) => {
                 val === IModel.IUser.Gender.MALE ?
                     <>
                         <Image source={require('assets/images/male.png')} style={styles.gender_image} contentFit="fill" />
-                        <Icon path={require('assets/icons/checked.svg')} styles={{
+                        <Icon name={$theme === 'dark' ? 'checkedDark':'checkedLight'} style={{
                             width: scale(24), height: scale(24),
                             marginTop: scale(-12)
                         }} />
@@ -86,7 +87,7 @@ export const UpdateGenderModal= forwardRef((_, ref) => {
                 val === IModel.IUser.Gender.FEMALE ?
                     <>
                         <Image source={require('assets/images/female.png')} style={styles.gender_image} contentFit="fill" />
-                        <Icon path={require('assets/icons/checked.svg')} styles={{
+                        <Icon name={$theme === 'dark' ? 'checkedDark':'checkedLight'} style={{
                             width: scale(24), height: scale(24),
                             marginTop: scale(-12)
                         }} />

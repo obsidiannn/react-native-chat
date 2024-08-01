@@ -1,9 +1,9 @@
 
 import { Button } from "app/components";
-import Icon from "app/components/Icon";
+import { Icon } from "app/components/Icon/Icon";
 import { ScreenModal, ScreenModalType } from "app/components/ScreenModal";
 import { AuthService } from "app/services/auth.service";
-import { ColorsState } from "app/stores/system";
+import { ColorsState, ThemeState } from "app/stores/system"
 import { scale, verticalScale } from "app/utils/size";
 import { forwardRef, useImperativeHandle, useRef, useState } from "react"
 import { useTranslation } from "react-i18next";
@@ -26,7 +26,7 @@ export const UpdateSignModal = forwardRef((_, ref) => {
     const [loading, setLoading] = useState<boolean>(false)
     const onFinishRef = useRef<(v: string) => void>()
     const themeColor = useRecoilValue(ColorsState)
-
+    const $theme = useRecoilValue(ThemeState)
     const screenModalRef = useRef<ScreenModalType>(null);
 
     const onClose = () => {
@@ -105,7 +105,7 @@ export const UpdateSignModal = forwardRef((_, ref) => {
                     alignSelf: 'flex-start'
                 }}>
                     <View style={{ alignItems: 'center', padding: scale(4) }}>
-                        <Icon path={require("assets/icons/point.svg")} width={8} height={8} />
+                        <Icon name={$theme === 'dark'?'pointDark':'pointLight'} />
                     </View>
                     <Text style={{
                         ...styles.paragraph,
@@ -124,7 +124,7 @@ export const UpdateSignModal = forwardRef((_, ref) => {
                     alignSelf: 'flex-start'
                 }}>
                     <View style={{ alignItems: 'center', padding: scale(4) }}>
-                        <Icon path={require("assets/icons/point.svg")} width={8} height={8} />
+                        <Icon name={$theme === 'dark'?'pointDark':'pointLight'} />
                     </View>
                     <Text style={{
                         ...styles.paragraph,
@@ -143,7 +143,7 @@ export const UpdateSignModal = forwardRef((_, ref) => {
                     alignSelf: 'flex-start'
                 }}>
                     <View style={{ alignItems: 'center', padding: scale(4) }}>
-                        <Icon path={require("assets/icons/point.svg")} width={8} height={8} />
+                        <Icon name={$theme === 'dark'?'pointDark':'pointLight'} />
                     </View>
                     <Text style={{
                         ...styles.paragraph,

@@ -1,5 +1,5 @@
-import { Text, TouchableOpacity, View } from "react-native"
-import Icon from "./Icon"
+import { TouchableOpacity, View } from "react-native"
+import { Icon } from "./Icon/Icon"
 import { useState } from "react"
 import { TextInput } from "react-native-gesture-handler"
 import { s, scale } from "app/utils/size"
@@ -7,6 +7,7 @@ import { s, scale } from "app/utils/size"
 export interface SearchProps {
     onSearch: (val: string) => Promise<void>
     color: IColors
+    theme: string
 }
 
 export const Search = (props: SearchProps) => {
@@ -44,7 +45,7 @@ export const Search = (props: SearchProps) => {
                 padding: scale(8),
                 borderRadius: scale(8),
             }}>
-            <Icon path={require('assets/icons/search-1.svg')} width={14} height={15} color={props.color.text} />
+            <Icon name={props.theme === 'dark'?'searchDark':'searchLight'} />
         </TouchableOpacity>
     </View>
 }

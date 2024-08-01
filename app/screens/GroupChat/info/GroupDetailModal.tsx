@@ -4,14 +4,14 @@ import BaseModal from "app/components/base-modal";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { scale } from "app/utils/size";
 import { useRecoilValue } from "recoil";
-import { ColorsState } from "app/stores/system";
+import { ColorsState, ThemeState } from "app/stores/system"
 import AvatarX from "app/components/AvatarX";
 import { GroupChatUiContext } from "../context";
 import { ScrollView, TextInput } from "react-native-gesture-handler";
 import { useTranslation } from "react-i18next";
 import { colors } from "app/theme";
 import { IModel } from "@repo/enums";
-import Icon from "app/components/Icon";
+import {Icon} from "app/components/Icon/Icon";
 import { isOnline } from "app/utils/account";
 import { Button } from "app/components";
 import groupApi from "app/api/group/group";
@@ -36,7 +36,7 @@ export default forwardRef((_, ref) => {
     const groupMemberManageRef = useRef<GroupMemberManageModalType>()
     const { t } = useTranslation('screens')
     const selectMemberModalRef = useRef<SelectMemberModalType>(null)
-
+    const $theme = useRecoilValue(ThemeState);
     const onClose = () => {
         setVisible(false)
     }
@@ -103,7 +103,7 @@ export default forwardRef((_, ref) => {
         renderRight={
             <TouchableOpacity style={{ backgroundColor: themeColor.background, padding: scale(4), borderRadius: scale(8) }}
             >
-                <Icon path={require("assets/icons/share.svg")} color={themeColor.text} />
+                <Icon name={$theme === 'dark'? "shareDark":"shareLight"} />
             </TouchableOpacity>
         }
 
@@ -163,7 +163,7 @@ export default forwardRef((_, ref) => {
                     <TouchableOpacity style={{ backgroundColor: themeColor.secondaryBackground, padding: scale(4), borderRadius: scale(8) }}
                         onPress={changeName}
                     >
-                        {editing ? <Icon path={require("assets/icons/check.svg")} color={themeColor.text} /> : <Icon path={require("assets/icons/edit.svg")} color={themeColor.text} />}
+                        {editing ? <Icon name={$theme == "dark" ? "checkDark":"checkLight"} /> : <Icon name={$theme == "dark" ? "changeDark":"changeLight"}  />}
                     </TouchableOpacity> :
                     null
                 }
@@ -177,7 +177,7 @@ export default forwardRef((_, ref) => {
                 <View style={{
                     display: 'flex', flexDirection: 'row', alignItems: 'center',
                 }}>
-                    <Icon path={require("assets/icons/group-info.svg")} />
+                    <Icon name={$theme == "dark" ? "peoplesDark":"peoplesLight"}  />
                     <Text>当前群成员人数</Text>
                 </View>
                 <Text>
@@ -199,7 +199,7 @@ export default forwardRef((_, ref) => {
                             <TouchableOpacity onPress={() => {
                                 groupMemberManageRef.current?.open(groupContext.group.id, item, groupContext.selfMember)
                             }}>
-                                <Icon path={require("assets/icons/more.svg")} />
+                                <Icon name={$theme == "dark" ? "moreDark":"moreLight"}  />
                             </TouchableOpacity>
                         </View>
                     })

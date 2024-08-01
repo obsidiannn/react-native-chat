@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View, TextInput } from "react-native"
 import { Button } from "app/components";
-import Icon from "app/components/Icon";
+import {Icon} from "app/components/Icon/Icon";
 import { ScreenModal, ScreenModalType } from "app/components/ScreenModal";
 import { AuthService } from "app/services/auth.service";
 import { ColorsState } from "app/stores/system";
@@ -105,7 +105,7 @@ export default  forwardRef((_, ref) => {
                     padding: scale(12)
                 }}>
                     <View style={{ alignItems: 'center', padding: scale(4) }}>
-                        <Icon path={require("assets/icons/point.svg")} width={8} height={8} />
+                        <Icon name={"pointDark"} />
                     </View>
                     <Text style={{
                         ...styles.paragraph
@@ -122,7 +122,7 @@ export default  forwardRef((_, ref) => {
                     padding: scale(12)
                 }}>
                     <View style={{ alignItems: 'center', padding: scale(4) }}>
-                        <Icon path={require("assets/icons/point.svg")} width={8} height={8} />
+                        <Icon name={"pointDark"} />
                     </View>
                     <Text style={{
                         ...styles.paragraph
@@ -139,7 +139,7 @@ export default  forwardRef((_, ref) => {
                     padding: scale(12)
                 }}>
                     <View style={{ alignItems: 'center', padding: scale(4) }}>
-                        <Icon path={require("assets/icons/point.svg")} width={8} height={8} />
+                        <Icon name={"pointDark"} />
                     </View>
                     <Text style={{
                         ...styles.paragraph

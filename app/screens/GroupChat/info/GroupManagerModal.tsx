@@ -9,10 +9,10 @@ import { useTranslation } from "react-i18next";
 import { IModel } from "@repo/enums";
 import { scale } from "app/utils/size";
 import { colors } from "app/theme";
-import Icon from "app/components/Icon";
+import { Icon } from "app/components/Icon/Icon";
 import AvatarComponent from "app/components/Avatar";
 import { useRecoilValue } from "recoil";
-import { ColorsState } from "app/stores/system";
+import { ColorsState, ThemeState } from "app/stores/system"
 
 export interface GroupManagerModalRef {
   open: (groupId: number) => void;
@@ -27,6 +27,7 @@ export default forwardRef((props: {
   const selectMemberModalRef = useRef<SelectMemberModalType>(null)
   const themeColor = useRecoilValue(ColorsState)
   const { t } = useTranslation('screens')
+  const $theme = useRecoilValue(ThemeState);
   const managerDescribe = [
     t('groupChat.label_manager_1'),
     t('groupChat.label_manager_2'),
@@ -69,7 +70,7 @@ export default forwardRef((props: {
           managerDescribe.map(
             (e, i) => {
               return <View style={styles.groupDescribe} key={"label_" + i}>
-                <Icon path={require('assets/icons/bell.svg')} width={14} height={14} />
+                <Icon name={$theme==='dark'?"bellDark":"bellLight"} />
                 <Text style={{ color: "#6b7280", margin: scale(5) }} key={i}> {e} </Text>
               </View>
             }
@@ -152,14 +153,14 @@ export default forwardRef((props: {
           }}
         >
           <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-            <Icon path={require('assets/icons/circle-plus-primary.svg')} width={48} height={48} />
+            <Icon name={$theme==='dark'?"plusAddDark":"plusAddLight"} size={48} />
             <Text style={{
               ...styles.memberText,
               color: themeColor.text,
               marginLeft: scale(10)
             }}>{t('groupChat.btn_add_manager')}</Text>
           </View>
-          <Icon path={require("assets/icons/arrow-right-gray.svg")} />
+          <Icon name={"arrowRight"} />
         </TouchableOpacity>
 
       </View>

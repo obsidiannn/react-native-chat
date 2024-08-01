@@ -1,11 +1,10 @@
 import { GroupDetailItem } from "@repo/types"
 import AvatarComponent from "app/components/Avatar"
-import Icon from "app/components/Icon"
+import { Icon } from "app/components/Icon/Icon"
 import fileService from "app/services/file.service"
 import { AuthUser } from "app/stores/auth"
-import { ColorsState } from "app/stores/system"
+import { ColorsState, ThemeState } from "app/stores/system"
 import { scale } from "app/utils/size"
-import { } from "expo-image"
 import { ImageBackground, Platform, Pressable, StyleSheet, Text, View } from "react-native"
 import { useRecoilValue } from "recoil"
 
@@ -19,6 +18,8 @@ export interface GroupCardProps {
 export const GroupCard = (props: GroupCardProps) => {
     const authUser = useRecoilValue(AuthUser)
     const themeColor = useRecoilValue(ColorsState)
+    const $theme = useRecoilValue(ThemeState)
+
     const { group } = props
     return <Pressable onPress={props.onPress}>
         <ImageBackground
@@ -47,7 +48,7 @@ export const GroupCard = (props: GroupCardProps) => {
                     <Text style={{ fontSize: scale(14), color: themeColor.secondaryText, }}>{group?.desc ?? ''}</Text>
                 </View>
                 <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                    <Icon path={require('assets/icons/group.svg')} />
+                    <Icon name={$theme==='dark'?"peoplesDark":"peoplesLight"}/>
                     <Text>{group?.total}</Text>
                 </View>
                 <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
