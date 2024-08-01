@@ -1,3 +1,4 @@
+import { StyleSheet, Text, View, TextInput } from "react-native"
 import { Button } from "app/components";
 import Icon from "app/components/Icon";
 import { ScreenModal, ScreenModalType } from "app/components/ScreenModal";
@@ -6,7 +7,6 @@ import { ColorsState } from "app/stores/system";
 import { scale, verticalScale } from "app/utils/size";
 import { forwardRef, useImperativeHandle, useRef, useState } from "react"
 import { useTranslation } from "react-i18next";
-import { StyleSheet, Text, View, TextInput } from "react-native"
 import { useRecoilValue } from "recoil";
 
 
@@ -19,7 +19,7 @@ export interface UpdateUsernameModalRef {
     ) => void;
 
 }
-export const UpdateUserNameModal= forwardRef((_, ref) => {
+export default  forwardRef((_, ref) => {
     const maxLength = 60
     const { t } = useTranslation('screens')
     const [val, setVal] = useState('')
