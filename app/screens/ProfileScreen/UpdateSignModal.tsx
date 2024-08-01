@@ -2,7 +2,6 @@
 import { Button } from "app/components";
 import Icon from "app/components/Icon";
 import { ScreenModal, ScreenModalType } from "app/components/ScreenModal";
-import BaseModal from "app/components/base-modal";
 import { AuthService } from "app/services/auth.service";
 import { ColorsState } from "app/stores/system";
 import { scale, verticalScale } from "app/utils/size";
@@ -11,7 +10,7 @@ import { useTranslation } from "react-i18next";
 import { StyleSheet, Text, View, TextInput } from "react-native"
 import { useRecoilValue } from "recoil";
 
-export interface UpdateSignRef {
+export interface UpdateSignModalRef {
     open: (
         param: {
             value: string,
@@ -20,7 +19,7 @@ export interface UpdateSignRef {
     ) => void;
 }
 
-export default forwardRef((_, ref) => {
+export const UpdateSignModal = forwardRef((_, ref) => {
     const maxLength = 150
     const { t } = useTranslation('screens')
     const [val, setVal] = useState('')

@@ -1,5 +1,5 @@
 import { Button } from "app/components";
-import Icon from "app/components/Icon";
+import { Icon } from "app/components/Icon";
 import { ScreenModal, ScreenModalType } from "app/components/ScreenModal";
 import { AuthService } from "app/services/auth.service";
 import { ColorsState } from "app/stores/system";
@@ -10,7 +10,7 @@ import { StyleSheet, Text, View, TextInput } from "react-native"
 import { useRecoilValue } from "recoil";
 
 
-export interface UpdateNicknameRef {
+export interface UpdateNickNameModalRef {
     open: (
         param: {
             value: string,
@@ -19,7 +19,7 @@ export interface UpdateNicknameRef {
     ) => void;
 
 }
-export default forwardRef((_, ref) => {
+export const UpdateNickNameModal = forwardRef((_, ref) => {
     const maxLength = 150
     const { t } = useTranslation('screens')
     const [loading, setLoading] = useState<boolean>(false)
@@ -47,145 +47,145 @@ export default forwardRef((_, ref) => {
         },
     }));
 
-    return <ScreenModal ref={screenModalRef} >
-        <View style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            padding: scale(14)
-        }}>
-            <Text style={{
-                color: themeColor.title,
-                fontSize: scale(28),
-                fontWeight: '500',
-                alignSelf: 'flex-start'
-            }}>
-                {t('profile.title_nickname')}
-            </Text>
+    return <ScreenModal ref={screenModalRef} title="更新昵称" >
+        <>
             <View style={{
-                width: '100%',
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
-                marginTop: scale(22)
+                padding: scale(14)
             }}>
-                <TextInput
-                    cursorColor={themeColor.text}
-                    placeholder={t('profile.placeholder_nickname')}
-                    placeholderTextColor={themeColor.border}
-                    maxLength={maxLength}
-                    style={{
-                        fontSize: scale(16),
-                        height: scale(44),
-                        color: themeColor.text,
-                        backgroundColor: themeColor.background,
-                        width: '100%',
-                        borderRadius: scale(12),
-                    }}
-                    onChangeText={(v) => {
-                        setVal(v)
-                    }}
-                    value={val}
-                />
                 <Text style={{
-                    color: themeColor.border,
-                    alignSelf: 'flex-end',
-                    fontSize: scale(12),
-                    marginVertical: scale(8),
-                    marginRight: scale(4)
+                    color: themeColor.title,
+                    fontSize: scale(28),
+                    fontWeight: '500',
+                    alignSelf: 'flex-start'
                 }}>
-                    {val.length}/{maxLength}
+                    {t('profile.title_nickname')}
                 </Text>
+                <View style={{
+                    width: '100%',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    marginTop: scale(22)
+                }}>
+                    <TextInput
+                    // placeholder={t('profile.placeholder_nickname')}
+                    // //placeholderTextColor={themeColor.border}
+                    // maxLength={maxLength}
 
-            </View>
+                    // style={{
+                    //     fontSize: scale(16),
+                    //     height: scale(44),
+                    //     color: themeColor.text,
+                    //     backgroundColor: themeColor.background,
+                    //     width: '100%',
+                    //     borderRadius: scale(12),
+                    // }}
+                    // onChangeText={(v) => setVal(v)}
+                    // value={val}
+                    />
+                    <Text style={{
+                        color: themeColor.border,
+                        alignSelf: 'flex-end',
+                        fontSize: scale(12),
+                        marginVertical: scale(8),
+                        marginRight: scale(4)
+                    }}>
+                        {val.length}/{maxLength}
+                    </Text>
 
-            <View style={{
-                marginTop: scale(32),
-                display: 'flex',
-                flexDirection: 'row',
-                alignItems: 'stretch',
-                padding: scale(12),
-            }}>
-                <View style={{ alignItems: 'center', padding: scale(4) }}>
-                    <Icon path={require("assets/icons/point.svg")} width={8} height={8} />
                 </View>
-                <Text style={{
-                    ...styles.paragraph,
-                    color: themeColor.secondaryText
+
+                <View style={{
+                    marginTop: scale(32),
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'stretch',
+                    padding: scale(12),
                 }}>
-                    {t('profile.paragraph_nickname_1')}
-                </Text>
+                    <View style={{ alignItems: 'center', padding: scale(4) }}>
+                        <Icon path={require("assets/icons/point.svg")} width={8} height={8} />
+                    </View>
+                    <Text style={{
+                        ...styles.paragraph,
+                        color: themeColor.secondaryText
+                    }}>
+                        {t('profile.paragraph_nickname_1')}
+                    </Text>
 
-            </View>
-
-            <View style={{
-                display: 'flex',
-                flexDirection: 'row',
-                alignItems: 'stretch',
-                padding: scale(12)
-            }}>
-                <View style={{ alignItems: 'center', padding: scale(4) }}>
-                    <Icon path={require("assets/icons/point.svg")} width={8} height={8} />
                 </View>
-                <Text style={{
-                    ...styles.paragraph,
-                    color: themeColor.secondaryText
+
+                <View style={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'stretch',
+                    padding: scale(12)
                 }}>
-                    {t('profile.paragraph_nickname_2')}
-                </Text>
+                    <View style={{ alignItems: 'center', padding: scale(4) }}>
+                        <Icon path={require("assets/icons/point.svg")} width={8} height={8} />
+                    </View>
+                    <Text style={{
+                        ...styles.paragraph,
+                        color: themeColor.secondaryText
+                    }}>
+                        {t('profile.paragraph_nickname_2')}
+                    </Text>
 
-            </View>
-
-            <View style={{
-                display: 'flex',
-                flexDirection: 'row',
-                alignItems: 'stretch',
-                padding: scale(12)
-            }}>
-                <View style={{ alignItems: 'center', padding: scale(4) }}>
-                    <Icon path={require("assets/icons/point.svg")} width={8} height={8} />
                 </View>
-                <Text style={{
-                    ...styles.paragraph,
-                    color: themeColor.secondaryText
+
+                <View style={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'stretch',
+                    padding: scale(12)
                 }}>
-                    {t('profile.paragraph_nickname_3')}
-                </Text>
+                    <View style={{ alignItems: 'center', padding: scale(4) }}>
+                        <Icon path={require("assets/icons/point.svg")} width={8} height={8} />
+                    </View>
+                    <Text style={{
+                        ...styles.paragraph,
+                        color: themeColor.secondaryText
+                    }}>
+                        {t('profile.paragraph_nickname_3')}
+                    </Text>
+
+                </View>
+
+
 
             </View>
 
 
+            <Button
+                size="large"
+                label={t('common.btn_submit')}
+                textStyle={styles.nextButtonLabel}
+                containerStyle={{
+                    backgroundColor: themeColor.primary,
+                    borderRadius: scale(12),
+                    marginBottom: scale(14),
+                    marginHorizontal: scale(12),
+                }}
+                onPress={async () => {
+                    if (loading) {
+                        return;
+                    }
+                    if (val.length > maxLength) {
+                        return
+                    }
+                    setLoading(true);
 
-        </View>
-
-
-        <Button
-            size="large"
-            label={t('common.btn_submit')}
-            textStyle={styles.nextButtonLabel}
-            containerStyle={{
-                backgroundColor: themeColor.primary,
-                borderRadius: scale(12),
-                marginBottom: scale(14),
-                marginHorizontal: scale(12),
-            }}
-            onPress={async () => {
-                if (loading) {
-                    return;
-                }
-                if (val.length > maxLength) {
-                    return
-                }
-                setLoading(true);
-
-                await AuthService.updateNickName(val)
-                    .then(() => {
-                        onFinishRef.current && onFinishRef.current(val)
-                    }).catch(() => { })
-                    .finally(() => {
-                        onClose()
-                    })
-            }} />
+                    await AuthService.updateNickName(val)
+                        .then(() => {
+                            onFinishRef.current && onFinishRef.current(val)
+                        }).catch(() => { })
+                        .finally(() => {
+                            onClose()
+                        })
+                }} />
+        </>
     </ScreenModal>
 })
 

@@ -49,7 +49,7 @@ export const SafetyScreen = () => {
             <CardMenu items={[
                 {
                     icon: <Icon name={$theme == "dark" ? "backupDark" : "backupLight"} />,
-                    title: "备份私钥",
+                    title: "备份所有",
                     onPress: () => {
                         backupPriKeyModalRef.current?.open()
                     },
@@ -62,8 +62,7 @@ export const SafetyScreen = () => {
                             desc: "是否退出所有群聊？",
                             title: "退出所有群聊",
                             onCancel: () => { },
-                            onSubmit: () => {
-                            }
+                            onSubmit: () => { }
                         })
                     },
                 },

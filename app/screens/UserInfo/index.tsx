@@ -12,11 +12,11 @@ import { useTranslation } from 'react-i18next';
 import { App } from "types/app";
 import Navbar from "app/components/Navbar";
 import { scale, verticalScale } from "app/utils/size";
-import { Button } from "app/components";
 import { useRecoilValue } from "recoil";
 import { ColorsState } from "app/stores/system";
 import Icon from "app/components/Icon";
 import { IModel } from "@repo/enums";
+import { Button } from "app/components";
 
 
 type Props = StackScreenProps<App.StackParamList, 'UserInfoScreen'>;
@@ -92,12 +92,7 @@ export const UserInfoScreen = ({ navigation, route }: Props) => {
                         alignItems: 'center',
                         marginTop: verticalScale(40),
                     }}>
-                        <Button style={{
-                            width: '100%',
-                            height: verticalScale(50),
-                            borderRadius: verticalScale(16),
-                            backgroundColor: themeColor.primary
-                        }} onPress={() => {
+                        <Button fullWidth size="large" onPress={() => {
 
                             if (!user.isFriend) {
                                 navigation.navigate('InviteFriendScreen', {
@@ -120,11 +115,8 @@ export const UserInfoScreen = ({ navigation, route }: Props) => {
 
                             }
                         }}
-                        >
-                            {
-                                renderLabel(user.isFriend)
-                            }
-                        </Button>
+                        label={user?.isFriend ? "进入聊天": "添加好友"}
+                        />
                     </View>
                 </View> : null}
 

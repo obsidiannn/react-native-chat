@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import { StyleSheet, TextInput, View } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
 import { useTranslation } from 'react-i18next';
 import { App } from "types/app";
@@ -17,7 +17,6 @@ export const InviteFriendScreen = ({ navigation, route }: Props) => {
     const [remark, setRemark] = useState('');
     const [state, setState] = useState(false)
     const { t } = useTranslation('screens')
-    const themeColor = useRecoilValue(ColorsState)
     useEffect(() => {
         // 監聽頁面獲取焦點
         const unsubscribe = navigation.addListener('focus', () => {
@@ -44,11 +43,7 @@ export const InviteFriendScreen = ({ navigation, route }: Props) => {
                 />
             </View>
             <View style={styles.buttonContainer}>
-                <Button disabled={state}
-                    style={{
-                        ...styles.button,
-                        backgroundColor: themeColor.btnDefault
-                    }} onPress={() => {
+                <Button size="large" fullWidth label={t('friend.btn_send_invite')} onPress={() => {
                         setState(true);
                         if (userId) {
                             friendApplyService.create(userId, remark).then(res => {
@@ -62,9 +57,7 @@ export const InviteFriendScreen = ({ navigation, route }: Props) => {
                                 setState(false)
                             })
                         }
-                    }} >
-                    <Text>{t('friend.btn_send_invite')}</Text>
-                </Button>
+                    }} />
             </View>
         </View>
     </View>

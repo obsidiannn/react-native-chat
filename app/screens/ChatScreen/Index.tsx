@@ -98,7 +98,7 @@ export const ChatScreen = ({ navigation }: Props) => {
             />
         </View>
 
-        <PagerView ref={pagerViewRef}
+        <PagerView useNext={false} ref={pagerViewRef}
             scrollEnabled={false}
             style={{
                 flex: 1,

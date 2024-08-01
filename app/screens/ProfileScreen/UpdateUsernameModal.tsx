@@ -1,7 +1,6 @@
 import { Button } from "app/components";
 import Icon from "app/components/Icon";
 import { ScreenModal, ScreenModalType } from "app/components/ScreenModal";
-import BaseModal from "app/components/base-modal";
 import { AuthService } from "app/services/auth.service";
 import { ColorsState } from "app/stores/system";
 import { scale, verticalScale } from "app/utils/size";
@@ -20,7 +19,7 @@ export interface UpdateUsernameModalRef {
     ) => void;
 
 }
-export default forwardRef((_, ref) => {
+export const UpdateUserNameModal= forwardRef((_, ref) => {
     const maxLength = 60
     const { t } = useTranslation('screens')
     const [val, setVal] = useState('')

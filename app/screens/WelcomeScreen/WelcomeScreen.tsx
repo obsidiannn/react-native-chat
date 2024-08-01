@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import { Image } from "expo-image"
 import { ImageStyle, View, Text, Appearance, Pressable, ViewStyle, TextStyle } from "react-native";
 import { s } from 'app/utils/size';
@@ -11,13 +11,14 @@ import BlockButton from "app/components/BlockButton";
 import { StackScreenProps } from "@react-navigation/stack";
 import { Checkbox } from "./Checkbox";
 import { App } from "types/app";
-
+import ConfirmModal, { ConfirmModalType } from "app/components/ConfirmModal";
 
 type Props = StackScreenProps<App.StackParamList, 'WelcomeScreen'>;
 export const WelcomeScreen = ({ navigation }: Props) => {
   const colorScheme = Appearance.getColorScheme();
   const $colors = useRecoilValue(ColorsState);
   const [protocolStatus, setProtocolStatus] = useState(false)
+  const confirmModalRef = useRef<ConfirmModalType>();
   const { t } = useTranslation("screens");
   const protocols = [
     {
@@ -47,14 +48,32 @@ export const WelcomeScreen = ({ navigation }: Props) => {
       }]}>
         <BlockButton onPress={() => {
           if (!protocolStatus) {
-
+            confirmModalRef.current?.open({
+              title:"确认阅读并同意相关协议",
+              desc: "确认阅读并同意相关协议",
+              onSubmit: () => {
+                navigation.navigate("UnlockScreen")
+              }
+            });
+            return;
           }
-          navigation.navigate("SignInScreen")
+          navigation.navigate("UnlockScreen")
         }} label={t("welcome.signIn")} type="primary" />
       </View>
       <View style={$buttonContainer}>
         <BlockButton onPress={() => {
+          if (!protocolStatus) {
+            confirmModalRef.current?.open({
+              title:"确认阅读并同意相关协议",
+              desc: "确认阅读并同意相关协议",
+              onSubmit: () => {
+                navigation.navigate("SignUpScreen")
+              }
+            });
+            return;
+          }
           navigation.navigate("SignUpScreen")
+          
         }} label={t("welcome.signUp")} type="secondary" />
       </View>
       <View style={$checkboxContainer}>
@@ -71,6 +90,7 @@ export const WelcomeScreen = ({ navigation }: Props) => {
           </Pressable>
         })}
       </View>
+      <ConfirmModal ref={confirmModalRef} />
     </Screen>
   )
 }

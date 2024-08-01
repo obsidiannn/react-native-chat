@@ -7,7 +7,7 @@ import friendApplyService from "app/services/friend-apply.service";
 import { IUser } from "drizzle/schema";
 import { useRecoilValue } from "recoil";
 import { useTranslation } from 'react-i18next';
-import { scale, verticalScale } from "app/utils/size";
+import { s, scale, verticalScale } from "app/utils/size";
 import Navbar from "app/components/Navbar";
 import { Button } from "app/components";
 import { AuthUser } from "app/stores/auth";
@@ -95,7 +95,7 @@ export const InviteInfoScreen = ({ navigation, route }: Props) => {
                 </View>
                 <View style={styles.actionContainer}>
                     {info?.friendApply.status === IModel.IFriendApply.Status.PENDING && !info.isSelf ? <>
-                        <Button style={{ ...styles.accpetButton, backgroundColor: themeColor.primary }} onPress={() => {
+                        <Button fullWidth size="large" onPress={() => {
                             if (loading) {
                                 return
                             };
@@ -105,10 +105,10 @@ export const InviteInfoScreen = ({ navigation, route }: Props) => {
                             }).finally(() => {
                                 setLoading(false);
                             });
-                        }} >
-                            <Text style={styles.label}>{t('friend.btn_apply')} </Text>
-                        </Button>
-                        <Button style={{ ...styles.rejectButton, backgroundColor: themeColor.background }} onPress={async () => {
+                        }} label={t('friend.btn_apply')}/>
+                        <Button type="secondary" containerStyle={{
+                            marginTop:s(10)
+                        }} fullWidth size="large" onPress={async () => {
                             if (loading) {
                                 return
                             };
@@ -119,16 +119,9 @@ export const InviteInfoScreen = ({ navigation, route }: Props) => {
                                 navigation.goBack();
                                 setLoading(false);
                             });
-                        }} >
-                            <Text style={{ ...styles.label, color: themeColor.primary }}>{t('friend.btn_reject')} </Text>
-                        </Button>
+                        }} label={t('friend.btn_reject') }/>
                     </> : null}
-                    {info?.friendApply.status === IModel.IFriendApply.Status.PENDING && info.isSelf ? <Button disabled={true} style={{
-                        ...styles.waitButton,
-                        backgroundColor: themeColor.primary
-                    }}  >
-                        <Text style={styles.label}>{t('friend.label_pending')} </Text>
-                    </Button> : null}
+                    {info?.friendApply.status === IModel.IFriendApply.Status.PENDING && info.isSelf ? <Button label={t('friend.label_pending')} />: null}
                 </View>
             </ScrollView>
         </View>

@@ -10,7 +10,7 @@ export interface IconProps {
     color?: string
 }
 
-const Icon = (props: IconProps) => {
+export const Icon = (props: IconProps) => {
     const renderStyle = () => {
         if (props.styles) {
             return props.styles

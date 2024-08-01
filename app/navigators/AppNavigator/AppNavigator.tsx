@@ -135,7 +135,6 @@ const AppStack = () => {
       <Stack.Screen name="GroupChatScreen" component={Screens.GroupChatScreen} />
       <Stack.Screen name="WelcomeScreen" component={Screens.WelcomeScreen} />
       <Stack.Screen name="WebViewScreen" component={Screens.WebViewScreen} />
-      <Stack.Screen name="SignInScreen" component={Screens.SignInScreen} />
       <Stack.Screen name="SignUpScreen" component={Screens.SignUpScreen} />
       <Stack.Screen name="UserInfoScreen" component={Screens.UserInfoScreen} />
       <Stack.Screen name="InviteFriendScreen" component={Screens.InviteFriendScreen} />

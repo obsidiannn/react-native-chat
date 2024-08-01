@@ -4,10 +4,10 @@ import { ColorsState, ThemeState } from "app/stores/system";
 import { s } from "app/utils/size";
 import { useTranslation } from "react-i18next";
 import { useRecoilState, useRecoilValue } from "recoil";
-import UpdateNickname, { UpdateNicknameRef } from "./UpdateNicknameModal";
-import UpdateGender, { UpdateGenderRef } from "./UpdateGenderModal";
-import UpdateSign, { UpdateSignRef } from "./UpdateSignModal";
-import UpdateUsername, { UpdateUsernameModalRef } from "./UpdateUsernameModal";
+import { UpdateNickNameModal,UpdateNickNameModalRef} from "./UpdateNickNameModal";
+import { UpdateGenderModal,UpdateGenderModalRef } from "./UpdateGenderModal";
+import { UpdateSignModal,UpdateSignModalRef } from "./UpdateSignModal";
+import {UpdateUserNameModal, UpdateUsernameModalRef } from "./UpdateUserNameModal";
 import toast from "app/utils/toast";
 import { IModel } from "@repo/enums";
 import { AuthService } from "app/services/auth.service";
@@ -21,17 +21,15 @@ import Navbar from "app/components/Navbar";
 import { CardMenu } from "app/components/CardMenu/CardMenu";
 import { StyleSheet, Text, View } from "react-native";
 import { Icon } from "app/components/Icon/Icon";
-
-import AssetIcon from "app/components/Icon";
 import profile from "app/utils/profile";
 import strUtil from "app/utils/str-util";
 export const ProfileScreen = () => {
     const insets = useSafeAreaInsets();
     const $colors = useRecoilValue(ColorsState);
     const $theme = useRecoilValue(ThemeState);
-    const updateNicknameModalRef = useRef<UpdateNicknameRef>(null)
-    const updateGenderModalRef = useRef<UpdateGenderRef>(null)
-    const updateSignModalRef = useRef<UpdateSignRef>(null)
+    const updateNickNameModalRef = useRef<UpdateNickNameModalRef>(null)
+    const updateGenderModalRef = useRef<UpdateGenderModalRef>(null)
+    const updateSignModalRef = useRef<UpdateSignModalRef>(null)
     const updateUsernameModalRef = useRef<UpdateUsernameModalRef>(null)
     const [authUser, setAuthUser] = useRecoilState(AuthUser)
     const { t } = useTranslation('screens');
@@ -86,7 +84,7 @@ export const ProfileScreen = () => {
                     icon: <Icon name={$theme == "dark" ? "editDark" : "editLight"} />,
                     title: t('profile.title_nickname'),
                     onPress: () => {
-                        updateNicknameModalRef.current?.open({
+                        updateNickNameModalRef.current?.open({
                             value: authUser?.nickName ?? '',
                             callback: (val: string) => {
                                 authUpdate({
@@ -101,7 +99,6 @@ export const ProfileScreen = () => {
                         <Text style={{ color: $colors.secondaryText }}>{authUser?.nickName}</Text>
                         <Icon name="arrowRight" />
                     </View>,
-                    theme: $theme,
                 },
                 {
                     icon: <Icon name={$theme == "dark" ? "editDark" : "editLight"} />,
@@ -118,7 +115,6 @@ export const ProfileScreen = () => {
                             }
                         })
                     },
-                    theme: $theme,
                     rightArrow: <View style={styles.formLine} >
                         <Text style={{ color: $colors.secondaryText }}>{strUtil.truncateMiddle(authUser?.userName ?? '', 20)}</Text>
                         <Icon name="arrowRight" />
@@ -140,7 +136,6 @@ export const ProfileScreen = () => {
                             }
                         })
                     },
-                    theme: $theme,
                     rightArrow: <View style={styles.formLine} >
                         <Text style={{ color: $colors.secondaryText }}>{profile.genderValue(authUser?.gender)}</Text>
                         <Icon name="arrowRight" />
@@ -161,7 +156,6 @@ export const ProfileScreen = () => {
                             }
                         })
                     },
-                    theme: $theme,
                     rightArrow: <View style={styles.formLine} >
                         <Text style={{ color: $colors.secondaryText }}>{strUtil.truncateMiddle(authUser?.sign ?? '', 20) ?? t('common.default_label_none')}</Text>
                         <Icon name="arrowRight" />
@@ -169,10 +163,10 @@ export const ProfileScreen = () => {
                 },
             ]} />
         </View>
-        <UpdateNickname ref={updateNicknameModalRef} />
-        <UpdateGender ref={updateGenderModalRef} />
-        <UpdateSign ref={updateSignModalRef} />
-        <UpdateUsername ref={updateUsernameModalRef} />
+        <UpdateNickNameModal ref={updateNickNameModalRef} />
+        <UpdateGenderModal ref={updateGenderModalRef} />
+        <UpdateSignModal ref={updateSignModalRef} />
+        <UpdateUserNameModal ref={updateUsernameModalRef} />
     </View>
 }
 

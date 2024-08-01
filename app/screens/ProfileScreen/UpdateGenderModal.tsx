@@ -5,7 +5,6 @@ import { IModel } from "@repo/enums";
 import { Button } from "app/components";
 import Icon from "app/components/Icon";
 import { ScreenModal, ScreenModalType } from "app/components/ScreenModal";
-import BaseModal from "app/components/base-modal";
 import { AuthService } from "app/services/auth.service";
 import { ColorsState } from "app/stores/system";
 import { scale } from "app/utils/size";
@@ -16,7 +15,7 @@ import { StyleSheet, Text, View, TouchableOpacity } from "react-native"
 import { useRecoilValue } from "recoil";
 
 
-export interface UpdateGenderRef {
+export interface UpdateGenderModalRef {
     open: (
         param: {
             value: number,
@@ -26,7 +25,7 @@ export interface UpdateGenderRef {
 
 }
 
-export default forwardRef((_, ref) => {
+export const UpdateGenderModal= forwardRef((_, ref) => {
     const { t } = useTranslation('screens')
 
 
@@ -105,13 +104,6 @@ export default forwardRef((_, ref) => {
     const genderChoose = (chooseVal: number) => {
         setVal(chooseVal)
     }
-
-    // return <BaseModal visible={visible} onClose={onClose} title={t('profile.title_choose_gender')} styles={{
-    //     padding: scale(12),
-    //     flex: 1,
-    //     display: 'flex',
-    //     flexDirection: 'column'
-    // }}>
     return <ScreenModal ref={screenModalRef} title={t('profile.title_choose_gender')} >
         <View
             style={{
