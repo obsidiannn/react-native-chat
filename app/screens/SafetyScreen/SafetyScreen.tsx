@@ -1,6 +1,6 @@
 import { ColorsState, ThemeState } from "app/stores/system"
 
-import { Text, View } from "react-native"
+import { Platform, View } from "react-native"
 import { useRecoilValue } from "recoil"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { s } from "app/utils/size"
@@ -14,30 +14,24 @@ import messageSendService from "app/services/message-send.service"
 import { useTranslation } from "react-i18next"
 import toast from "app/utils/toast"
 import { Icon } from "app/components/Icon/Icon"
-import { BackupPriKeyModal, BackupPriKeyModalType } from "./BackupPriKeyModal"
-
+import * as FileSystem from 'expo-file-system';
+import * as Sharing from 'expo-sharing';
+import { dump } from "app/utils/account"
+import dayjs from "dayjs"
 export const SafetyScreen = () => {
     const insets = useSafeAreaInsets();
     const $colors = useRecoilValue(ColorsState);
     const $theme = useRecoilValue(ThemeState);
     const { t } = useTranslation('screens')
     const confirmModalRef = useRef<ConfirmModalType>(null);
-    const backupPriKeyModalRef = useRef<BackupPriKeyModalType>(null);
     return <View style={{
         flex: 1,
         paddingTop: insets.top,
         backgroundColor: $colors.secondaryBackground,
     }}>
-        <Navbar />
-        <Text style={{
-            color: $colors.text,
-            fontSize: s(26),
-            fontWeight: "600",
-            marginTop: s(10),
-            marginLeft: s(10),
-            marginVertical: s(30)
-        }}>安全</Text>
+        <Navbar title="安全" />
         <View style={{
+            marginTop: s(30),
             flex: 1,
             backgroundColor: "white",
             width: s(375),
@@ -49,9 +43,32 @@ export const SafetyScreen = () => {
             <CardMenu items={[
                 {
                     icon: <Icon name={$theme == "dark" ? "backupDark" : "backupLight"} />,
-                    title: "备份所有",
+                    title: "备份所有账户",
                     onPress: () => {
-                        backupPriKeyModalRef.current?.open()
+                        confirmModalRef.current?.open({
+                            content: "是否备份所有账户？",
+                            title: "备份所有账户",
+                            onCancel: () => { },
+                            onSubmit: async () => {
+                                if (Platform.OS == "android") {
+                                    const fileName = FileSystem.documentDirectory + `bobo_backup_${dayjs().format("YYYYmmdhms")}.txt`;
+                                    await FileSystem.writeAsStringAsync(fileName, dump(), { encoding: FileSystem.EncodingType.UTF8 })
+                                    if(!Sharing.isAvailableAsync()){
+                                        toast("不能分享")
+                                    }else{
+                                        Sharing.shareAsync(fileName)
+                                    }
+                                } else {
+                                    const fileName = FileSystem.cacheDirectory + `bobo_backup_${dayjs().format("YYYYmmdhms")}.txt`;
+                                    await FileSystem.writeAsStringAsync(fileName, dump(), { encoding: FileSystem.EncodingType.UTF8 })
+                                    if(!Sharing.isAvailableAsync()){
+                                        toast("不能分享")
+                                    }else{
+                                        Sharing.shareAsync(fileName)
+                                    }
+                                }
+                            }
+                        })
                     },
                 },
                 {
@@ -125,7 +142,6 @@ export const SafetyScreen = () => {
             ]} />
         </View>
         <ConfirmModal ref={confirmModalRef} />
-        <BackupPriKeyModal ref={backupPriKeyModalRef}/>
     </View>
 }
 

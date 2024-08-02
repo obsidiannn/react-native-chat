@@ -1,14 +1,14 @@
 import { useRef } from "react";
 import { StyleSheet, TouchableOpacity, ViewStyle } from "react-native";
 import BottomOptionModal, { BottomOptionModalType } from "./BottomOptionModal"
-import { Image, ImageStyle } from "expo-image";
+import { Image } from "expo-image";
 import { useTranslation } from 'react-i18next';
 import { chooseImage } from "app/services/file.service";
 import { s } from "app/utils/size";
 import { useRecoilValue } from "recoil";
 import { ColorsState } from "app/stores/system";
 
-export default (props: {
+export const AvatarUpload =  (props: {
     avatar: string;
     onChange: (v: string) => void
     border?: boolean;
@@ -98,3 +98,5 @@ const styles = StyleSheet.create({
         borderRadius: s(11),
     }
 });
+
+export default AvatarUpload;

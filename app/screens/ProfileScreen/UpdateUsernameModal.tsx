@@ -19,7 +19,7 @@ export interface UpdateUsernameModalRef {
     ) => void;
 
 }
-export default  forwardRef((_, ref) => {
+export const UpdateUserNameModal =  forwardRef((_, ref) => {
     const maxLength = 60
     const { t } = useTranslation('screens')
     const [val, setVal] = useState('')

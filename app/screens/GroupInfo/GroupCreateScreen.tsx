@@ -227,16 +227,7 @@ export const GroupCreateScreen = ({ route, navigation }: Props) => {
                 </View>
 
 
-                <Button onPress={doGroupCreate} style={{
-                    marginTop: s(40),
-                    height: s(50),
-                    borderRadius: s(15),
-                    backgroundColor: themeColor.primary
-                }} >
-                    <Text style={{
-                        color: themeColor.textChoosed
-                    }}> {t('groupCreate.title_group_create')}</Text>
-                </Button>
+                <Button onPress={doGroupCreate} size="small" label={t('groupCreate.title_group_create')}/>
                 <LoadingModal ref={loadingModalRef} />
             </View>
         </View>

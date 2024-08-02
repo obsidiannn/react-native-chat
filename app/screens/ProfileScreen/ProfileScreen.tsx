@@ -1,4 +1,4 @@
-import AvatarUpload from "app/components/AvatarUpload";
+import {AvatarUpload} from "app/components/AvatarUpload";
 import { AuthUser } from "app/stores/auth";
 import { ColorsState, ThemeState } from "app/stores/system";
 import { s } from "app/utils/size";
@@ -7,7 +7,7 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import { UpdateNickNameModal, UpdateNickNameModalRef } from "./UpdateNickNameModal";
 import { UpdateGenderModal, UpdateGenderModalRef } from "./UpdateGenderModal";
 import { UpdateSignModal, UpdateSignModalRef } from "./UpdateSignModal";
-import UpdateUserNameModal, { UpdateUsernameModalRef } from "./UpdateUserNameModal";
+import  { UpdateUserNameModal,UpdateUsernameModalRef } from "./UpdateUserNameModal";
 import toast from "app/utils/toast";
 import { IModel } from "@repo/enums";
 import { AuthService } from "app/services/auth.service";
@@ -43,15 +43,7 @@ export const ProfileScreen = () => {
         paddingTop: insets.top,
         backgroundColor: $colors.secondaryBackground,
     }}>
-        <Navbar />
-        <Text style={{
-            color: $colors.text,
-            fontSize: s(26),
-            fontWeight: "600",
-            marginTop: s(10),
-            marginLeft: s(10),
-            marginVertical: s(30)
-        }}>{t('profile.title_user_profile')}</Text>
+        <Navbar title={t('profile.title_user_profile')} />
         <View style={{
             width: s(343),
             padding: s(16),

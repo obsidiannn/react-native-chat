@@ -71,20 +71,20 @@ export const UpdateNickNameModal = forwardRef((_, ref) => {
                     marginTop: s(22)
                 }}>
                     <TextInput
-                    // placeholder={t('profile.placeholder_nickname')}
-                    // //placeholderTextColor={themeColor.border}
-                    // maxLength={maxLength}
+                    placeholder={t('profile.placeholder_nickname')}
+                    //placeholderTextColor={themeColor.border}
+                    maxLength={maxLength}
 
-                    // style={{
-                    //     fontSize: s(16),
-                    //     height: s(44),
-                    //     color: themeColor.text,
-                    //     backgroundColor: themeColor.background,
-                    //     width: '100%',
-                    //     borderRadius: s(12),
-                    // }}
-                    // onChangeText={(v) => setVal(v)}
-                    // value={val}
+                    style={{
+                        fontSize: s(16),
+                        height: s(44),
+                        color: themeColor.text,
+                        backgroundColor: themeColor.background,
+                        width: '100%',
+                        borderRadius: s(12),
+                    }}
+                    onChangeText={(v) => setVal(v)}
+                    value={val}
                     />
                     <Text style={{
                         color: themeColor.border,

@@ -50,45 +50,58 @@ export const ScreenModal = forwardRef((props: {
             }
         }
     }, [])
-    if (Platform.OS == "ios") {
-        return (
-            <Modal transparent={false} style={{ flex: 1 }} visible={visible} animationType="slide">
-                <GestureDetector gesture={gesture}>
-                    <View style={[
-                        {
-                            paddingTop: insets.top,
-                            flex: 1,
-                            backgroundColor: $colors.secondaryBackground,
-                        },
-                        props.style
-                    ]}>
-                        <Navbar onLeftPress={() => setVisible(false)} />
-                        {props.children}
-                    </View>
-                </GestureDetector>
-            </Modal>
-        )
-    }
-    return (
-        <Modal transparent={false} style={{ flex: 1 }} visible={visible} animationType="slide">
-            <WithHoc>
-                <GestureDetector gesture={gesture}>
-                    <View style={[
-                        {
-                            paddingTop: insets.top,
-                            flex: 1,
-                            backgroundColor: $colors.secondaryBackground,
-                        },
-                        props.style
-                    ]}>
-                        <Navbar onLeftPress={() => setVisible(false)} />
-                        <>
-                            {props.children}
-                        </>
-                    </View>
-                </GestureDetector>
-            </WithHoc>
-        </Modal>
-    )
+    return <Modal transparent={false} style={{ flex: 1 }} visible={visible} animationType="slide">
+        <View style={[
+            {
+                paddingTop: insets.top,
+                flex: 1,
+                backgroundColor: $colors.secondaryBackground,
+            },
+            props.style
+        ]}>
+            <Navbar onLeftPress={() => setVisible(false)} />
+            {props.children}
+        </View>
+    </Modal>
+    // if (Platform.OS == "ios") {
+    //     return (
+    //         <Modal transparent={false} style={{ flex: 1 }} visible={visible} animationType="slide">
+    //             <GestureDetector gesture={gesture}>
+    //                 <View style={[
+    //                     {
+    //                         paddingTop: insets.top,
+    //                         flex: 1,
+    //                         backgroundColor: $colors.secondaryBackground,
+    //                     },
+    //                     props.style
+    //                 ]}>
+    //                     <Navbar onLeftPress={() => setVisible(false)} />
+    //                     {props.children}
+    //                 </View>
+    //             </GestureDetector>
+    //         </Modal>
+    //     )
+    // }
+    // return (
+    //     <Modal transparent={false} style={{ flex: 1 }} visible={visible} animationType="slide">
+    //         <WithHoc>
+    //             <GestureDetector gesture={gesture}>
+    //                 <View style={[
+    //                     {
+    //                         paddingTop: insets.top,
+    //                         flex: 1,
+    //                         backgroundColor: $colors.secondaryBackground,
+    //                     },
+    //                     props.style
+    //                 ]}>
+    //                     <Navbar onLeftPress={() => setVisible(false)} />
+    //                     <>
+    //                         {props.children}
+    //                     </>
+    //                 </View>
+    //             </GestureDetector>
+    //         </WithHoc>
+    //     </Modal>
+    // )
 
 })

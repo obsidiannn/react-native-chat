@@ -15,15 +15,7 @@ export default (props: {
         <Checkbox style={{
             borderRadius: s(15)
         }} color={props.primary} value={props.checkedAll} onValueChange={(value) => props.onCheckedAllChange(value)} />
-        <Button style={{
-            ...styles.button,
-            backgroundColor: props.primary
-        }} onPress={() => props.onConfirm()} >
-            <Text style={{
-                ...styles.buttonLabel,
-                color: colors.palette.neutral100
-            }}>完成</Text>
-        </Button>
+        <Button label="完成" size="small" onPress={() => props.onConfirm()} />
     </View>
 }
 const styles = StyleSheet.create({

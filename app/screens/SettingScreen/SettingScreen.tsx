@@ -30,17 +30,10 @@ export const SettingScreen = ({ navigation }: Props) => {
         paddingTop: insets.top,
         backgroundColor: $colors.secondaryBackground,
     }}>
-        <Navbar />
-        <Text style={{
-            color: $colors.text,
-            fontSize: s(26),
-            fontWeight: "600",
-            marginTop: s(10),
-            marginLeft: s(10),
-            marginVertical: s(30)
-        }}>设置</Text>
+        <Navbar title="设置"/>
         <View style={{
             flex: 1,
+            marginTop: s(30),
             backgroundColor: "white",
             width: s(375),
             borderTopRightRadius: s(32),
