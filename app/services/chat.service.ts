@@ -116,14 +116,17 @@ const refreshSequence = async (chats: ChatDetailItem[]): Promise<ChatDetailItem[
         sequenceResp.items.forEach(i => {
             seqMap.set(i.chatId, i)
         })
-        chats.forEach(c => {
+        return chats.map(c => {
             const seq = seqMap.get(c.id)
+            console.log('seq',seq);
+            
             if (seq) {
                 c.lastSequence = seq.lastSequence
                 c.lastReadSequence = seq.lastReadSequence
                 c.firstSequence = seq.firstSequence
                 c.lastTime = seq.lastTime
             }
+            return c
         })
     }
     return chats

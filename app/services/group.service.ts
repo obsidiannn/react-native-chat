@@ -106,7 +106,7 @@ const create = async (name: string, avatar: string, isEnc: boolean, searchType: 
 
     const myWallet = globalThis.wallet
     const sharedSecret = myWallet?.computeSharedSecret(myWallet.getPublicKey())
-    const enc_key = quickCrypto.En(groupPassword, Buffer.from(sharedSecret, 'utf8'));
+    const enc_key = quickCrypto.En(sharedSecret, Buffer.from(groupPassword, 'utf8'));
 
     const group: GroupCreateReq =
     {
@@ -150,7 +150,7 @@ const invite = async (members: {
     }[] = [];
     members.forEach(member => {
         const itemSecretKey = wallet?.computeSharedSecret(member.pubKey ?? '')
-        const enkey = quickCrypto.En(groupInfo.groupPassword, Buffer.from(itemSecretKey ?? '', 'utf8'));
+        const enkey = quickCrypto.En(itemSecretKey??'', Buffer.from(groupInfo.groupPassword ?? '', 'utf8'));
         items.push({
             uid: Number(member.id),
             encPri: myWallet.getPublicKey(),

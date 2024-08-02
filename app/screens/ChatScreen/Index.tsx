@@ -9,7 +9,7 @@ import { colors } from "../../theme/colors";
 import { Button } from "app/components";
 import { s } from "app/utils/size";
 import { useTranslation } from "react-i18next";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { ColorsState } from "app/stores/system";
 import { StackScreenProps } from "@react-navigation/stack";
 import chatService from "app/services/chat.service";
@@ -25,7 +25,7 @@ export const ChatScreen = ({ navigation }: Props) => {
     const pagerViewRef = useRef<PagerView>(null);
     const [pageIndex, setPageIndex] = useState(0);
     const themeColor = useRecoilValue(ColorsState)
-    const setChatsStore = useSetRecoilState(ChatsStore)
+    const [chatStore, setChatsStore] = useRecoilState(ChatsStore)
     const [friends, setFriends] = useState<IUser[]>([])
     const [groups, setGroups] = useState<GroupSingleItem[]>([])
     const { t } = useTranslation('screens')
@@ -33,7 +33,7 @@ export const ChatScreen = ({ navigation }: Props) => {
     const changeTab = (idx: number) => {
         pagerViewRef.current?.setPage(idx);
         if (idx === 0) {
-            chatService.mineChatList().then(res => {
+            chatService.refreshSequence(chatStore).then(res => {
                 setChatsStore(res)
             })
         }

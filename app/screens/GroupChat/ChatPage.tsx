@@ -28,6 +28,7 @@ import quickCrypto from "app/utils/quick-crypto";
 import generateUtil from "app/utils/generateUtil";
 import { GestureResponderEvent } from "react-native";
 import { ThemeState } from "app/stores/system";
+import chatService from "app/services/chat.service";
 
 
 export interface GroupChatPageRef {
@@ -99,20 +100,23 @@ export default forwardRef((props, ref) => {
         
         authorRef.current = author
         chatItemRef.current = chatItem
+
+
+
         if (sharedSecretRef.current) {
             return
         }
         let sharedSecret: string
         if (author?.encPri !== '' && author?.encPri !== null && author?.encPri !== undefined) {
-            console.log('a', author);
+            console.log('[groupa]', author);
 
             const key = myWallet.computeSharedSecret(author.encPri)
             const decode = quickCrypto.De(key, Buffer.from(author.encKey, 'hex'))
             sharedSecret = Buffer.from(decode).toString('utf8')
         } else {
-            console.log('b', author);
+            console.log('[groupb]', author);
             const key = myWallet.computeSharedSecret(myWallet.getPublicKey())
-            const decode = quickCrypto.De(key, Buffer.from(author.encKey, 'utf8'))
+            const decode = quickCrypto.De(key, Buffer.from(author.encKey, 'hex'))
             sharedSecret = Buffer.from(decode).toString('utf8')
             console.log('sharedSecret==', sharedSecret);
         }
@@ -147,6 +151,17 @@ export default forwardRef((props, ref) => {
     }));
 
     const messageLoad = async (_chatItem: ChatDetailItem) => {
+        try{
+            console.log('刷新chat');
+            
+            const newChatItem = await chatService.refreshSequence([_chatItem])
+            _chatItem = newChatItem[0]
+            console.log(newChatItem);
+            
+        }catch(e){
+
+        }
+
         firstSeq.current = _chatItem.lastSequence
         lastSeq.current = _chatItem.lastSequence
         loadMessages('up', true);
@@ -491,7 +506,6 @@ export default forwardRef((props, ref) => {
                     loadMessages('up')
                 }}
                 showUserAvatars
-                showUserNames
                 onMessageLongPress={handleLongPress}
                 usePreviewData={false}
                 theme={theme === 'dark' ? darkTheme : lightTheme}

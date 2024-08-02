@@ -59,7 +59,7 @@ export const GroupCreateScreen = ({ route, navigation }: Props) => {
                 imgUrl = url
             }
             console.log('group avatar = ', imgUrl);
-            const group = await groupService.create(createState.name, imgUrl, createState.isEnc, createState.searchType,createState.describe)
+            const group = await groupService.create(createState.name, imgUrl, createState.isEnc, createState.searchType, createState.describe)
             const ops = route.params.selected
             if (ops.length > 0) {
                 const items = ops.map(o => {
@@ -68,10 +68,10 @@ export const GroupCreateScreen = ({ route, navigation }: Props) => {
                 // 這裏是首次創建，所以share secret 是用的自己的公私鑰
                 const myWallet = globalThis.wallet
                 const sharedSecret = myWallet?.computeSharedSecret(myWallet.getPublicKey())
-                const groupPassword = quickCrypto.De(group.encKey, Buffer.from(sharedSecret ?? '', 'utf8'));
+                const groupPassword = quickCrypto.De(sharedSecret ?? '', Buffer.from(group.encKey ?? '', 'hex'));
                 const groupInfo = {
                     id: group.id ?? -1,
-                    groupPassword: Buffer.from(groupPassword).toString('hex')
+                    groupPassword: Buffer.from(groupPassword).toString('utf8')
                 }
                 await groupService.invite(items, groupInfo);
             }
@@ -208,8 +208,8 @@ export const GroupCreateScreen = ({ route, navigation }: Props) => {
                             tintColor: themeColor.text
                         }} />
                         <View>
-                            <Text style={{ fontSize: s(16),marginBottom: s(4) }}>加密（不可更改）</Text>
-                            <Text style={{ fontSize: s(14),color: themeColor.secondaryText }}>不加密，用户将直接可以加入群聊</Text>
+                            <Text style={{ fontSize: s(16), marginBottom: s(4) }}>加密（不可更改）</Text>
+                            <Text style={{ fontSize: s(14), color: themeColor.secondaryText }}>不加密，用户将直接可以加入群聊</Text>
                         </View>
                     </View>
                     <Switch value={createState.isEnc}
@@ -227,7 +227,7 @@ export const GroupCreateScreen = ({ route, navigation }: Props) => {
                 </View>
 
 
-                <Button onPress={doGroupCreate} size="small" label={t('groupCreate.title_group_create')}/>
+                <Button onPress={doGroupCreate} size="small" label={t('groupCreate.title_group_create')} />
                 <LoadingModal ref={loadingModalRef} />
             </View>
         </View>

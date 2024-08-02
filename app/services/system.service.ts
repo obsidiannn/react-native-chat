@@ -1,15 +1,16 @@
 import { globalKV, globalStorage } from "app/utils/kv-tool"
 import { getLists } from "app/api/sys/node"
-import { SYSTEM_API_URL } from "@env";
+import { SYSTEM_API_URL, SYSTEM_PUBLIC_KEY, SIZE_BASE_HEIGHT } from "@env";
 
 export class SystemService {
     static GetApiUrlByCache = () => {
         const apiUrl = globalStorage.get('string', 'NOW_API_URL')
-        console.log("@@@@@@@@apiUrl",apiUrl)
+        console.log("@@@@@@@@apiUrl", apiUrl)
         if (apiUrl) {
             return apiUrl as string;
         }
-        console.log("@@@@@@@@apiUrl",SYSTEM_API_URL)
+        console.log("@@@@@@@@apiUrl", SYSTEM_API_URL, SIZE_BASE_HEIGHT)
+        console.log("@@@@@@@@SYSTEM_PUBLIC_KEY", SYSTEM_PUBLIC_KEY)
         return SYSTEM_API_URL;
     }
     static GetApiUrl = () => {

@@ -88,10 +88,15 @@ export const GroupChatScreen = ({ navigation, route }: Props) => {
         }
 
         const _chatItem = route.params.item as ChatDetailItem
-        console.log(_chatItem);
         chatItemRef.current = _chatItem
-        setChatItem(_chatItem)
         groupIdRef.current = _chatItem.sourceId
+
+        console.log('chatPage', _chatItem);
+
+        console.log("sourceId", groupIdRef.current, _chatItem.sourceId);
+
+        setChatItem(_chatItem)
+
         console.log('羣id', groupIdRef.current)
         await loadGroup()
         loadMembers();
