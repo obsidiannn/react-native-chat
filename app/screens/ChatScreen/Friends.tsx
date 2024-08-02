@@ -52,11 +52,12 @@ const FriendListView = (props: { contacts: IUser[] }) => {
           data={props.contacts}
           renderItem={({ item, index }) => {
             return <ContractListItem onPress={async () => {
-              const chatDetail = await chatService.mineChatList(String(item.chatId));
-              if (!chatDetail || chatDetail === null) {
+              const chatDetails = await chatService.mineChatList([String(item.chatId)]);
+              if (!chatDetails || chatDetails.length <= 0) {
                 toast("會話不存在")
                 return
               }
+              const chatDetail = chatDetails[0]
               console.log('chatDetail', chatDetail);
               navigate('UserChatUI', {
                 item: chatDetail,

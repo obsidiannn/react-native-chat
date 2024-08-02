@@ -8,7 +8,7 @@ import groupService from "app/services/group.service";
 import { ChatDetailItem, GroupDetailItem, GroupMemberItemVO } from "@repo/types";
 import ChatPage, { GroupChatPageRef } from './ChatPage';
 import { GroupChatUiContext } from "./context";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilValue } from "recoil";
 import { IUser } from "drizzle/schema";
 import { useTranslation } from 'react-i18next';
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -73,10 +73,9 @@ export const GroupChatScreen = ({ navigation, route }: Props) => {
     }, [])
 
     const reloadChat = (chat: ChatDetailItem) => {
-        console.log('[group]reload', chat);
-        setChatItem(chat)
-        chatService.mineChatList(chat.id).then(res => {
-            chatService.changeChat(chatMapper.dto2Entity(res[0]))
+        chatService.changeChat(chat).then(() => {
+            console.log('[group]reload', chat);
+            setChatItem(chat)
         })
         // chatItemRef.current = chat
     }

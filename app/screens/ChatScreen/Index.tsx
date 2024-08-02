@@ -1,5 +1,5 @@
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import PagerView from "react-native-pager-view";
 import { StyleSheet, View } from "react-native";
 import ChatView from "./Chats";
@@ -17,7 +17,7 @@ import { App } from "types/app";
 import { ChatsStore } from "app/stores/auth";
 import friendService from "app/services/friend.service";
 import { IUser } from "drizzle/schema";
-import { GroupSingleItem } from "@repo/types";
+import { ChatDetailItem, GroupSingleItem } from "@repo/types";
 import groupService from "app/services/group.service";
 
 type Props = StackScreenProps<App.StackParamList, 'ChatScreen'>;
@@ -32,9 +32,33 @@ export const ChatScreen = ({ navigation }: Props) => {
 
     const changeTab = (idx: number) => {
         pagerViewRef.current?.setPage(idx);
+        dataRefresh(idx)
+    }
+
+    const dataRefresh = (idx: number) => {
         if (idx === 0) {
-            chatService.refreshSequence(chatStore).then(res => {
-                setChatsStore(res)
+            chatService.checkAndRefresh(chatStore).then(res => {
+                const oldsMap = new Map<string, ChatDetailItem>()
+                if (res.olds.length > 0) {
+                    res.olds.forEach(o => {
+                        oldsMap.set(o.id, o)
+                    })
+                }
+                setChatsStore((items) => {
+                    if (res.news && res.news.length > 0) {
+                        const newItems = items.map(t => {
+                            const old = oldsMap.get(t.id)
+                            return old ? old : t
+                        })
+                        return res.news.concat(newItems)
+                    } else {
+                        const newItems = items.map(t => {
+                            const old = oldsMap.get(t.id)
+                            return old ? old : t
+                        })
+                        return newItems
+                    }
+                })
             })
         }
         if (idx === 1) {
@@ -66,15 +90,28 @@ export const ChatScreen = ({ navigation }: Props) => {
                 backgroundColor: themeColor.btnChoosed,
                 color: colors.palette.primary,
                 borderColor: colors.palette.gray200,
+                marginRight: s(8)
             }
         } else {
             return {
                 backgroundColor: themeColor.btnDefault,
                 color: colors.palette.primary,
                 borderColor: colors.palette.gray200,
+                marginRight: s(8)
             }
         }
     }
+
+    useEffect(() => {
+        const focusEvent = navigation.addListener('focus', () => {
+            console.log('chat screen on focus');
+            
+            dataRefresh(pageIndex)
+        })
+        return () => {
+            navigation.removeListener('focus', focusEvent)
+        }
+    }, [navigation])
 
     return <View style={[styles.container, {
         backgroundColor: themeColor.background

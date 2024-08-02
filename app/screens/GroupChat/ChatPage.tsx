@@ -96,8 +96,8 @@ export default forwardRef((props, ref) => {
             return
         }
         console.log('會話id conversationIdRef', chatItem.id)
-        console.log('author=',author);
-        
+        console.log('author=', author);
+
         authorRef.current = author
         chatItemRef.current = chatItem
 
@@ -151,14 +151,14 @@ export default forwardRef((props, ref) => {
     }));
 
     const messageLoad = async (_chatItem: ChatDetailItem) => {
-        try{
+        try {
             console.log('刷新chat');
-            
+
             const newChatItem = await chatService.refreshSequence([_chatItem])
             _chatItem = newChatItem[0]
             console.log(newChatItem);
-            
-        }catch(e){
+
+        } catch (e) {
 
         }
 
@@ -205,6 +205,10 @@ export default forwardRef((props, ref) => {
                 }
             } else {
                 seq += 1
+            }
+        } else {
+            if (seq <= 1) {
+                seq = 10
             }
         }
         console.log('load group', direction, seq);

@@ -14,7 +14,7 @@ import Navbar from "app/components/Navbar";
 import { s, verticalScale } from "app/utils/size";
 import { useRecoilValue } from "recoil";
 import { ColorsState, ThemeState } from "app/stores/system"
-import {Icon} from "app/components/Icon/Icon";
+import { Icon } from "app/components/Icon/Icon";
 import { IModel } from "@repo/enums";
 import { Button } from "app/components";
 
@@ -37,6 +37,7 @@ export const UserInfoScreen = ({ navigation, route }: Props) => {
                         setUser({
                             ...u,
                             isFriend: item.status == true ? 1 : 0,
+                            chatId: item.chatId
                         } as IUser)
                     }
                 })
@@ -48,7 +49,7 @@ export const UserInfoScreen = ({ navigation, route }: Props) => {
     const renderLabel = (isFriend: number) => {
         if (isFriend === IModel.ICommon.ICommonBoolEnum.YES) {
             return <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                <Icon name={$theme === 'dark'?'chatDark':'chatLight'} />
+                <Icon name={$theme === 'dark' ? 'chatDark' : 'chatLight'} />
                 <Text style={{
                     color: themeColor.textChoosed
                 }}>{t('userInfo.label_start_chat')}
@@ -56,7 +57,7 @@ export const UserInfoScreen = ({ navigation, route }: Props) => {
             </View>
         } else {
             return <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                <Icon name={$theme === 'dark'?'chatDark':'chatLight'} />
+                <Icon name={$theme === 'dark' ? 'chatDark' : 'chatLight'} />
                 <Text style={{
                     color: themeColor.textChoosed
                 }}>{t('userInfo.label_add_friend')}
@@ -100,23 +101,18 @@ export const UserInfoScreen = ({ navigation, route }: Props) => {
                                     userId: user.id
                                 })
                             } else {
-                                chatService.getChatIdByUserId(user.id).then(id => {
-                                    if (id !== null) {
-                                        chatService.mineChatList(id).then(res => {
-                                            if (res.length > 0) {
-                                                console.log(res[0]);
-                                                navigation.navigate('UserChatScreen', {
-                                                    item: res[0]
-                                                })
-                                            }
-
+                                chatService.mineChatList([user?.chatId ?? '']).then(res => {
+                                    if (res.length > 0) {
+                                        console.log(res[0]);
+                                        navigation.navigate('UserChatScreen', {
+                                            item: res[0]
                                         })
                                     }
-                                })
 
+                                })
                             }
                         }}
-                        label={user?.isFriend ? "进入聊天": "添加好友"}
+                            label={user?.isFriend ? "进入聊天" : "添加好友"}
                         />
                     </View>
                 </View> : null}

@@ -96,7 +96,7 @@ const alphabetList = (items: GroupMemberItemVO[]) => {
     };
 }
 
-const create = async (name: string, avatar: string, isEnc: boolean, searchType: string, describe: string) => {
+const create = async (name: string, avatar: string, isEnc: boolean, searchType: string, describe: string,cover: string) => {
     if (!globalThis.wallet) {
         throw new Error('請先登錄');
     }
@@ -118,7 +118,8 @@ const create = async (name: string, avatar: string, isEnc: boolean, searchType: 
         searchType: Number(searchType),
         encPri: '',
         encKey: Buffer.from(enc_key).toString('hex'),
-        describe: describe
+        describe: describe,
+        cover: cover
     }
     const { id } = await groupApi.create(group);
     group.id = id

@@ -70,7 +70,6 @@ const AppStack = () => {
           if (res !== null && res.length > 0) {
             console.log('change chat detail');
             setChatsStore(res)
-            chatService.batchSaveLocal(res)
           }
         })
 

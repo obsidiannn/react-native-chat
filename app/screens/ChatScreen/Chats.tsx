@@ -4,7 +4,7 @@ import { EmptyComponent } from "app/components/EmptyComponent"
 import LoadingComponent from "app/components/Loading"
 import { formatDate } from "app/utils/formatDate"
 import { s } from "app/utils/size"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { StyleSheet, Text, View, ActivityIndicator } from "react-native"
 import dayjs from 'dayjs'
 import { useRecoilValue } from "recoil"
@@ -18,6 +18,8 @@ const ChatView = () => {
 
     const chats = useRecoilValue(ChatsStore)
     const [loading, setLoading] = useState<boolean>(false)
+
+ 
 
     const renderList = () => {
         return <View style={{

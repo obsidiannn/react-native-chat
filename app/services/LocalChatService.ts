@@ -12,6 +12,55 @@ export class LocalChatService {
     static queryPage() {
 
     }
+
+    /**
+     * 获取最新加入的chatId
+     * @param chatIds 
+     */
+    static async findLatestId(): Promise<number | null> {
+        const db = GetDB()
+        if (!db) {
+            return null
+        }
+        const result = await db.query.chats.findFirst({
+            columns: {
+                createdAt: true
+            },
+            orderBy: [
+                desc(chats.createdAt)
+            ]
+        })
+        if (result) {
+            return result.createdAt
+        }
+        return null
+    }
+
+    /**
+     * 哪些id不在db内
+     * @param chatIds 不存在的id
+     */
+    static async findIdNotIn(chatIds: string[]): Promise<string[]> {
+        if (!chatIds || chatIds.length <= 0) {
+            return []
+        }
+
+        const db = GetDB()
+        const result = await db.query.chats.findMany({
+            columns: {
+                id: true
+            },
+            where: inArray(chats.id, chatIds),
+        })
+        if (result && result.length > 0) {
+            const idSet = new Set<string>(result.map(r => r.id))
+            return chatIds.filter(e => {
+                return !idSet.has(e)
+            })
+        }
+        return chatIds
+    }
+
     // 不存在过期策略的chat list
     static async findByIdInWithoutTimeout(chatIds: string[]): Promise<IChat[]> {
         if (chatIds.length <= 0)
@@ -37,6 +86,8 @@ export class LocalChatService {
     }
 
     static async save(chat: IChat): Promise<IChat> {
+        console.log('[sqlite] chat save');
+
         const entity = {
             ...chat,
             refreshAt: dayjs().unix()
@@ -57,11 +108,18 @@ export class LocalChatService {
         if (!db) {
             return
         }
+        console.log('[sqlite] chat saveBatch');
         const now = dayjs().unix()
         await db.transaction(async (tx) => {
-            for (let index = 0; index < entities.length; index++) {
-                const e = entities[index];
-                await tx.insert(chats).values(e).onConflictDoUpdate({ target: chats.id, set: { ...e, refreshAt: now } })
+            try {
+                for (let index = 0; index < entities.length; index++) {
+                    const e = entities[index];
+                    await tx.insert(chats).values(e).onConflictDoUpdate({ target: chats.id, set: { ...e, refreshAt: now } })
+                }
+                tx.run(sql`commit`)
+            } catch (e) {
+                tx.rollback()
+                console.error(e)
             }
         });
 

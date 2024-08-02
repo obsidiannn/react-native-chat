@@ -37,4 +37,7 @@ export const Init = async (name: string) => {
 
 
 
-export const GetDB = () => db;
+export const GetDB = () => {
+    
+    return db
+};

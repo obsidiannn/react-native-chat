@@ -19,7 +19,8 @@ import { Button } from "app/components";
 import { useRecoilValue } from "recoil";
 import { ColorsState } from "app/stores/system";
 import { Image } from "expo-image";
-
+import { UploadArea } from "app/components/UploadArea";
+import { ScrollView } from "react-native-gesture-handler";
 
 type Props = StackScreenProps<App.StackParamList, 'GroupCreateScreen'>;
 interface GroupCreateType {
@@ -27,7 +28,8 @@ interface GroupCreateType {
     avatar: string
     describe: string
     searchType: string
-    isEnc: boolean
+    isEnc: boolean,
+    cover: string
 }
 export const GroupCreateScreen = ({ route, navigation }: Props) => {
     const insets = useSafeAreaInsets();
@@ -39,7 +41,8 @@ export const GroupCreateScreen = ({ route, navigation }: Props) => {
         avatar: '',
         describe: '',
         searchType: '0',
-        isEnc: true
+        isEnc: true,
+        cover: ''
     })
 
     const doGroupCreate = async () => {
@@ -47,8 +50,9 @@ export const GroupCreateScreen = ({ route, navigation }: Props) => {
             toast(t('groupCreate.require_name'))
             return
         }
-        let imgUrl = createState.avatar
         loadingModalRef.current?.open()
+        let imgUrl = createState.avatar
+        let coverUrl = createState.cover
         try {
             if (imgUrl && imgUrl !== '') {
                 const url = await fileService.uploadImage(imgUrl)
@@ -58,8 +62,19 @@ export const GroupCreateScreen = ({ route, navigation }: Props) => {
                 }
                 imgUrl = url
             }
-            console.log('group avatar = ', imgUrl);
-            const group = await groupService.create(createState.name, imgUrl, createState.isEnc, createState.searchType, createState.describe)
+            if (coverUrl && coverUrl !== '') {
+                const url = await fileService.uploadImage(coverUrl)
+                if (!url || url === null || url === '') {
+                    toast(t('groupCreate.error_upload'))
+                    return
+                }
+                coverUrl = url
+            }
+            console.log('group avatar = ', imgUrl, 'cover=', coverUrl);
+            const group = await groupService.create(createState.name,
+                imgUrl, createState.isEnc,
+                createState.searchType,
+                createState.describe, coverUrl)
             const ops = route.params.selected
             if (ops.length > 0) {
                 const items = ops.map(o => {
@@ -92,7 +107,8 @@ export const GroupCreateScreen = ({ route, navigation }: Props) => {
             paddingBottom: insets.bottom,
         }}>
             <Navbar title={t('groupCreate.title_group_create')} />
-            <View style={{
+            <ScrollView style={{
+                flex: 1,
                 paddingHorizontal: s(15),
                 paddingTop: s(20),
                 backgroundColor: themeColor.background
@@ -121,11 +137,15 @@ export const GroupCreateScreen = ({ route, navigation }: Props) => {
                         })
                     }}
                 />
-                <View style={{
+                <UploadArea style={{
                     ...styles.sub_area,
                     backgroundColor: themeColor.secondaryBackground,
                     borderColor: themeColor.border,
-
+                }} onChange={(v: string) => {
+                    setCreateState({
+                        ...createState,
+                        cover: v
+                    })
                 }}>
                     <View style={{
                         borderRadius: s(24),
@@ -141,8 +161,7 @@ export const GroupCreateScreen = ({ route, navigation }: Props) => {
                         }} />
                     </View>
                     <Text style={{ color: themeColor.primary }}>上传封面</Text>
-
-                </View>
+                </UploadArea>
 
                 <TextInput
                     placeholder={t('groupCreate.placeholder_describe')}
@@ -226,10 +245,12 @@ export const GroupCreateScreen = ({ route, navigation }: Props) => {
                         }} />
                 </View>
 
+                <Button onPress={doGroupCreate} size="large" label={t('groupCreate.title_group_create')} containerStyle={{
+                    marginVertical: s(24)
+                }} />
 
-                <Button onPress={doGroupCreate} size="small" label={t('groupCreate.title_group_create')} />
-                <LoadingModal ref={loadingModalRef} />
-            </View>
+            </ScrollView>
+            <LoadingModal ref={loadingModalRef} />
         </View>
     );
 };

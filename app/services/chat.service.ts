@@ -34,17 +34,17 @@ const queryChatByIdIn = async (chatIds: string[]): Promise<Map<string, ChatDetai
 /**
  * 我的消息列表
  */
-const mineChatList = async (chatId?: string): Promise<ChatDetailItem[]> => {
+const mineChatList = async (_chatIds?: string[]): Promise<ChatDetailItem[]> => {
     try {
         const chatIds: string[] = []
-        if (!chatId) {
+        if (!_chatIds) {
             const idResp = await chatApi.mineChatIdList()
             if (!idResp.items || idResp.items.length <= 0) {
                 return []
             }
             chatIds.push(...idResp.items)
         } else {
-            chatIds.push(chatId)
+            chatIds.push(..._chatIds)
         }
         const chatsMap = await queryChatByIdIn(chatIds)
         const result: ChatDetailItem[] = []
@@ -99,6 +99,66 @@ const mineChatList = async (chatId?: string): Promise<ChatDetailItem[]> => {
     return mineLocalChats()
 }
 
+/**
+ * 刷新或者加载那些可能存在的新的chats
+ * @param chats 这里会存在
+ * @returns 
+ */
+const checkAndRefresh = async (chats: ChatDetailItem[]): Promise<{
+    news: ChatDetailItem[],
+    olds: ChatDetailItem[],
+}> => {
+    const news: ChatDetailItem[] = []
+    const olds: ChatDetailItem[] = []
+
+    try {
+        const lastest = await LocalChatService.findLatestId()
+        console.log('latest',lastest);
+        
+        if (lastest) {
+            const idResp = await chatApi.mineChatIdAfter(lastest)
+            if (idResp && idResp.items.length > 0) {
+                const missedIds = await LocalChatService.findIdNotIn(idResp.items)
+                if (missedIds && missedIds.length > 0) {
+                    const newsData = await mineChatList(missedIds)
+                    news.push(...newsData)
+                }
+            }
+        } else {
+            // const newsData = await mineChatList()
+            // news.push(...newsData)
+            // return { olds, news }
+        }
+    } catch (e) {
+        console.log('[chat]检查chats异常',e);
+    }
+
+    if (!chats || chats.length <= 0) {
+        return { news, olds }
+    }
+    const chatIds = chats.map(e => e.id)
+    const sequenceResp = await chatApi.queryChatSequence(chatIds)
+    if (sequenceResp.items && sequenceResp.items.length > 0) {
+        const seqMap = new Map<string, ChatSequenceItem>()
+        sequenceResp.items.forEach(i => {
+            seqMap.set(i.chatId, i)
+        })
+        const oldsData = chats.map(c => {
+            const seq = seqMap.get(c.id)
+            console.log('seq', seq);
+
+            if (seq) {
+                c.lastSequence = seq.lastSequence
+                c.lastReadSequence = seq.lastReadSequence
+                c.firstSequence = seq.firstSequence
+                c.lastTime = seq.lastTime
+            }
+            return c
+        })
+        olds.push(...oldsData)
+    }
+    return { news, olds }
+}
 
 /**
  * 加载sequence
@@ -118,8 +178,8 @@ const refreshSequence = async (chats: ChatDetailItem[]): Promise<ChatDetailItem[
         })
         return chats.map(c => {
             const seq = seqMap.get(c.id)
-            console.log('seq',seq);
-            
+            console.log('seq', seq);
+
             if (seq) {
                 c.lastSequence = seq.lastSequence
                 c.lastReadSequence = seq.lastReadSequence
@@ -151,5 +211,6 @@ export default {
     mineLocalChats,
     changeChat,
     batchSaveLocal,
-    refreshSequence
+    refreshSequence,
+    checkAndRefresh,
 }

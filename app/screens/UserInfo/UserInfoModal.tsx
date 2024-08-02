@@ -76,7 +76,7 @@ export default forwardRef((_, ref) => {
                                             })
                                         } else {
                                             if (user.chatId && user.chatId !== '') {
-                                                chatService.mineChatList(user.chatId).then(res => {
+                                                chatService.mineChatList([user.chatId]).then(res => {
                                                     if (res.length > 0) {
                                                         console.log(res[0]);
                                                         navigate('UserChatScreen', {

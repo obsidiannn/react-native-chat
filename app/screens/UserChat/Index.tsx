@@ -41,7 +41,7 @@ export const UserChatScreen = ({ navigation, route }: Props) => {
     }, [])
 
     const reloadChat = (id: string) => {
-        chatService.mineChatList(id).then(res => {
+        chatService.mineChatList([id]).then(res => {
             setChatItem(res[0])
             chatService.changeChat(chatMapper.dto2Entity(res[0]))
         })

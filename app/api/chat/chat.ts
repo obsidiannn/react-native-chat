@@ -7,7 +7,8 @@ import {
 
 // 我的会话列表（id）有序
 const mineChatIdList = async (): Promise<BaseArrayResp<string>> => await createInstance(true).post('/chats/mine-id-list');
-
+const mineChatIdAfter = async (lastTime: number): Promise<BaseArrayResp<string>> =>
+  await createInstance(true).post('/chats/mine-id-after', { lastTime });
 // 获取我的会话列表
 const mineChatList = async (): Promise<BaseArrayResp<ChatListItem>> => await createInstance(true).post('/chats/mine-list');
 const chatByIds = async (chatIds: string[]):
@@ -41,5 +42,6 @@ export default {
   mineChatDetailList,
   findChatIdByUserId,
   tokenRegister,
-  queryChatSequence
+  queryChatSequence,
+  mineChatIdAfter
 }

@@ -120,26 +120,28 @@ export const GroupInfoScreen = ({ navigation, route }: Props) => {
                             </View>
 
                         </View>
-                        <Button onPress={() => {
-                            if ((group?.role ?? -1) > 0) {
-                                chatService.mineChatList(group?.chatId ?? '').then(res => {
-                                    if (res.length > 0) {
-                                        const chatItem = res[0]
-                                        navigation.navigate('GroupChatScreen', {
-                                            item: chatItem
-                                        })
-                                    }
-                                })
-                            } else {
-                                applyJoinModalRef.current?.open(group?.id ?? 0);
-                            }
-                        }} style={{
-                            borderRadius: s(15),
-                            padding: s(4),
-                            backgroundColor: themeColor.primary
-                        }} >
-                            <Text style={{color: themeColor.textChoosed}}>{((group?.role ?? -1) > 0) ? "進入" : "加入"}</Text>
-                        </Button>
+                        <Button
+                            size="large"
+                            onPress={() => {
+                                if ((group?.role ?? -1) > 0) {
+                                    chatService.mineChatList([group?.chatId ?? '']).then(res => {
+                                        if (res.length > 0) {
+                                            const chatItem = res[0]
+                                            navigation.navigate('GroupChatScreen', {
+                                                item: chatItem
+                                            })
+                                        }
+                                    })
+                                } else {
+                                    applyJoinModalRef.current?.open(group?.id ?? 0);
+                                }
+                            }}
+                            containerStyle={{
+                                borderRadius: s(15),
+                                padding: s(4),
+                                backgroundColor: themeColor.primary
+                            }} label={((group?.role ?? -1) > 0) ? "進入" : "加入"}
+                            textStyle={{ color: themeColor.textChoosed }} />
 
                     </View>
                     <View style={{
