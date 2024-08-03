@@ -1,6 +1,7 @@
 import { useRef } from "react";
 import { StyleSheet, TouchableOpacity, ViewStyle } from "react-native";
-import BottomOptionModal, { BottomOptionModalType } from "./BottomOptionModal"
+import { MenuModalRef, MenuModal } from 'app/components/MenuModal/MenuModal';
+import { IMenuItem } from 'app/components/MenuModal/MenuItem';
 import { Image } from "expo-image";
 import { useTranslation } from 'react-i18next';
 import { chooseImage } from "app/services/file.service";
@@ -19,8 +20,8 @@ export const AvatarUpload =  (props: {
     console.log('avatar', props.avatar);
     const size = props.size ?? 64
     const themeColor = useRecoilValue(ColorsState)
-    const bottomOptionModalRef = useRef<BottomOptionModalType>();
-    const options = [
+    const menuModalRef = useRef<MenuModalRef>();
+    const options: IMenuItem[] = [
         {
             title: t('upload.label_camera'),
             onPress: () => {
@@ -60,7 +61,9 @@ export const AvatarUpload =  (props: {
             width: size ,
             height: size
         }} onPress={() => {
-            bottomOptionModalRef.current?.open();
+            menuModalRef.current?.open({
+                items: options
+            });
         }}>
             {props.avatar ? <Image source={props.avatar} style={{
                 borderRadius: s(32),
@@ -70,7 +73,7 @@ export const AvatarUpload =  (props: {
             }} /> : null}
             <Image source={require('assets/icons/circle-plus-primary.svg')} style={styles.icon} />
         </TouchableOpacity>
-        <BottomOptionModal ref={bottomOptionModalRef} items={options} />
+        <MenuModal ref={menuModalRef} />
     </>
 }
 const styles = StyleSheet.create({

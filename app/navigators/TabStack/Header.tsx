@@ -1,4 +1,4 @@
-import { Text, TouchableOpacity, View } from 'react-native';
+import { TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ColorsState, ThemeState } from 'app/stores/system';
 import { useRecoilValue } from 'recoil';
@@ -10,19 +10,58 @@ import SettingCenterModal, { SettingCenterModalType } from 'app/components/Setti
 import { useRef } from 'react';
 import SelectMemberModal, { SelectMemberModalType, SelectMemberOption } from "app/components/SelectMemberModal/Index"
 import scanService from 'app/services/scan.service';
-import ModelMenus, { ModelMenuProps } from 'app/components/ModelMenus';
 import friendService from 'app/services/friend.service';
 import { navigate } from '../navigationUtilities';
 import { BottomTabHeaderProps } from '@react-navigation/bottom-tabs';
+import { MenuModalRef, MenuModal } from 'app/components/MenuModal/MenuModal';
+import { IMenuItem } from 'app/components/MenuModal/MenuItem';
 export const Header = (props: BottomTabHeaderProps) => {
     const insets = useSafeAreaInsets();
     const $colors = useRecoilValue(ColorsState);
     const $theme = useRecoilValue(ThemeState);
-    const modelMenuRef = useRef<ModelMenuProps>(null)
+    const menuModalRef = useRef<MenuModalRef>(null)
     const scanModalRef = useRef<ScanModalType>(null);
     const myBusinessCardModalRef = useRef<MyBusinessCardModalType>(null);
     const settingCenterModalRef = useRef<SettingCenterModalType>(null);
     const selectMemberModalRef = useRef<SelectMemberModalType>(null);
+    const chatMenus:IMenuItem[] = [
+        {
+            title: "添加好友",
+            iconName: $theme == "dark" ? "addFriendDark" : "addFriendLight",
+            onPress: () => {
+                navigate("AddFriendModal")
+            },
+        },
+        {
+            title: "创建群聊",
+            iconName: $theme == "dark" ? "newChatDark" : "newChatLight",
+            onPress: async () => {
+                const users = await friendService.getOnlineList();
+                const options: SelectMemberOption[] = users.map((item) => {
+                    return {
+                        id: item.id,
+                        icon: item.avatar ?? "",
+                        title: item.nickName ?? "",
+                        name: item.nickName ?? "",
+                        name_index: item.nickNameIdx ?? "",
+                        status: false,
+                        disabled: false,
+                        pubKey: item.pubKey
+                    } as SelectMemberOption
+                });
+                selectMemberModalRef.current?.open({
+                    title: '選擇好友',
+                    options,
+                    callback: async (ops: SelectMemberOption[]) => {
+                        // 跳轉到羣組創建再返回
+                        navigate('GroupCreateScreen', {
+                            selected: ops
+                        });
+                    }
+                });
+            },
+        }
+    ]
     return <View style={{
         marginTop: insets.top,
         backgroundColor: $colors.background,
@@ -39,45 +78,9 @@ export const Header = (props: BottomTabHeaderProps) => {
             alignItems: "center",
         }}>
             <TouchableOpacity onPress={() => {
-                modelMenuRef.current?.open({
-                    menus: [
-                        {
-                            title: "添加好友",
-                            icon: require("assets/icons/user-add.svg"),
-                            onPress: () => {
-                                navigate("AddFriendModal")
-                            },
-                        },
-                        {
-                            title: "创建群聊",
-                            icon: require("assets/icons/menu-chat.svg"),
-                            onPress: async () => {
-                                const users = await friendService.getOnlineList();
-                                const options: SelectMemberOption[] = users.map((item) => {
-                                    return {
-                                        id: item.id,
-                                        icon: item.avatar ?? "",
-                                        title: item.nickName ?? "",
-                                        name: item.nickName ?? "",
-                                        name_index: item.nickNameIdx ?? "",
-                                        status: false,
-                                        disabled: false,
-                                        pubKey: item.pubKey
-                                    } as SelectMemberOption
-                                });
-                                selectMemberModalRef.current?.open({
-                                    title: '選擇好友',
-                                    options,
-                                    callback: async (ops: SelectMemberOption[]) => {
-                                        // 跳轉到羣組創建再返回
-                                        navigate('GroupCreateScreen', {
-                                            selected: ops
-                                        });
-                                    }
-                                });
-                            },
-                        }
-                    ]
+                console.log(chatMenus);
+                menuModalRef.current?.open({
+                    items: chatMenus
                 })
             }} style={{
                 width: s(32),
@@ -125,7 +128,7 @@ export const Header = (props: BottomTabHeaderProps) => {
         }} ref={scanModalRef} />
         <MyBusinessCardModal ref={myBusinessCardModalRef} />
         <SettingCenterModal ref={settingCenterModalRef} />
-        <ModelMenus ref={modelMenuRef} />
+        <MenuModal ref={menuModalRef} />
         <SelectMemberModal ref={selectMemberModalRef} />
     </View>
 }

@@ -35,20 +35,6 @@ export const ScreenModal = forwardRef((props: {
         close: async () => setVisible(false)
     }));
     useEffect(() => {
-        if (Platform.OS = "android") {
-            BackHandler.addEventListener('hardwareBackPress', () => {
-                setVisible(false)
-                return true
-            })
-        }
-        return () => {
-            if (Platform.OS = "android") {
-                BackHandler.removeEventListener('hardwareBackPress', () => {
-                    setVisible(false)
-                    return true
-                })
-            }
-        }
     }, [])
     return (
         <Modal transparent={false} style={{ flex: 1 }} visible={visible} animationType="slide">

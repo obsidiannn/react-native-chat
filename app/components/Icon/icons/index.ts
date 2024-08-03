@@ -27,6 +27,8 @@ export const topLight = require('./top-light.png');
 export const ignoreLight = require('./ignore-light.png');
 export const chatLight = require('./chat-light.png');
 export const searchLight = require('./search-light.png');
+export const addFriendLight = require('./add-friend-light.png');
+export const newChatLight = require('./new-chat-light.png');
 
 export const userManageDark = require('./user-manage-dark.png');
 export const topDark = require('./top-dark.png');
@@ -60,6 +62,8 @@ export const chooseDark = require('./choose-dark.png');
 export const pointDark = require('./point.png');
 export const shareDark = require('./share-dark.png');
 export const changeDark = require('./change-dark.png');
+export const addFriendDark = require('./add-friend-dark.png');
+export const newChatDark = require('./new-chat-dark.png');
 
 export const loginOutRed = require('./login-out-red.png');
 export const restartRed = require('./restart-red.png');

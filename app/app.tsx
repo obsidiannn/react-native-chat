@@ -23,7 +23,9 @@ const App = (props: AppProps) => {
   } = useNavigationPersistence(storage, NAVIGATION_PERSISTENCE_KEY)
 
   useEffect(() => {
-    setTimeout(() => hideSplashScreen(),2000)
+    setTimeout(() => {
+      hideSplashScreen();
+    },2000)
   },[])
 
   if (!isNavigationStateRestored) {

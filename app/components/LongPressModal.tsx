@@ -1,6 +1,6 @@
 
 import { Pressable, TouchableOpacity, StyleSheet, Text, View, GestureResponderEvent, Platform } from "react-native"
-import { forwardRef, useImperativeHandle, useRef, useState } from "react";
+import { forwardRef, useImperativeHandle, useState } from "react";
 import { MessageType } from "./chat-ui";
 import { s } from "app/utils/size";
 import { Image } from "expo-image";

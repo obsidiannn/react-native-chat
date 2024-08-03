@@ -7,11 +7,11 @@ import { ColorsState } from "app/stores/system"
 import { useTranslation } from 'react-i18next';
 import { getLocales } from "expo-localization";
 import { Screen } from "app/components";
-import BlockButton from "app/components/BlockButton";
+import { Button } from "app/components/Button";
 import { StackScreenProps } from "@react-navigation/stack";
 import { Checkbox } from "./Checkbox";
 import { App } from "types/app";
-import {ConfirmModal, ConfirmModalType } from "app/components/ConfirmModal";
+import { ConfirmModal, ConfirmModalType } from "app/components/ConfirmModal";
 
 type Props = StackScreenProps<App.StackParamList, 'WelcomeScreen'>;
 export const WelcomeScreen = ({ navigation }: Props) => {
@@ -46,10 +46,10 @@ export const WelcomeScreen = ({ navigation }: Props) => {
       <View style={[$buttonContainer, {
         marginTop: s(40)
       }]}>
-        <BlockButton onPress={() => {
+        <Button onPress={() => {
           if (!protocolStatus) {
             confirmModalRef.current?.open({
-              title:"确认阅读并同意相关协议",
+              title: "确认阅读并同意相关协议",
               content: "确认阅读并同意相关协议",
               onSubmit: () => {
                 navigation.navigate("UnlockScreen")
@@ -58,13 +58,13 @@ export const WelcomeScreen = ({ navigation }: Props) => {
             return;
           }
           navigation.navigate("UnlockScreen")
-        }} label={t("welcome.signIn")} type="primary" />
+        }} fullWidth size="large" label={t("welcome.signIn")} type="primary" />
       </View>
       <View style={$buttonContainer}>
-        <BlockButton onPress={() => {
+        <Button onPress={() => {
           if (!protocolStatus) {
             confirmModalRef.current?.open({
-              title:"确认阅读并同意相关协议",
+              title: "确认阅读并同意相关协议",
               content: "确认阅读并同意相关协议",
               onSubmit: () => {
                 navigation.navigate("SignUpScreen")
@@ -73,12 +73,13 @@ export const WelcomeScreen = ({ navigation }: Props) => {
             return;
           }
           navigation.navigate("SignUpScreen")
-          
-        }} label={t("welcome.signUp")} type="secondary" />
+        }} fullWidth label={t("welcome.signUp")} size="large" type="secondary" />
       </View>
       <View style={$checkboxContainer}>
         <Checkbox onChange={() => setProtocolStatus(!protocolStatus)} checked={protocolStatus} />
-        <Text style={[$checkboxText, { color: $colors.secondaryText }]}>{t("welcome.agree")}</Text>
+        <Pressable onPress={() => setProtocolStatus(!protocolStatus)}>
+          <Text style={[$checkboxText, { color: $colors.secondaryText }]}>{t("welcome.agree")}</Text>
+        </Pressable>
         {protocols.map((protocol) => {
           return <Pressable key={protocol.name} onPress={() => {
             navigation.push("WebViewScreen", {
