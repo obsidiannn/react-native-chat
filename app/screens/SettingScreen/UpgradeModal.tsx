@@ -1,10 +1,12 @@
 import { ScreenModal, ScreenModalType } from "app/components/ScreenModal";
 import { ColorsState, ThemeState } from "app/stores/system";
 import { s } from "app/utils/size";
-import { forwardRef, ReactNode, useImperativeHandle, useRef, useState } from "react"
-import { ColorValue, Linking, Platform, ScrollView, Text, TextStyle, TouchableOpacity, View, ViewStyle } from "react-native"
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { forwardRef, ReactNode, useCallback, useImperativeHandle, useRef, useState } from "react"
+import { ColorValue, Linking, ScrollView, Text, TextStyle, TouchableOpacity, View, ViewStyle } from "react-native"
+import ky from "ky";
 import { useRecoilValue } from "recoil";
+import { IServer } from "@repo/types";
+import AppApi from "app/api/sys/app";
 export interface UpgradeModalType {
   open: () => void,
   close: () => void
@@ -42,7 +44,6 @@ const Button = (props: {
   onPress?: () => void,
 }) => {
   const $colors = useRecoilValue(ColorsState);
-  const $theme = useRecoilValue(ThemeState);
   const { fullWidth = false, rounded = true, size = "small", label, containerStyle, textStyle } = props;
   const $container: Record<string, ViewStyle> = {
     "small": {
@@ -77,12 +78,7 @@ const Button = (props: {
   </TouchableOpacity>
 }
 const VersionListItem = (props: {
-  item: {
-    version: string;
-    androidDownloadUrl: string;
-    iosDownloadUrl: string;
-    description: string;
-  }
+  item: IServer.IAppVersion;
 }) => {
   const $colors = useRecoilValue(ColorsState);
   const { item } = props;
@@ -97,10 +93,8 @@ const VersionListItem = (props: {
         fontSize: s(16),
         fontWeight: "600",
         color: $colors.text
-      }}>{item.version}</Text>
-      <Button onPress={() => {
-        Linking.openURL(Platform.OS === "ios" ? item.iosDownloadUrl : item.androidDownloadUrl)
-      }} label="下载" />
+      }}>{item.versionName}</Text>
+      <Button onPress={() => Linking.openURL(item.downloadUrl)} label="下载" />
     </View>
     <View style={{
       width: "100%",
@@ -119,12 +113,24 @@ const VersionListItem = (props: {
 }
 export const UpgradeModal = forwardRef((_, ref) => {
   const screenModalRef = useRef<ScreenModalType>(null);
-  const insets = useSafeAreaInsets();
+  const [items, setItems] = useState<IServer.IAppVersion[]>([]);
+  const loadData = useCallback(async () => {
+    const rep  = await AppApi.getVersions({
+      platform: "android",
+      language: "zh-CN",
+      offset: 0,
+          limit: 10
+    });
+    setItems(rep.list);
+  }, [])
   useImperativeHandle(ref, () => ({
-    open: async () => screenModalRef.current?.open(),
+    open: async () => {
+      console.log("open");
+      screenModalRef.current?.open();
+      await loadData();
+    },
     close: async () => screenModalRef.current?.close()
   }));
-  const [items, setItems] = useState<string[]>(["1", "2"]);
   return (
     <ScreenModal ref={screenModalRef} >
       <View style={{
@@ -137,12 +143,7 @@ export const UpgradeModal = forwardRef((_, ref) => {
           flex: 1,
         }}>
           {items.map((item) => {
-            return <VersionListItem key={item} item={{
-              version: "0.2.9",
-              iosDownloadUrl: "https://baidu.com",
-              androidDownloadUrl: "https://baidu.com",
-              description: "更新内容"
-            }} />
+            return <VersionListItem key={item.versionName} item={item} />
           })}
         </ScrollView>
       </View>
