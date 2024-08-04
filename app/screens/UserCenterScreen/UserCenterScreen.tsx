@@ -21,7 +21,7 @@ export const UserCenterScreen = () => {
     return <View style={{
         flex: 1,
         paddingTop: insets.top,
-        backgroundColor: $colors.secondaryBackground,
+        backgroundColor: $colors.background,
     }}>
         <View style={{
             flex: 1,

@@ -2,7 +2,6 @@ import { TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ColorsState, ThemeState } from 'app/stores/system';
 import { useRecoilValue } from 'recoil';
-import { Image } from 'expo-image';
 import { s } from 'app/utils/size';
 import ScanModal, { ScanModalType } from 'app/components/ScanModal/ScanModal';
 import MyBusinessCardModal, { MyBusinessCardModalType } from './MyBusinessCardModal/MyBusinessCardModal';
@@ -15,6 +14,7 @@ import { navigate } from '../navigationUtilities';
 import { BottomTabHeaderProps } from '@react-navigation/bottom-tabs';
 import { MenuModalRef, MenuModal } from 'app/components/MenuModal/MenuModal';
 import { IMenuItem } from 'app/components/MenuModal/MenuItem';
+import { IconFont } from 'app/components/IconFont/IconFont';
 export const Header = (props: BottomTabHeaderProps) => {
     const insets = useSafeAreaInsets();
     const $colors = useRecoilValue(ColorsState);
@@ -83,42 +83,34 @@ export const Header = (props: BottomTabHeaderProps) => {
                     items: chatMenus
                 })
             }} style={{
-                width: s(32),
-                height: s(32),
-                marginRight: s(16),
-                backgroundColor: $colors.primary,
-                borderRadius: s(16),
-                justifyContent: "center",
-                alignItems: "center",
+                marginRight: s(16)
             }}>
-                <Image source={require('assets/icons/plus.svg')} style={{
-                    width: s(20),
-                    height: s(20)
-                }} />
+                <IconFont containerStyle={{
+                    width: s(32),
+                    height: s(32),
+                    borderRadius: s(10),
+                }} backgroundColor="#F0F2F5" name='plus' size={20} color="black" />
             </TouchableOpacity>
             <TouchableOpacity onPress={() => {
                 console.log("qr scan")
                 scanModalRef.current?.open();
             }} style={{
-                width: s(32),
-                height: s(32),
                 marginRight: s(16)
             }}>
-                <Image style={{
+                <IconFont containerStyle={{
                     width: s(32),
                     height: s(32),
-                }} source={$theme == "dark" ? require('./scan-dark.png') : require('./scan-light.png')} />
+                    borderRadius: s(10),
+                }} backgroundColor="#F0F2F5" name='scan' size={20} color="black" />
             </TouchableOpacity>
             <TouchableOpacity onPress={() => {
                 myBusinessCardModalRef.current?.open();
-            }} style={{
-                width: s(32),
-                height: s(32),
-            }}>
-                <Image style={{
+            }} >
+                <IconFont containerStyle={{
                     width: s(32),
-                    height: s(32)
-                }} source={$theme == "dark" ? require('./qr-dark.png') : require('./qr-light.png')} />
+                    height: s(32),
+                    borderRadius: s(10),
+                }} backgroundColor="#F0F2F5" name='qrcode' size={20} color="black" />
             </TouchableOpacity>
         </View>
         <ScanModal onChange={(v) => {
