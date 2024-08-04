@@ -20,7 +20,6 @@ import { colors } from "app/theme";
 import GroupInfoModal, { GroupInfoModalType } from './info/Index'
 import { ColorsState } from "app/stores/system";
 import chatService from "app/services/chat.service";
-import chatMapper from "app/utils/chat.mapper";
 
 type Props = StackScreenProps<App.StackParamList, 'GroupChatScreen'>;
 
@@ -62,14 +61,16 @@ export const GroupChatScreen = ({ navigation, route }: Props) => {
         });
     }, []);
     const loadGroup = useCallback(async () => {
-        const res = await groupService.getInfo(groupIdRef.current)
-        console.log('羣信息', res);
-        if (res === null) {
-            toast(t('groupChat.error_group'))
-            return
+        const groupId = groupIdRef.current
+        if (groupId) {
+            const res = await groupService.getMineList([groupId])
+            console.log('羣信息', res);
+            if (!res || res.length <= 0) {
+                toast(t('groupChat.error_group'))
+                return
+            }
+            setGroup(res[0]);
         }
-        setGroup(res);
-        return res
     }, [])
 
     const reloadChat = (chat: ChatDetailItem) => {

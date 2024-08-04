@@ -1,5 +1,5 @@
 import { GetDB } from "app/utils/database";
-import { and, inArray, eq, lte, gte, desc, asc } from "drizzle-orm";
+import { and, inArray, eq, lte, gte, desc, asc, sql } from "drizzle-orm";
 import { IMessage, messages } from "drizzle/schema";
 
 export interface MessageQueryType {
@@ -20,9 +20,23 @@ export class LocalMessageService {
             return
         }
         const db = GetDB()
-        const result = await db.insert(messages)
-            .values(_data)
-        console.log('save=', result);
+        if (!db) {
+            return
+        }
+        console.log('[sqlite] messages saveBatch');
+        await db.transaction(async (tx) => {
+            try {
+                for (let index = 0; index < _data.length; index++) {
+                    const e = _data[index];
+                    await tx.insert(messages).values(e).onConflictDoUpdate({ target: messages.id, set: { ...e, } })
+                }
+                tx.run(sql`commit`)
+            } catch (e) {
+                tx.rollback()
+                console.error(e)
+            }
+        });
+        console.log('[sqlite] groups messages batch ', _data.length);
     }
 
 
@@ -81,5 +95,5 @@ export class LocalMessageService {
         )
     }
 
-    
+
 }

@@ -30,7 +30,7 @@ CREATE TABLE `groups` (
 	`creator_id` integer,
 	`group_notice` text,
 	`group_desc` text,
-	`group_cover` integer,
+	`group_cover` text,
 	`is_enc` integer DEFAULT 1,
 	`group_type` integer,
 	`ban_type` integer,
@@ -41,7 +41,8 @@ CREATE TABLE `groups` (
 	`enc_key` text(2048),
 	`enc_pri` text(2048),
 	`chat_id` text,
-	`refreshAt` integer
+	`refreshAt` integer,
+	`join_at` integer DEFAULT 0
 );
 --> statement-breakpoint
 CREATE TABLE `messages` (

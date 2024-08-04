@@ -20,7 +20,8 @@ const dto2Entity = (dto: ChatDetailItem): IChat => {
         chatUserId: dto.chatUserId,
         // 免打扰 1-是 0-否 默认0
         isMute: dto.isMute,
-        describe: dto.describe ?? ''
+        describe: dto.describe ?? '',
+        refreshAt:0
     }
     return entity
 }

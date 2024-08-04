@@ -3,16 +3,18 @@ import groupApi from "../api/group/group";
 
 import userService from "./user.service";
 import {
-    GroupApplyItem, GroupApplyJoinReq, GroupCreateReq, GroupDetailItem, GroupInfoItem, GroupManagerChangeReq,
+    GroupApplyItem, GroupCreateReq, GroupDetailItem, GroupManagerChangeReq,
     GroupMemberItemVO, GroupMemberResp, GroupMembersReq, GroupRequireJoinResp,
-    GroupSingleItem, GroupTagReq, GroupTransferReq
+    GroupSingleItem, GroupTagReq
 } from "@repo/types";
 import quickCrypto from "app/utils/quick-crypto";
 import { IModel } from "@repo/enums";
 import { LocalMessageService } from "./LocalMessageService";
 import search from "app/api/discovery/search";
+import { LocalGroupService } from "./LocalGroupService";
+import groupMapper from "app/utils/group.mapper";
 
-const quit = async (gid: string) => {
+const quit = async (gid: number) => {
     return true;
 }
 const quitAll = async () => {
@@ -38,19 +40,82 @@ const searchGroup = async (keyword: string, page: number, limit: number = 10): P
     return { items: [], total: 0 }
 }
 
-const changeAliasByManage = () => {
 
+const queryByIdIn = async (groupIds: number[]): Promise<Map<number, GroupDetailItem>> => {
+    const entities = await LocalGroupService.findByIdInWithTimeout(groupIds)
+    const entityMap = new Map<number, GroupDetailItem>()
+    if (entities && entities.length > 0) {
+        for (let i = 0; i < entities.length; i++) {
+            const e = entities[i];
+            entityMap.set(e.id, groupMapper.entity2Dto(e))
+        }
+    }
+    const missedId = groupIds.filter(id => !entityMap.has(id))
+    if (missedId.length > 0) {
+        const groupResp = await groupApi.groupDetail({ ids: missedId })
+        if (groupResp.items && groupResp.items.length > 0) {
+            groupResp.items.forEach(e => {
+                entityMap.set(e.id, e)
+            })
+            void batchSaveLocal(groupResp.items)
+        }
+    }
+    return entityMap
 }
 
 // 獲取羣組列表
-const getMineList = async () => {
-    const groupIdsResp = await groupApi.mineGroupList({})
-    const groups = groupIdsResp.items ?? []
-    if (groups.length > 0) {
-        const result = await groupApi.groupSingleInfo({ ids: groups.map(g => g.groupId) })
-        return result.items
+const getMineList = async (_groupIds?: number[]): Promise<GroupDetailItem[]> => {
+    const groupIds: number[] = []
+    if (!_groupIds) {
+        const idResp = await groupApi.mineGroupList({})
+        if (!idResp.items || idResp.items.length <= 0) {
+            return []
+        }
+        groupIds.push(...idResp.items)
+    } else {
+        groupIds.push(..._groupIds)
     }
-    return []
+    const entityMap = await queryByIdIn(groupIds)
+    const result: GroupDetailItem[] = []
+    groupIds.forEach(id => {
+        const group = entityMap.get(id)
+        if (group) {
+            result.push(group)
+        }
+    })
+    return result
+}
+
+
+/**
+ * 刷新或者加载那些可能存在的新的chats
+ * @param chats 这里会存在
+ * @returns 
+ */
+const checkAndRefresh = async (): Promise<GroupDetailItem[]> => {
+    const news: GroupDetailItem[] = []
+    try {
+        const lastest = await LocalGroupService.findLatestId()
+        console.log('latest', lastest);
+
+        if (lastest) {
+            const idResp = await groupApi.groupIdAfter(lastest)
+            if (idResp && idResp.items.length > 0) {
+                const missedIds = await LocalGroupService.findIdNotIn(idResp.items)
+                if (missedIds && missedIds.length > 0) {
+                    const newsData = await getMineList(missedIds)
+                    news.push(...newsData)
+                }
+            }
+        } else {
+            // const newsData = await mineChatList()
+            // news.push(...newsData)
+            // return { olds, news }
+        }
+    } catch (e) {
+        console.log('[group]检查group异常', e);
+    }
+    return news
 }
 
 
@@ -96,7 +161,7 @@ const alphabetList = (items: GroupMemberItemVO[]) => {
     };
 }
 
-const create = async (name: string, avatar: string, isEnc: boolean, searchType: string, describe: string,cover: string) => {
+const create = async (name: string, avatar: string, isEnc: boolean, searchType: string, describe: string, cover: string) => {
     if (!globalThis.wallet) {
         throw new Error('請先登錄');
     }
@@ -151,7 +216,7 @@ const invite = async (members: {
     }[] = [];
     members.forEach(member => {
         const itemSecretKey = wallet?.computeSharedSecret(member.pubKey ?? '')
-        const enkey = quickCrypto.En(itemSecretKey??'', Buffer.from(groupInfo.groupPassword ?? '', 'utf8'));
+        const enkey = quickCrypto.En(itemSecretKey ?? '', Buffer.from(groupInfo.groupPassword ?? '', 'utf8'));
         items.push({
             uid: Number(member.id),
             encPri: myWallet.getPublicKey(),
@@ -198,19 +263,14 @@ const getMembers = async (id: string) => {
     return data.items;
 }
 
+const batchSaveLocal = (data: GroupDetailItem[]) => {
+    void LocalGroupService.saveBatch(data.map(c => groupMapper.dto2Entity(c)))
+}
+
 const getMemberPage = async (param: GroupMembersReq): Promise<GroupMemberResp> => {
     const data = await groupApi.getGroupMembers(param)
     return data;
 }
-// 獲取羣組信息
-const getInfo = async (id: number): Promise<GroupDetailItem> => {
-    const data = await groupApi.groupDegist({
-        id: id
-    });
-
-    return data;
-}
-
 
 const join = async (id: number, remark: string): Promise<GroupRequireJoinResp> => {
     return groupApi.requireJoin({ id, encKey: '', encPri: '', remark: remark });
@@ -288,7 +348,6 @@ export default {
     quitAll,
     create,
     getList,
-    getInfo,
     getMembers,
     getMemberList,
     alphabetList,
@@ -307,6 +366,7 @@ export default {
     adminAgree,
     saveTag,
     clearGroupMessages,
-    groupSingleInfo,
-    searchGroup
+    queryByIdIn,
+    searchGroup,
+    checkAndRefresh
 }

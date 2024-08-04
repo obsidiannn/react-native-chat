@@ -16,5 +16,7 @@ export const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve
 export const delaySecond = (cacheMin?: number): number => {
     const cacheSeconds = cacheMin ?? 5 * 60
     const currentSecond = dayjs().unix()
+    // console.log('currentSecond = ', currentSecond);
+
     return currentSecond - cacheSeconds
 }

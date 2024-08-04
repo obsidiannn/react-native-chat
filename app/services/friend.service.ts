@@ -62,25 +62,24 @@ const getOnlineList = async () => {
     }
     const friends = await findByIds(friendIds);
     const userIds = select(friends, f => f.friendId, () => true)
-    const users = await userService.findByIds(userIds);
-    console.log("users==:", users);
-    const items = await map(users, async u => {
-        const friend = friends.find(f => f.friendId === u.id);
-        if (!friend) {
-            return null;
+    const usersMap = await userService.getUserHash(userIds);
+    const result: IUser[] = []
+    friends.forEach(friend => {
+        const u = usersMap.get(friend.friendId)
+        if (u) {
+            result.push({
+                ...u,
+                friendId: friend.id,
+                chatId: friend.chatId,
+                friendAlias: friend.remark,
+                friendAliasIdx: friend.remarkIdx,
+                isFriend: 1,
+            })
         }
-        return {
-            ...u,
-            friendId: friend.id,
-            remark: friend.remark,
-            chatId: friend.chatId,
-            remarkIdx: friend.remarkIdx,
-            isFriend: 1,
-        };
     })
-    await userService.setNonFriends(userIds);
+    // await userService.setNonFriends(userIds);
     await LocalUserService.setFriends(userIds);
-    return items.filter(i => i != null) as IUser[];
+    return result as IUser[];
 }
 const removeAll = async () => {
     return true;

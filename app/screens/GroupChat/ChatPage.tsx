@@ -29,6 +29,7 @@ import generateUtil from "app/utils/generateUtil";
 import { GestureResponderEvent } from "react-native";
 import { ThemeState } from "app/stores/system";
 import chatService from "app/services/chat.service";
+import auth from "app/api/auth/auth";
 
 
 export interface GroupChatPageRef {
@@ -171,6 +172,7 @@ export default forwardRef((props, ref) => {
     const handleEvent = (e: any) => {
         const { type } = e
         console.log('[event]', e);
+        console.log('checkauthor', author?.id)
         if (type === IModel.IClient.SocketTypeEnum.MESSAGE) {
             const _eventItem = e as SocketMessageEvent
             if (lastSeq.current < _eventItem.sequence && author?.id !== _eventItem.senderId) {

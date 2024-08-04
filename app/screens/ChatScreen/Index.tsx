@@ -9,7 +9,7 @@ import { colors } from "../../theme/colors";
 import { Button } from "app/components";
 import { s } from "app/utils/size";
 import { useTranslation } from "react-i18next";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { ColorsState } from "app/stores/system";
 import { StackScreenProps } from "@react-navigation/stack";
 import chatService from "app/services/chat.service";
@@ -17,7 +17,7 @@ import { App } from "types/app";
 import { ChatsStore } from "app/stores/auth";
 import friendService from "app/services/friend.service";
 import { IUser } from "drizzle/schema";
-import { ChatDetailItem, GroupSingleItem } from "@repo/types";
+import { ChatDetailItem, GroupDetailItem } from "@repo/types";
 import groupService from "app/services/group.service";
 
 type Props = StackScreenProps<App.StackParamList, 'ChatScreen'>;
@@ -27,7 +27,7 @@ export const ChatScreen = ({ navigation }: Props) => {
     const themeColor = useRecoilValue(ColorsState)
     const [chatStore, setChatsStore] = useRecoilState(ChatsStore)
     const [friends, setFriends] = useState<IUser[]>([])
-    const [groups, setGroups] = useState<GroupSingleItem[]>([])
+    const [groups, setGroups] = useState<GroupDetailItem[]>([])
     const { t } = useTranslation('screens')
 
     const changeTab = (idx: number) => {
@@ -62,9 +62,18 @@ export const ChatScreen = ({ navigation }: Props) => {
             })
         }
         if (idx === 1) {
-            groupService.getMineList().then(res => {
-                setGroups(res)
-            })
+            if (groups.length <= 0) {
+                groupService.getMineList().then(res => {
+                    console.log('groups', res);
+                    setGroups(res)
+                })
+            } else {
+                groupService.checkAndRefresh().then(res => {
+                    setGroups((items) => {
+                        return res.concat(items)
+                    })
+                })
+            }
         }
         if (idx === 2) {
             friendService.getOnlineList().then((val) => {
@@ -105,7 +114,7 @@ export const ChatScreen = ({ navigation }: Props) => {
     useEffect(() => {
         const focusEvent = navigation.addListener('focus', () => {
             console.log('chat screen on focus');
-            
+
             dataRefresh(pageIndex)
         })
         return () => {

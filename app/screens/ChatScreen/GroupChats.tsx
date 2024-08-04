@@ -11,12 +11,12 @@ import { ColorsState } from "app/stores/system"
 import ContractListItem from "app/components/ContractListItem"
 import chatService from "app/services/chat.service"
 import toast from "app/utils/toast"
-import { GroupSingleItem } from "@repo/types"
+import { GroupDetailItem } from "@repo/types"
 import fileService from "app/services/file.service"
 
 
 
-const GroupListView = (props: { groups: GroupSingleItem[] }) => {
+const GroupListView = (props: { groups: GroupDetailItem[] }) => {
     const themeColor = useRecoilValue(ColorsState)
     const [loading, setLoading] = useState<boolean>(false)
     const { t } = useTranslation('screens')

@@ -41,8 +41,8 @@ const requireJoin = async (param: GroupRequireJoinReq): Promise<GroupRequireJoin
 
 const kickOut = async (param: GroupKickOutReq) => await createInstance(true).post('/groups/kick-out', param);
 
-const mineGroupList = async (param: GroupIdsReq): Promise<BaseArrayResp<GroupListIdResp>> => createInstance(true).post('/groups/list', param);
-const searchGroup = async (param: {keyword: string}): Promise<BaseArrayResp<number>> => createInstance(true).post('/groups/search', param);
+const mineGroupList = async (param: GroupIdsReq): Promise<BaseArrayResp<number>> => createInstance(true).post('/groups/list', param);
+const searchGroup = async (param: { keyword: string }): Promise<BaseArrayResp<number>> => createInstance(true).post('/groups/search', param);
 
 const groupInfoList = async (param: GroupIdsReq): Promise<BaseArrayResp<GroupInfoDto>> => await createInstance(true).post('/groups/list-by-ids', param);
 
@@ -91,6 +91,8 @@ const groupSingleInfo = async (param: BaseIdsNumberReq): Promise<BaseArrayResp<G
 
 const groupDetail = async (param: { ids: number[] }): Promise<GroupDetailResp> => await createInstance(true).post('/groups/get-batch-info', param);
 
+const groupIdAfter = async (lastTime: number): Promise<BaseArrayResp<number>> => await createInstance(true).post('/groups//mine-id-after', { lastTime });
+
 const clearGroupMessages = async (param: BaseIdsArrayReq) => await createInstance(true).post('/groups/clear-messages', param);
 
 const groupDegist = async (param: { id: number }): Promise<GroupDetailItem> => await createInstance(true).post('/groups/get-info', param);
@@ -129,5 +131,6 @@ export default {
   saveGroupTag,
   clearGroupMessages,
   groupSingleInfo,
-  searchGroup
+  searchGroup,
+  groupIdAfter
 }

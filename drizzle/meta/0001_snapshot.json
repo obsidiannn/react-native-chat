@@ -1,8 +1,8 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "7d5fa116-8577-43d6-b7f4-51c0a0ddcf42",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "e7bdf86f-2235-4120-ba34-f3cddc7632ef",
+  "prevId": "7d5fa116-8577-43d6-b7f4-51c0a0ddcf42",
   "tables": {
     "chats": {
       "name": "chats",
@@ -342,6 +342,13 @@
           "name": "groupRefreshIdx",
           "columns": [
             "refreshAt"
+          ],
+          "isUnique": false
+        },
+        "groupJoinAtIdx": {
+          "name": "groupJoinAtIdx",
+          "columns": [
+            "join_at"
           ],
           "isUnique": false
         }

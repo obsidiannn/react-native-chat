@@ -1,0 +1,1 @@
+CREATE INDEX `groupJoinAtIdx` ON `groups` (`join_at`);

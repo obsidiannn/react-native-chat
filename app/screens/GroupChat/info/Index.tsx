@@ -297,7 +297,7 @@ export default forwardRef((_, ref) => {
                             if (!groupContext.group) {
                                 return;
                             }
-                            applyListModalRef.current?.open(groupContext.group?.gid, groupContext.selfMember?.encKey ?? '', groupContext.selfMember?.encPri ?? '');
+                            applyListModalRef.current?.open(groupContext.group?.id, groupContext.selfMember?.encKey ?? '', groupContext.selfMember?.encPri ?? '');
                         }} icon={require('assets/icons/arrow-right-gray.svg')} label={t('groupChat.title_apply_list')} />
                         {/* 清空群记录 */}
                         <MenuItem label={t('groupChat.title_drop_message')} labelColor="#FB3737"

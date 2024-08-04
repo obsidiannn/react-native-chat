@@ -21,6 +21,8 @@ const getBatchInfo = async (ids: number[]): Promise<{
 
 const getFriendIdByUserId = async (ids: number[]): Promise<BaseArrayResp<number>> => await createInstance(true).post('/friends/friendIdByUserId', { ids });
 
+const getFriendUserIds = async (): Promise<BaseArrayResp<number>> => await createInstance(true).post('/friends/getFriendUserId');
+
 /**
  * 删除自己的全部好友，之后需要清除本地 message data 
  * @returns 
@@ -34,4 +36,6 @@ export default {
   getBatchInfo,
   getFriendIdByUserId,
   dropAllFriends
+  ,
+  getFriendUserIds
 }

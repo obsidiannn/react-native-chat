@@ -82,14 +82,14 @@ export const groups = sqliteTable('groups', {
     id: integer('id').primaryKey(),
     name: text('group_name'),
     avatar: text('group_avatar'),
-    created_at: integer('create_at'),
+    createdAt: integer('create_at'),
     memberLimit: integer('member_limit'),
     total: integer('total'),
     ownerId: integer('owner_id'),
     creatorId: integer('creator_id'),
     notice: text('group_notice'),
     desc: text('group_desc'),
-    cover: integer('group_cover'),
+    cover: text('group_cover'),
     isEnc: integer('is_enc').default(1),
     type: integer('group_type'),
     banType: integer('ban_type'),
@@ -101,9 +101,11 @@ export const groups = sqliteTable('groups', {
     encPri: text('enc_pri', { length: 2048 }),
     chatId: text('chat_id'),
     refreshAt: integer('refreshAt'),
+    joinAt: integer('join_at').default(0)
 }, (entity) => ({
     chatIdIdx: index('groupChatIdIdx').on(entity.chatId),
     refreshIdx: index('groupRefreshIdx').on(entity.refreshAt),
+    joinAtIdx: index('groupJoinAtIdx').on(entity.joinAt),
 }))
 
 export type IGroup = typeof groups.$inferSelect

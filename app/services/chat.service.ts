@@ -26,6 +26,7 @@ const queryChatByIdIn = async (chatIds: string[]): Promise<Map<string, ChatDetai
             chatResp.items.forEach(e => {
                 chatsMap.set(e.id, e)
             })
+            void batchSaveLocal(chatResp.items)
         }
     }
     return chatsMap
@@ -64,7 +65,7 @@ const mineChatList = async (_chatIds?: string[]): Promise<ChatDetailItem[]> => {
             }
         })
         const userHash = await userService.getUserHash(userIds)
-        const groupHash = await groupService.groupSingleInfo(groupIds)
+        const groupHash = await groupService.queryByIdIn(groupIds)
         chatIds.forEach(id => {
             const i = chatsMap.get(id)
             if (i) {
@@ -89,9 +90,6 @@ const mineChatList = async (_chatIds?: string[]): Promise<ChatDetailItem[]> => {
                 result.push(i)
             }
         })
-        if (result) {
-            void batchSaveLocal(result)
-        }
         return result
     } catch (e) {
         console.error(e)
@@ -113,8 +111,8 @@ const checkAndRefresh = async (chats: ChatDetailItem[]): Promise<{
 
     try {
         const lastest = await LocalChatService.findLatestId()
-        console.log('latest',lastest);
-        
+        console.log('latest', lastest);
+
         if (lastest) {
             const idResp = await chatApi.mineChatIdAfter(lastest)
             if (idResp && idResp.items.length > 0) {
@@ -130,7 +128,7 @@ const checkAndRefresh = async (chats: ChatDetailItem[]): Promise<{
             // return { olds, news }
         }
     } catch (e) {
-        console.log('[chat]检查chats异常',e);
+        console.log('[chat]检查chats异常', e);
     }
 
     if (!chats || chats.length <= 0) {

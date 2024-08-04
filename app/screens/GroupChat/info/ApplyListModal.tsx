@@ -8,7 +8,7 @@ import BaseModal from "app/components/base-modal";
 
 // 羣申請列表
 export interface ApplyListModalRef {
-    open: (id: string, encKey: string, encPri: string) => void;
+    open: (id: number, encKey: string, encPri: string) => void;
 }
 export default forwardRef((props: {
     onCheck: (item: GroupApplyItem) => void;
