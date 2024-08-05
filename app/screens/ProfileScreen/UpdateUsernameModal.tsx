@@ -1,6 +1,5 @@
 import { StyleSheet, Text, View, TextInput } from "react-native"
-import { Button } from "app/components";
-import {Icon} from "app/components/Icon/Icon";
+import { Button } from "app/components"; 
 import { ScreenModal, ScreenModalType } from "app/components/ScreenModal";
 import { AuthService } from "app/services/auth.service";
 import { ColorsState } from "app/stores/system";
@@ -104,13 +103,11 @@ export const UpdateUserNameModal =  forwardRef((_, ref) => {
                     alignItems: 'stretch',
                     padding: s(12)
                 }}>
-                    <View style={{ alignItems: 'center', padding: s(4) }}>
-                        <Icon name={"pointDark"} />
-                    </View>
+                    
                     <Text style={{
                         ...styles.paragraph
                     }}>
-                        {t('profile.paragraph_username_1')}
+                       * {t('profile.paragraph_username_1')}
                     </Text>
 
                 </View>
@@ -121,13 +118,11 @@ export const UpdateUserNameModal =  forwardRef((_, ref) => {
                     alignItems: 'stretch',
                     padding: s(12)
                 }}>
-                    <View style={{ alignItems: 'center', padding: s(4) }}>
-                        <Icon name={"pointDark"} />
-                    </View>
+                    
                     <Text style={{
                         ...styles.paragraph
                     }}>
-                        {t('profile.paragraph_username_2')}
+                       * {t('profile.paragraph_username_2')}
                     </Text>
 
                 </View>
@@ -138,13 +133,11 @@ export const UpdateUserNameModal =  forwardRef((_, ref) => {
                     alignItems: 'stretch',
                     padding: s(12)
                 }}>
-                    <View style={{ alignItems: 'center', padding: s(4) }}>
-                        <Icon name={"pointDark"} />
-                    </View>
+                  
                     <Text style={{
                         ...styles.paragraph
                     }}>
-                        {t('profile.paragraph_username_3')}
+                       * {t('profile.paragraph_username_3')}
                     </Text>
 
                 </View>

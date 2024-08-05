@@ -1,4 +1,4 @@
-import { Icon } from "app/components/Icon/Icon";
+import { IconFont } from "app/components/IconFont/IconFont";
 import { ScreenModal, ScreenModalType } from "app/components/ScreenModal";
 import { ColorsState, ThemeState } from "app/stores/system";
 import { s } from "app/utils/size";
@@ -70,7 +70,7 @@ export const LangModal = forwardRef((_, ref) => {
               ...$langListItemText,
               color: $colors.text
             }}>{item.name}</Text>
-            {lang == item.value ? <Icon name={$theme == "dark" ? "chooseDark" : "chooseLight"} /> : null}
+            {lang == item.value ? <IconFont name="checkMark" color={$colors.text} size={24} /> : null}
           </TouchableOpacity>
         })}
       </ScrollView>

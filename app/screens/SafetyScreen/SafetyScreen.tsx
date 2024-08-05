@@ -6,18 +6,19 @@ import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { s } from "app/utils/size"
 import Navbar from "app/components/Navbar"
 import { CardMenu } from "app/components/CardMenu/CardMenu"
-import {ConfirmModal, ConfirmModalType } from "app/components/ConfirmModal"
+import { ConfirmModal, ConfirmModalType } from "app/components/ConfirmModal"
 import { useRef } from "react"
 import { globalKV, globalStorage } from "app/utils/kv-tool"
 import RNRestart from 'react-native-restart';
 import messageSendService from "app/services/message-send.service"
 import { useTranslation } from "react-i18next"
-import toast from "app/utils/toast"
-import { Icon } from "app/components/Icon/Icon"
+import toast from "app/utils/toast" 
 import * as FileSystem from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
 import { dump } from "app/utils/account"
 import dayjs from "dayjs"
+import { IconFont } from "app/components/IconFont/IconFont"
+import { colors } from "app/theme"
 export const SafetyScreen = () => {
     const insets = useSafeAreaInsets();
     const $colors = useRecoilValue(ColorsState);
@@ -42,7 +43,7 @@ export const SafetyScreen = () => {
         }}>
             <CardMenu items={[
                 {
-                    icon: <Icon name={$theme == "dark" ? "backupDark" : "backupLight"} />,
+                    icon: <IconFont name="docs" color={$colors.text} size={24} />,
                     title: "备份所有账户",
                     onPress: () => {
                         confirmModalRef.current?.open({
@@ -53,17 +54,17 @@ export const SafetyScreen = () => {
                                 if (Platform.OS == "android") {
                                     const fileName = FileSystem.documentDirectory + `bobo_backup_${dayjs().format("YYYYmmdhms")}.txt`;
                                     await FileSystem.writeAsStringAsync(fileName, dump(), { encoding: FileSystem.EncodingType.UTF8 })
-                                    if(!Sharing.isAvailableAsync()){
+                                    if (!Sharing.isAvailableAsync()) {
                                         toast("不能分享")
-                                    }else{
+                                    } else {
                                         Sharing.shareAsync(fileName)
                                     }
                                 } else {
                                     const fileName = FileSystem.cacheDirectory + `bobo_backup_${dayjs().format("YYYYmmdhms")}.txt`;
                                     await FileSystem.writeAsStringAsync(fileName, dump(), { encoding: FileSystem.EncodingType.UTF8 })
-                                    if(!Sharing.isAvailableAsync()){
+                                    if (!Sharing.isAvailableAsync()) {
                                         toast("不能分享")
-                                    }else{
+                                    } else {
                                         Sharing.shareAsync(fileName)
                                     }
                                 }
@@ -72,7 +73,7 @@ export const SafetyScreen = () => {
                     },
                 },
                 {
-                    icon: <Icon name={$theme == "dark" ? "quitDark" : "quitLight"} />,
+                    icon: <IconFont name="quit" color={$colors.text} size={24} />,
                     title: "退出所有群聊",
                     onPress: () => {
                         confirmModalRef.current?.open({
@@ -84,7 +85,7 @@ export const SafetyScreen = () => {
                     },
                 },
                 {
-                    icon: <Icon name={$theme == "dark" ? "trashDark" : "trashLight"} />,
+                    icon: <IconFont name="trash" color={$colors.text} size={24} />,
                     title: "清空所有消息",
                     onPress: () => {
                         confirmModalRef.current?.open({
@@ -103,7 +104,7 @@ export const SafetyScreen = () => {
                 marginTop: s(20),
             }} items={[
                 {
-                    icon:  <Icon name={$theme == "dark" ? "removeUserDark" : "removeUserRed"} />,
+                    icon: <IconFont name="docs" color={colors.palette.red500} size={24} />,
                     title: "删除所有好友",
                     textStyle: {
                         color: "#FB3737"
@@ -120,7 +121,7 @@ export const SafetyScreen = () => {
                     rightArrow: null,
                 },
                 {
-                    icon: <Icon name={$theme == "dark" ? "restartDark" : "restartRed"} />,
+                    icon: <IconFont name="restart" color={colors.palette.red500} size={24} />,
                     title: "重置应用",
                     textStyle: {
                         color: "#FB3737"

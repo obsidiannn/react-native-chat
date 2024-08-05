@@ -1,6 +1,5 @@
 
-import { Button } from "app/components";
-import { Icon } from "app/components/Icon/Icon";
+import { Button } from "app/components"; 
 import { ScreenModal, ScreenModalType } from "app/components/ScreenModal";
 import { AuthService } from "app/services/auth.service";
 import { ColorsState, ThemeState } from "app/stores/system"
@@ -104,14 +103,12 @@ export const UpdateSignModal = forwardRef((_, ref) => {
                     alignItems: 'stretch',
                     alignSelf: 'flex-start'
                 }}>
-                    <View style={{ alignItems: 'center', padding: s(4) }}>
-                        <Icon name={$theme === 'dark'?'pointDark':'pointLight'} />
-                    </View>
+                    
                     <Text style={{
                         ...styles.paragraph,
                         color: themeColor.secondaryText
                     }}>
-                        {t('profile.paragraph_sign_1')}
+                       * {t('profile.paragraph_sign_1')}
                     </Text>
 
                 </View>
@@ -123,14 +120,12 @@ export const UpdateSignModal = forwardRef((_, ref) => {
                     alignItems: 'stretch',
                     alignSelf: 'flex-start'
                 }}>
-                    <View style={{ alignItems: 'center', padding: s(4) }}>
-                        <Icon name={$theme === 'dark'?'pointDark':'pointLight'} />
-                    </View>
+                    
                     <Text style={{
                         ...styles.paragraph,
                         color: themeColor.secondaryText
                     }}>
-                        {t('profile.paragraph_sign_2')}
+                       * {t('profile.paragraph_sign_2')}
                     </Text>
 
                 </View>
@@ -142,14 +137,12 @@ export const UpdateSignModal = forwardRef((_, ref) => {
                     alignItems: 'stretch',
                     alignSelf: 'flex-start'
                 }}>
-                    <View style={{ alignItems: 'center', padding: s(4) }}>
-                        <Icon name={$theme === 'dark'?'pointDark':'pointLight'} />
-                    </View>
+                    
                     <Text style={{
                         ...styles.paragraph,
                         color: themeColor.secondaryText
                     }}>
-                        {t('profile.paragraph_sign_3')}
+                       * {t('profile.paragraph_sign_3')}
                     </Text>
 
                 </View>

@@ -7,9 +7,9 @@ import { AuthUser } from "app/stores/auth"
 import { s } from "app/utils/size"
 import { navigate } from "app/navigators"
 import { CardMenu } from "app/components/CardMenu/CardMenu"
-import AvatarComponent from "app/components/Avatar"
-import { Icon } from "app/components/Icon/Icon"
+import AvatarComponent from "app/components/Avatar" 
 import fileService from "app/services/file.service"
+import { IconFont } from "app/components/IconFont/IconFont"
 export const UserCenterScreen = () => {
     const insets = useSafeAreaInsets();
     const $colors = useRecoilValue(ColorsState);
@@ -55,19 +55,19 @@ export const UserCenterScreen = () => {
             </View>
             <CardMenu items={[
                 {
-                    icon: <Icon name={$theme == "dark" ? "editDark" : "editLight"} />,
+                    icon: <IconFont name="pencil" color={$colors.text} size={24} />,
                     title: "编辑资料",
                     onPress: () => {
                         navigate("ProfileScreen")
                     },
                 },
                 {
-                    icon: <Icon name={$theme == "dark" ? "safeKeyDark" : "safeKeyLight"} />,
+                    icon: <IconFont name="safety" color={$colors.text} size={24} />,
                     title: "安全",
                     onPress: () => navigate("SafetyScreen"),
                 },
                 {
-                    icon: <Icon name={$theme == "dark" ? "settingDark" : "settingLight"} />,
+                    icon: <IconFont name="setting" color={$colors.text} size={24} />,
                     title: "设置",
                     onPress: () => navigate("SettingScreen"),
                 },

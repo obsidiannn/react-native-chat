@@ -1,5 +1,4 @@
-import { Button } from "app/components";
-import { Icon } from "app/components/Icon/Icon";
+import { Button } from "app/components"; 
 import { ScreenModal, ScreenModalType } from "app/components/ScreenModal";
 import { AuthService } from "app/services/auth.service";
 import { ColorsState, ThemeState } from "app/stores/system"
@@ -71,20 +70,20 @@ export const UpdateNickNameModal = forwardRef((_, ref) => {
                     marginTop: s(22)
                 }}>
                     <TextInput
-                    placeholder={t('profile.placeholder_nickname')}
-                    //placeholderTextColor={themeColor.border}
-                    maxLength={maxLength}
+                        placeholder={t('profile.placeholder_nickname')}
+                        //placeholderTextColor={themeColor.border}
+                        maxLength={maxLength}
 
-                    style={{
-                        fontSize: s(16),
-                        height: s(44),
-                        color: themeColor.text,
-                        backgroundColor: themeColor.background,
-                        width: '100%',
-                        borderRadius: s(12),
-                    }}
-                    onChangeText={(v) => setVal(v)}
-                    value={val}
+                        style={{
+                            fontSize: s(16),
+                            height: s(44),
+                            color: themeColor.text,
+                            backgroundColor: themeColor.background,
+                            width: '100%',
+                            borderRadius: s(12),
+                        }}
+                        onChangeText={(v) => setVal(v)}
+                        value={val}
                     />
                     <Text style={{
                         color: themeColor.border,
@@ -105,15 +104,12 @@ export const UpdateNickNameModal = forwardRef((_, ref) => {
                     alignItems: 'stretch',
                     padding: s(12),
                 }}>
-                    <View style={{ alignItems: 'center', padding: s(4) }}>
-                        <Icon name={$theme === 'dark'?'pointDark':'pointLight'} />
 
-                    </View>
                     <Text style={{
                         ...styles.paragraph,
                         color: themeColor.secondaryText
                     }}>
-                        {t('profile.paragraph_nickname_1')}
+                        * {t('profile.paragraph_nickname_1')}
                     </Text>
 
                 </View>
@@ -124,14 +120,12 @@ export const UpdateNickNameModal = forwardRef((_, ref) => {
                     alignItems: 'stretch',
                     padding: s(12)
                 }}>
-                    <View style={{ alignItems: 'center', padding: s(4) }}>
-                        <Icon name={$theme === 'dark'?'pointDark':'pointLight'} />
-                    </View>
+
                     <Text style={{
                         ...styles.paragraph,
                         color: themeColor.secondaryText
                     }}>
-                        {t('profile.paragraph_nickname_2')}
+                        * {t('profile.paragraph_nickname_2')}
                     </Text>
 
                 </View>
@@ -142,14 +136,12 @@ export const UpdateNickNameModal = forwardRef((_, ref) => {
                     alignItems: 'stretch',
                     padding: s(12)
                 }}>
-                    <View style={{ alignItems: 'center', padding: s(4) }}>
-                        <Icon name={$theme === 'dark'?'pointDark':'pointLight'} />
-                    </View>
+                     
                     <Text style={{
                         ...styles.paragraph,
                         color: themeColor.secondaryText
                     }}>
-                        {t('profile.paragraph_nickname_3')}
+                       * {t('profile.paragraph_nickname_3')}
                     </Text>
 
                 </View>

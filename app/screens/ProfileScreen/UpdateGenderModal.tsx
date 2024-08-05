@@ -1,6 +1,5 @@
 import { IModel } from "@repo/enums";
 import { Button } from "app/components";
-import { Icon } from "app/components/Icon/Icon";
 import { IconFont } from "app/components/IconFont/IconFont";
 import { ScreenModal, ScreenModalType } from "app/components/ScreenModal";
 import { AuthService } from "app/services/auth.service";
@@ -61,7 +60,14 @@ export const UpdateGenderModal = forwardRef((_, ref) => {
                 val === IModel.IUser.Gender.MALE ?
                     <>
                         <Image source={require('assets/images/male.png')} style={styles.gender_image} contentFit="fill" />
-                        <IconFont name="checkMark" color={themeColor.textChoosed} size={24} />,
+                        <View style={{
+                            padding: s(4),
+                            backgroundColor: themeColor.primary,
+                            borderRadius: s(16),
+                            alignItems: 'center', justifyContent: 'center', marginTop: s(-12)
+                        }}>
+                            <IconFont name="checkMark" color={themeColor.textChoosed} size={16} />
+                        </View>
                     </> :
                     <>
                         <Image source={require('assets/images/male-default.png')} style={styles.gender_image} contentFit="fill" />
@@ -86,7 +92,7 @@ export const UpdateGenderModal = forwardRef((_, ref) => {
                             padding: s(4),
                             backgroundColor: themeColor.primary,
                             borderRadius: s(16),
-                            alignItems: 'center',justifyContent: 'center'
+                            alignItems: 'center', justifyContent: 'center', marginTop: s(-12)
                         }}>
                             <IconFont name="checkMark" color={themeColor.textChoosed} size={16} />
                         </View>

@@ -11,11 +11,12 @@ import { useRef } from "react"
 import { quit } from "app/utils/account"
 import { navigate } from "app/navigators"
 import { App } from "types/app"
-import { StackScreenProps } from "@react-navigation/stack"
-import { Icon } from "app/components/Icon/Icon"
+import { StackScreenProps } from "@react-navigation/stack" 
 import { LangModal, LangModalType } from "./LangModal"
 import { UpgradeModal, UpgradeModalType } from "./UpgradeModal"
 import * as Application from 'expo-application';
+import { IconFont } from "app/components/IconFont/IconFont"
+import { colors } from "app/theme"
 type Props = StackScreenProps<App.StackParamList, 'SettingScreen'>;
 export const SettingScreen = ({ navigation }: Props) => {
     const insets = useSafeAreaInsets();
@@ -43,7 +44,7 @@ export const SettingScreen = ({ navigation }: Props) => {
         }}>
             <CardMenu items={[
                 {
-                    icon: <Icon name={$theme == "dark" ? "aboutDark" : "aboutLight"} />,
+                    icon: <IconFont name="about" color={$colors.text} size={24} />,
                     title: "关于我们",
                     onPress: () => {
                         navigate("WebViewScreen", {
@@ -53,14 +54,14 @@ export const SettingScreen = ({ navigation }: Props) => {
                     }
                 },
                 {
-                    icon: <Icon name={$theme == "dark" ? "langDark" : "langLight"} />,
+                    icon: <IconFont name="language" color={$colors.text} size={24} />,
                     title: "语言",
                     onPress: () => {
                         langModalRef.current?.open()
                     }
                 },
                 {
-                    icon: <Icon name={$theme == "dark" ? "bookDark" : "bookLight"} />,
+                    icon: <IconFont name="book" color={$colors.text} size={24} />,
                     title: "当前版本",
                     onPress: () => {
                         upgradeModalRef.current?.open()
@@ -72,7 +73,7 @@ export const SettingScreen = ({ navigation }: Props) => {
                         <Text style={{
                             color: $colors.secondaryText
                         }}>{version}</Text>
-                        <Icon name="arrowRight" />
+                         <IconFont name="arrowRight" color={$colors.border} size={14} />
                     </View>
                 },
             ]} />
@@ -80,7 +81,7 @@ export const SettingScreen = ({ navigation }: Props) => {
                 marginTop: s(20),
             }} items={[
                 {
-                    icon: <Icon name={$theme == "dark" ? "powerDark" : "powerRed"} />,
+                    icon: <IconFont name="power" color={colors.palette.red500} size={24} />,
                     title: "注销账号",
                     onPress: () => {
                         confirmModalRef.current?.open({
@@ -102,7 +103,7 @@ export const SettingScreen = ({ navigation }: Props) => {
                     }
                 },
                 {
-                    icon: <Icon name={$theme == "dark" ? "loginOutDark" : "loginOutRed"}/>,
+                    icon:  <IconFont name="logout" color={colors.palette.red500} size={24} />,
                     title: "退出登录",
                     onPress: () => {
                         confirmModalRef.current?.open({

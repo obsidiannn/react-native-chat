@@ -13,10 +13,10 @@ import { App } from "types/app";
 import Navbar from "app/components/Navbar";
 import { s, verticalScale } from "app/utils/size";
 import { useRecoilValue } from "recoil";
-import { ColorsState, ThemeState } from "app/stores/system"
-import { Icon } from "app/components/Icon/Icon";
+import { ColorsState, ThemeState } from "app/stores/system" 
 import { IModel } from "@repo/enums";
 import { Button } from "app/components";
+import { IconFont } from "app/components/IconFont/IconFont";
 
 
 type Props = StackScreenProps<App.StackParamList, 'UserInfoScreen'>;
@@ -49,7 +49,7 @@ export const UserInfoScreen = ({ navigation, route }: Props) => {
     const renderLabel = (isFriend: number) => {
         if (isFriend === IModel.ICommon.ICommonBoolEnum.YES) {
             return <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                <Icon name={$theme === 'dark' ? 'chatDark' : 'chatLight'} />
+                <IconFont name="newChat" color={themeColor.text} size={24} />
                 <Text style={{
                     color: themeColor.textChoosed
                 }}>{t('userInfo.label_start_chat')}
@@ -57,7 +57,7 @@ export const UserInfoScreen = ({ navigation, route }: Props) => {
             </View>
         } else {
             return <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                <Icon name={$theme === 'dark' ? 'chatDark' : 'chatLight'} />
+                <IconFont name="newChat" color={themeColor.text} size={24} />
                 <Text style={{
                     color: themeColor.textChoosed
                 }}>{t('userInfo.label_add_friend')}
