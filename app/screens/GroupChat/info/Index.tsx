@@ -5,7 +5,7 @@ import MemberItem from "./components/MemberItem";
 import MenuItem from "./components/MenuItem";
 import QRcodeModal, { QRcodeModalRef } from "./QrcodeModal";
 import ApplyListModal, { ApplyListModalRef } from "./ApplyListModal";
-import  {ConfirmModal, ConfirmModalType } from "app/components/ConfirmModal";
+import { ConfirmModal, ConfirmModalType } from "app/components/ConfirmModal";
 import GoodManager, { GroupManagerModalRef } from "./GroupManagerModal";
 import { forwardRef, useCallback, useContext, useImperativeHandle, useMemo, useRef, useState } from "react";
 import SelectMemberModal, { SelectMemberModalType, SelectMemberOption } from "app/components/SelectMemberModal/Index"
@@ -20,15 +20,14 @@ import { s } from "app/utils/size";
 import messageSendService from "app/services/message-send.service";
 import quickCrypto from "app/utils/quick-crypto";
 import BaseModal from "app/components/base-modal";
-import {  useRecoilValue } from "recoil";
+import { useRecoilValue } from "recoil";
 import { ColorsState, ThemeState } from "app/stores/system"
-import { Icon } from "app/components/Icon/Icon";
 import { colors } from "app/theme";
 import { ScrollView } from "react-native-gesture-handler";
 import GroupDetailModal, { GroupDetailModalType } from "./GroupDetailModal";
-import {Image} from 'expo-image'
 
 import chatApi from "app/api/chat/chat";
+import { IconFont } from "app/components/IconFont/IconFont";
 
 export interface GroupInfoModalType {
     open: () => void
@@ -211,17 +210,23 @@ export default forwardRef((_, ref) => {
         }}>
             {/* 群信息 */}
             <MenuItem label={t('groupChat.title_group_info')}
-                leftIcon={<Icon name={$theme==='dark'?"peoplesDark":"peoplesLight"}/>}
-                rightComponent={<Icon name={'arrowRight'}/>}
+                leftIcon={
+                    <IconFont name="userGroup" color={themeColor.text} size={24} />
+                }
+                rightComponent={
+                    <IconFont name="arrowRight" color={themeColor.border} size={16} />
+                }
                 onPress={() => {
                     groupDetailModalRef.current?.open()
                 }}
             />
             <MenuItem label={t('groupChat.title_qrcode')}
-                leftIcon={<Image source={require('assets/icons/qrcode.svg')} style={{
-                    width:20,height: 20
-                }} />}
-                rightComponent={<Icon name={'arrowRight'}/>}
+                leftIcon={
+                    <IconFont name="qrcode" color={themeColor.text} size={24} />
+                }
+                rightComponent={
+                    <IconFont name="arrowRight" color={themeColor.border} size={16} />
+                }
                 onPress={() => {
                     qrcodeModalRef.current?.open({
                         group: groupContext.group,
@@ -240,8 +245,13 @@ export default forwardRef((_, ref) => {
                             console.log("管理進入");
                             groupManagerModalRef.current?.open(groupContext.group?.id);
                         }}
-                        leftIcon={<Icon name={$theme==='dark'?"userManageDark":"userManageLight"}/>}
-                        rightComponent={<Icon name={'arrowRight'}/>} />
+                        leftIcon={
+                            // <Icon name={$theme === 'dark' ? "userManageDark" : "userManageLight"} />
+                            <IconFont name="setting" color={themeColor.text} size={24}/>
+                        }
+                        rightComponent={
+                            <IconFont name="arrowRight" color={themeColor.border} size={16} />
+                        } />
                     : null
             }
             <View style={{
@@ -250,7 +260,9 @@ export default forwardRef((_, ref) => {
             }} />
 
             <MenuItem label={t('groupChat.title_top')}
-                leftIcon={<Icon name={$theme==='dark'?"topDark":"topLight"}/>}
+                leftIcon={
+                    <IconFont name="chatTop" color={themeColor.text} size={24} />
+                }
                 rightComponent={
                     <Switch value={switchState.isTop}
                         thumbColor={'#ffffff'}
@@ -272,7 +284,9 @@ export default forwardRef((_, ref) => {
                         }} />} />
 
             <MenuItem label={t('groupChat.title_inhibite')}
-                leftIcon={<Icon name={$theme==='dark'?"ignoreDark":"ignoreLight"}/>}
+                leftIcon={
+                    <IconFont name="notificationOff" color={themeColor.text} size={24} />
+                }
                 rightComponent={<Switch value={switchState.isMute}
                     thumbColor={'#ffffff'}
                     trackColor={{
@@ -314,7 +328,9 @@ export default forwardRef((_, ref) => {
                                     }
                                 });
                             }}
-                            leftIcon={<Icon name={"blockRed"}/>}
+                            leftIcon={
+                                <IconFont name="clearDoc" color={colors.palette.red500} size={24} />
+                            }
                         />
                     </>
                     : null
@@ -334,7 +350,9 @@ export default forwardRef((_, ref) => {
                         }
                     });
                 }}
-                leftIcon={<Icon name={"blockRed"}/>}
+                leftIcon={
+                    <IconFont name="clearDoc" color={colors.palette.red500} size={24} />
+                }
             />
 
             {
@@ -354,7 +372,9 @@ export default forwardRef((_, ref) => {
                                 }
                             });
                         }}
-                        leftIcon={<Icon name={"trashRed"}/>}
+                        leftIcon={
+                            <IconFont name="trash" color={colors.palette.red500} size={24} />
+                        }
                     /> : null
             }
 

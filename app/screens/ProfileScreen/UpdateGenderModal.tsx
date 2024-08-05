@@ -1,6 +1,7 @@
 import { IModel } from "@repo/enums";
 import { Button } from "app/components";
 import { Icon } from "app/components/Icon/Icon";
+import { IconFont } from "app/components/IconFont/IconFont";
 import { ScreenModal, ScreenModalType } from "app/components/ScreenModal";
 import { AuthService } from "app/services/auth.service";
 import { ColorsState, ThemeState } from "app/stores/system"
@@ -22,7 +23,7 @@ export interface UpdateGenderModalRef {
 
 }
 
-export const UpdateGenderModal= forwardRef((_, ref) => {
+export const UpdateGenderModal = forwardRef((_, ref) => {
     const { t } = useTranslation('screens')
 
 
@@ -60,10 +61,7 @@ export const UpdateGenderModal= forwardRef((_, ref) => {
                 val === IModel.IUser.Gender.MALE ?
                     <>
                         <Image source={require('assets/images/male.png')} style={styles.gender_image} contentFit="fill" />
-                        <Icon name={$theme === 'dark' ? 'checkedDark':'checkedLight'} style={{
-                            width: s(24), height: s(24),
-                            marginTop: s(-12)
-                        }} />
+                        <IconFont name="checkMark" color={themeColor.textChoosed} size={24} />,
                     </> :
                     <>
                         <Image source={require('assets/images/male-default.png')} style={styles.gender_image} contentFit="fill" />
@@ -84,10 +82,14 @@ export const UpdateGenderModal= forwardRef((_, ref) => {
                 val === IModel.IUser.Gender.FEMALE ?
                     <>
                         <Image source={require('assets/images/female.png')} style={styles.gender_image} contentFit="fill" />
-                        <Icon name={$theme === 'dark' ? 'checkedDark':'checkedLight'} style={{
-                            width: s(24), height: s(24),
-                            marginTop: s(-12)
-                        }} />
+                        <View style={{
+                            padding: s(4),
+                            backgroundColor: themeColor.primary,
+                            borderRadius: s(16),
+                            alignItems: 'center',justifyContent: 'center'
+                        }}>
+                            <IconFont name="checkMark" color={themeColor.textChoosed} size={16} />
+                        </View>
                     </> :
                     <>
                         <Image source={require('assets/images/female-default.png')} style={styles.gender_image} contentFit="fill" />

@@ -11,7 +11,7 @@ import { ScrollView, TextInput } from "react-native-gesture-handler";
 import { useTranslation } from "react-i18next";
 import { colors } from "app/theme";
 import { IModel } from "@repo/enums";
-import { Icon } from "app/components/Icon/Icon";
+import { IconFont } from "app/components/IconFont/IconFont";
 import { isOnline } from "app/utils/account";
 import { Button } from "app/components";
 import groupApi from "app/api/group/group";
@@ -89,7 +89,7 @@ export default forwardRef((_, ref) => {
             id: groupContext.group?.id ?? -1,
             groupPassword: sharedSecret
         }
-       
+
         groupService.invite(users, groupInfo).then(() => {
             groupContext.reloadMember()
         })
@@ -106,7 +106,7 @@ export default forwardRef((_, ref) => {
         renderRight={
             <TouchableOpacity style={{ backgroundColor: themeColor.background, padding: s(4), borderRadius: s(8) }}
             >
-                <Icon name={$theme === 'dark' ? "shareDark" : "shareLight"} />
+                <IconFont name="share" color={themeColor.text} size={24} />
             </TouchableOpacity>
         }
 
@@ -124,7 +124,7 @@ export default forwardRef((_, ref) => {
                 marginTop: s(-48)
             }}>
                 {
-                    groupContext.selfMember.role < IModel.IGroup.IGroupMemberRoleEnum.MEMBER ?
+                    groupContext.selfMember?.role ?? -1 < IModel.IGroup.IGroupMemberRoleEnum.MEMBER ?
                         <AvatarUpload
                             border
                             avatar={fileService.getFullUrl(groupContext.group.avatar)}
@@ -166,7 +166,8 @@ export default forwardRef((_, ref) => {
                     <TouchableOpacity style={{ backgroundColor: themeColor.secondaryBackground, padding: s(4), borderRadius: s(8) }}
                         onPress={changeName}
                     >
-                        {editing ? <Icon name={$theme == "dark" ? "checkDark" : "checkLight"} /> : <Icon name={$theme == "dark" ? "changeDark" : "changeLight"} />}
+                        {editing ? <IconFont name="checkMark" color={themeColor.text} size={24} /> :
+                            <IconFont name="edit" color={themeColor.text} size={24} />}
                     </TouchableOpacity> :
                     null
                 }
@@ -180,7 +181,7 @@ export default forwardRef((_, ref) => {
                 <View style={{
                     display: 'flex', flexDirection: 'row', alignItems: 'center',
                 }}>
-                    <Icon name={$theme == "dark" ? "peoplesDark" : "peoplesLight"} />
+                    <IconFont name="userGroup" color={themeColor.secondaryText} size={22} />
                     <Text>当前群成员人数</Text>
                 </View>
                 <Text>
@@ -202,7 +203,7 @@ export default forwardRef((_, ref) => {
                             <TouchableOpacity onPress={() => {
                                 groupMemberManageRef.current?.open(groupContext.group.id, item, groupContext.selfMember)
                             }}>
-                                <Icon name={$theme == "dark" ? "moreDark" : "moreLight"} />
+                                <IconFont name="ellipsis" color={themeColor.text} size={22} />
                             </TouchableOpacity>
                         </View>
                     })

@@ -9,10 +9,10 @@ import { useTranslation } from "react-i18next";
 import { IModel } from "@repo/enums";
 import { s } from "app/utils/size";
 import { colors } from "app/theme";
-import { Icon } from "app/components/Icon/Icon";
 import AvatarComponent from "app/components/Avatar";
 import { useRecoilValue } from "recoil";
 import { ColorsState, ThemeState } from "app/stores/system"
+import { IconFont } from "app/components/IconFont/IconFont";
 
 export interface GroupManagerModalRef {
   open: (groupId: number) => void;
@@ -70,7 +70,7 @@ export default forwardRef((props: {
           managerDescribe.map(
             (e, i) => {
               return <View style={styles.groupDescribe} key={"label_" + i}>
-                <Icon name={$theme==='dark'?"bellDark":"bellLight"} />
+                <IconFont name="notification" color={themeColor.text} />
                 <Text style={{ color: "#6b7280", margin: s(5) }} key={i}> {e} </Text>
               </View>
             }
@@ -153,14 +153,19 @@ export default forwardRef((props: {
           }}
         >
           <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-            <Icon name={$theme==='dark'?"plusAddDark":"plusAddLight"} size={48} />
+            {/* <Icon name={$theme==='dark'?"plusAddDark":"plusAddLight"} size={48} /> */}
+            <View style={{
+              padding: s(4), backgroundColor: themeColor.primary, borderRadius: 48
+            }}>
+              <IconFont name="plus" color={themeColor.textChoosed} />
+            </View>
             <Text style={{
               ...styles.memberText,
               color: themeColor.text,
               marginLeft: s(10)
             }}>{t('groupChat.btn_add_manager')}</Text>
           </View>
-          <Icon name={"arrowRight"} />
+          <IconFont name="arrowRight" color={themeColor.border} size={18} />
         </TouchableOpacity>
 
       </View>

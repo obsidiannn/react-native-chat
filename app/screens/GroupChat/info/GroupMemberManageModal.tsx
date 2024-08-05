@@ -7,7 +7,6 @@ import { useRecoilValue } from "recoil";
 import MenuItem from "./components/MenuItem";
 import { useTranslation } from "react-i18next";
 import { ConfirmModal,ConfirmModalType } from "app/components/ConfirmModal";
-import { Icon } from "app/components/Icon/Icon";
 import { GroupMemberItemVO } from "../../../../../../packages/types/dist/client/group";
 import { IModel } from "@repo/enums";
 import UserInfoModal, { UserInfoModalType } from "app/screens/UserInfo/UserInfoModal";
@@ -15,6 +14,8 @@ import ConfirmInputModal, { ConfirmInputModalType } from "app/components/Confirm
 import groupApi from "app/api/group/group";
 import { GroupChatUiContext } from "../context";
 import groupService from "app/services/group.service";
+import { IconFont } from "app/components/IconFont/IconFont";
+import { colors } from "app/theme";
 
 
 export interface GroupMemberManageModalType {
@@ -61,8 +62,12 @@ export default forwardRef((_, ref) => {
         }}>
             {/* 查看个人资料 */}
             <MenuItem label={t('groupChat.btn_user_profile')}
-                leftIcon={<Icon name={$theme === 'dark'?"profileDark":"profileLight"} />}
-                rightComponent={<Icon name={"arrowRight"} />}
+                leftIcon={
+                    <IconFont name="userProfile" color={themeColor.text} size={24} />
+                }
+                rightComponent={
+                    <IconFont name="arrowRight" color={themeColor.secondaryText} size={16}/>
+                }
                 onPress={() => {
                     userInfoModalRef.current?.open(member?.uid ?? -1, self?.uid ?? 0)
                 }}
@@ -71,7 +76,9 @@ export default forwardRef((_, ref) => {
                 // 添加群备注
                 (self?.uid === member?.uid || (self?.role ?? IModel.IGroup.IGroupMemberRoleEnum.MEMBER) < IModel.IGroup.IGroupMemberRoleEnum.MEMBER) ?
                     <MenuItem label={t('groupChat.btn_change_alias')}
-                        leftIcon={<Icon name={$theme === 'dark'?"editDark":"editLight"} />}
+                        leftIcon={
+                            <IconFont name="pencil" color={themeColor.text} size={24}/>
+                        }
                         onPress={() => {
                             confirmInputModalRef.current?.open({
                                 title: t('groupChat.btn_change_alias'),
@@ -126,7 +133,9 @@ export default forwardRef((_, ref) => {
                                     }
                                 });
                             }}
-                            leftIcon={<Icon name={$theme ==='dark'?"trashDark":"trashLight"} />}
+                            leftIcon={
+                                <IconFont name="trash" color={themeColor.text} size={24} />
+                            }
                         />
                         <MenuItem label={t('groupChat.btn_block_user')} labelColor="#FB3737"
                             onPress={() => {
@@ -138,7 +147,9 @@ export default forwardRef((_, ref) => {
                                     }
                                 });
                             }}
-                            leftIcon={<Icon name={"blockRed"}/>}
+                            leftIcon={
+                                <IconFont name="clearDoc" color={colors.palette.red500} size={24} />
+                            }
                         />
                     </> : null
             }

@@ -1,6 +1,6 @@
 import { GroupDetailItem } from "@repo/types"
 import AvatarComponent from "app/components/Avatar"
-import { Icon } from "app/components/Icon/Icon"
+import { IconFont } from "app/components/IconFont/IconFont"
 import fileService from "app/services/file.service"
 import { AuthUser } from "app/stores/auth"
 import { ColorsState, ThemeState } from "app/stores/system"
@@ -48,7 +48,7 @@ export const GroupCard = (props: GroupCardProps) => {
                     <Text style={{ fontSize: s(14), color: themeColor.secondaryText, }}>{group?.desc ?? ''}</Text>
                 </View>
                 <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                    <Icon name={$theme==='dark'?"peoplesDark":"peoplesLight"}/>
+                    <IconFont name="userGroup" color={themeColor.text} size={24} />
                     <Text>{group?.total}</Text>
                 </View>
                 <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>

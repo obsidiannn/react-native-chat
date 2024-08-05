@@ -1,4 +1,4 @@
-import {AvatarUpload} from "app/components/AvatarUpload";
+import { AvatarUpload } from "app/components/AvatarUpload";
 import { AuthUser } from "app/stores/auth";
 import { ColorsState, ThemeState } from "app/stores/system";
 import { s } from "app/utils/size";
@@ -7,22 +7,21 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import { UpdateNickNameModal, UpdateNickNameModalRef } from "./UpdateNickNameModal";
 import { UpdateGenderModal, UpdateGenderModalRef } from "./UpdateGenderModal";
 import { UpdateSignModal, UpdateSignModalRef } from "./UpdateSignModal";
-import  { UpdateUserNameModal,UpdateUsernameModalRef } from "./UpdateUserNameModal";
+import { UpdateUserNameModal, UpdateUsernameModalRef } from "./UpdateUserNameModal";
 import toast from "app/utils/toast";
 import { IModel } from "@repo/enums";
 import { AuthService } from "app/services/auth.service";
 import fileService from "app/services/file.service";
 import { IUser } from "drizzle/schema";
-import { LocalUserService } from "app/services/LocalUserService";
-
+import { LocalUserService } from "app/services/LocalUserService"; 
 import { useRef } from "react"
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Navbar from "app/components/Navbar";
 import { CardMenu } from "app/components/CardMenu/CardMenu";
 import { StyleSheet, Text, View } from "react-native";
-import { Icon } from "app/components/Icon/Icon";
 import profile from "app/utils/profile";
 import strUtil from "app/utils/str-util";
+import { IconFont } from "app/components/IconFont/IconFont";
 export const ProfileScreen = () => {
     const insets = useSafeAreaInsets();
     const $colors = useRecoilValue(ColorsState);
@@ -73,7 +72,7 @@ export const ProfileScreen = () => {
         }}>
             <CardMenu items={[
                 {
-                    icon: <Icon name={$theme == "dark" ? "editDark" : "editLight"} />,
+                    icon: <IconFont name="pencil" color={$colors.text} size={24} />,
                     title: t('profile.title_nickname'),
                     onPress: () => {
                         updateNickNameModalRef.current?.open({
@@ -89,11 +88,11 @@ export const ProfileScreen = () => {
                     },
                     rightArrow: <View style={styles.formLine} >
                         <Text style={{ color: $colors.secondaryText }}>{authUser?.nickName}</Text>
-                        <Icon name="arrowRight" />
+                        <IconFont name="arrowRight" color={$colors.border} size={16} />
                     </View>,
                 },
                 {
-                    icon: <Icon name={$theme == "dark" ? "profileDark" : "profileLight"} />,
+                    icon: <IconFont name="userProfile" color={$colors.text} size={24} />,
                     title: t('profile.title_username'),
                     onPress: () => {
                         updateUsernameModalRef.current?.open({
@@ -109,12 +108,12 @@ export const ProfileScreen = () => {
                     },
                     rightArrow: <View style={styles.formLine} >
                         <Text style={{ color: $colors.secondaryText }}>{strUtil.truncateMiddle(authUser?.userName ?? '', 20)}</Text>
-                        <Icon name="arrowRight" />
+                        <IconFont name="arrowRight" color={$colors.border} size={16} />
                     </View>
 
                 },
                 {
-                    icon: <Icon name={$theme == "dark" ? "genderDark" : "genderLight"} />,
+                    icon: <IconFont name="women" color={$colors.text} size={24} />,
                     title: t('profile.title_gender'),
                     onPress: () => {
                         updateGenderModalRef.current?.open({
@@ -130,11 +129,11 @@ export const ProfileScreen = () => {
                     },
                     rightArrow: <View style={styles.formLine} >
                         <Text style={{ color: $colors.secondaryText }}>{profile.genderValue(authUser?.gender)}</Text>
-                        <Icon name="arrowRight" />
+                        <IconFont name="arrowRight" color={$colors.border} size={16} />
                     </View>
                 },
                 {
-                    icon: <Icon name={$theme == "dark" ? "signDark" : "signLight"} />,
+                    icon:  <IconFont name="doc" color={$colors.text} size={24} />,
                     title: t('profile.title_sign'),
                     onPress: () => {
                         updateSignModalRef.current?.open({
@@ -150,7 +149,7 @@ export const ProfileScreen = () => {
                     },
                     rightArrow: <View style={styles.formLine} >
                         <Text style={{ color: $colors.secondaryText }}>{strUtil.truncateMiddle(authUser?.sign ?? '', 20) ?? t('common.default_label_none')}</Text>
-                        <Icon name="arrowRight" />
+                        <IconFont name="arrowRight" color={$colors.border} size={16} />
                     </View>
                 },
             ]} />
