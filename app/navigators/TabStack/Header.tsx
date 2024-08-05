@@ -83,7 +83,7 @@ export const Header = (props: BottomTabHeaderProps) => {
                     items: chatMenus
                 })
             }} style={{
-                marginRight: s(16)
+                marginRight: s(16),
             }}>
                 <IconFont containerStyle={{
                     width: s(32),

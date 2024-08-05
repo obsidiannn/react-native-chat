@@ -2,6 +2,7 @@ import { s } from "app/utils/size";
 import { Image } from "expo-image";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native"
 import AvatarComponent from "./Avatar";
+import { colors } from "app/theme";
 
 
 export interface IContactListItemProps {
@@ -20,15 +21,20 @@ export interface IContactListItemProps {
 export default (props: IContactListItemProps) => {
 
     const renderPoint = () => {
+
         if (props.inhibite) {
+            console.log('inhibite==>', props.inhibite, props.title);
+
             return <Image source={require('assets/icons/inhibite.svg')} style={{
                 width: s(20), height: s(20)
             }} />
         }
         if (props.badgeNumber && props.badgeNumber > 0) {
-            return <Image source={require('assets/icons/red-point.svg')} style={{
-                width: s(6), height: s(6)
-            }} />
+            return <View style={{
+                padding: s(3),backgroundColor: colors.palette.red500,borderRadius: s(8)
+            }}>
+
+            </View>
         }
         return null
     }

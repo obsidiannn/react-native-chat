@@ -44,7 +44,7 @@ export const Search = (props: SearchProps) => {
                 padding: s(8),
                 borderRadius: s(8),
             }}>
-            <IconFont name="search" size={24} color={props.color.text} />
+            <IconFont name="search" size={16} color={props.color.text} />
         </TouchableOpacity>
     </View>
 }

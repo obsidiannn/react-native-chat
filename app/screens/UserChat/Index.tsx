@@ -15,13 +15,17 @@ import friendService from "app/services/friend.service";
 import { UserChatUIContext } from "./context";
 import chatService from "app/services/chat.service";
 import chatMapper from "app/utils/chat.mapper";
+import UserChatInfoModal, { UserChatInfoModalRef } from "./UserChatInfoModal";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import { ChatsStore } from "app/stores/auth";
 
 type Props = StackScreenProps<App.StackParamList, 'UserChatScreen'>;
 
 export const UserChatScreen = ({ navigation, route }: Props) => {
     const $topContainerInsets = useSafeAreaInsetsStyle(["top"])
-
+    const setChatsStore = useSetRecoilState(ChatsStore)
     const [chatItem, setChatItem] = useState<ChatDetailItem>()
+    const userChatInfoModalRef = useRef<UserChatInfoModalRef>(null)
     const [user, setUser] = useState<IUser>();
     const chatPageRef = useRef<ChatUIPageRef>(null)
 
@@ -40,10 +44,18 @@ export const UserChatScreen = ({ navigation, route }: Props) => {
         }
     }, [])
 
-    const reloadChat = (id: string) => {
-        chatService.mineChatList([id]).then(res => {
-            setChatItem(res[0])
-            chatService.changeChat(chatMapper.dto2Entity(res[0]))
+    const reloadChat = (item: ChatDetailItem) => {
+        chatService.changeChat(item).then(() => {
+            setChatItem(item)
+            setChatsStore((items) => {
+                const newItems = items.map(t => {
+                    if (item.id === t.id) {
+                        return { ...item }
+                    }
+                    return t
+                })
+                return newItems
+            })
         })
     }
 
@@ -62,41 +74,41 @@ export const UserChatScreen = ({ navigation, route }: Props) => {
     }]}>
         <UserChatUIContext.Provider value={{
             chatItem: chatItem,
-            reloadChat:reloadChat
+            reloadChat: reloadChat
         }}>
-        <Navbar title={chatItem?.chatAlias}
-            onLeftPress={() => {
-                void chatPageRef.current?.close()
-                if (route.params.fromNotify) {
-                    navigation.replace('TabStack')
-                } else {
-                    navigation.goBack()
-                }
-            }}
-            renderRight={() => {
-                return <View style={{
-                    height: '100%',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    display: 'flex',
-                    flexDirection: 'row'
-                }}>
-                    <TouchableOpacity onPress={() => {
-                        navigate('UserChatInfoModal', {
-                            user,
-                            chatId: chatItem?.id
-                        })
+            <Navbar title={chatItem?.chatAlias}
+                onLeftPress={() => {
+                    void chatPageRef.current?.close()
+                    if (route.params.fromNotify) {
+                        navigation.replace('TabStack')
+                    } else {
+                        navigation.goBack()
+                    }
+                }}
+                renderRight={() => {
+                    return <View style={{
+                        height: '100%',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        display: 'flex',
+                        flexDirection: 'row'
                     }}>
-                        <Image source={require('assets/icons/more.svg')} style={{
-                            width: s(32),
-                            height: s(32),
-                        }} />
-                    </TouchableOpacity>
-                </View>
-            }} />
+                        <TouchableOpacity onPress={() => {
+                            console.log('open');
+                            
+                            userChatInfoModalRef.current?.open()
+                        }}>
+                            <Image source={require('assets/icons/more.svg')} style={{
+                                width: s(32),
+                                height: s(32),
+                            }} />
+                        </TouchableOpacity>
+                    </View>
+                }} />
 
-        <ChatPage ref={chatPageRef} />
-    </UserChatUIContext.Provider>
+            <ChatPage ref={chatPageRef} />
+            <UserChatInfoModal ref={userChatInfoModalRef} />
+        </UserChatUIContext.Provider>
     </View >
 }
 

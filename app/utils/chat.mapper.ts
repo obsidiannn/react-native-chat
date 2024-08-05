@@ -1,5 +1,5 @@
 import { IChat } from "drizzle/schema"
-import { ChatDetailItem } from "../../../../packages/types/dist/client/chat"
+import { ChatDetailItem } from "@repo/types"
 
 const dto2Entity = (dto: ChatDetailItem): IChat => {
     const entity: IChat = {
@@ -17,7 +17,7 @@ const dto2Entity = (dto: ChatDetailItem): IChat => {
         sourceId: dto.sourceId + '',
         chatAlias: dto.chatAlias,
         isTop: dto.isTop,
-        chatUserId: dto.chatUserId,
+        chatUserId: 0,
         // 免打扰 1-是 0-否 默认0
         isMute: dto.isMute,
         describe: dto.describe ?? '',
@@ -42,7 +42,6 @@ const entity2Dto = (entity: IChat): ChatDetailItem => {
         sourceId: Number(entity.sourceId ?? 0),
         chatAlias: entity.chatAlias,
         isTop: entity.isTop,
-        chatUserId: entity.chatUserId,
         isMute: entity.isMute,
         describe: entity.describe
     }

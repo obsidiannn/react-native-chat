@@ -4,7 +4,7 @@ import { EmptyComponent } from "app/components/EmptyComponent"
 import LoadingComponent from "app/components/Loading"
 import { formatDate } from "app/utils/formatDate"
 import { s } from "app/utils/size"
-import { useEffect, useState } from "react"
+import {  useState } from "react"
 import { StyleSheet, Text, View, ActivityIndicator } from "react-native"
 import dayjs from 'dayjs'
 import { useRecoilValue } from "recoil"
