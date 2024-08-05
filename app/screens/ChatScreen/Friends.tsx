@@ -59,7 +59,7 @@ const FriendListView = (props: { contacts: IUser[] }) => {
               }
               const chatDetail = chatDetails[0]
               console.log('chatDetail', chatDetail);
-              navigate('UserChatUI', {
+              navigate('UserChatScreen', {
                 item: chatDetail,
                 userId: chatDetail.sourceId
               })
