@@ -247,7 +247,7 @@ export default forwardRef((_, ref) => {
                         }}
                         leftIcon={
                             // <Icon name={$theme === 'dark' ? "userManageDark" : "userManageLight"} />
-                            <IconFont name="setting" color={themeColor.text} size={24}/>
+                            <IconFont name="userSetting" color={themeColor.text} size={24}/>
                         }
                         rightComponent={
                             <IconFont name="arrowRight" color={themeColor.border} size={16} />

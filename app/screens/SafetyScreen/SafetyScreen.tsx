@@ -12,7 +12,7 @@ import { globalKV, globalStorage } from "app/utils/kv-tool"
 import RNRestart from 'react-native-restart';
 import messageSendService from "app/services/message-send.service"
 import { useTranslation } from "react-i18next"
-import toast from "app/utils/toast" 
+import toast from "app/utils/toast"
 import * as FileSystem from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
 import { dump } from "app/utils/account"
@@ -104,7 +104,7 @@ export const SafetyScreen = () => {
                 marginTop: s(20),
             }} items={[
                 {
-                    icon: <IconFont name="docs" color={colors.palette.red500} size={24} />,
+                    icon: <IconFont name="userRemove" color={colors.palette.red500} size={24} />,
                     title: "删除所有好友",
                     textStyle: {
                         color: "#FB3737"
