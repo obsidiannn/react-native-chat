@@ -21,42 +21,42 @@ export interface MyBusinessCardModalType {
 const hasAndroidPermission = async () => {
     const version = Number(Platform.Version);
     const getCheckPermissionPromise = () => {
-      if (version >= 33) {
-        return Promise.all([
-          PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.READ_MEDIA_IMAGES),
-          PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.READ_MEDIA_VIDEO),
-        ]).then(
-          ([hasReadMediaImagesPermission, hasReadMediaVideoPermission]) =>
-            hasReadMediaImagesPermission && hasReadMediaVideoPermission,
-        );
-      } else {
-        return PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE);
-      }
+        if (version >= 33) {
+            return Promise.all([
+                PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.READ_MEDIA_IMAGES),
+                PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.READ_MEDIA_VIDEO),
+            ]).then(
+                ([hasReadMediaImagesPermission, hasReadMediaVideoPermission]) =>
+                    hasReadMediaImagesPermission && hasReadMediaVideoPermission,
+            );
+        } else {
+            return PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE);
+        }
     };
-  
+
     const hasPermission = await getCheckPermissionPromise();
     if (hasPermission) {
-      return true;
+        return true;
     }
     const getRequestPermissionPromise = () => {
-      if (version >= 33) {
-        return PermissionsAndroid.requestMultiple([
-          PermissionsAndroid.PERMISSIONS.READ_MEDIA_IMAGES,
-          PermissionsAndroid.PERMISSIONS.READ_MEDIA_VIDEO,
-        ]).then(
-          (statuses) =>
-            statuses[PermissionsAndroid.PERMISSIONS.READ_MEDIA_IMAGES] ===
-              PermissionsAndroid.RESULTS.GRANTED &&
-            statuses[PermissionsAndroid.PERMISSIONS.READ_MEDIA_VIDEO] ===
-              PermissionsAndroid.RESULTS.GRANTED,
-        );
-      } else {
-        return PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE).then((status) => status === PermissionsAndroid.RESULTS.GRANTED);
-      }
+        if (version >= 33) {
+            return PermissionsAndroid.requestMultiple([
+                PermissionsAndroid.PERMISSIONS.READ_MEDIA_IMAGES,
+                PermissionsAndroid.PERMISSIONS.READ_MEDIA_VIDEO,
+            ]).then(
+                (statuses) =>
+                    statuses[PermissionsAndroid.PERMISSIONS.READ_MEDIA_IMAGES] ===
+                    PermissionsAndroid.RESULTS.GRANTED &&
+                    statuses[PermissionsAndroid.PERMISSIONS.READ_MEDIA_VIDEO] ===
+                    PermissionsAndroid.RESULTS.GRANTED,
+            );
+        } else {
+            return PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE).then((status) => status === PermissionsAndroid.RESULTS.GRANTED);
+        }
     };
-  
+
     return await getRequestPermissionPromise();
-  }
+}
 export default forwardRef((_, ref) => {
     const [visible, setVisible] = useState(false);
     const insets = useSafeAreaInsets();
@@ -80,7 +80,7 @@ export default forwardRef((_, ref) => {
             <Navbar title={'个人名片'} onLeftPress={onClose} />
             <ViewShot ref={viewRef} style={{
                 width: s(343),
-                paddingHorizontal:s(50),
+                paddingHorizontal: s(50),
                 paddingVertical: s(40),
                 marginHorizontal: s(16),
                 marginTop: s(30),
@@ -88,17 +88,17 @@ export default forwardRef((_, ref) => {
                 backgroundColor: "white",
             }}>
                 <View style={{
-                    display:"flex",
-                    flexDirection:"row",
-                    height:s(44),
+                    display: "flex",
+                    flexDirection: "row",
+                    height: s(44),
                     alignItems: "center",
                 }}>
-                    <AvatarX uri={authUser?.avatar ?? ''} border={true} size={44}/>
+                    <AvatarX uri={authUser?.avatar ?? ''} border={true} size={44} />
                     <Text numberOfLines={1} ellipsizeMode="tail" style={{
-                        marginLeft:s(5),
-                        fontSize:s(26),
+                        marginLeft: s(5),
+                        fontSize: s(26),
                         width: s(204),
-                        fontWeight:"700",
+                        fontWeight: "700",
                     }}>{authUser?.nickName}xxx</Text>
                 </View>
                 <View style={{
@@ -112,14 +112,14 @@ export default forwardRef((_, ref) => {
                         borderColor: $colors.border,
                         padding: s(8)
                     }}>
-                        <QRCode size={s(227)} value={"nextchat://userinfo/" + authUser?.id}/>
+                        <QRCode size={s(227)} value={"nextchat://userinfo/" + authUser?.id} />
                     </View>
                 </View>
                 <View style={{
                     marginTop: s(42),
                 }}>
                     <Text style={{
-                        textAlign:'center',
+                        textAlign: 'center',
                         color: $colors.text,
                         fontSize: s(14),
                         fontWeight: "500",
@@ -132,29 +132,31 @@ export default forwardRef((_, ref) => {
                 marginHorizontal: s(16),
                 marginTop: s(54),
             }}>
-                <Button onPress={async () => {
-                    if (viewRef.current == null) {
-                        return;
-                    }
-                    try {
-                        if(Platform.OS =="android"){
-                            const permission = await hasAndroidPermission();
-                            if (!permission) {
-                                toast('請先允許訪問相冊');
-                                return;
-                            }
+                <Button
+                    size="large"
+                    onPress={async () => {
+                        if (viewRef.current == null) {
+                            return;
                         }
-                        const uri = await captureRef(viewRef.current, {
-                            format: "png",
-                            quality: 0.8,
-                            handleGLSurfaceViewOnAndroid: true,
-                        });
-                        await CameraRoll.saveAsset(uri);
-                        toast('保存到相冊成功');
-                    } catch (error) {
-                        console.log(error);
-                    }
-                }} label="保存图片"/>
+                        try {
+                            if (Platform.OS == "android") {
+                                const permission = await hasAndroidPermission();
+                                if (!permission) {
+                                    toast('請先允許訪問相冊');
+                                    return;
+                                }
+                            }
+                            const uri = await captureRef(viewRef.current, {
+                                format: "png",
+                                quality: 0.8,
+                                handleGLSurfaceViewOnAndroid: true,
+                            });
+                            await CameraRoll.saveAsset(uri);
+                            toast('保存到相冊成功');
+                        } catch (error) {
+                            console.log(error);
+                        }
+                    }} label="保存图片" />
             </View>
         </View>
     </Modal>

@@ -9,6 +9,7 @@ import { navigate } from "app/navigators"
 import { CardMenu } from "app/components/CardMenu/CardMenu"
 import AvatarComponent from "app/components/Avatar"
 import { Icon } from "app/components/Icon/Icon"
+import fileService from "app/services/file.service"
 export const UserCenterScreen = () => {
     const insets = useSafeAreaInsets();
     const $colors = useRecoilValue(ColorsState);
@@ -38,7 +39,7 @@ export const UserCenterScreen = () => {
                 justifyContent: 'space-between',
 
             }}>
-                <AvatarComponent enableAvatarBorder width={74} height={74} url={authUser?.avatar ?? ''} online={true} style={{
+                <AvatarComponent enableAvatarBorder width={74} height={74} url={fileService.getFullUrl(authUser?.avatar ?? '')} online={true} style={{
                     marginTop: s(-42)
                 }} />
             </View>

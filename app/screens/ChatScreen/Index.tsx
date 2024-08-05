@@ -76,9 +76,16 @@ export const ChatScreen = ({ navigation }: Props) => {
             }
         }
         if (idx === 2) {
-            friendService.getOnlineList().then((val) => {
-                setFriends(val)
-            })
+            if (friends && friends.length > 0) {
+                friendService.getOnlineList().then((val) => {
+                    setFriends(val)
+                })
+            } else {
+                friendService.getOnlineList().then((val) => {
+                    setFriends(val)
+                })
+            }
+
         }
     }
 

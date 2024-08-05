@@ -130,7 +130,8 @@ export default forwardRef((_, ref) => {
                 marginHorizontal: s(16),
                 marginTop: s(54),
             }}>
-                <BlockButton onPress={async () => {
+                <BlockButton
+                onPress={async () => {
                     if (viewRef.current == null) {
                         return;
                     }

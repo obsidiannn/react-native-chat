@@ -4,7 +4,7 @@ import { Image } from "expo-image";
 import { forwardRef, useImperativeHandle, useState } from "react";
 import { Modal, StyleSheet, View, TouchableOpacity } from "react-native";
 import { useRecoilValue } from "recoil";
-import { MenuItem, IMenuItem} from "./MenuItem";
+import { MenuItem, IMenuItem } from "./MenuItem";
 
 
 export interface MenuModalRef {
@@ -31,16 +31,18 @@ export const MenuModal = forwardRef((_, ref) => {
         setVisible(false)
     }
 
-    return <Modal visible={visible} style={{flex: 1}} transparent={true} animationType="slide">
+    return <Modal visible={visible} style={{ flex: 1 }} transparent={true} animationType="slide">
         <View style={styles.container}>
             <View style={{
                 ...styles.menuArea,
                 backgroundColor: themeColor.background
             }}>
-                {menus.map((m, i) => <MenuItem onPress={() => {
-                    m.onPress();
-                    close();
-                }} title={m.title} iconName={m.iconName} bottomBorder={i !== menus.length - 1} />)}
+                {menus.map((m, i) => <MenuItem
+                    key={m.title + "_" + i}
+                    onPress={() => {
+                        m.onPress();
+                        close();
+                    }} title={m.title} iconName={m.iconName} bottomBorder={i !== menus.length - 1} />)}
             </View>
             <View style={{ alignItems: 'center', margin: s(32), }}>
                 <TouchableOpacity onPress={close} >

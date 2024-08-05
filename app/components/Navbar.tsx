@@ -28,16 +28,14 @@ const Navbar = (props: {
         if (renderCenter) {
             return renderCenter()
         } else {
-            if (title && title !== '') {
-                return <View style={[$centerContainer]}>
-                    <Text style={[
-                        $centerText,
-                        {
-                            color: $colors.text,
-                        },
-                    ]}>{title}</Text>
-                </View>
-            }
+            return <View style={[$centerContainer]}>
+                <Text style={[
+                    $centerText,
+                    {
+                        color: $colors.text,
+                    },
+                ]}>{title}</Text>
+            </View>
         }
         return null
     }

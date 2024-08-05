@@ -107,12 +107,16 @@ export const GroupCreateScreen = ({ route, navigation }: Props) => {
             paddingBottom: insets.bottom,
         }}>
             <Navbar title={t('groupCreate.title_group_create')} />
-            <ScrollView style={{
-                flex: 1,
-                paddingHorizontal: s(15),
-                paddingTop: s(20),
-                backgroundColor: themeColor.background
-            }}>
+            <ScrollView
+                scrollEnabled
+                contentContainerStyle={{
+                    display: 'flex',
+                    paddingHorizontal: s(15),
+                    paddingTop: s(20),
+                    backgroundColor: themeColor.background
+                }}
+            >
+
                 <AvatarUpload
                     avatar={createState.avatar}
                     onChange={(uri) => {
@@ -137,30 +141,36 @@ export const GroupCreateScreen = ({ route, navigation }: Props) => {
                         })
                     }}
                 />
-                <UploadArea style={{
-                    ...styles.sub_area,
-                    backgroundColor: themeColor.secondaryBackground,
-                    borderColor: themeColor.border,
-                }} onChange={(v: string) => {
-                    setCreateState({
-                        ...createState,
-                        cover: v
-                    })
-                }}>
-                    <View style={{
-                        borderRadius: s(24),
+                <UploadArea
+                    // url={""}
+                    url={createState.cover}
+                    style={{
+                        backgroundColor: themeColor.secondaryBackground,
                         borderColor: themeColor.border,
-                        borderWidth: 1,
-                        borderStyle: 'dashed',
-                        margin: s(12)
+                    }} onChange={(v: string) => {
+                        setCreateState({
+                            ...createState,
+                            cover: v
+                        })
                     }}>
-                        <Image source={require('assets/icons/plus.svg')} style={{
-                            width: s(24),
-                            height: s(24),
-                            tintColor: themeColor.border
-                        }} />
+                    <View style={{
+                        padding: s(14)
+                    }}>
+                        <View style={{
+                            borderRadius: s(24),
+                            borderColor: themeColor.border,
+                            borderWidth: 1,
+                            borderStyle: 'dashed',
+                            margin: s(12),
+                        }}>
+                            <Image source={require('assets/icons/plus.svg')} style={{
+                                width: s(24),
+                                height: s(24),
+                                tintColor: themeColor.border
+                            }} />
+                        </View>
+                        <Text style={{ color: themeColor.primary }}>上传封面</Text>
                     </View>
-                    <Text style={{ color: themeColor.primary }}>上传封面</Text>
                 </UploadArea>
 
                 <TextInput
@@ -243,12 +253,11 @@ export const GroupCreateScreen = ({ route, navigation }: Props) => {
                                 isEnc: e
                             })
                         }} />
+
                 </View>
-
                 <Button onPress={doGroupCreate} size="large" label={t('groupCreate.title_group_create')} containerStyle={{
-                    marginVertical: s(24)
+                    marginVertical: s(24),
                 }} />
-
             </ScrollView>
             <LoadingModal ref={loadingModalRef} />
         </View>
@@ -263,15 +272,8 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
     },
     sub_area: {
-        padding: s(15),
-        paddingVertical: s(32),
-        borderRadius: s(15),
-        borderWidth: 1,
-        borderStyle: 'dashed',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center'
+
+
     },
     input: {
         fontSize: s(32),

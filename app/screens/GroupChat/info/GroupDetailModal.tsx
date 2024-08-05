@@ -11,7 +11,7 @@ import { ScrollView, TextInput } from "react-native-gesture-handler";
 import { useTranslation } from "react-i18next";
 import { colors } from "app/theme";
 import { IModel } from "@repo/enums";
-import {Icon} from "app/components/Icon/Icon";
+import { Icon } from "app/components/Icon/Icon";
 import { isOnline } from "app/utils/account";
 import { Button } from "app/components";
 import groupApi from "app/api/group/group";
@@ -71,22 +71,25 @@ export default forwardRef((_, ref) => {
         if (!author) {
             return
         }
-        let secretBuff
+        let sharedSecret: string
         if (author?.encPri !== '' && author?.encPri !== null && author?.encPri !== undefined) {
-            console.log('a');
-            const key = wallet?.computeSharedSecret(author.encPri)
-            secretBuff = quickCrypto.De(key ?? '', Buffer.from(author.encKey, 'utf8'))
+            console.log('[groupa]', author);
+
+            const key = myWallet.computeSharedSecret(author.encPri)
+            const decode = quickCrypto.De(key, Buffer.from(author.encKey, 'hex'))
+            sharedSecret = Buffer.from(decode).toString('utf8')
         } else {
-            console.log('b');
-            const key = wallet?.computeSharedSecret(myWallet.getPublicKey())
-            // sharedSecret = quickAes.De(author?.encKey ?? '', key ?? '')
-            secretBuff = quickCrypto.De(key ?? '', Buffer.from(author.encKey, 'utf8'))
+            console.log('[groupb]', author);
+            const key = myWallet.computeSharedSecret(myWallet.getPublicKey())
+            const decode = quickCrypto.De(key, Buffer.from(author.encKey, 'hex'))
+            sharedSecret = Buffer.from(decode).toString('utf8')
         }
-        const groupPassword = quickCrypto.De(author?.encKey ?? '', secretBuff)
+        console.log('sharedSecret==', sharedSecret);
         const groupInfo = {
             id: groupContext.group?.id ?? -1,
-            groupPassword: Buffer.from(groupPassword).toString('hex')
+            groupPassword: sharedSecret
         }
+       
         groupService.invite(users, groupInfo).then(() => {
             groupContext.reloadMember()
         })
@@ -103,7 +106,7 @@ export default forwardRef((_, ref) => {
         renderRight={
             <TouchableOpacity style={{ backgroundColor: themeColor.background, padding: s(4), borderRadius: s(8) }}
             >
-                <Icon name={$theme === 'dark'? "shareDark":"shareLight"} />
+                <Icon name={$theme === 'dark' ? "shareDark" : "shareLight"} />
             </TouchableOpacity>
         }
 
@@ -129,7 +132,7 @@ export default forwardRef((_, ref) => {
                                 groupApi.changeAvatar({
                                     id: groupContext.group.id,
                                     avatar: uri
-                                }).then(()=>{
+                                }).then(() => {
                                     groupContext.reloadGroup()
                                 })
 
@@ -163,7 +166,7 @@ export default forwardRef((_, ref) => {
                     <TouchableOpacity style={{ backgroundColor: themeColor.secondaryBackground, padding: s(4), borderRadius: s(8) }}
                         onPress={changeName}
                     >
-                        {editing ? <Icon name={$theme == "dark" ? "checkDark":"checkLight"} /> : <Icon name={$theme == "dark" ? "changeDark":"changeLight"}  />}
+                        {editing ? <Icon name={$theme == "dark" ? "checkDark" : "checkLight"} /> : <Icon name={$theme == "dark" ? "changeDark" : "changeLight"} />}
                     </TouchableOpacity> :
                     null
                 }
@@ -177,7 +180,7 @@ export default forwardRef((_, ref) => {
                 <View style={{
                     display: 'flex', flexDirection: 'row', alignItems: 'center',
                 }}>
-                    <Icon name={$theme == "dark" ? "peoplesDark":"peoplesLight"}  />
+                    <Icon name={$theme == "dark" ? "peoplesDark" : "peoplesLight"} />
                     <Text>当前群成员人数</Text>
                 </View>
                 <Text>
@@ -199,20 +202,18 @@ export default forwardRef((_, ref) => {
                             <TouchableOpacity onPress={() => {
                                 groupMemberManageRef.current?.open(groupContext.group.id, item, groupContext.selfMember)
                             }}>
-                                <Icon name={$theme == "dark" ? "moreDark":"moreLight"}  />
+                                <Icon name={$theme == "dark" ? "moreDark" : "moreLight"} />
                             </TouchableOpacity>
                         </View>
                     })
                 }
 
             </ScrollView>
-            <Button style={{
+            <Button containerStyle={{
                 backgroundColor: themeColor.primary,
                 borderRadius: s(14),
             }}
-                pressedStyle={{
-                    backgroundColor: themeColor.btnChoosed
-                }}
+                size="large"
                 onPress={async () => {
                     const data = await friendService.getOnlineList();
                     const existIds = groupContext.members?.map(item => item.id) ?? [];
@@ -245,9 +246,9 @@ export default forwardRef((_, ref) => {
                         })
                     }
                 }}
-            >
-                <Text style={{ color: themeColor.btnDefault }}>{t('groupChat.btn_invite_member')}</Text>
-            </Button>
+                label={t('groupChat.btn_invite_member')}
+            />
+
         </View>
 
         <SelectMemberModal ref={selectMemberModalRef} />

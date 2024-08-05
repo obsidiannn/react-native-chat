@@ -51,7 +51,7 @@ export const GroupChatScreen = ({ navigation, route }: Props) => {
         groupService.getMemberList(groupIdRef.current).then((res) => {
             setMembers(res)
             const self = res.find(m => m.uid === authUser?.id ?? -1)
-            console.log('self===', self);
+            console.log('self===', authUser, self);
 
             if (self !== null) {
                 selfMemberRef.current = self
