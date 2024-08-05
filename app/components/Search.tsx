@@ -1,13 +1,12 @@
 import { TouchableOpacity, View } from "react-native"
-import { Icon } from "./Icon/Icon"
 import { useState } from "react"
 import { TextInput } from "react-native-gesture-handler"
 import { s } from "app/utils/size"
+import { IconFont } from "./IconFont/IconFont"
 
 export interface SearchProps {
     onSearch: (val: string) => Promise<void>
     color: IColors
-    theme: string
 }
 
 export const Search = (props: SearchProps) => {
@@ -45,7 +44,7 @@ export const Search = (props: SearchProps) => {
                 padding: s(8),
                 borderRadius: s(8),
             }}>
-            <Icon name={props.theme === 'dark'?'searchDark':'searchLight'} />
+            <IconFont name="search" size={24} color={props.color.text} />
         </TouchableOpacity>
     </View>
 }

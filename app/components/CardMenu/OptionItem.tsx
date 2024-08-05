@@ -4,8 +4,8 @@ import { useRecoilValue } from "recoil";
 import { ColorsState } from "app/stores/system";
 import { s } from "app/utils/size";
 import { ReactNode } from "react";
-import { Icon } from "../Icon/Icon";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { IconFont } from "../IconFont/IconFont";
 
 export interface OptionItemProps {
     title: string;
@@ -42,6 +42,6 @@ export const OptionItem = (props: OptionItemProps) => {
                 props.textStyle
             ]}>{props.title}</Text>
         </View>
-        {props.rightArrow===undefined?<Icon name="arrowRight" />:props.rightArrow}
+        {props.rightArrow === undefined ? <IconFont name="arrowRight" size={16} color={$colors.border} /> : props.rightArrow}
     </TouchableOpacity>
 }
