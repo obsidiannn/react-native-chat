@@ -68,6 +68,7 @@ const glyphMap = {
     search: 0x005f,
     userSetting: 0x0060,
     userRemove: 0x0061,
+    silent: 0x0062,
 };
 export type IconFontNameType = keyof typeof glyphMap;
 export const IconFontNames = Object.keys(glyphMap) as IconFontNameType[];
