@@ -64,7 +64,9 @@ const glyphMap = {
     newChat: 0x005b,
     notificationOff: 0x005c,
     notification: 0x005d,
-    checkMark: 0x005e
+    checkMark: 0x005e,
+    search: 0x005f,
+    userSetting: 0x0060
 };
 export type IconFontNameType = keyof typeof glyphMap;
 export const IconFontNames = Object.keys(glyphMap) as IconFontNameType[];
