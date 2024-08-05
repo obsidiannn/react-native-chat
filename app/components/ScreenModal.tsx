@@ -1,7 +1,7 @@
 import Navbar from "app/components/Navbar";
 import { ColorsState } from "app/stores/system";
 import { forwardRef, useEffect, useImperativeHandle, useState } from "react"
-import { BackHandler, Modal, Platform, View, ViewStyle } from "react-native"
+import { Modal, View, ViewStyle } from "react-native"
 import { Gesture, GestureDetector, GestureStateChangeEvent, PanGestureHandlerEventPayload, gestureHandlerRootHOC } from "react-native-gesture-handler";
 import { runOnJS } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
