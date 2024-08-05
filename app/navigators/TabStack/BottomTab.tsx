@@ -1,7 +1,7 @@
 import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 import { TouchableOpacity, View,ViewStyle } from "react-native";
-import { Image } from "expo-image";
 import { s, vs } from "app/utils/size";
+import { IconFont } from "app/components/IconFont/IconFont";
 const $container:ViewStyle = {
     width: '100%',
     height: vs(60),
@@ -50,18 +50,9 @@ export function BottomTab({ state, descriptors, navigation }: BottomTabBarProps)
                         key={index}
                     >
                         <View>
-                            {route.name == 'PlazaScreen' ? <Image style={{
-                                width: s(32),
-                                height: s(32),
-                            }} source={isFocused ? require('./plaza-selected.png') : require('./plaza.png')} /> : null}
-                            {route.name == 'ChatScreen' ? <Image style={{
-                                width: s(32),
-                                height: s(32),
-                            }} source={isFocused ? require('./contact-selected.png') : require('./contact.png')} /> : null}
-                            {route.name == 'UserCenterScreen' ? <Image style={{
-                                width: s(32),
-                                height: s(32),
-                            }} source={isFocused ? require('./wallet-selected.png') : require('./wallet.png')} /> : null}
+                            {route.name == 'PlazaScreen' && <IconFont name="planet" size={32} color={isFocused ? 'white' : '#617086'} />}
+                            {route.name == 'ChatScreen' && <IconFont name="chat" size={32} color={isFocused ? 'white' : '#617086'} />}
+                            {route.name == 'UserCenterScreen' && <IconFont name="person" size={32} color={isFocused ? 'white' : '#617086'} />}
                         </View>
                     </TouchableOpacity>
                 );
