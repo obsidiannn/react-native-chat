@@ -30,6 +30,11 @@ const deleteChat = async (param: BaseIdsArrayReq) => await createInstance(true).
 // 置顶
 const raiseTop = async (param: ChatRaiseTopReq): Promise<{ isTop: number }> => createInstance(true).post('/chats/raise-top', param);
 
+// 免打扰
+const changeMute = async (param: {
+  chatId: string, mute: boolean
+}): Promise<{ isMute: number }> => createInstance(true).post('/chats/change-mute', param);
+
 const tokenRegister = async (param: { token: string }): Promise<void> => await createInstance(true).post('/chats/tokenRegister', param);
 
 export default {
@@ -39,6 +44,7 @@ export default {
   chatDetail,
   deleteChat,
   raiseTop,
+  changeMute,
   mineChatDetailList,
   findChatIdByUserId,
   tokenRegister,

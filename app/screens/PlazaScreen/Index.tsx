@@ -54,13 +54,13 @@ export const PlazaScreen = ({ navigation }: Props) => {
     if (pageIndex === idx) {
       return {
         backgroundColor: themeColor.btnChoosed,
-        color: colors.palette.primary,
+        color: themeColor.textChoosed,
         borderColor: colors.palette.gray200,
       }
     } else {
       return {
         backgroundColor: themeColor.btnDefault,
-        color: colors.palette.primary,
+        color: themeColor.text,
         borderColor: colors.palette.gray200,
       }
     }
@@ -70,23 +70,23 @@ export const PlazaScreen = ({ navigation }: Props) => {
   return <View style={[styles.container, {
     backgroundColor: themeColor.background
   }]}>
-    <BannerComponent label="邀请好友" describe="分享一个链接" onPress={() => {
+    <BannerComponent label="发现" describe="你最喜欢的社区" onPress={() => {
       console.log('press');
 
       navigation.navigate('DiscoverScreen')
     }} />
     <View style={styles.topContainer}>
-      <Button children={t('chat.btn_recent')} onPress={() => changeTab(0)}
-        style={[styles.tabButton, btnStyle(0)]}
-        textStyle={[btnTextStyle(0)]}
+      <Button label={t('chat.btn_recent')} onPress={() => changeTab(0)}
+        containerStyle={{...styles.tabButton, ...btnStyle(0)}}
+        textStyle={btnTextStyle(0)}
       />
-      <Button children={t('chat.btn_group')} onPress={() => changeTab(1)}
-        style={[styles.tabButton, btnStyle(1)]}
-        textStyle={[btnTextStyle(1)]}
+      <Button label={t('chat.btn_group')} onPress={() => changeTab(1)}
+        containerStyle={{...styles.tabButton, ...btnStyle(1)}}
+        textStyle={btnTextStyle(1)}
       />
-      <Button children={t('chat.btn_contract')} onPress={() => changeTab(2)}
-        style={[styles.tabButton, btnStyle(2)]}
-        textStyle={[btnTextStyle(2)]}
+      <Button label={t('chat.btn_contract')} onPress={() => changeTab(2)}
+        containerStyle={{...styles.tabButton, ...btnStyle(2)}}
+        textStyle={btnTextStyle(2)}
       />
     </View>
     <PagerView ref={pagerViewRef}
@@ -122,15 +122,11 @@ const styles = StyleSheet.create({
   },
   tabButton: {
     fontSize: s(10),
-    marginRight: s(18),
-    padding: 0,
-    paddingVertical: s(8),
+    marginRight: s(12),
     display: 'flex',
     flexDirection: 'row',
     minHeight: 0,
-    borderRadius: s(12),
-    borderWidth: 0
-
+    borderRadius: s(8),
   },
 
   btnTextDefault: {

@@ -172,7 +172,7 @@ export default forwardRef((_, ref) => {
     }
 
 
-    const changeTop = (chatIdVal: string, val: number) => {
+    const changeTop = (val: number) => {
 
         groupContext.reloadChat({
             ...groupContext.chatItem,
@@ -180,7 +180,7 @@ export default forwardRef((_, ref) => {
         })
     }
 
-    const changeMute = (chatIdVal: string, val: number) => {
+    const changeMute = (val: number) => {
 
         groupContext.reloadChat({
             ...groupContext.chatItem,
@@ -247,7 +247,7 @@ export default forwardRef((_, ref) => {
                         }}
                         leftIcon={
                             // <Icon name={$theme === 'dark' ? "userManageDark" : "userManageLight"} />
-                            <IconFont name="userSetting" color={themeColor.text} size={24}/>
+                            <IconFont name="userSetting" color={themeColor.text} size={24} />
                         }
                         rightComponent={
                             <IconFont name="arrowRight" color={themeColor.border} size={16} />
@@ -276,10 +276,10 @@ export default forwardRef((_, ref) => {
                             e.stopPropagation()
                             e.persist()
                             const res = await chatApi.raiseTop({
-                                chatUserId: groupContext.chatItem.chatUserId ?? '',
+                                chatId: groupContext.chatItem.id ?? '',
                                 top: e.nativeEvent.value
                             })
-                            changeTop(groupContext.chatItem.id, res.isTop ? 1 : 0)
+                            changeTop(res.isTop ? 1 : 0)
 
                         }} />} />
 
@@ -293,9 +293,14 @@ export default forwardRef((_, ref) => {
                         false: colors.palette.gray400,
                         true: themeColor.primary
                     }}
-                    onValueChange={async (e) => {
-                        await new Promise(resolve => setTimeout(resolve, 1000));
-                        changeMute(groupContext.chatItem.id, e ? 1 : 0)
+                    onChange={async (e) => {
+                        e.stopPropagation()
+                        e.persist()
+                        const res = await chatApi.changeMute({
+                            chatId: groupContext.chatItem.id ?? '',
+                            mute: e.nativeEvent.value
+                        })
+                        changeMute(res.isMute)
                     }} />} />
 
             <View style={{

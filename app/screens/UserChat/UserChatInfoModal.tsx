@@ -1,6 +1,6 @@
 import { StyleSheet, View, Switch } from "react-native";
-import { useRef, useState, useContext, useMemo } from "react";
-import  { ConfirmModal,ConfirmModalType } from "app/components/ConfirmModal";
+import { useRef, useState, useContext, useMemo, forwardRef, useImperativeHandle } from "react";
+import { ConfirmModal, ConfirmModalType } from "app/components/ConfirmModal";
 import messageSenderService from "app/services/message-send.service";
 import ActionItem from "./action-item";
 import { ChatDetailItem, ClearChatMessageEvent } from "@repo/types";
@@ -8,7 +8,6 @@ import { IModel } from "@repo/enums";
 import EventManager from 'app/services/event-manager.service'
 import chatApi from "app/api/chat/chat";
 import { s } from "app/utils/size";
-import Navbar from "app/components/Navbar";
 import { colors } from "app/theme";
 import { Image } from "expo-image";
 import toast from "app/utils/toast";
@@ -16,198 +15,188 @@ import { useTranslation } from "react-i18next";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { ColorsState } from "app/stores/system";
 import { ChatsStore } from "app/stores/auth";
+import { ScreenModal, ScreenModalType } from "app/components/ScreenModal";
+import { UserChatUIContext } from "./context";
 
+export interface UserChatInfoModalRef {
+    open: () => void
+}
 
-
-export const UserChatInfoModel = ({ navigation, route }) => {
+export default forwardRef((_, ref) => {
     // const route = useRoute()gai l
     console.log('start');
-
-    const [chatsStore, setChatsStore] = useRecoilState(ChatsStore)
-    console.log(route.params);
-    const user = route.params
-    const chatId = route.params.chatId
-
-
-
+    const screenModalRef = useRef<ScreenModalType>(null)
+    const userContext = useContext(UserChatUIContext)
     const { t } = useTranslation('screens')
-    const theme = useRecoilValue(ColorsState)
+    const themeColor = useRecoilValue(ColorsState)
     const confirmModalRef = useRef<ConfirmModalType>(null);
-
-    const changeTop = (chatIdVal: string, val: number) => {
-        setChatsStore((items) => {
-            const newItems = items.map(t => {
-                if (chatIdVal === t.id) {
-                    return { ...t, isTop: val }
-                }
-                return t
-            })
-            return newItems
+    const chat = useMemo(() => {
+        return userContext.chatItem
+    }, [userContext.chatItem])
+    const changeTop = (val: number) => {
+        userContext.reloadChat({
+            ...chat, isTop: val
         })
     }
 
-    const changeMute = (chatIdVal: string, val: number) => {
-        setChatsStore((items) => {
-            const newItems = items.map(t => {
-                if (chatIdVal === t.id) {
-                    return { ...t, isMute: val }
-                }
-                return t
-            })
-            return newItems
+    const changeMute = (val: number) => {
+        userContext.reloadChat({
+            ...chat, isMute: val
         })
     }
 
-    // const chat = useMemo(() => {
-    //     const chatDetails = chatsStore.filter(c => c.id = chatId)
+    useImperativeHandle(ref, () => {
+        return {
+            open: () => {
+                screenModalRef.current?.open()
+            }
+        }
+    })
 
-    //     if (chatDetails.length > 0) {
-    //         console.log('chat has changed', chatDetails[0]);
-    //         return chatDetails[0]
-    //     }
-    //     return null
-    // }, [chatsStore.filter(c => c.id === chatId)])
+    return <ScreenModal ref={screenModalRef} >
 
-    const chat = chatsStore.filter(c => c.id === chatId)[0]
-    const onClose = () => {
-        navigation.goBack()
-    }
-
-    return (
         <View style={{
-            flex: 1,
-            ...styles,
-            backgroundColor: theme.background
+            paddingHorizontal: s(25),
+            marginTop: s(20),
         }}>
-            <Navbar onLeftPress={onClose} />
             <View style={{
-                paddingHorizontal: s(25),
-                marginTop: s(20),
+                marginTop: s(15),
             }}>
-                <View style={{
-                    marginTop: s(15),
-                }}>
-                    <ActionItem title={'查看个人资料'}
-                        onPress={() => {
-                            console.log('press');
-                        }}
-                        leftComponent={
-                            <Image source={require('assets/icons/personal.svg')} style={{
-                                width: s(20),
-                                height: s(20),
-                                marginRight: s(8)
-                            }} />
-                        }
-                        rightComponent={
-                            <Image source={require('assets/icons/arrow-right-gray.svg')} style={{
-                                width: s(20),
-                                height: s(20),
-                            }} />
-                        } />
-                </View>
-
-                <View style={{
-                    marginTop: s(15),
-                }}>
-                    <ActionItem title={'消息免打扰'}
-                        leftComponent={
-                            <Image source={require('assets/icons/off.svg')} style={{
-                                width: s(20),
-                                height: s(20),
-                                marginRight: s(8)
-                            }} />
-                        }
-                        rightComponent={<Switch height={s(24)}
-                            onColor={colors.palette.primary} value={
-                                chat?.isMute === IModel.ICommon.ICommonBoolEnum.YES
-                            } onValueChange={async (v) => {
-                                await new Promise(resolve => setTimeout(resolve, 500));
-                                changeMute(chat?.id ?? '', v ? 1 : 0)
-                            }} />} />
-                </View>
-
-
-                <View style={{
-                    marginTop: s(15),
-                }}>
-                    <ActionItem title={t('chat.btn_chat_top')}
-                        leftComponent={
-                            <Image source={require('assets/icons/top.svg')} style={{
-                                width: s(20),
-                                height: s(20),
-                                marginRight: s(8)
-                            }} />
-                        }
-                        rightComponent={<Switch height={s(24)} onColor={colors.palette.primary}
-                            value={
-                                chat?.isTop === IModel.ICommon.ICommonBoolEnum.YES
-                            }
-                            onChange={async (e) => {
-                                console.log('chatchange');
-
-                                const res = await chatApi.raiseTop({
-                                    chatUserId: chat.chatUserId ?? '',
-                                    top: e.nativeEvent.value
-                                })
-
-                                changeTop(chat.id, res.isTop)
-                            }} />} />
-                </View>
-
-                <View style={{
-                    marginTop: s(15),
-                }}>
-                    <ActionItem title={'查找聊天内容'}
-                        leftComponent={
-                            <Image source={require('assets/icons/search.svg')} style={{
-                                width: s(20),
-                                height: s(20),
-                                marginRight: s(8)
-                            }} />
-                        }
-                        rightComponent={<Image source={require('assets/icons/arrow-right-gray.svg')} style={{
+                <ActionItem title={'查看个人资料'}
+                    onPress={() => {
+                        console.log('press');
+                    }}
+                    leftComponent={
+                        <Image source={require('assets/icons/personal.svg')} style={{
                             width: s(20),
                             height: s(20),
-                        }} />} />
-                </View>
-
-                <View style={{
-                    marginTop: s(15),
-                    paddingTop: s(15),
-                    borderTopColor: colors.palette.gray200,
-                    borderTopWidth: s(0.5)
-                }}>
-                    <ActionItem onPress={() => {
-                        confirmModalRef.current?.open({
-                            title: t('chat.btn_message_delete'),
-                            content: t('chat.btn_message_delete_desc'),
-                            onSubmit: () => {
-                                messageSenderService.clearMineMessage([chat?.id ?? ""]).then(() => {
-                                    const event: ClearChatMessageEvent = { chatId: chat?.id ?? '', type: IModel.IClient.SocketTypeEnum.CLEAR_ALL_MESSAGE }
-                                    const eventKey = EventManager.generateChatTopic(chat?.id ?? '')
-                                    EventManager.emit(eventKey, event)
-                                    toast(t('chat.success_cleaned'))
-                                })
-                            }
-                        })
-                    }} title={t('chat.btn_message_delete')} textColor="#FB3737"
-                        leftComponent={
-                            <Image source={require('assets/icons/close.svg')} style={{
-                                width: s(20),
-                                height: s(20),
-                                marginRight: s(8)
-                            }} />
-                        }
-                        rightComponent={<Image source={require('assets/icons/arrow-right-gray.svg')} style={{
+                            marginRight: s(8)
+                        }} />
+                    }
+                    rightComponent={
+                        <Image source={require('assets/icons/arrow-right-gray.svg')} style={{
                             width: s(20),
                             height: s(20),
-                        }} />} />
-                </View>
+                        }} />
+                    } />
             </View>
-            <ConfirmModal ref={confirmModalRef} />
+
+            <View style={{
+                marginTop: s(15),
+            }}>
+                <ActionItem title={'消息免打扰'}
+                    leftComponent={
+                        <Image source={require('assets/icons/off.svg')} style={{
+                            width: s(20),
+                            height: s(20),
+                            marginRight: s(8)
+                        }} />
+                    }
+                    rightComponent={<Switch
+                        thumbColor={themeColor.background}
+                        trackColor={{
+                            true: themeColor.primary,
+                            false: themeColor.border
+                        }}
+                        value={
+                            chat?.isMute === IModel.ICommon.ICommonBoolEnum.YES
+                        }
+                        onChange={async (e) => {
+                            e.stopPropagation()
+                            e.persist()
+                            const res = await chatApi.changeMute({
+                                chatId: chat.id ?? '',
+                                mute: e.nativeEvent.value
+                            })
+                            changeMute(res.isMute)
+                        }} />} />
+            </View>
+
+
+            <View style={{
+                marginTop: s(15),
+            }}>
+                <ActionItem title={t('chat.btn_chat_top')}
+                    leftComponent={
+                        <Image source={require('assets/icons/top.svg')} style={{
+                            width: s(20),
+                            height: s(20),
+                            marginRight: s(8)
+                        }} />
+                    }
+                    rightComponent={<Switch
+                        thumbColor={themeColor.background}
+                        trackColor={{
+                            true: themeColor.primary,
+                            false: themeColor.border
+                        }}
+                        value={
+                            chat?.isTop === IModel.ICommon.ICommonBoolEnum.YES
+                        }
+                        onChange={async (e) => {
+                            e.stopPropagation()
+                            e.persist()
+                            const res = await chatApi.raiseTop({
+                                chatId: chat.id ?? '',
+                                top: e.nativeEvent.value
+                            })
+                            changeTop(res.isTop)
+                        }} />} />
+            </View>
+
+            <View style={{
+                marginTop: s(15),
+            }}>
+                <ActionItem title={'查找聊天内容'}
+                    leftComponent={
+                        <Image source={require('assets/icons/search.svg')} style={{
+                            width: s(20),
+                            height: s(20),
+                            marginRight: s(8)
+                        }} />
+                    }
+                    rightComponent={<Image source={require('assets/icons/arrow-right-gray.svg')} style={{
+                        width: s(20),
+                        height: s(20),
+                    }} />} />
+            </View>
+
+            <View style={{
+                marginTop: s(15),
+                paddingTop: s(15),
+                borderTopColor: colors.palette.gray200,
+                borderTopWidth: s(0.5)
+            }}>
+                <ActionItem onPress={() => {
+                    confirmModalRef.current?.open({
+                        title: t('chat.btn_message_delete'),
+                        content: t('chat.btn_message_delete_desc'),
+                        onSubmit: () => {
+                            messageSenderService.clearMineMessage([chat?.id ?? ""]).then(() => {
+                                const event: ClearChatMessageEvent = { chatId: chat?.id ?? '', type: IModel.IClient.SocketTypeEnum.CLEAR_ALL_MESSAGE }
+                                const eventKey = EventManager.generateChatTopic(chat?.id ?? '')
+                                EventManager.emit(eventKey, event)
+                                toast(t('chat.success_cleaned'))
+                            })
+                        }
+                    })
+                }} title={t('chat.btn_message_delete')} textColor="#FB3737"
+                    leftComponent={
+                        <Image source={require('assets/icons/close.svg')} style={{
+                            width: s(20),
+                            height: s(20),
+                            marginRight: s(8)
+                        }} />
+                    }
+                    rightComponent={<Image source={require('assets/icons/arrow-right-gray.svg')} style={{
+                        width: s(20),
+                        height: s(20),
+                    }} />} />
+            </View>
         </View>
-    );
-}
+        <ConfirmModal ref={confirmModalRef} />
+    </ScreenModal>
+})
 
 const styles = StyleSheet.create({
     container: {
