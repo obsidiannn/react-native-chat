@@ -12,6 +12,7 @@ import { useRecoilValue } from "recoil";
 import { ColorsState } from "app/stores/system";
 import AvatarX from "app/components/AvatarX";
 import strUtil from "app/utils/str-util";
+import { IconFont } from "app/components/IconFont/IconFont";
 export default (props: {
     user: IUser
 }) => {
@@ -33,12 +34,7 @@ export default (props: {
                 {
                     user.gender !== IModel.IUser.Gender.UNKNOWN ?
                         (
-                            <Image source={user.gender === IModel.IUser.Gender.MALE ? require('assets/icons/male.svg') : require('assets/icons/female.svg')}
-                                style={{
-                                    width: s(36),
-                                    height: s(36)
-                                }}
-                            />
+                            <IconFont name={user.gender === IModel.IUser.Gender.MALE ? "men" : "women"} color={$colors.text} />
                         ) : null
                 }
 
@@ -48,8 +44,8 @@ export default (props: {
                 await clipboard.setStringAsync(user.userName ?? '');
                 toast(t('userInfo.success_copied'));
             }}>
-                <Text style={styles.signText}>@{strUtil.truncateMiddle(user.userName,30)}</Text>
-                <Image source={require('assets/icons/copy.svg')} style={styles.copyIcon} />
+                <Text style={styles.signText}>@{strUtil.truncateMiddle(user.userName, 30)}</Text>
+                <IconFont name={"copy"} color={$colors.text} size={16} />
             </TouchableOpacity>
         </View>
         <View style={styles.signContainer}>

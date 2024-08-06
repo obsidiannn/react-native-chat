@@ -16,6 +16,7 @@ import { IServer } from "@repo/types";
 import { App } from "types/app";
 import { IModel } from "@repo/enums";
 import UserInfo from "app/components/UserInfo";
+import { IconFont } from "app/components/IconFont/IconFont";
 type Props = StackScreenProps<App.StackParamList, 'InviteInfoScreen'>;
 export const InviteInfoScreen = ({ navigation, route }: Props) => {
     const insets = useSafeAreaInsets();
@@ -85,12 +86,7 @@ export const InviteInfoScreen = ({ navigation, route }: Props) => {
                         <TextInput value={remark} onChangeText={(v) => setRemark(v)} placeholder={t('placeholder_remark')} style={{
                             flex: 1
                         }} />
-                        <Image source={require('assets/icons/edit.svg')} style={{
-                            width: verticalScale(20),
-                            height: verticalScale(20),
-                            marginLeft: s(15),
-                            marginTop: verticalScale(15),
-                        }} />
+                        <IconFont name="edit" color={themeColor.text} size={20} />
                     </View> : null}
                 </View>
                 <View style={styles.actionContainer}>
@@ -105,9 +101,9 @@ export const InviteInfoScreen = ({ navigation, route }: Props) => {
                             }).finally(() => {
                                 setLoading(false);
                             });
-                        }} label={t('friend.btn_apply')}/>
+                        }} label={t('friend.btn_apply')} />
                         <Button type="secondary" containerStyle={{
-                            marginTop:s(10)
+                            marginTop: s(10)
                         }} fullWidth size="large" onPress={async () => {
                             if (loading) {
                                 return
@@ -119,9 +115,9 @@ export const InviteInfoScreen = ({ navigation, route }: Props) => {
                                 navigation.goBack();
                                 setLoading(false);
                             });
-                        }} label={t('friend.btn_reject') }/>
+                        }} label={t('friend.btn_reject')} />
                     </> : null}
-                    {info?.friendApply.status === IModel.IFriendApply.Status.PENDING && info.isSelf ? <Button label={t('friend.label_pending')} />: null}
+                    {info?.friendApply.status === IModel.IFriendApply.Status.PENDING && info.isSelf ? <Button label={t('friend.label_pending')} /> : null}
                 </View>
             </ScrollView>
         </View>

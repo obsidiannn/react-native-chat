@@ -4,6 +4,9 @@ import { forwardRef, useImperativeHandle, useState } from "react";
 import { MessageType } from "./chat-ui";
 import { s } from "app/utils/size";
 import { Image } from "expo-image";
+import { IconFont } from "./IconFont/IconFont";
+import { useRecoilValue } from "recoil";
+import { ColorsState } from "app/stores/system";
 
 
 export interface LongPressModalType {
@@ -16,7 +19,8 @@ export interface LongPressModalType {
 export default forwardRef((props, ref) => {
     const [visible, setVisible] = useState(false)
     const [layout, setLayout] = useState<number[]>([])
-    const [height,setHeight] = useState<number>(0)
+    const [height, setHeight] = useState<number>(0)
+    const themeColor = useRecoilValue(ColorsState)
     const openModal = () => {
         setVisible(true)
     }
@@ -54,36 +58,37 @@ export default forwardRef((props, ref) => {
                 }}
             >
                 <View
-                    onLayout={(e)=>{
+                    onLayout={(e) => {
                         setHeight(e.nativeEvent.layout.height)
                     }}
                     // onStartShouldSetResponderCapture={(ev) => { return true }}
                     style={{
                         ...styles.modal_container,
                         ...(layout.length > 0 ? {
-                            top:  layout[1] - height
-                        } : {})
+                            top: layout[1] - height
+                        } : {}),
+                        backgroundColor: themeColor.background
                     }}
                 >
                     <TouchableOpacity style={styles.line_button_style}>
-                        <Image source={require('assets/icons/copy.svg')} style={styles.icon_btn} />
-                        <Text>复制</Text>
+                        <IconFont name="copy" color={themeColor.text} size={32} />
+                        <Text style={{ color: themeColor.text }}>复制</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.line_button_style}>
-                        <Image source={require('assets/icons/share.svg')} style={styles.icon_btn} />
-                        <Text>分享</Text>
+                        <IconFont name="share" color={themeColor.text} size={32} />
+                        <Text style={{ color: themeColor.text }}>分享</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.line_button_style}>
-                        <Image source={require('assets/icons/reference.svg')} style={styles.icon_btn} />
-                        <Text>引用</Text>
+                        <IconFont name="quote" color={themeColor.text} size={32} />
+                        <Text style={{ color: themeColor.text }}>引用</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.line_button_style}>
-                        <Image source={require('assets/icons/multi_select.svg')} style={styles.icon_btn} />
-                        <Text>多选</Text>
+                        <IconFont name="multipleSelection" color={themeColor.text} size={32} />
+                        <Text style={{ color: themeColor.text }}>多选</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={[styles.line_button_style, { marginRight: 0 }]}>
-                        <Image source={require('assets/icons/delete.svg')} style={styles.icon_btn} />
-                        <Text>删除</Text>
+                        <IconFont name="trash" color={themeColor.text} size={32} />
+                        <Text style={{ color: themeColor.text }}>删除</Text>
                     </TouchableOpacity>
                 </View>
 

@@ -20,6 +20,7 @@ import { colors } from "app/theme";
 import GroupInfoModal, { GroupInfoModalType } from './info/Index'
 import { ColorsState } from "app/stores/system";
 import chatService from "app/services/chat.service";
+import { IconFont } from "app/components/IconFont/IconFont";
 
 type Props = StackScreenProps<App.StackParamList, 'GroupChatScreen'>;
 
@@ -146,16 +147,13 @@ export const GroupChatScreen = ({ navigation, route }: Props) => {
 
                             <TouchableOpacity style={{
                                 backgroundColor: themeColor.background,
-                                borderRadius: s(10)
+                                borderRadius: s(10),
+                                padding: s(2)
                             }}
                                 onPress={() => {
                                     groupInfoModalRef.current?.open()
                                 }}>
-                                <Image source={require('assets/icons/more.svg')} style={{
-                                    width: s(32),
-                                    height: s(32),
-                                    tintColor: colors.palette.gray800
-                                }} />
+                                <IconFont name="ellipsis" color={themeColor.text} size={28} />
                             </TouchableOpacity>
 
                         </View>

@@ -11,6 +11,8 @@ import { useTranslation } from "react-i18next";
 import { IModel } from "@repo/enums";
 import { Button } from "app/components";
 import quickCrypto from "app/utils/quick-crypto";
+import { IconFont } from "app/components/IconFont/IconFont";
+import { colors } from "app/theme";
 
 export interface ApplyInfoModalRef {
     open: (item: GroupApplyItem, encKey: string, encPub: string) => void;
@@ -72,10 +74,8 @@ export default forwardRef((props: {
                             marginTop: 5,
                         }}>
                             <Text style={{ fontSize: 14, color: '#999', fontWeight: '400' }}>{item?.address}</Text>
-                            <Image style={{
-                                width: verticalScale(20),
-                                height: verticalScale(20),
-                            }} source={require('assets/icons/copy.svg')} />
+                            <IconFont name="copy" color={colors.text} size={20} />
+                            
                         </TouchableOpacity>
                     </View>
                 </View>

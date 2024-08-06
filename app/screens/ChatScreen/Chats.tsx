@@ -1,5 +1,5 @@
 import { FlashList } from "@shopify/flash-list"
-import ConversationItem, { IContactListItemProps } from "app/components/ConversationItem"
+import ConversationItem from "app/components/ConversationItem"
 import { EmptyComponent } from "app/components/EmptyComponent"
 import LoadingComponent from "app/components/Loading"
 import { formatDate } from "app/utils/formatDate"

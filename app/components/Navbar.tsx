@@ -5,6 +5,7 @@ import { goBack } from "app/navigators";
 import { s } from "app/utils/size";
 import { ColorsState, ThemeState } from "app/stores/system";
 import { useRecoilValue } from "recoil";
+import { IconFont } from "./IconFont/IconFont";
 const Navbar = (props: {
     onLeftPress?: () => void;
     renderRight?: () => React.ReactNode;
@@ -51,7 +52,7 @@ const Navbar = (props: {
                         backgroundColor: $colors.background
                     }
                 ]} onPress={() => onLeftPress()}>
-                    <Image source={$theme == "dark" ? require('assets/icons/back-white.svg') : require('assets/icons/back.svg')} style={$leftIcon} />
+                    <IconFont name="arrowLeft" color={$colors.text} size={14} />
                 </Pressable>
             }
         </View>}

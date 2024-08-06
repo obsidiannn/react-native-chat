@@ -1,3 +1,5 @@
+import { IconFont } from "app/components/IconFont/IconFont";
+import { colors } from "app/theme";
 import { s } from "app/utils/size";
 import { Image } from "expo-image";
 import { Pressable, Text, TouchableOpacity, View } from "react-native";
@@ -35,10 +37,7 @@ export default (props: {
                 marginHorizontal: s(6)
             }}>{props.label}</Text>
         </View>
-        {props.rightComponent ?? (props.icon ? <Image source={props.icon} style={{
-            width: s(24),
-            height: s(24),
-        }} /> : null)}
+        {props.rightComponent ?? (props.icon ? <IconFont name={props.icon} color={colors.palette.gray300} size={16} /> : null)}
 
     </Pressable>
 }

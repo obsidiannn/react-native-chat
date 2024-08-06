@@ -17,6 +17,7 @@ import { ColorsState } from "app/stores/system";
 import { ChatsStore } from "app/stores/auth";
 import { ScreenModal, ScreenModalType } from "app/components/ScreenModal";
 import { UserChatUIContext } from "./context";
+import { IconFont } from "app/components/IconFont/IconFont";
 
 export interface UserChatInfoModalRef {
     open: () => void
@@ -67,17 +68,10 @@ export default forwardRef((_, ref) => {
                         console.log('press');
                     }}
                     leftComponent={
-                        <Image source={require('assets/icons/personal.svg')} style={{
-                            width: s(20),
-                            height: s(20),
-                            marginRight: s(8)
-                        }} />
+                        <IconFont name="userProfile" color={themeColor.text} size={26} />
                     }
                     rightComponent={
-                        <Image source={require('assets/icons/arrow-right-gray.svg')} style={{
-                            width: s(20),
-                            height: s(20),
-                        }} />
+                        <IconFont name="arrowRight" color={themeColor.border} size={16} />
                     } />
             </View>
 
@@ -86,11 +80,7 @@ export default forwardRef((_, ref) => {
             }}>
                 <ActionItem title={'消息免打扰'}
                     leftComponent={
-                        <Image source={require('assets/icons/off.svg')} style={{
-                            width: s(20),
-                            height: s(20),
-                            marginRight: s(8)
-                        }} />
+                        <IconFont name="notificationOff" color={themeColor.text} size={26} />
                     }
                     rightComponent={<Switch
                         thumbColor={themeColor.background}
@@ -118,11 +108,7 @@ export default forwardRef((_, ref) => {
             }}>
                 <ActionItem title={t('chat.btn_chat_top')}
                     leftComponent={
-                        <Image source={require('assets/icons/top.svg')} style={{
-                            width: s(20),
-                            height: s(20),
-                            marginRight: s(8)
-                        }} />
+                        <IconFont name="chatTop" color={themeColor.text} size={26} />
                     }
                     rightComponent={<Switch
                         thumbColor={themeColor.background}
@@ -149,16 +135,9 @@ export default forwardRef((_, ref) => {
             }}>
                 <ActionItem title={'查找聊天内容'}
                     leftComponent={
-                        <Image source={require('assets/icons/search.svg')} style={{
-                            width: s(20),
-                            height: s(20),
-                            marginRight: s(8)
-                        }} />
+                        <IconFont name="searchDoc" color={themeColor.text} size={26} />
                     }
-                    rightComponent={<Image source={require('assets/icons/arrow-right-gray.svg')} style={{
-                        width: s(20),
-                        height: s(20),
-                    }} />} />
+                    rightComponent={<IconFont name="arrowRight" color={themeColor.border} size={16} />} />
             </View>
 
             <View style={{
@@ -182,16 +161,9 @@ export default forwardRef((_, ref) => {
                     })
                 }} title={t('chat.btn_message_delete')} textColor="#FB3737"
                     leftComponent={
-                        <Image source={require('assets/icons/close.svg')} style={{
-                            width: s(20),
-                            height: s(20),
-                            marginRight: s(8)
-                        }} />
+                        <IconFont name="circleClose" color={colors.palette.red500} size={26} />
                     }
-                    rightComponent={<Image source={require('assets/icons/arrow-right-gray.svg')} style={{
-                        width: s(20),
-                        height: s(20),
-                    }} />} />
+                    rightComponent={<IconFont name="arrowRight" color={themeColor.border} size={16} />} />
             </View>
         </View>
         <ConfirmModal ref={confirmModalRef} />

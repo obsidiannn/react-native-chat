@@ -5,6 +5,8 @@ import { IUser } from "drizzle/schema";
 import { useTranslation } from 'react-i18next';
 import { s, verticalScale } from "app/utils/size";
 import toast from "app/utils/toast";
+import { IconFont } from "./IconFont/IconFont";
+import { colors } from "app/theme";
 export default (props: {
     user: IUser;
 }) => {
@@ -23,7 +25,8 @@ export default (props: {
                 toast(t('common.success_copied'));
             }} style={styles.addressContainer}>
                 <Text style={styles.addressText}>{props.user.userName ?? ""} numberOfLines={2}</Text>
-                <Image style={styles.icon} source={require('assets/icons/copy.svg')} />
+                
+                <IconFont name="copy" color={colors.palette.gray400} size={16} />
             </TouchableOpacity>
         </View>
     </View>

@@ -16,8 +16,10 @@ import { UserChatUIContext } from "./context";
 import chatService from "app/services/chat.service";
 import chatMapper from "app/utils/chat.mapper";
 import UserChatInfoModal, { UserChatInfoModalRef } from "./UserChatInfoModal";
-import { useRecoilState, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { ChatsStore } from "app/stores/auth";
+import { IconFont } from "app/components/IconFont/IconFont";
+import { ColorsState } from "app/stores/system";
 
 type Props = StackScreenProps<App.StackParamList, 'UserChatScreen'>;
 
@@ -28,7 +30,7 @@ export const UserChatScreen = ({ navigation, route }: Props) => {
     const userChatInfoModalRef = useRef<UserChatInfoModalRef>(null)
     const [user, setUser] = useState<IUser>();
     const chatPageRef = useRef<ChatUIPageRef>(null)
-
+    const themeColor = useRecoilValue(ColorsState)
     const init = useCallback(async () => {
         const _chatItem = route.params.item
         const uid = _chatItem?.sourceId;
@@ -95,13 +97,13 @@ export const UserChatScreen = ({ navigation, route }: Props) => {
                     }}>
                         <TouchableOpacity onPress={() => {
                             console.log('open');
-                            
                             userChatInfoModalRef.current?.open()
+                        }} style={{
+                            backgroundColor: themeColor.background,
+                            padding: 2,
+                            borderRadius: s(8)
                         }}>
-                            <Image source={require('assets/icons/more.svg')} style={{
-                                width: s(32),
-                                height: s(32),
-                            }} />
+                           <IconFont name="ellipsis" color={themeColor.text} size={24} />
                         </TouchableOpacity>
                     </View>
                 }} />
