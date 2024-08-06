@@ -179,10 +179,13 @@ const refreshSequence = async (chats: ChatDetailItem[]): Promise<ChatDetailItem[
             console.log('seq', seq);
 
             if (seq) {
-                c.lastSequence = seq.lastSequence
-                c.lastReadSequence = seq.lastReadSequence
-                c.firstSequence = seq.firstSequence
-                c.lastTime = seq.lastTime
+                return {
+                    ...c,
+                    lastSequence: seq.lastSequence,
+                    lastReadSequence: seq.lastReadSequence,
+                    firstSequence: seq.firstSequence,
+                    lastTime: seq.lastTime,
+                }
             }
             return c
         })

@@ -3,7 +3,6 @@ import { View } from "react-native";
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Navbar from "app/components/Navbar";
 import { TouchableOpacity } from "react-native";
-import { Image } from "expo-image";
 import groupService from "app/services/group.service";
 import { ChatDetailItem, GroupDetailItem, GroupMemberItemVO } from "@repo/types";
 import ChatPage, { GroupChatPageRef } from './ChatPage';
@@ -16,7 +15,6 @@ import { App } from "types/app";
 import { AuthUser } from "app/stores/auth";
 import toast from "app/utils/toast";
 import { s } from "app/utils/size";
-import { colors } from "app/theme";
 import GroupInfoModal, { GroupInfoModalType } from './info/Index'
 import { ColorsState } from "app/stores/system";
 import chatService from "app/services/chat.service";
