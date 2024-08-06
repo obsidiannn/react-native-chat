@@ -46,19 +46,7 @@ export const WelcomeScreen = ({ navigation }: Props) => {
       <View style={[$buttonContainer, {
         marginTop: s(40)
       }]}>
-        <Button onPress={() => {
-          if (!protocolStatus) {
-            confirmModalRef.current?.open({
-              title: "确认阅读并同意相关协议",
-              content: "确认阅读并同意相关协议",
-              onSubmit: () => {
-                navigation.navigate("UnlockScreen")
-              }
-            });
-            return;
-          }
-          navigation.navigate("UnlockScreen")
-        }} fullWidth size="large" label={t("welcome.signIn")} type="primary" />
+        <Button onPress={() => navigation.navigate("UnlockScreen")} fullWidth size="large" label={t("welcome.signIn")} type="primary" />
       </View>
       <View style={$buttonContainer}>
         <Button onPress={() => {
