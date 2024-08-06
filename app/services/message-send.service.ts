@@ -64,30 +64,15 @@ const sendText = async (chatId: string, key: string, message: MessageType.Text) 
 }
 const sendImage = async (chatId: string, key: string, message: MessageType.Image) => {
     const originalPath = message.uri
-    // const thumbnail = await manipulateAsync(originalPath, [{ resize: { width: 200 } }], {
-    //     compress: 0.5,
-    //     format: SaveFormat.JPEG,
-    // });
     const original = await manipulateAsync(originalPath, [], {
         compress: 1,
         format: SaveFormat.PNG,
     });
-    // const originalExt = originalPath.split('.').pop() ?? '';
-    // const thumbnailExt = thumbnail.uri.split('.').pop() ?? '';
-    // const originalWebp = originalPath.replace(originalExt, 'webp');
     console.log('original', original)
     const originalWebp = await imageFormat(original.uri);
     const originKey = await uploadFile(originalWebp);
 
-    // const thumbnailWebp = thumbnail.uri.replace(thumbnailExt, 'webp');
-    // console.log('thumbnail.uri', thumbnail.uri)
-    // await format(thumbnail.uri, thumbnailWebp);
-    // const thumbKey = await uploadFile(originalWebp);
-
     message.uri = originKey.key
-    // message.metadata = {
-    //     thumbnail: thumbKey.key
-    // }
     const result = await _send(chatId, key, message.id, IModel.IChat.IMessageTypeEnum.NORMAL, {
         t: 'image',
         d: chatUiAdapter.convertPartialContent(message)
@@ -218,10 +203,6 @@ const checkDiffFromWb = (
     return { seq: _seq, limit: _limit }
 }
 
-
-export interface MessageQueryType {
-
-}
 
 /**
  * 獲取消息列表
