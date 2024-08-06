@@ -124,20 +124,23 @@ export default forwardRef((_, ref) => {
                 marginTop: s(-48)
             }}>
                 {
-                    groupContext.selfMember?.role ?? -1 < IModel.IGroup.IGroupMemberRoleEnum.MEMBER ?
+                    groupContext.selfMember?.role < IModel.IGroup.IGroupMemberRoleEnum.MEMBER ?
                         <AvatarUpload
                             border
                             avatar={fileService.getFullUrl(groupContext.group.avatar)}
-                            onChange={(uri) => {
-                                groupApi.changeAvatar({
-                                    id: groupContext.group.id,
-                                    avatar: uri
-                                }).then(() => {
-                                    groupContext.reloadGroup()
-                                })
+                            onChange={async (uri) => {
+                                const url = await fileService.uploadImage(uri)
+                                if (url) {
+                                    groupApi.changeAvatar({
+                                        id: groupContext.group.id,
+                                        avatar: url
+                                    }).then(() => {
+                                        groupContext.reloadGroup()
+                                    })
+                                }
 
                             }} /> :
-                        <AvatarX uri={groupContext.group.avatar} border size={64} />
+                        <AvatarX uri={fileService.getFullUrl(groupContext.group.avatar)} border size={64} />
                 }
             </View>
             <View style={{

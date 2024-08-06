@@ -1,12 +1,15 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { ColorValue, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
 import { ChatUiToolsKitProps } from "../../types";
 import { Image } from "expo-image";
 import { s, verticalScale } from "app/utils/size";
 import { colors } from "app/theme";
+import { IconFont } from "app/components/IconFont/IconFont";
 
 export interface InputToolsProps {
     tools?: ChatUiToolsKitProps[];
+    backgroundColor?: ColorValue
+    color: ColorValue
     onPress: (tool: ChatUiToolsKitProps) => void;
 }
 export default (props: InputToolsProps) => {
@@ -16,8 +19,16 @@ export default (props: InputToolsProps) => {
             return <TouchableOpacity onPress={() => onPress(tool)} key={tool.key} style={{
                 ...styles.item,
                 marginTop: i > 3 ? 10 : 0,
+
             }}>
-                <Image style={styles.icon} source={tool.icon} />
+                <View style={{
+                    backgroundColor: props.backgroundColor ?? colors.palette.gray400,
+                    padding: 4,
+                    borderRadius: 12
+                }}>
+                    <IconFont name={tool.icon} color={props.color} />
+                </View>
+                {/* <Image style={styles.icon} source={tool.icon} /> */}
                 <Text style={styles.title}>{tool.title}</Text>
             </TouchableOpacity>
         })}

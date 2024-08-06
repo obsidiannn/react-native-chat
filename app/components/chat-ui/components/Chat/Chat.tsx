@@ -458,85 +458,89 @@ export const Chat = ({
   return (
     <UserContext.Provider value={user}>
       <ThemeContext.Provider value={theme}>
-          {/* <KeyboardProvider> */}
-          <View style={container} onLayout={onLayout}>
-            {customBottomComponent ? (
-              <>
-                <>{renderScrollable({})}</>
-                <>{customBottomComponent()}</>
-              </>
-            ) : (
-              // <>
-              // <>{renderScrollable({})}</>
-              // <KeyboardAwareScrollView style={keyboardAccessoryView}
-              // disableScrollOnKeyboardHide
-              // bottomOffset={50}
-              // >
-              //   <Input
-              //     {...{
-              //       ...unwrap(inputProps),
-              //       isAttachmentUploading,
-              //       onAttachmentPress: renderToolWindow,
-              //       onSendPress,
-              //       sendButtonVisibilityMode,
-              //       textInputProps,
-              //     }}
-              //   />
+        {/* <KeyboardProvider> */}
+        <View style={container} onLayout={onLayout}>
+          {customBottomComponent ? (
+            <>
+              <>{renderScrollable({})}</>
+              <>{customBottomComponent()}</>
+            </>
+          ) : (
+            // <>
+            // <>{renderScrollable({})}</>
+            // <KeyboardAwareScrollView style={keyboardAccessoryView}
+            // disableScrollOnKeyboardHide
+            // bottomOffset={50}
+            // >
+            //   <Input
+            //     {...{
+            //       ...unwrap(inputProps),
+            //       isAttachmentUploading,
+            //       onAttachmentPress: renderToolWindow,
+            //       onSendPress,
+            //       sendButtonVisibilityMode,
+            //       textInputProps,
+            //     }}
+            //   />
 
-              //   {/* <> {
-              //     toolOpen ? (
-              //       <View style={{
-              //         width: '100%',
-              //       }}>
-              //         <AccessoryView tools={tools} onPress={async (tool) => {
-              //         }} />
-              //       </View>
-              //     ) : null
-              //   }</> */}
-              // </KeyboardAwareScrollView>
-              // </>
-              <KeyboardAccessoryView
+            //   {/* <> {
+            //     toolOpen ? (
+            //       <View style={{
+            //         width: '100%',
+            //       }}>
+            //         <AccessoryView tools={tools} onPress={async (tool) => {
+            //         }} />
+            //       </View>
+            //     ) : null
+            //   }</> */}
+            // </KeyboardAwareScrollView>
+            // </>
+            <KeyboardAccessoryView
+              {...{
+                renderScrollable,
+                style: keyboardAccessoryView,
+              }}
+            >
+              <Input
                 {...{
+                  ...unwrap(inputProps),
+                  isAttachmentUploading,
+                  onAttachmentPress: renderToolWindow,
+                  onSendPress,
                   renderScrollable,
-                  style: keyboardAccessoryView,
+                  sendButtonVisibilityMode,
+                  textInputProps,
                 }}
-              >
-                <Input
-                  {...{
-                    ...unwrap(inputProps),
-                    isAttachmentUploading,
-                    onAttachmentPress: renderToolWindow,
-                    onSendPress,
-                    renderScrollable,
-                    sendButtonVisibilityMode,
-                    textInputProps,
-                  }}
-                />
-                {
-                  toolOpen ? (
-                    <View style={{
-                      width: '100%',
-                    }}>
-                      <AccessoryView tools={tools} onPress={async (tool) => {
+              />
+              {
+                toolOpen ? (
+                  <View style={{
+                    width: '100%',
+                  }}>
+                    <AccessoryView
+                      tools={tools}
+                      backgroundColor={theme.colors.background}
+                      color={theme.colors.inputCursorColor}
+                      onPress={async (tool) => {
                         onAttachmentPress && onAttachmentPress(tool.key)
                       }} />
-                    </View>
-                  ) : null
-                }
-              </KeyboardAccessoryView>
-            )}
+                  </View>
+                ) : null
+              }
+            </KeyboardAccessoryView>
+          )}
 
 
-            <ImageView
-              imageIndex={imageViewIndex}
-              images={gallery}
-              onRequestClose={handleRequestClose}
-              visible={isImageViewVisible}
-              onLongPress={handleImageLongPress}
-              FooterComponent={renderImageDownload}
-            />
-          </View>
-          {/* </KeyboardProvider> */}
+          <ImageView
+            imageIndex={imageViewIndex}
+            images={gallery}
+            onRequestClose={handleRequestClose}
+            visible={isImageViewVisible}
+            onLongPress={handleImageLongPress}
+            FooterComponent={renderImageDownload}
+          />
+        </View>
+        {/* </KeyboardProvider> */}
       </ThemeContext.Provider>
     </UserContext.Provider>
   )

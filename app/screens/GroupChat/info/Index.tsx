@@ -312,12 +312,13 @@ export default forwardRef((_, ref) => {
                                 console.log('解散羣聊');
                             }
                         });
-                    }} style={{
+                    }} containerStyle={{
                         height: s(50),
                         marginVertical: s(24),
                         borderRadius: s(12)
-                    }} >
-                        <Text>{t('groupChat.title_drop_group')}</Text>
+                    }}
+                        label={t('groupChat.title_drop_group')}
+                    >
                     </Button>
 
                     : null

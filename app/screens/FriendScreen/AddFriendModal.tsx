@@ -1,12 +1,12 @@
 import { IServer } from "@repo/types";
 import FriendItem from "app/components/FriendItem";
+import { IconFont } from "app/components/IconFont/IconFont";
 import Navbar from "app/components/Navbar";
 import fileService from "app/services/file.service"
 import friendService from "app/services/friend.service";
 import userService from "app/services/user.service";
 import { ColorsState } from "app/stores/system";
 import { s } from "app/utils/size";
-import { Image } from "expo-image";
 import { useCallback, useState } from "react";
 import { View, StyleSheet, TextInput, Pressable, ScrollView } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -27,10 +27,8 @@ export const AddFriendModal = () => {
         }
         setLoading(true);
         const user = await userService.findByUserName(v);
-        console.log('user', user);
-
         if (user) {
-            console.log('userRelations',"请求关系");
+            console.log('userRelations', "请求关系");
             const userRelations = await friendService.getReleationList([user.id])
             console.log('userRelations', userRelations);
 
@@ -65,7 +63,7 @@ export const AddFriendModal = () => {
         flex: 1,
         paddingTop: insets.top
     }}>
-        <Navbar title="添加好友"/>
+        <Navbar title="添加好友" />
         <View style={{
             ...styles.mainContainer,
             backgroundColor: themeColor.background
@@ -100,10 +98,7 @@ export const AddFriendModal = () => {
                     console.log('search');
                     search(keyword, false)
                 }}>
-                    <Image source={require('assets/icons/query-search.svg')} style={{
-                        width: s(20),
-                        height: s(20),
-                    }} />
+                    <IconFont name="search" color={themeColor.secondaryText} size={26} />
                 </Pressable>
             </View>
 

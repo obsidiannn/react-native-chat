@@ -1,22 +1,22 @@
 export default [
     {
         title: '拍照',
-        icon: require('assets/icons/camera.svg'),
+        icon: 'camera',
         key: 'camera'
     },
     {
         title: '錄像',
-        icon: require('assets/icons/video.svg'),
+        icon: 'video',
         key: 'video'
     },
     {
         title: '相冊',
-        icon: require('assets/icons/albums.svg'),
+        icon: 'picture',
         key: 'albums'
     },
     {
         title: '文件',
-        icon: require('assets/icons/file.svg'),
+        icon: 'file',
         key: 'file'
     },
 ]

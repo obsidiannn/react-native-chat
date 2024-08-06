@@ -20,7 +20,7 @@ export const AvatarUpload = (props: {
     style?: ViewStyle
 }) => {
     const { t } = useTranslation('components')
-    console.log('avatar', props.avatar);
+    console.log('[avatar]', props.avatar);
     const size = props.size ?? 64
     const themeColor = useRecoilValue(ColorsState)
     const menuModalRef = useRef<MenuModalRef>();
@@ -80,7 +80,7 @@ export const AvatarUpload = (props: {
                 borderColor: themeColor.border,
                 borderWidth: s(0.5),
             }}>
-                <IconFont name="camera" color={themeColor.textChoosed} size={16}/>
+                <IconFont name="camera" color={themeColor.textChoosed} size={16} />
             </View>
         </TouchableOpacity>
         <MenuModal ref={menuModalRef} />

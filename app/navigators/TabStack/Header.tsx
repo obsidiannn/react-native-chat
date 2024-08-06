@@ -27,14 +27,14 @@ export const Header = (props: BottomTabHeaderProps) => {
     const chatMenus:IMenuItem[] = [
         {
             title: "添加好友",
-            iconName: $theme == "dark" ? "addFriendDark" : "addFriendLight",
+            iconName: "userAdd",
             onPress: () => {
                 navigate("AddFriendModal")
             },
         },
         {
             title: "创建群聊",
-            iconName: $theme == "dark" ? "newChatDark" : "newChatLight",
+            iconName: "newChat",
             onPress: async () => {
                 const users = await friendService.getOnlineList();
                 const options: SelectMemberOption[] = users.map((item) => {
