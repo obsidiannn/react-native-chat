@@ -1,16 +1,14 @@
 import { ClearChatMessageEvent } from "@repo/types";
 import { StyleSheet, Switch, Text, View } from "react-native"
 import { Button } from "app/components/Button"
-import MemberItem from "./components/MemberItem";
 import MenuItem from "./components/MenuItem";
 import QRcodeModal, { QRcodeModalRef } from "./QrcodeModal";
 import ApplyListModal, { ApplyListModalRef } from "./ApplyListModal";
 import { ConfirmModal, ConfirmModalType } from "app/components/ConfirmModal";
 import GoodManager, { GroupManagerModalRef } from "./GroupManagerModal";
 import { forwardRef, useCallback, useContext, useImperativeHandle, useMemo, useRef, useState } from "react";
-import SelectMemberModal, { SelectMemberModalType, SelectMemberOption } from "app/components/SelectMemberModal/Index"
+import SelectMemberModal, { SelectMemberModalType } from "app/components/SelectMemberModal/Index"
 import groupService from "app/services/group.service";
-import friendService from "app/services/friend.service";
 import { GroupChatUiContext } from "../context";
 import EventManager from 'app/services/event-manager.service'
 import { useTranslation } from 'react-i18next';
@@ -39,7 +37,6 @@ export default forwardRef((_, ref) => {
     const [visible, setVisible] = useState(false)
     const themeColor = useRecoilValue(ColorsState)
 
-    const $theme = useRecoilValue(ThemeState);
     const qrcodeModalRef = useRef<QRcodeModalRef>(null);
     const applyListModalRef = useRef<ApplyListModalRef>(null);
     const confirmModalRef = useRef<ConfirmModalType>(null);

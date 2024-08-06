@@ -151,21 +151,26 @@ export default forwardRef((props, ref) => {
         close,
     }));
 
+
     const messageLoad = async (_chatItem: ChatDetailItem) => {
-        try {
-            console.log('刷新chat');
-
-            const newChatItem = await chatService.refreshSequence([_chatItem])
-            _chatItem = newChatItem[0]
-            console.log(newChatItem);
-
-        } catch (e) {
-
-        }
-
         firstSeq.current = _chatItem.lastSequence
         lastSeq.current = _chatItem.lastSequence
-        loadMessages('up', true);
+        console.log('[groupchat]load local');
+        await loadMessages('up', true);
+        try {
+            console.log('刷新chat');
+            const oldSeq = _chatItem.lastSequence
+            const newChatItem = await chatService.refreshSequence([_chatItem])
+            _chatItem = newChatItem[0]
+            // 有未讀
+            const limit = _chatItem.lastSequence - oldSeq
+            if (limit > 0) {
+                console.log('[groupchat]load remote');
+                loadMessages('down', false, limit);
+            }
+        } catch (e) {
+            console.error(e)
+        }
     }
 
 
@@ -192,7 +197,7 @@ export default forwardRef((props, ref) => {
         }
     }
 
-    const loadMessages = useCallback(async (direction: 'up' | 'down', init?: boolean) => {
+    const loadMessages = useCallback(async (direction: 'up' | 'down', init?: boolean, limit?: number) => {
         const chatItem = chatItemRef.current
         if (!chatItem || chatItem === null) {
             return
@@ -221,7 +226,8 @@ export default forwardRef((props, ref) => {
             sharedSecretRef.current,
             seq,
             direction,
-            chatItem.firstSequence
+            chatItem.firstSequence,
+            true, limit
         )
             .then((res) => {
                 if (res.length <= 0) {

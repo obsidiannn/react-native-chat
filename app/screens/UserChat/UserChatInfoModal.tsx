@@ -1,20 +1,18 @@
 import { StyleSheet, View, Switch } from "react-native";
-import { useRef, useState, useContext, useMemo, forwardRef, useImperativeHandle } from "react";
+import { useRef, useContext, useMemo, forwardRef, useImperativeHandle } from "react";
 import { ConfirmModal, ConfirmModalType } from "app/components/ConfirmModal";
 import messageSenderService from "app/services/message-send.service";
 import ActionItem from "./action-item";
-import { ChatDetailItem, ClearChatMessageEvent } from "@repo/types";
+import { ClearChatMessageEvent } from "@repo/types";
 import { IModel } from "@repo/enums";
 import EventManager from 'app/services/event-manager.service'
 import chatApi from "app/api/chat/chat";
 import { s } from "app/utils/size";
 import { colors } from "app/theme";
-import { Image } from "expo-image";
 import toast from "app/utils/toast";
 import { useTranslation } from "react-i18next";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilValue } from "recoil";
 import { ColorsState } from "app/stores/system";
-import { ChatsStore } from "app/stores/auth";
 import { ScreenModal, ScreenModalType } from "app/components/ScreenModal";
 import { UserChatUIContext } from "./context";
 import { IconFont } from "app/components/IconFont/IconFont";
@@ -24,7 +22,6 @@ export interface UserChatInfoModalRef {
 }
 
 export default forwardRef((_, ref) => {
-    // const route = useRoute()gai l
     console.log('start');
     const screenModalRef = useRef<ScreenModalType>(null)
     const userContext = useContext(UserChatUIContext)

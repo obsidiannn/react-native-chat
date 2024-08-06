@@ -1,6 +1,6 @@
 import { StackScreenProps } from "@react-navigation/stack";
 import { View } from "react-native";
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import Navbar from "app/components/Navbar";
 import { TouchableOpacity } from "react-native";
 import groupService from "app/services/group.service";
@@ -51,7 +51,6 @@ export const GroupChatScreen = ({ navigation, route }: Props) => {
             setMembers(res)
             const self = res.find(m => m.uid === authUser?.id ?? -1)
             console.log('self===', authUser, self);
-
             if (self !== null) {
                 selfMemberRef.current = self
                 setSelfMember(self)

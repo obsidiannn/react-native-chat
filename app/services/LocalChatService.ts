@@ -116,11 +116,12 @@ export class LocalChatService {
                     const e = entities[index];
                     await tx.insert(chats).values(e).onConflictDoUpdate({ target: chats.id, set: { ...e, refreshAt: now } })
                 }
-                tx.run(sql`commit`)
             } catch (e) {
+                console.error('[sqlite] rolback', e)
                 tx.rollback()
-                console.error(e)
             }
+        }, {
+            behavior: "deferred",
         });
 
         console.log('[sqlite] chat save batch ', entities.length);

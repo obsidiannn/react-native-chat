@@ -1,7 +1,7 @@
-import { ActivityIndicator, StyleSheet, Text, TextInput } from "react-native";
+import { StyleSheet, Text, TextInput } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import Navbar from "app/components/Navbar";
 import { View, Switch } from "react-native";
 

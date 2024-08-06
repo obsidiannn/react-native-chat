@@ -2,8 +2,8 @@ import { StackScreenProps } from "@react-navigation/stack";
 import { FlashList } from "@shopify/flash-list";
 import Navbar from "app/components/Navbar";
 import { s } from "app/utils/size";
-import { useCallback, useEffect, useState } from "react";
-import { StyleSheet, Text, View } from "react-native"
+import { useCallback, useState } from "react";
+import { StyleSheet, View } from "react-native"
 import { App } from "types/app";
 import { GroupCard } from "./GroupCard";
 import groupService from "app/services/group.service";

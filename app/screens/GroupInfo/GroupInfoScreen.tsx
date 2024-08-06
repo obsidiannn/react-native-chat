@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { GroupDetailItem, GroupMemberResp } from "@repo/types";
 import { useTranslation } from 'react-i18next';
 import ApplyJoinModal, { ApplyJoinModalRef } from "app/components/ApplyJoinModal";

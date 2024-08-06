@@ -45,13 +45,7 @@ const ChatPage = forwardRef((_, ref) => {
     const fileModalRef = useRef<ChatUIFileModalRef>(null)
     const loadingModalRef = useRef<LoadingModalType>(null)
     const { t } = useTranslation('screens')
-    // const author: User = {
-    //     id: "1",
-    //     createdAt: 0,
-    //     firstName: 'sub',
-    //     imageUrl: 'https://i3.hoopchina.com.cn/user/865/194528590988865/194528590988865-1580107402.jpeg',
-    //     role: 'admin'
-    // }
+
     const addMessage = (message: MessageType.Any) => {
         const { sequence = 0 } = message
         if (sequence > lastSeq.current) {
@@ -123,20 +117,24 @@ const ChatPage = forwardRef((_, ref) => {
 
 
     const messageLoad = async (_chatItem: ChatDetailItem) => {
-        try {
-            console.log('刷新chat');
-            const newChatItem = await chatService.refreshSequence([_chatItem])
-            
-            _chatItem = newChatItem[0]
-        } catch (e) {
-            
-        }
-        console.log('_chatItem', _chatItem);
-
         firstSeq.current = _chatItem.lastSequence
         lastSeq.current = _chatItem.lastSequence
-        // 有未讀
-        loadMessages('up', true);
+        console.log('[userchat]load local');
+        await loadMessages('up', true);
+        try {
+            console.log('刷新chat');
+            const oldSeq = _chatItem.lastSequence
+            const newChatItem = await chatService.refreshSequence([_chatItem])
+            _chatItem = newChatItem[0]
+            // 有未讀
+            const limit = _chatItem.lastSequence - oldSeq
+            if (limit > 0) {
+                console.log('[userchat]load remote');
+                loadMessages('down',false,limit);
+            }
+        } catch (e) {
+            console.error(e)
+        }
     }
 
     const handleEvent = (e: any) => {
@@ -164,7 +162,7 @@ const ChatPage = forwardRef((_, ref) => {
 
 
 
-    const loadMessages = useCallback(async (direction: 'up' | 'down', init?: boolean) => {
+    const loadMessages = useCallback(async (direction: 'up' | 'down', init?: boolean, limit?: number) => {
         const chatItem = chatItemRef.current
         if (!chatItem || chatItem === null) {
             return
@@ -185,7 +183,7 @@ const ChatPage = forwardRef((_, ref) => {
 
         return messageSendService.getList(chatItem.id,
             sharedSecretRef.current, seq, direction,
-            chatItem.firstSequence).then((res) => {
+            chatItem.firstSequence, true, limit).then((res) => {
                 if (res.length <= 0) {
                     return
                 }
@@ -204,9 +202,13 @@ const ChatPage = forwardRef((_, ref) => {
                         })
                         firstSeq.current = fs
                         if (_data.length > 0) {
-                            setMessages((items) => {
-                                return items.concat(_data);
-                            });
+                            if (init) {
+                                setMessages(_data);
+                            } else {
+                                setMessages((items) => {
+                                    return items.concat(_data);
+                                });
+                            }
                         }
                     }
                 }

@@ -65,7 +65,7 @@ export class LocalGroupService {
         return await GetDB().select().from(groups).where(
             and(
                 inArray(groups.id, groupIds),
-                gt(groups.role,0),
+                gt(groups.role, 0),
                 gte(groups.refreshAt, delaySecond())
             )
         )
@@ -78,7 +78,7 @@ export class LocalGroupService {
         return db.select().from(groups).where(
             and(
                 inArray(groups.id, groupIds),
-                gt(groups.role,0),
+                gt(groups.role, 0),
                 gte(groups.refreshAt, delaySecond())
             )
         )
@@ -115,11 +115,12 @@ export class LocalGroupService {
                     const e = entities[index];
                     await tx.insert(groups).values(e).onConflictDoUpdate({ target: groups.id, set: { ...e, refreshAt: now } })
                 }
-                tx.run(sql`commit`)
             } catch (e) {
                 console.error(e)
                 tx.rollback()
             }
+        }, {
+            behavior: "deferred",
         });
 
         console.log('[sqlite] groups save batch ', entities.length);
@@ -136,7 +137,7 @@ export class LocalGroupService {
         const db = GetDB()
         const data = await db.select().from(groups)
             .orderBy(
-                 desc(groups.joinAt))
+                desc(groups.joinAt))
         return data
     }
 }

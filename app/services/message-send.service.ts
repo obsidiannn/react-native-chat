@@ -11,6 +11,9 @@ import chatUiAdapter from "app/utils/chat-ui.adapter";
 import { imageFormat } from "app/utils/media-util";
 import { LocalMessageService } from "./LocalMessageService";
 
+const _limit = 20
+
+
 const _send = async (chatId: string, key: string, mid: string, type: IModel.IChat.IMessageTypeEnum, data: {
     t: string;
     d: any;
@@ -215,6 +218,11 @@ const checkDiffFromWb = (
     return { seq: _seq, limit: _limit }
 }
 
+
+export interface MessageQueryType {
+
+}
+
 /**
  * 獲取消息列表
  * @param chatId
@@ -229,11 +237,11 @@ const getList = async (
     sequence: number,
     direction: 'up' | 'down',
     firstSeq: number,
-    needDecode: boolean = true
+    needDecode: boolean = true,
+    limit: number = _limit
 ): Promise<MessageType.Any[]> => {
-
     // await LocalMessageService.deleteMessageByChatIdIn([chatId])
-    const list = await getMessageDetails(chatId, key, sequence, direction, firstSeq, needDecode)
+    const list = await getMessageDetails(chatId, key, sequence, direction, firstSeq, needDecode, limit)
     const userIds: number[] = []
     list.forEach(d => {
         if (d.senderId !== undefined && d.senderId !== null) {
@@ -241,8 +249,8 @@ const getList = async (
         }
     })
     const userHash = await userService.getUserHash(userIds)
-    console.log('message list',list);
-    
+    console.log('message list', list);
+
     return list.map((item) => {
         const user = userHash.get(item?.senderId ?? -1)
         // console.log('user avatar::',user?.avatar);
@@ -260,15 +268,15 @@ const getMessageDetails = async (
     sequence: number,
     direction: 'up' | 'down',
     firstSeq: number,
-    needDecode: boolean
+    needDecode: boolean,
+    limit: number
 ): Promise<MessageType.Any[]> => {
     if (chatId === null && chatId === undefined) {
         return []
     }
-    const _limit = 20
     // await LocalMessageService.deleteMessageByChatIdIn([chatId])
-    const list: MessageType.Any[] = await getListFromDb(chatId, sequence, direction, _limit, key, needDecode)
-    const checkResult = checkDiffFromWb(list, sequence, direction, _limit, firstSeq)
+    const list: MessageType.Any[] = await getListFromDb(chatId, sequence, direction, limit, key, needDecode)
+    const checkResult = checkDiffFromWb(list, sequence, direction, limit, firstSeq)
     console.log('檢查', checkResult);
 
     if (checkResult.limit < 0) {

@@ -28,13 +28,15 @@ export class LocalMessageService {
             try {
                 for (let index = 0; index < _data.length; index++) {
                     const e = _data[index];
-                    await tx.insert(messages).values(e).onConflictDoUpdate({ target: messages.id, set: { ...e, } })
+                    const { id, ...upd } = e
+                    await tx.insert(messages).values(e).onConflictDoUpdate({ target: messages.id, set: upd })
                 }
-                tx.run(sql`commit`)
             } catch (e) {
+                console.error('[sqlite] rolback', e)
                 tx.rollback()
-                console.error(e)
             }
+        }, {
+            behavior: "deferred",
         });
         console.log('[sqlite] groups messages batch ', _data.length);
     }
@@ -47,7 +49,6 @@ export class LocalMessageService {
         */
     static async queryEntity(param: MessageQueryType): Promise<IMessage[]> {
         const isUp: boolean = param.direction === 'up';
-
         const data = await (GetDB()).select().from(messages)
             .where(
                 and(eq(messages.chatId, param.chatId),
