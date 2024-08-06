@@ -21,6 +21,7 @@ import { ColorsState } from "app/stores/system";
 import { Image } from "expo-image";
 import { UploadArea } from "app/components/UploadArea";
 import { ScrollView } from "react-native-gesture-handler";
+import { IconFont } from "app/components/IconFont/IconFont";
 
 type Props = StackScreenProps<App.StackParamList, 'GroupCreateScreen'>;
 interface GroupCreateType {
@@ -163,11 +164,7 @@ export const GroupCreateScreen = ({ route, navigation }: Props) => {
                             borderStyle: 'dashed',
                             margin: s(12),
                         }}>
-                            <Image source={require('assets/icons/plus.svg')} style={{
-                                width: s(24),
-                                height: s(24),
-                                tintColor: themeColor.border
-                            }} />
+                            <IconFont name="plus" color={themeColor.border} />
                         </View>
                         <Text style={{ color: themeColor.primary }}>上传封面</Text>
                     </View>
@@ -204,11 +201,7 @@ export const GroupCreateScreen = ({ route, navigation }: Props) => {
                         flexDirection: 'row',
                         alignItems: 'center'
                     }}>
-                        <Image source={require('assets/icons/lock-open.svg')} style={{
-                            width: s(28),
-                            height: s(28),
-                            tintColor: themeColor.text
-                        }} />
+                        <IconFont name="unlock" color={themeColor.text} size={24} />
                         <Text style={{ fontSize: s(16) }}>公开</Text>
                     </View>
                     <Switch value={createState.searchType === '1'}
@@ -231,11 +224,7 @@ export const GroupCreateScreen = ({ route, navigation }: Props) => {
                         flexDirection: 'row',
                         alignItems: 'flex-start'
                     }}>
-                        <Image source={require('assets/icons/lock-off.svg')} style={{
-                            width: s(28),
-                            height: s(28),
-                            tintColor: themeColor.text
-                        }} />
+                        <IconFont name="lock" color={themeColor.text} size={24} />
                         <View>
                             <Text style={{ fontSize: s(16), marginBottom: s(4) }}>加密（不可更改）</Text>
                             <Text style={{ fontSize: s(14), color: themeColor.secondaryText }}>不加密，用户将直接可以加入群聊</Text>

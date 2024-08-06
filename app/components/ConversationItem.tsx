@@ -1,8 +1,8 @@
-import { s } from "app/utils/size";
-import { Image } from "expo-image";
+import { s } from "app/utils/size"; 
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native"
 import AvatarComponent from "./Avatar";
 import { colors } from "app/theme";
+import { IconFont } from "./IconFont/IconFont";
 
 
 export interface IContactListItemProps {
@@ -24,10 +24,7 @@ export default (props: IContactListItemProps) => {
 
         if (props.inhibite) {
             console.log('inhibite==>', props.inhibite, props.title);
-
-            return <Image source={require('assets/icons/inhibite.svg')} style={{
-                width: s(20), height: s(20)
-            }} />
+            return <IconFont name="silent" color={colors.palette.gray300} size={20}/>
         }
         if (props.badgeNumber && props.badgeNumber > 0) {
             return <View style={{

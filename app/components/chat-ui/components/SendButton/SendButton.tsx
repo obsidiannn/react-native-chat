@@ -11,6 +11,7 @@ import {
 
 import {  ThemeContext, translate } from '../../utils'
 import { colors } from 'app/theme'
+import { IconFont } from 'app/components/IconFont/IconFont'
 
 export interface SendButtonPropsAdditionalProps {
   touchableOpacityProps?: TouchableOpacityProps
@@ -42,15 +43,18 @@ export const SendButton = ({
     >
       <View style={{
         backgroundColor: theme.colors.secondary,
-        padding: 8,
-        paddingHorizontal: 14,
-        borderRadius: 16,
+        padding: 4,
+        borderRadius: 24,
+        transform: [{
+          rotate: '90deg'
+        }]
       }}>
-        <Text style={{
+        <IconFont name='send' color={colors.palette.neutral100} />
+        {/* <Text style={{
           color: colors.palette.neutral100,
         }}>{
             translate('chatUI.btnSend')
-          }</Text>
+          }</Text> */}
       </View>
       {/* {theme.icons?.sendButtonIcon?.() ?? (
         <Image

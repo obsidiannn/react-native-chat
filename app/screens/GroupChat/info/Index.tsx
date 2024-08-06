@@ -94,84 +94,6 @@ export default forwardRef((_, ref) => {
         await groupService.invite(users, groupInfo);
     }, []);
 
-
-    const renderAddMember = () => {
-        return <MemberItem avatar={require('assets/icons/plus.svg')} onPress={async () => {
-            const data = await friendService.getOnlineList();
-            const existIds = groupContext.members?.map(item => item.id) ?? [];
-            const options: SelectMemberOption[] = data.map((item) => {
-                const disabled = existIds.includes(item.id);
-                return {
-                    id: item.id,
-                    icon: item.avatar,
-                    status: false,
-                    name: item.nickName,
-                    title: item.nickName,
-                    name_index: item.nickNameIdx,
-                    disabled,
-                    pubKey: item.pubKey
-                } as SelectMemberOption;
-            })
-            if (options.length > 0) {
-                console.log('options', options);
-                selectMemberModalRef.current?.open({
-                    title: t('groupChat.title_add_member'),
-                    options,
-                    callback: async (ops: SelectMemberOption[]) => {
-                        const selected = ops.filter((item) => item.status).map(o => {
-                            return { id: Number(o.id), pubKey: o.pubKey ?? '' }
-                        })
-                        if (selected.length > 0) {
-                            await batchInviteJoin(selected)
-                        }
-                    },
-                })
-            }
-        }} />
-    }
-
-    const renderRemoveMember = () => {
-        return <MemberItem avatar={require('assets/icons/plus.svg')} onPress={() => {
-            console.log('踢出用戶');
-            if (groupContext.members) {
-                const options: SelectMemberOption[] = groupContext.members.map((item) => {
-                    const disabled = groupContext.selfMember?.id === item.id;
-                    return {
-                        id: item.id,
-                        icon: item.avatar,
-                        status: false,
-                        name: item.name,
-                        title: item.name,
-                        name_index: item.nameIndex,
-                        disabled,
-                        pubKey: item.pubKey
-                    } as SelectMemberOption;
-                })
-
-                selectMemberModalRef.current?.open({
-                    title: t('groupChat.title_remove_member'),
-                    options,
-                    callback: (ops: SelectMemberOption[]) => {
-                        console.log(ops);
-                        const uids = ops.filter((item) => item.status).map(item => Number(item.id));
-                        if (uids.length > 0) {
-                            groupService.kickOut({
-                                id: groupContext.group?.id ?? -1,
-                                uids,
-                            }).then(() => {
-                                toast(t('groupChat.option_success'))
-                            }).catch((e) => {
-                                console.log(e);
-                                toast(t('groupChat.option_failed'))
-                            })
-                        }
-                    },
-                })
-            }
-        }} />
-    }
-
-
     const changeTop = (val: number) => {
 
         groupContext.reloadChat({
@@ -317,7 +239,7 @@ export default forwardRef((_, ref) => {
                                 return;
                             }
                             applyListModalRef.current?.open(groupContext.group?.id, groupContext.selfMember?.encKey ?? '', groupContext.selfMember?.encPri ?? '');
-                        }} icon={require('assets/icons/arrow-right-gray.svg')} label={t('groupChat.title_apply_list')} />
+                        }} icon={"arrowRight"} label={t('groupChat.title_apply_list')} />
                         {/* 清空群记录 */}
                         <MenuItem label={t('groupChat.title_drop_message')} labelColor="#FB3737"
                             onPress={() => {
@@ -405,23 +327,6 @@ export default forwardRef((_, ref) => {
             }
 
         </ScrollView>
-
-
-
-
-
-        {/* {
-            (props.authUser && props.authUser.role === IModel.IGroup.IGroupMemberRoleEnum.OWNER) ?
-                <MenuItem onPress={() => {
-                    if (!props.group) {
-                        return;
-                    }
-                    groupCategoryModalRef.current?.open(props.group?.id);
-                }} icon={require('@/assets/icons/arrow-right-gray.svg')} label={t('groupChat.title_category')} />
-                : null
-        } */}
-
-
 
 
         <QRcodeModal ref={qrcodeModalRef} />

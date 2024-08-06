@@ -22,7 +22,6 @@ import { colors } from "app/theme"
 export const SafetyScreen = () => {
     const insets = useSafeAreaInsets();
     const $colors = useRecoilValue(ColorsState);
-    const $theme = useRecoilValue(ThemeState);
     const { t } = useTranslation('screens')
     const confirmModalRef = useRef<ConfirmModalType>(null);
     return <View style={{

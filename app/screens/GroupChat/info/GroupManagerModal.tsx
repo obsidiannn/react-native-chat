@@ -100,11 +100,8 @@ export default forwardRef((props: {
                     })
                     groupContext.reloadMemberByUids([e.uid])
                   }}>
-                  <Image source={require('assets/icons/destory.svg')}
-                    style={{
-                      width: s(28), height: s(28),
-                      tintColor: colors.palette.gray400
-                    }} />
+
+                  <IconFont name="trash" color={themeColor.secondaryText} size={28} />
                 </TouchableOpacity>
               </View>
             })

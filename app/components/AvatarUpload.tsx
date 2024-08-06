@@ -8,8 +8,11 @@ import { chooseImage } from "app/services/file.service";
 import { s } from "app/utils/size";
 import { useRecoilValue } from "recoil";
 import { ColorsState } from "app/stores/system";
+import { IconFont } from "./IconFont/IconFont";
+import { View } from "react-native";
+import { colors } from "app/theme";
 
-export const AvatarUpload =  (props: {
+export const AvatarUpload = (props: {
     avatar: string;
     onChange: (v: string) => void
     border?: boolean;
@@ -58,7 +61,7 @@ export const AvatarUpload =  (props: {
             ...styles.container,
             backgroundColor: themeColor.primary,
 
-            width: size ,
+            width: size,
             height: size
         }} onPress={() => {
             menuModalRef.current?.open({
@@ -71,7 +74,14 @@ export const AvatarUpload =  (props: {
                 width: size,
                 height: size
             }} /> : null}
-            <Image source={require('assets/icons/circle-plus-primary.svg')} style={styles.icon} />
+            <View style={{
+                ...styles.icon,
+                backgroundColor: colors.palette.gray500,
+                borderColor: themeColor.border,
+                borderWidth: s(0.5),
+            }}>
+                <IconFont name="camera" color={themeColor.textChoosed} size={16}/>
+            </View>
         </TouchableOpacity>
         <MenuModal ref={menuModalRef} />
     </>
@@ -99,6 +109,8 @@ const styles = StyleSheet.create({
         width: s(22),
         height: s(22),
         borderRadius: s(11),
+        alignItems: 'center',
+        justifyContent: 'center'
     }
 });
 
