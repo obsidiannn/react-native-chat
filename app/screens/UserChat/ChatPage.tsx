@@ -22,6 +22,7 @@ import { IModel } from "@repo/enums"
 import messageSendService from "app/services/message-send.service"
 import chatUiAdapter from "app/utils/chat-ui.adapter"
 import { ThemeState } from "app/stores/system"
+import chatService from "app/services/chat.service"
 
 export interface ChatUIPageRef {
     init: (chatItem: ChatDetailItem, friend: IUser) => void
@@ -88,7 +89,7 @@ const ChatPage = forwardRef((_, ref) => {
         console.log('[chatui] init', chatItem);
         console.log('[chatui] friend', friend);
         console.log(sharedSecretRef.current);
-        
+
         if (sharedSecretRef.current) {
             return
         }
@@ -122,6 +123,16 @@ const ChatPage = forwardRef((_, ref) => {
 
 
     const messageLoad = async (_chatItem: ChatDetailItem) => {
+        try {
+            console.log('刷新chat');
+            const newChatItem = await chatService.refreshSequence([_chatItem])
+            
+            _chatItem = newChatItem[0]
+        } catch (e) {
+            
+        }
+        console.log('_chatItem', _chatItem);
+
         firstSeq.current = _chatItem.lastSequence
         lastSeq.current = _chatItem.lastSequence
         // 有未讀

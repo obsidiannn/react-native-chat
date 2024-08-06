@@ -1,6 +1,6 @@
 import friendApi from "app/api/friend/friend";
 import userService from "./user.service";
-import { map, select } from "radash";
+import { select } from "radash";
 import { IUser } from "drizzle/schema";
 import { LocalUserService } from "./LocalUserService";
 
