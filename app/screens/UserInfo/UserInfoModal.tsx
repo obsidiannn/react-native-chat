@@ -20,7 +20,9 @@ export interface UserInfoModalType {
     open: (userId: number, selfId: number) => void
 }
 
-export default forwardRef((_, ref) => {
+export default forwardRef((props: {
+    user?: IUser
+}, ref) => {
     const [selfId, setSelfId] = useState<number>(0)
     const [user, setUser] = useState<IUser | null>(null);
     const themeColor = useRecoilValue(ColorsState)
@@ -37,7 +39,9 @@ export default forwardRef((_, ref) => {
     useImperativeHandle(ref, () => ({
         open: async (userId: number, selfId: number) => {
             if (userId <= 0) { return }
-            const u = await userService.findById(userId);
+            const u = props.user ?? await userService.findById(userId);
+            console.log('user=', u);
+
             setSelfId(selfId)
             if (u && userId !== selfId) {
                 friendService.getReleationList([u.id]).then(res => {

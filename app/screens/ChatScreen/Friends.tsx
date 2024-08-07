@@ -1,5 +1,4 @@
 import { FlashList } from "@shopify/flash-list"
-import ConversationItem, { IContactListItemProps } from "app/components/ConversationItem"
 import { EmptyComponent } from "app/components/EmptyComponent"
 import LoadingComponent from "app/components/Loading"
 import { s } from "app/utils/size"
@@ -20,7 +19,6 @@ import fileService from "app/services/file.service"
 const FriendListView = (props: { contacts: IUser[] }) => {
   const themeColor = useRecoilValue(ColorsState)
   const [loading, setLoading] = useState<boolean>(false)
-  const { t } = useTranslation('friend')
   const renderList = () => {
     return <View style={{
       flex: 1,
@@ -66,7 +64,7 @@ const FriendListView = (props: { contacts: IUser[] }) => {
               })
             }}
               icon={fileService.getFullUrl(item.avatar ?? '')}
-              title={item?.nickName ? item.nickName : item.userName}
+              title={item?.friendAlias ?? item.nickName ?? item.userName}
               bottomLine={props.contacts.length > 1 && index < props.contacts.length - 1} />;
           }}
         />

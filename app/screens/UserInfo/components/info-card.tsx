@@ -28,18 +28,12 @@ export default (props: {
             <View style={{
                 marginTop: s(-40)
             }}>
-                {/* <AvatarComponent
-                    width={64} height={64}
-                    online={isOnline(user.updatedAt?.valueOf() ?? 0)}
-                    enableAvatarBorder
-                    url={fileService.getFullUrl(user.avatar ?? "")} /> */}
                 <AvatarX border size={64}
                     online={isOnline(user.updatedAt?.valueOf() ?? 0)}
                     uri={fileService.getFullUrl(user.avatar ?? '')} />
-
             </View>
             <View style={styles.rightContainer}>
-                <Text style={styles.nameText}>{user.nickName}</Text>
+                <Text style={styles.nameText}>{user.friendAlias ?? user.nickName}</Text>
                 {
                     user.gender !== IModel.IUser.Gender.UNKNOWN ?
                         (

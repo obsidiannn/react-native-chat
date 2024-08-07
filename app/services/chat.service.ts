@@ -26,7 +26,7 @@ const queryChatByIdIn = async (chatIds: string[]): Promise<Map<string, ChatDetai
             chatResp.items.forEach(e => {
                 chatsMap.set(e.id, e)
             })
-            void batchSaveLocal(chatResp.items)
+            await batchSaveLocal(chatResp.items)
         }
     }
     return chatsMap
@@ -206,8 +206,8 @@ const changeChat = async (dto: ChatDetailItem) => {
     await LocalChatService.save(chatMapper.dto2Entity(dto))
 }
 
-const batchSaveLocal = (chats: ChatDetailItem[]) => {
-    void LocalChatService.saveBatch(chats.map(c => chatMapper.dto2Entity(c)))
+const batchSaveLocal =async (chats: ChatDetailItem[]) => {
+    await LocalChatService.saveBatch(chats.map(c => chatMapper.dto2Entity(c)))
 }
 
 export default {

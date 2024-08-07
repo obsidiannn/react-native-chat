@@ -35,19 +35,20 @@ export const ChatScreen = ({ navigation }: Props) => {
         dataRefresh(idx)
     }
 
-    useEffect(() => {
-        if (groups.length <= 0) {
-            groupService.getMineList().then(res => {
-                console.log('groups', res);
-                setGroups(res)
-            })
-        }
-        if (friends.length <= 0) {
-            friendService.getOnlineList().then((val) => {
-                setFriends(val)
-            })
-        }
-    }, [])
+    // useEffect(() => {
+        // if (groups.length <= 0) {
+        //     console.log('[init] 加载在线group');
+        //     groupService.getMineList().then(res => {
+        //         setGroups(res)
+        //     })
+        // }
+        // if (friends.length <= 0) {
+        //     console.log('[init] 加载在线friend');
+        //     friendService.getOnlineList().then((val) => {
+        //         setFriends(val)
+        //     })
+        // }
+    // }, [])
 
     const dataRefresh = (idx: number) => {
         if (idx === 0) {

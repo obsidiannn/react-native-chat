@@ -72,16 +72,19 @@ export class LocalGroupService {
     }
     // 存在过期策略的chat list
     static async findByIdInWithTimeout(groupIds: number[]): Promise<IGroup[]> {
+
         if (groupIds.length <= 0)
             return []
         const db = GetDB()
-        return db.select().from(groups).where(
+        const result = await db.select().from(groups).where(
             and(
                 inArray(groups.id, groupIds),
                 gt(groups.role, 0),
                 gte(groups.refreshAt, delaySecond())
             )
         )
+        console.log('[sqlite] group query', result);
+        return result
     }
 
     static async save(e: IGroup): Promise<IGroup> {

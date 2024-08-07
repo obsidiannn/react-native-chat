@@ -41,24 +41,26 @@ export default forwardRef((props: {
             return
         }
         await friendService.updateRemark(friendId, friendAlias)
-        const user = {
-            ...props.friend,
-            friendAlias: friendAlias
-        }
-        await userService.updateUser(user)
         if (userContext && userContext.reloadChat) {
             userContext.reloadChat({
                 ...userContext.chatItem, chatAlias: friendAlias
             })
         }
-
+        if (userContext) {
+            const user = {
+                ...props.friend,
+                friendAlias: friendAlias
+            }
+            userContext.reloadUser(user)
+        }
     }
 
     const renderCheckButton = () => {
         if (props.friend && editing) {
             return <TouchableOpacity
-                onPress={() => {
-                    changeAlias()
+                onPress={async () => {
+                    await changeAlias()
+                    setEditing(false)
                 }}
                 style={{
                     padding: s(3),

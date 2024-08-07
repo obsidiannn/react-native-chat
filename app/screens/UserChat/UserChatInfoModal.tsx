@@ -173,7 +173,7 @@ export default forwardRef((_, ref) => {
             </View>
         </View>
         <ConfirmModal ref={confirmModalRef} />
-        <UserInfoModal ref={userInfoModalRef} />
+        <UserInfoModal ref={userInfoModalRef} user={userContext.friend ?? undefined} />
     </ScreenModal>
 })
 

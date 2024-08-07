@@ -56,7 +56,7 @@ const queryByIdIn = async (groupIds: number[]): Promise<Map<number, GroupDetailI
             groupResp.items.forEach(e => {
                 entityMap.set(e.id, e)
             })
-            void batchSaveLocal(groupResp.items)
+            await batchSaveLocal(groupResp.items)
         }
     }
     return entityMap
@@ -262,8 +262,8 @@ const getMembers = async (id: string) => {
     return data.items;
 }
 
-const batchSaveLocal = (data: GroupDetailItem[]) => {
-    void LocalGroupService.saveBatch(data.map(c => groupMapper.dto2Entity(c)))
+const batchSaveLocal = async (data: GroupDetailItem[]) => {
+    await LocalGroupService.saveBatch(data.map(c => groupMapper.dto2Entity(c)))
 }
 
 const getMemberPage = async (param: GroupMembersReq): Promise<GroupMemberResp> => {

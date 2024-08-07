@@ -91,7 +91,7 @@ const groupSingleInfo = async (param: BaseIdsNumberReq): Promise<BaseArrayResp<G
 
 const groupDetail = async (param: { ids: number[] }): Promise<GroupDetailResp> => await createInstance(true).post('/groups/get-batch-info', param);
 
-const groupIdAfter = async (lastTime: number): Promise<BaseArrayResp<number>> => await createInstance(true).post('/groups//mine-id-after', { lastTime });
+const groupIdAfter = async (lastTime: number): Promise<BaseArrayResp<number>> => await createInstance(true).post('/groups/mine-id-after', { lastTime });
 
 const clearGroupMessages = async (param: BaseIdsArrayReq) => await createInstance(true).post('/groups/clear-messages', param);
 

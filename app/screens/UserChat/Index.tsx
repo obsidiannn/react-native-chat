@@ -17,6 +17,7 @@ import { useRecoilValue, useSetRecoilState } from "recoil";
 import { ChatsStore } from "app/stores/auth";
 import { IconFont } from "app/components/IconFont/IconFont";
 import { ColorsState } from "app/stores/system";
+import userService from "app/services/user.service";
 
 type Props = StackScreenProps<App.StackParamList, 'UserChatScreen'>;
 
@@ -25,7 +26,7 @@ export const UserChatScreen = ({ navigation, route }: Props) => {
     const setChatsStore = useSetRecoilState(ChatsStore)
     const [chatItem, setChatItem] = useState<ChatDetailItem>()
     const userChatInfoModalRef = useRef<UserChatInfoModalRef>(null)
-    const [user, setUser] = useState<IUser>();
+    const [user, setUser] = useState<IUser | null>(null);
     const chatPageRef = useRef<ChatUIPageRef>(null)
     const themeColor = useRecoilValue(ColorsState)
     const init = useCallback(async () => {
@@ -55,8 +56,22 @@ export const UserChatScreen = ({ navigation, route }: Props) => {
                 })
                 return newItems
             })
+        }).catch(e => {
+            console.error(e)
         })
     }
+
+    const reloadUser = (item: IUser) => {
+        if (item) {
+            userService.updateUser(item).then(() => {
+                setUser(item)
+            }).catch(e => {
+                console.error(e)
+            })
+        }
+
+    }
+
 
     useEffect(() => {
         navigation.addListener('focus', () => {
@@ -72,8 +87,10 @@ export const UserChatScreen = ({ navigation, route }: Props) => {
         backgroundColor: '#ffffff'
     }]}>
         <UserChatUIContext.Provider value={{
+            friend: user,
             chatItem: chatItem,
-            reloadChat: reloadChat
+            reloadUser,
+            reloadChat
         }}>
             <Navbar title={chatItem?.chatAlias}
                 onLeftPress={() => {
@@ -100,7 +117,7 @@ export const UserChatScreen = ({ navigation, route }: Props) => {
                             padding: 2,
                             borderRadius: s(8)
                         }}>
-                           <IconFont name="ellipsis" color={themeColor.text} size={24} />
+                            <IconFont name="ellipsis" color={themeColor.text} size={24} />
                         </TouchableOpacity>
                     </View>
                 }} />

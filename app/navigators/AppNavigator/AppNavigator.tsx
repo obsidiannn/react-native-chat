@@ -66,6 +66,7 @@ const AppStack = () => {
         // 刷新请求地址
         // 上报firebase token
         // 连接websocket
+        console.log('[init] 加载在线chat');
         chatService.mineChatList().then((res) => {
           if (res !== null && res.length > 0) {
             console.log('change chat detail');
@@ -90,6 +91,7 @@ const AppStack = () => {
         routes: [{ name: 'TabStack' }],
       })
       await DBInit(global.wallet.getAddress());
+      // 加载离线chat 
       chatService.mineLocalChats().then(res => {
         setChatsStore(res)
       })
