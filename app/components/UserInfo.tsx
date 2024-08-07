@@ -7,12 +7,16 @@ import { s, verticalScale } from "app/utils/size";
 import toast from "app/utils/toast";
 import { IconFont } from "./IconFont/IconFont";
 import { colors } from "app/theme";
+import AvatarX from "./AvatarX";
+import fileService from "app/services/file.service";
 export default (props: {
     user: IUser;
 }) => {
     const { t } = useTranslation('screens')
+    console.log('propsuser',props.user);
+    
     return <View style={styles.container}>
-        <Image style={styles.avatar} source={props.user.avatar} />
+        <AvatarX uri={fileService.getFullUrl(props.user.avatar ?? '')} border />
         <View style={{
             display: 'flex',
             flexDirection: 'column',
@@ -25,7 +29,7 @@ export default (props: {
                 toast(t('common.success_copied'));
             }} style={styles.addressContainer}>
                 <Text style={styles.addressText}>{props.user.userName ?? ""} numberOfLines={2}</Text>
-                
+
                 <IconFont name="copy" color={colors.palette.gray400} size={16} />
             </TouchableOpacity>
         </View>

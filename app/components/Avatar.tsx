@@ -15,7 +15,7 @@ export interface AvatarProps {
 const AvatarComponent = (props: AvatarProps) => {
     return <View style={{
         flexDirection: 'row',
-        display: 'flex'
+        display: 'flex',
     }} >
         <Image source={props.url} style={{
             ...styles.defaultAvatar,
@@ -25,13 +25,8 @@ const AvatarComponent = (props: AvatarProps) => {
                 height: props.height,
                 borderRadius: props.width
             } : {}),
-            ...(props.enableAvatarBorder ? {
-                borderWidth: s(3),
-                borderStartColor: 'red',
-                borderEndColor: '#890084',
-                borderTopColor: '#8A0184',
-                borderBottomColor: 'green',
-            } : {})
+            ...(props.enableAvatarBorder ? styles.border : null),
+
         }} />
         {
             props.online !== undefined ?
@@ -55,7 +50,6 @@ const styles = StyleSheet.create({
         display: 'flex',
         justifyContent: 'center',
         borderRadius: s(24),
-
     },
     badgeContainer: {
         position: 'relative',
@@ -67,6 +61,14 @@ const styles = StyleSheet.create({
         borderWidth: s(2),
         borderRadius: s(12),
         backgroundColor: colors.palette.gray400,
+    },
+    border: {
+        borderWidth: s(3),
+        // borderColor: 'blue',
+        borderStartColor: 'red',
+        borderEndColor: '#890084',
+        borderTopColor: '#8A0184',
+        borderBottomColor: 'green',
     },
 })
 

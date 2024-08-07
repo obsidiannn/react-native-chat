@@ -36,7 +36,6 @@ export default forwardRef((_, ref) => {
     const groupMemberManageRef = useRef<GroupMemberManageModalType>()
     const { t } = useTranslation('screens')
     const selectMemberModalRef = useRef<SelectMemberModalType>(null)
-    const $theme = useRecoilValue(ThemeState);
     const onClose = () => {
         setVisible(false)
     }

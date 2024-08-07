@@ -2,6 +2,7 @@
 import { ColorsState } from "app/stores/system";
 import { colors } from "app/theme";
 import { s } from "app/utils/size";
+import { ReactNode } from "react";
 import { ActivityIndicator, ColorValue, Text, TextStyle, TouchableOpacity, ViewStyle } from "react-native";
 import { backgroundUpload } from "react-native-compressor";
 import { useRecoilValue } from "recoil";
@@ -22,6 +23,7 @@ export interface ButtonProps {
   textStyle?: TextStyle;
   onPress?: () => void;
   fullRounded?: boolean;
+  icon?: ReactNode
 }
 export const Button = (props: ButtonProps) => {
   const $colors = useRecoilValue(ColorsState);
@@ -35,7 +37,8 @@ export const Button = (props: ButtonProps) => {
     textStyle,
     type = "primary",
     loading,
-    disabled
+    disabled,
+    icon
   } = props;
   const $container: Record<string, ViewStyle> = {
     "small": {
@@ -97,6 +100,7 @@ export const Button = (props: ButtonProps) => {
     { display: 'flex', flexDirection: 'row', alignItems: 'center' }
   ]}>
     {loading ? <ActivityIndicator color={textStyle?.color ?? $colors.text} /> : null}
+    {icon ? icon : null}
     <Text style={[
       {
         color: "white",

@@ -2,7 +2,6 @@ import { ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useEffect, useState } from "react";
-import { Image } from "expo-image";
 import friendApplyService from "app/services/friend-apply.service";
 import { IUser } from "drizzle/schema";
 import { useRecoilValue } from "recoil";
@@ -17,6 +16,7 @@ import { App } from "types/app";
 import { IModel } from "@repo/enums";
 import UserInfo from "app/components/UserInfo";
 import { IconFont } from "app/components/IconFont/IconFont";
+import InfoCard from "../UserInfo/components/info-card";
 type Props = StackScreenProps<App.StackParamList, 'InviteInfoScreen'>;
 export const InviteInfoScreen = ({ navigation, route }: Props) => {
     const insets = useSafeAreaInsets();
@@ -55,40 +55,34 @@ export const InviteInfoScreen = ({ navigation, route }: Props) => {
                 <Navbar title={t('friend.title_apply_info')} />
             </View>
             <ScrollView keyboardDismissMode="interactive">
-                <View style={styles.infoContainer}>
-                    {info?.user && <UserInfo user={info.user} />}
-                    <View style={{
-                        borderWidth: 1,
-                        borderColor: '#F4F4F4',
-                        backgroundColor: '#F8F8F8',
-                        width: '100%',
-                        borderRadius: verticalScale(16),
-                        paddingHorizontal: s(15),
-                        paddingVertical: verticalScale(17),
-                        marginTop: verticalScale(10),
-                    }}>
-                        <Text style={{
-                            fontSize: 16,
-                            color: '#333'
-                        }}>{info?.friendApply.remark ?? ''}</Text>
-                    </View>
-                    {info?.friendApply.status === 1 && !info.isSelf ? <View style={{
-                        height: verticalScale(50),
-                        borderRadius: verticalScale(25),
-                        backgroundColor: '#F8F8F8',
-                        borderWidth: 1,
-                        borderColor: '#F4F4F4',
-                        display: 'flex',
-                        flexDirection: 'row',
-                        paddingHorizontal: s(15),
-                        marginTop: verticalScale(20),
-                    }}>
-                        <TextInput value={remark} onChangeText={(v) => setRemark(v)} placeholder={t('placeholder_remark')} style={{
-                            flex: 1
-                        }} />
-                        <IconFont name="edit" color={themeColor.text} size={20} />
-                    </View> : null}
+                <View style={{
+                    paddingTop: verticalScale(32),
+                    backgroundColor: themeColor.secondaryBackground
+                }}>
+                    {info?.user && <InfoCard user={info.user} />}
                 </View>
+                {
+                    info?.friendApply.remark ? (
+                        <View style={styles.infoContainer}>
+                            <View style={{
+                                borderWidth: 1,
+                                borderColor: '#F4F4F4',
+                                backgroundColor: '#F8F8F8',
+                                width: '100%',
+                                borderRadius: verticalScale(16),
+                                paddingHorizontal: s(15),
+                                paddingVertical: verticalScale(17),
+                                marginTop: verticalScale(10),
+                            }}>
+                                <Text style={{
+                                    fontSize: 16,
+                                    color: '#333'
+                                }}>{info?.friendApply.remark ?? ''}</Text>
+                            </View>
+                        </View>
+                    ) : null
+                }
+
                 <View style={styles.actionContainer}>
                     {info?.friendApply.status === IModel.IFriendApply.Status.PENDING && !info.isSelf ? <>
                         <Button fullWidth size="large" onPress={() => {
@@ -102,6 +96,7 @@ export const InviteInfoScreen = ({ navigation, route }: Props) => {
                                 setLoading(false);
                             });
                         }} label={t('friend.btn_apply')} />
+
                         <Button type="secondary" containerStyle={{
                             marginTop: s(10)
                         }} fullWidth size="large" onPress={async () => {
@@ -117,7 +112,11 @@ export const InviteInfoScreen = ({ navigation, route }: Props) => {
                             });
                         }} label={t('friend.btn_reject')} />
                     </> : null}
-                    {info?.friendApply.status === IModel.IFriendApply.Status.PENDING && info.isSelf ? <Button label={t('friend.label_pending')} /> : null}
+
+                    {info?.friendApply.status === IModel.IFriendApply.Status.PENDING && info.isSelf ?
+                        <Button label={t('friend.label_pending')} disabled size="large"
+                        // icon={<IconFont name="restart"}
+                        /> : null}
                 </View>
             </ScrollView>
         </View>
@@ -134,7 +133,7 @@ const styles = StyleSheet.create({
         paddingTop: verticalScale(21)
     },
     actionContainer: {
-        paddingHorizontal: s(23),
+        paddingHorizontal: s(15),
         marginTop: verticalScale(100),
     },
     accpetButton: {

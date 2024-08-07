@@ -121,7 +121,7 @@ export class LocalChatService {
                 tx.rollback()
             }
         }, {
-            behavior: "deferred",
+            behavior: "immediate",
         });
 
         console.log('[sqlite] chat save batch ', entities.length);

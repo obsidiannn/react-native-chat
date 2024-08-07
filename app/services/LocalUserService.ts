@@ -41,11 +41,24 @@ export class LocalUserService {
             console.log('err');
             return
         }
-        const ids = data.map(d => d.id)
-        const deleteResult = await db.delete(users).where(inArray(users.id, ids)).returning({ deletedId: users.id })
-        console.log('delete result', deleteResult);
 
-        await db.insert(users).values(data);
+        console.log('[sqlite] user saveBatch');
+        const now = dayjs().unix()
+        await db.transaction(async (tx) => {
+            try {
+                for (let index = 0; index < data.length; index++) {
+                    const e = data[index];
+                    await tx.insert(users).values(e).onConflictDoUpdate({ target: users.id, set: { ...e, refreshAt: now } })
+                }
+            } catch (e) {
+                console.error(e)
+                tx.rollback()
+            }
+        }, {
+            behavior: "immediate",
+        });
+
+        console.log('[sqlite] users save batch ', data.length);
     }
 
     /**

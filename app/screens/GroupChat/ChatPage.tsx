@@ -29,7 +29,6 @@ import generateUtil from "app/utils/generateUtil";
 import { GestureResponderEvent } from "react-native";
 import { ThemeState } from "app/stores/system";
 import chatService from "app/services/chat.service";
-import auth from "app/api/auth/auth";
 
 
 export interface GroupChatPageRef {
@@ -101,8 +100,6 @@ export default forwardRef((props, ref) => {
 
         authorRef.current = author
         chatItemRef.current = chatItem
-
-
 
         if (sharedSecretRef.current) {
             return

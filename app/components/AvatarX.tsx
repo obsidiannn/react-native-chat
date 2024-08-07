@@ -17,14 +17,15 @@ const AvatarX = (props: AvatarXProps) => {
         <View style={[
             (border ? $border : null),
             {
-                width: s(size),
-                height: s(size)
-            }, {
-                borderRadius: s(size / 2),
+                borderRadius: s(size),
                 overflow: 'hidden'
             }
         ]}>
-            <NetworkImage uri={uri} style={[$avatar, { width: s(size), height: s(size) }]} />
+            <NetworkImage uri={uri} style={[$avatar, { width: s(size), height: s(size) }
+                , (border ? {
+                    borderRadius: s(size),
+                } : null)
+            ]} />
         </View>
         {
             online ?
@@ -42,6 +43,7 @@ const $container: ViewStyle = {
     display: 'flex'
 }
 const $border: ViewStyle = {
+    display: 'flex',
     borderWidth: s(3),
     borderStartColor: 'red',
     borderEndColor: '#890084',

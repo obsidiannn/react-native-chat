@@ -9,6 +9,7 @@ import { IModel } from "@repo/enums";
 import { navigate } from "app/navigators";
 import { IServer } from "@repo/types";
 import { s } from "app/utils/size";
+import fileService from "app/services/file.service";
 dayjs.extend(relativeTime)
 export default (props: {
     item: IServer.IFriendApply,
@@ -30,7 +31,7 @@ export default (props: {
         }
     }} style={styles.container}>
         <View style={styles.avatarContainer}>
-            <Image source={user.avatar ?? ''} style={styles.avatar} />
+            <Image source={fileService.getFullUrl(user.avatar ?? '')} style={styles.avatar} />
         </View>
         <View style={{
             ...styles.rightContainer,

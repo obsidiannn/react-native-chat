@@ -36,7 +36,7 @@ export class LocalMessageService {
                 tx.rollback()
             }
         }, {
-            behavior: "deferred",
+            behavior: "immediate",
         });
         console.log('[sqlite] groups messages batch ', _data.length);
     }

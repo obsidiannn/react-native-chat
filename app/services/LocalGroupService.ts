@@ -120,7 +120,7 @@ export class LocalGroupService {
                 tx.rollback()
             }
         }, {
-            behavior: "deferred",
+            behavior: "immediate",
         });
 
         console.log('[sqlite] groups save batch ', entities.length);

@@ -16,6 +16,8 @@ import { ColorsState } from "app/stores/system";
 import { ScreenModal, ScreenModalType } from "app/components/ScreenModal";
 import { UserChatUIContext } from "./context";
 import { IconFont } from "app/components/IconFont/IconFont";
+import UserInfoModal, { UserInfoModalType } from "../UserInfo/UserInfoModal";
+import { AuthUser } from "app/stores/auth";
 
 export interface UserChatInfoModalRef {
     open: () => void
@@ -24,6 +26,9 @@ export interface UserChatInfoModalRef {
 export default forwardRef((_, ref) => {
     console.log('start');
     const screenModalRef = useRef<ScreenModalType>(null)
+    const userInfoModalRef = useRef<UserInfoModalType>(null)
+
+    const author = useRecoilValue(AuthUser)
     const userContext = useContext(UserChatUIContext)
     const { t } = useTranslation('screens')
     const themeColor = useRecoilValue(ColorsState)
@@ -54,15 +59,19 @@ export default forwardRef((_, ref) => {
     return <ScreenModal ref={screenModalRef} >
 
         <View style={{
-            paddingHorizontal: s(25),
-            marginTop: s(20),
+            flex: 1,
+            paddingHorizontal: s(16),
+            marginTop: s(32),
+            backgroundColor: themeColor.background,
+            borderTopLeftRadius: s(24),
+            borderTopRightRadius: s(24)
         }}>
             <View style={{
                 marginTop: s(15),
             }}>
                 <ActionItem title={'查看个人资料'}
                     onPress={() => {
-                        console.log('press');
+                        userInfoModalRef.current?.open(userContext.chatItem.sourceId, author?.id ?? 0)
                     }}
                     leftComponent={
                         <IconFont name="userProfile" color={themeColor.text} size={26} />
@@ -164,6 +173,7 @@ export default forwardRef((_, ref) => {
             </View>
         </View>
         <ConfirmModal ref={confirmModalRef} />
+        <UserInfoModal ref={userInfoModalRef} />
     </ScreenModal>
 })
 

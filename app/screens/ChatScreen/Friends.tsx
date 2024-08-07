@@ -13,6 +13,7 @@ import { IUser } from "drizzle/schema"
 import ContractListItem from "app/components/ContractListItem"
 import chatService from "app/services/chat.service"
 import toast from "app/utils/toast"
+import fileService from "app/services/file.service"
 
 
 
@@ -63,7 +64,8 @@ const FriendListView = (props: { contacts: IUser[] }) => {
                 item: chatDetail,
                 userId: chatDetail.sourceId
               })
-            }} icon={item.avatar}
+            }}
+              icon={fileService.getFullUrl(item.avatar ?? '')}
               title={item?.nickName ? item.nickName : item.userName}
               bottomLine={props.contacts.length > 1 && index < props.contacts.length - 1} />;
           }}

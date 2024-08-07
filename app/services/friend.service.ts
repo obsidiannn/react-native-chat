@@ -91,7 +91,7 @@ const remove = async (uid: string) => {
     return removeBatch([uid]);
 }
 const updateRemark = async (id: number, remark: string): Promise<void> => {
-    return await friendApi.updateRemark(id, remark);
+    await friendApi.updateRemark(id, remark);
 }
 export default {
     getOnlineList,

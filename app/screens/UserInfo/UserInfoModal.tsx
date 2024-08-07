@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { View, TouchableOpacity } from "react-native";
 import friendService from 'app/services/friend.service'
 import userService from 'app/services/user.service'
 import { forwardRef, useImperativeHandle, useRef, useState } from "react";
@@ -6,12 +6,14 @@ import InfoCard from "./components/info-card";
 import { IUser } from "drizzle/schema";
 import chatService from "app/services/chat.service";
 import { useTranslation } from 'react-i18next';
-import { s, verticalScale } from "app/utils/size";
+import { s } from "app/utils/size";
 import { useRecoilValue } from "recoil";
 import { ColorsState } from "app/stores/system";
 import { navigate } from "app/navigators";
-import { ScreenModal, ScreenModalType } from "app/components/ScreenModal";
-import BlockButton from "app/components/BlockButton";
+import { Button } from "app/components";
+import BaseModal from "app/components/base-modal";
+import { IconFont } from "app/components/IconFont/IconFont";
+import UserConfigModal, { UserConfigModalType } from "./UserConfigModal";
 
 
 export interface UserInfoModalType {
@@ -22,8 +24,15 @@ export default forwardRef((_, ref) => {
     const [selfId, setSelfId] = useState<number>(0)
     const [user, setUser] = useState<IUser | null>(null);
     const themeColor = useRecoilValue(ColorsState)
+    const [visible, setVisible] = useState<boolean>(false)
+    const userConfigModalRef = useRef<UserConfigModalType>(null)
     const { t } = useTranslation('screens')
-    const screenModalRef = useRef<ScreenModalType>(null)
+
+    const onClose = () => {
+        setSelfId(0)
+        setUser(null)
+        setVisible(false)
+    }
 
     useImperativeHandle(ref, () => ({
         open: async (userId: number, selfId: number) => {
@@ -44,32 +53,49 @@ export default forwardRef((_, ref) => {
             } else {
                 setUser(u)
             }
-            screenModalRef.current?.open()
+            setVisible(true)
         }
     }));
 
+    const renderTopRight = () => {
+        if (user?.id !== selfId) {
+            return <TouchableOpacity
+                onPress={() => {
+                    console.log('open');
+
+                    userConfigModalRef.current?.open()
+                }}
+                style={{
+                    padding: s(3),
+                    backgroundColor: themeColor.background,
+                    borderRadius: s(8)
+                }}>
+                <IconFont name="ellipsis" color={themeColor.text} size={24} />
+            </TouchableOpacity>
+        }
+        return null
+    }
+
     return (
-        <ScreenModal ref={screenModalRef} title="">
+        <BaseModal visible={visible} title="" onClose={onClose} renderRight={
+            renderTopRight()
+        } styles={{ flex: 1 }}>
             {user ?
-                <View style={{ flex: 1, backgroundColor: "red" }}>
+                <View style={{ flex: 1, backgroundColor: themeColor.background }}>
                     <View style={{
                         backgroundColor: themeColor.secondaryBackground,
+                        paddingTop: s(36)
                     }}>
                         <InfoCard user={user} />
                     </View>
                     <View style={{
-                        flex: 1,
-                        width: s(343),
                         paddingHorizontal: s(16),
-                        alignItems: 'center',
-                        marginTop: verticalScale(40),
-                        backgroundColor: "red"
                     }}>
                         {
                             selfId !== user?.id ?
-                                <BlockButton
+                                <Button
+                                    size="large"
                                     onPress={() => {
-
                                         if (!user.isFriend) {
                                             navigate('InviteFriendScreen', {
                                                 userId: user.id
@@ -92,14 +118,13 @@ export default forwardRef((_, ref) => {
                                     label={user.isFriend ? t('userInfo.label_start_chat') : t('userInfo.label_add_friend')}
                                 /> : null
                         }
-
                     </View>
                 </View> : null}
-
-        </ScreenModal>
+            <UserConfigModal ref={userConfigModalRef} friend={user} />
+        </BaseModal>
     );
 })
 
-const styles = StyleSheet.create({
+// const styles = StyleSheet.create({
 
-});
+// });

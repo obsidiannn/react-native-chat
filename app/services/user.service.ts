@@ -116,6 +116,10 @@ const setFriends = async (ids: number[]) => {
     // return await UserModel.setFriends(ids);
 }
 
+const updateUser = async (user: IUser) => {
+    await LocalUserService.createMany([user])
+}
+
 export default {
     findById,
     findByIds,
@@ -123,5 +127,6 @@ export default {
     getUserHash,
     officialUserHash,
     setNonFriends,
-    setFriends
+    setFriends,
+    updateUser
 }

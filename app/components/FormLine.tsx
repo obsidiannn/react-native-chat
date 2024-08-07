@@ -1,5 +1,5 @@
 
-import { Text, TouchableOpacity, View, ViewStyle } from "react-native";
+import { Text, TextStyle, TouchableOpacity, View, ViewStyle } from "react-native";
 import { useRecoilValue } from "recoil";
 import { ColorsState } from "app/stores/system";
 import { s } from "app/utils/size";
@@ -11,6 +11,7 @@ export interface FormLineProps {
     renderRight?: ReactNode
     onPress: () => void;
     style?: ViewStyle;
+    textStyle?: TextStyle
 }
 export const FormLine = (props: FormLineProps) => {
     const $colors = useRecoilValue(ColorsState);
@@ -19,8 +20,6 @@ export const FormLine = (props: FormLineProps) => {
             display: "flex",
             flexDirection: "row",
             alignItems: "center",
-            paddingHorizontal: s(16),
-            paddingVertical: s(18),
             justifyContent: "space-between",
         },
         props.style
@@ -35,6 +34,7 @@ export const FormLine = (props: FormLineProps) => {
                 color: $colors.text,
                 fontSize: s(15),
                 fontWeight: "400",
+                ...(props.textStyle ? props.textStyle : null)
             }}>
                 {props.title}
             </Text>

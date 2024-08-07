@@ -40,7 +40,6 @@ const searchGroup = async (keyword: string, page: number, limit: number = 10): P
     return { items: [], total: 0 }
 }
 
-
 const queryByIdIn = async (groupIds: number[]): Promise<Map<number, GroupDetailItem>> => {
     const entities = await LocalGroupService.findByIdInWithTimeout(groupIds)
     const entityMap = new Map<number, GroupDetailItem>()

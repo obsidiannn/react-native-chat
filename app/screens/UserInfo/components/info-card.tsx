@@ -1,6 +1,5 @@
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import * as clipboard from 'expo-clipboard';
-import { Image } from "expo-image";
 import { IUser } from "drizzle/schema";
 import { useTranslation } from 'react-i18next';
 import toast from "app/utils/toast";
@@ -10,9 +9,11 @@ import { IModel } from "@repo/enums";
 import { colors } from "app/theme";
 import { useRecoilValue } from "recoil";
 import { ColorsState } from "app/stores/system";
-import AvatarX from "app/components/AvatarX";
 import strUtil from "app/utils/str-util";
 import { IconFont } from "app/components/IconFont/IconFont";
+import AvatarComponent from "app/components/Avatar";
+import fileService from "app/services/file.service";
+import AvatarX from "app/components/AvatarX";
 export default (props: {
     user: IUser
 }) => {
@@ -27,7 +28,15 @@ export default (props: {
             <View style={{
                 marginTop: s(-40)
             }}>
-                <AvatarX size={72} online={isOnline(user.updatedAt?.valueOf() ?? 0)} border={true} uri={user.avatar ?? ""} />
+                {/* <AvatarComponent
+                    width={64} height={64}
+                    online={isOnline(user.updatedAt?.valueOf() ?? 0)}
+                    enableAvatarBorder
+                    url={fileService.getFullUrl(user.avatar ?? "")} /> */}
+                <AvatarX border size={64}
+                    online={isOnline(user.updatedAt?.valueOf() ?? 0)}
+                    uri={fileService.getFullUrl(user.avatar ?? '')} />
+
             </View>
             <View style={styles.rightContainer}>
                 <Text style={styles.nameText}>{user.nickName}</Text>
