@@ -38,6 +38,14 @@ export const ChatScreen = ({ navigation }: Props) => {
     }
 
     useEffect(() => {
+        friendService.getOnlineList().then((val) => {
+            setFriends(val)
+        })
+        groupService.getMineList().then(res => {
+            console.log('group init', res);
+            setGroups(res)
+        })
+
         const eventKey = EventManager.generateKey(IModel.IClient.SocketTypeEnum.FRIEND_CHANGE)
         EventManager.addEventListener(eventKey, friendChangeHandle)
     }, [])

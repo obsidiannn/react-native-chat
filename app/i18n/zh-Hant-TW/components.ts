@@ -1,12 +1,13 @@
 export default {
     chatUI: {
-        attachmentButtonAccessibilityLabel: 'Send media',
+        attachmentButtonAccessibilityLabel: '发送媒体文件',
         emptyChatPlaceholder: '',
-        fileButtonAccessibilityLabel: 'File',
-        inputPlaceholder: 'Message',
-        sendButtonAccessibilityLabel: 'Send',
-        btnDownload: 'Download',
-        btnSend: 'Send'
+        fileButtonAccessibilityLabel: '文件',
+        inputPlaceholder: '消息',
+        sendButtonAccessibilityLabel: '发送',
+        btnDownload: '保存到本地',
+        btnSend: '发送',
+        downloadSuccess: '下载成功'
     },
     upload: {
         label_camera: "拍照",

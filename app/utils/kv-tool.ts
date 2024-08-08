@@ -22,3 +22,4 @@ export const getKV = (id: string, key?: string) => {
 
 
 export const globalStorage = new KV('global', 'bobochat');
+export const databaseStorge = new KV('global', 'sqlite');

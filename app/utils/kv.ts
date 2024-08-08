@@ -4,6 +4,7 @@ import { MMKV } from 'react-native-mmkv'
 export type IKVValueType = boolean | number | string | undefined | Uint8Array;
 export default class KV {
     private store: MMKV;
+    
     constructor(id: string, key: string | undefined) {
         this.store = new MMKV({ id, encryptionKey: key })
     }

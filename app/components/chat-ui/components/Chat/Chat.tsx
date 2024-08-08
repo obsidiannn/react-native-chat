@@ -39,6 +39,9 @@ import AccessoryView from './AccessoryView'
 import { ImageSource } from 'react-native-image-viewing/dist/@types'
 import { Button } from 'app/components/Button'
 import { s } from 'app/utils/size'
+import fileService from 'app/services/file.service'
+import toast from 'app/utils/toast'
+ 
 // import { KeyboardAwareScrollView,KeyboardProvider } from 'react-native-keyboard-controller'
 
 // Untestable
@@ -278,28 +281,29 @@ export const Chat = ({
   }
 
   const renderImageDownload = ({ imageIndex }: { imageIndex: number }) => {
-    return <Button style={{
-      marginBottom: s(16),
-      width: '50%',
-      alignSelf: 'center',
-      borderRadius: s(12),
-      backgroundColor: 'rgba(100,100,150,0.5)',
-      opacity: 0.9,
-    }} onPress={async () => {
-      console.log('index', imageIndex);
-      const url = gallery[imageIndex].uri ?? ''
-      if (url !== '') {
-        // todo
-        // const localPath = await fileService.downloadFile(url)
-        // fileService.saveToAlbum(localPath, 'png').then(res => {
-        //   if (res) {
-        //     toast(t('success'))
-        //   }
-        // })
-      }
-    }}>
-      <Text style={{ color: 'white' }}>{translate('chatUI.btnDownload')} </Text>
-    </Button>
+    return <Button
+      containerStyle={{
+        marginBottom: s(16),
+        width: '50%',
+        alignSelf: 'center',
+        borderRadius: s(12),
+        backgroundColor: 'rgba(100,100,150,0.5)',
+        opacity: 0.9,
+      }} onPress={async () => {
+        console.log('index', imageIndex);
+        const url = gallery[imageIndex].uri ?? ''
+        if (url !== '') {
+          const localPath = await fileService.downloadFile(url)
+          fileService.saveToAlbum(localPath, 'png').then(res => {
+            if (res) {
+              toast(translate('chatUI.downloadSuccess'))
+            }
+          })
+        }
+      }}
+      size='large'
+      label={translate('chatUI.btnDownload')}
+    />
   }
 
   const keyExtractor = React.useCallback(

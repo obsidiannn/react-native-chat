@@ -76,14 +76,13 @@ const mineChatList = async (_chatIds?: string[]): Promise<ChatDetailItem[]> => {
                         i.chatAlias = source?.name ?? ''
                     }
                 }
-                // todo: 這裏要切換成好友備註
                 if (i.type === IModel.IChat.IChatTypeEnum.NORMAL && i.sourceId) {
                     const source = userHash.get(i.sourceId)
                     console.log('source', source);
 
                     if (source !== null) {
                         i.avatar = fileService.getFullUrl(source?.avatar ?? '')
-                        i.chatAlias = source?.nickName ?? ''
+                        i.chatAlias = source?.friendAlias ?? source?.nickName ?? ''
                         i.describe = source?.sign ?? ''
                     }
                 }
@@ -206,7 +205,7 @@ const changeChat = async (dto: ChatDetailItem) => {
     await LocalChatService.save(chatMapper.dto2Entity(dto))
 }
 
-const batchSaveLocal =async (chats: ChatDetailItem[]) => {
+const batchSaveLocal = async (chats: ChatDetailItem[]) => {
     await LocalChatService.saveBatch(chats.map(c => chatMapper.dto2Entity(c)))
 }
 
