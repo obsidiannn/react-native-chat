@@ -140,6 +140,12 @@ export class LocalChatService {
         }).where(eq(chats.id, chatId))
     }
 
+    static async deleteIdIn(chatIds: string[]) {
+        const db = GetDB()
+        await db.delete(chats).where(
+            inArray(chats.id, chatIds)
+        )
+    }
 
 
     /**

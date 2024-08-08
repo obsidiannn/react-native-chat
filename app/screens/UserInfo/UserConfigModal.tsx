@@ -4,15 +4,18 @@ import { ConfirmModal, ConfirmModalType } from "app/components/ConfirmModal";
 import { s } from "app/utils/size";
 import { IconFont } from "app/components/IconFont/IconFont";
 import { FormLine } from "app/components/FormLine";
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { ColorsState } from "app/stores/system";
 import { IUser } from "drizzle/schema";
 import BaseModal from "app/components/base-modal";
 import { UserChatUIContext } from "../UserChat/context";
 import { colors } from "app/theme";
 import friendService from "app/services/friend.service";
-import userService from "app/services/user.service";
-
+import { ClearChatMessageEvent } from "@repo/types";
+import { IModel } from "@repo/enums";
+import EventManager from 'app/services/event-manager.service'
+import { ChatsStore } from "app/stores/auth";
+import { navigate } from "app/navigators";
 
 export interface UserConfigModalType {
     open: () => void
@@ -23,16 +26,13 @@ export default forwardRef((props: {
 }, ref) => {
     const [visible, setVisible] = useState(false)
     const themeColor = useRecoilValue(ColorsState)
+    const setChatsStore = useSetRecoilState(ChatsStore)
     const confirmModalRef = useRef<ConfirmModalType>(null);
     const [editing, setEditing] = useState(false)
     const userContext = useContext(UserChatUIContext)
-    console.log('friends=', props.friend);
-
     const [friendAlias, setFriendAlias] = useState('')
-    console.log(props.friend?.friendAlias ?? props.friend?.nickName ?? '');
-
     const isEditable = (): boolean => {
-        return props.friend !== null && ((props.friend.isFriend ?? 0) > 0)
+        return editing && props.friend !== null && ((props.friend.isFriend ?? 0) > 0)
     }
 
     const changeAlias = async () => {
@@ -56,18 +56,31 @@ export default forwardRef((props: {
     }
 
     const renderCheckButton = () => {
-        if (props.friend && editing) {
+        if (props.friend) {
+            if (editing) {
+                return <TouchableOpacity
+                    onPress={async () => {
+                        await changeAlias()
+                        setEditing(false)
+                    }}
+                    style={{
+                        padding: s(3),
+                        backgroundColor: themeColor.secondaryBackground,
+                        borderRadius: s(8)
+                    }}>
+                    <IconFont name="checkMark" color={themeColor.text} size={24} />
+                </TouchableOpacity>
+            }
             return <TouchableOpacity
                 onPress={async () => {
-                    await changeAlias()
-                    setEditing(false)
+                    setEditing(true)
                 }}
                 style={{
                     padding: s(3),
                     backgroundColor: themeColor.secondaryBackground,
                     borderRadius: s(8)
                 }}>
-                <IconFont name="checkMark" color={themeColor.text} size={24} />
+                <IconFont name="edit" color={themeColor.text} size={24} />
             </TouchableOpacity>
         }
         return null
@@ -122,7 +135,6 @@ export default forwardRef((props: {
                             textAlign: 'left'
                         }}
                         onChangeText={(v) => {
-                            setEditing(true)
                             setFriendAlias(v)
                         }}
                     />
@@ -144,7 +156,19 @@ export default forwardRef((props: {
                         <IconFont name="clearDoc" color={colors.palette.red500} size={24} containerStyle={{ marginRight: s(4) }} />
                     }
                     onPress={() => {
-
+                        confirmModalRef.current?.open({
+                            title: '加入黑名单',
+                            content: '确认加入黑名单',
+                            onSubmit: () => {
+                                friendService.block(props.friend?.friendId ?? 0).then((isShow) => {
+                                    if (isShow !== null && props.friend?.chatId) {
+                                        setChatsStore((items) => {
+                                            return items.filter(i => i.id !== props.friend?.chatId)
+                                        })
+                                    }
+                                })
+                            }
+                        })
                     }}
                 />
             </View>
@@ -159,7 +183,24 @@ export default forwardRef((props: {
                         <IconFont name="trash" color={colors.palette.red500} size={24} containerStyle={{ marginRight: s(4) }} />
                     }
                     onPress={() => {
-
+                        confirmModalRef.current?.open({
+                            title: '删除好友',
+                            content: '确认删除好友，聊天记录将不可恢复',
+                            onSubmit: () => {
+                                friendService.remove(props.friend?.friendId ?? 0).then((chatId) => {
+                                    if (chatId) {
+                                        const event: ClearChatMessageEvent = { chatId, type: IModel.IClient.SocketTypeEnum.CLEAR_ALL_MESSAGE }
+                                        const eventKey = EventManager.generateChatTopic(chatId)
+                                        EventManager.emit(eventKey, event)
+                                    }
+                                    // 修改chats 
+                                    setChatsStore((items) => {
+                                        return items.filter(i => i.id !== props.friend?.chatId)
+                                    })
+                                    navigate('TabStack')
+                                })
+                            }
+                        })
                     }}
                 />
             </View>

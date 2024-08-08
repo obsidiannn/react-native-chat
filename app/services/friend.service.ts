@@ -3,6 +3,9 @@ import userService from "./user.service";
 import { select } from "radash";
 import { IUser } from "drizzle/schema";
 import { LocalUserService } from "./LocalUserService";
+import chatService from "./chat.service";
+import { LocalChatService } from "./LocalChatService";
+import { LocalMessageService } from "./LocalMessageService";
 
 const getReleationList = async (userIds: number[]) => {
     return await friendApi.getRelationList(userIds);
@@ -87,8 +90,22 @@ const removeAll = async () => {
 const removeBatch = async (uids: string[]) => {
     return true;
 }
-const remove = async (uid: string) => {
-    return removeBatch([uid]);
+
+const block = async (id: number): Promise<number | null> => {
+    const result = await friendApi.blockFriend(id)
+    await LocalChatService.deleteIdIn([result.chatId])
+    return result.isShow
+}
+
+const remove = async (id: number): Promise<string | null> => {
+    const result = await friendApi.dropByFriendId(id)
+    if (result && result.chatId) {
+        // 去除chat等
+        await LocalChatService.deleteIdIn([result.chatId])
+        await LocalMessageService.deleteMessageByChatIdIn([result.chatId])
+        return result.chatId
+    }
+    return null
 }
 const updateRemark = async (id: number, remark: string): Promise<void> => {
     await friendApi.updateRemark(id, remark);
@@ -101,5 +118,6 @@ export default {
     updateRemark,
     getReleationList,
     getOfflineList,
-    getFriendInfoByUserId
+    getFriendInfoByUserId,
+    block
 };

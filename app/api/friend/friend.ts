@@ -29,13 +29,27 @@ const getFriendUserIds = async (): Promise<BaseArrayResp<number>> => await creat
  */
 const dropAllFriends = async (): Promise<{ chatIds: string[] }> => await createInstance(true).post('/friends/drop-all');
 
+/**
+ * 删除自己的全部好友，之后需要清除本地 message data 
+ * @returns 
+ */
+const dropByFriendId = async (id: number): Promise<{ chatId: string | null }> => await createInstance(true).post('/friends/del', { id });
+/**
+ * 删除自己的全部好友，之后需要清除本地 message data 
+ * @returns 
+ */
+const blockFriend = async (id: number): Promise<{ isShow: number | null, chatId: string }> => await createInstance(true).post('/friends/bloak', { id });
+
+
+
 export default {
   getRelationList,
   updateRemark,
   getList,
   getBatchInfo,
   getFriendIdByUserId,
-  dropAllFriends
-  ,
-  getFriendUserIds
+  dropAllFriends,
+  dropByFriendId,
+  getFriendUserIds,
+  blockFriend
 }
