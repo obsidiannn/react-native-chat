@@ -17,8 +17,10 @@ import { App } from "types/app";
 import { ChatsStore } from "app/stores/auth";
 import friendService from "app/services/friend.service";
 import { IUser } from "drizzle/schema";
-import { ChatDetailItem, GroupDetailItem } from "@repo/types";
+import { ChatDetailItem, FriendChangeEvent, GroupDetailItem } from "@repo/types";
 import groupService from "app/services/group.service";
+import EventManager from 'app/services/event-manager.service'
+import { IModel } from "@repo/enums";
 
 type Props = StackScreenProps<App.StackParamList, 'ChatScreen'>;
 export const ChatScreen = ({ navigation }: Props) => {
@@ -35,20 +37,18 @@ export const ChatScreen = ({ navigation }: Props) => {
         dataRefresh(idx)
     }
 
-    // useEffect(() => {
-        // if (groups.length <= 0) {
-        //     console.log('[init] 加载在线group');
-        //     groupService.getMineList().then(res => {
-        //         setGroups(res)
-        //     })
-        // }
-        // if (friends.length <= 0) {
-        //     console.log('[init] 加载在线friend');
-        //     friendService.getOnlineList().then((val) => {
-        //         setFriends(val)
-        //     })
-        // }
-    // }, [])
+    useEffect(() => {
+        const eventKey = EventManager.generateKey(IModel.IClient.SocketTypeEnum.FRIEND_CHANGE)
+        EventManager.addEventListener(eventKey, friendChangeHandle)
+    }, [])
+
+    const friendChangeHandle = (event: FriendChangeEvent) => {
+        if (event.remove) {
+            setFriends((items) => {
+                return items.filter(i => i.id !== event.friendId)
+            })
+        } else { }
+    }
 
     const dataRefresh = (idx: number) => {
         if (idx === 0) {

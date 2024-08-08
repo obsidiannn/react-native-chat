@@ -8,6 +8,7 @@ const getRelationList = async (userIds: number[]) => await createInstance(true).
     userId: number;
     status: boolean;
     chatId: string
+    friendId: number
   }[]
 };
 const updateRemark = async (id: number, remark: string): Promise<null> => await createInstance(true).post('/friends/updateRemark', { id, remark });
@@ -38,7 +39,7 @@ const dropByFriendId = async (id: number): Promise<{ chatId: string | null }> =>
  * 删除自己的全部好友，之后需要清除本地 message data 
  * @returns 
  */
-const blockFriend = async (id: number): Promise<{ isShow: number | null, chatId: string }> => await createInstance(true).post('/friends/bloak', { id });
+const blockFriend = async (id: number): Promise<{ isShow: number | null, chatId: string }> => await createInstance(true).post('/friends/block', { id });
 
 
 

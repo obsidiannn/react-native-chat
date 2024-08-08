@@ -49,6 +49,7 @@ export default forwardRef((props: {
                     if (item) {
                         setUser({
                             ...u,
+                            friendId: item.friendId,
                             isFriend: item.status == true ? 1 : 0,
                             chatId: item.chatId
                         } as IUser)

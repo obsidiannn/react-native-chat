@@ -129,4 +129,19 @@ export class LocalUserService {
         }
         return await db.select().from(users).where(eq(users.isFriend, 1));
     }
+
+
+    static async block(userIds: number[]) {
+        if (userIds.length <= 0) {
+            return;
+        }
+        const db = GetDB()
+        if (!db) {
+            return
+        }
+        return await db.update(users).set({
+            isFriend: 0,
+        }).where(inArray(users.id, userIds));
+    }
+
 }

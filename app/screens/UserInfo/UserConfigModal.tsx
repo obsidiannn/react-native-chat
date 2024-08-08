@@ -11,11 +11,12 @@ import BaseModal from "app/components/base-modal";
 import { UserChatUIContext } from "../UserChat/context";
 import { colors } from "app/theme";
 import friendService from "app/services/friend.service";
-import { ClearChatMessageEvent } from "@repo/types";
+import { ClearChatMessageEvent, FriendChangeEvent } from "@repo/types";
 import { IModel } from "@repo/enums";
 import EventManager from 'app/services/event-manager.service'
 import { ChatsStore } from "app/stores/auth";
 import { navigate } from "app/navigators";
+import { LocalUserService } from "app/services/LocalUserService";
 
 export interface UserConfigModalType {
     open: () => void
@@ -159,14 +160,27 @@ export default forwardRef((props: {
                         confirmModalRef.current?.open({
                             title: '加入黑名单',
                             content: '确认加入黑名单',
-                            onSubmit: () => {
-                                friendService.block(props.friend?.friendId ?? 0).then((isShow) => {
+                            onSubmit: async () => {
+                                console.log(props.friend);
+
+                                if (props.friend?.friendId) {
+                                    const isShow = await friendService.block(props.friend?.friendId)
                                     if (isShow !== null && props.friend?.chatId) {
                                         setChatsStore((items) => {
                                             return items.filter(i => i.id !== props.friend?.chatId)
                                         })
+                                        await LocalUserService.block([props.friend.id])
+
                                     }
-                                })
+
+                                    const event: FriendChangeEvent = {
+                                        friendId: props.friend.id ?? 0,
+                                        remove: true,
+                                        type: IModel.IClient.SocketTypeEnum.FRIEND_CHANGE
+                                    }
+                                    const eventKey = EventManager.generateKey(event.type)
+                                    EventManager.emit(eventKey, event)
+                                }
                             }
                         })
                     }}

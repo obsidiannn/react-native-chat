@@ -42,7 +42,7 @@ class EventEmitter {
 		}
 	}
 
-    generateKey(type: number,key: string): string{
+    generateKey(type: number,key?: string): string{
         if(type === IModel.IClient.SocketTypeEnum.MESSAGE){
             return 'msg_' + key
         }
@@ -51,6 +51,9 @@ class EventEmitter {
 		}
 		if(type === IModel.IClient.SocketTypeEnum.GLOBAL_MESSAGE){
 			return 'GLOBAL_MESSAGE'
+		}
+		if(type === IModel.IClient.SocketTypeEnum.FRIEND_CHANGE){
+			return 'FRIEND_CHANGE'
 		}
         return key
     }
