@@ -130,7 +130,7 @@ const ChatPage = forwardRef((_, ref) => {
             const limit = _chatItem.lastSequence - oldSeq
             if (limit > 0) {
                 console.log('[userchat]load remote');
-                loadMessages('down',false,limit);
+                loadMessages('down', false, limit);
             }
         } catch (e) {
             console.error(e)
@@ -181,65 +181,67 @@ const ChatPage = forwardRef((_, ref) => {
 
         console.log('load', direction, seq);
 
-        return messageSendService.getList(chatItem.id,
+        return messageSendService.getList(
+            chatItem.id,
             sharedSecretRef.current, seq, direction,
-            chatItem.firstSequence, true, limit).then((res) => {
-                if (res.length <= 0) {
+            chatItem.firstSequence, init, limit
+        ).then((res) => {
+            if (res.length <= 0) {
+                return
+            }
+            const ls = res[0].sequence ?? 0
+            const fs = res[res.length - 1].sequence ?? 0
+            let _data: any[] = []
+            if (direction === 'up') {
+                if (!init && firstSeq.current <= fs) {
                     return
-                }
-                const ls = res[0].sequence ?? 0
-                const fs = res[res.length - 1].sequence ?? 0
-                let _data: any[] = []
-                if (direction === 'up') {
-                    if (!init && firstSeq.current <= fs) {
-                        return
-                    } else {
-                        _data = res.filter(r => {
-                            if (init) {
-                                return true
-                            }
-                            return (r.sequence ?? 0) < firstSeq.current
-                        })
-                        firstSeq.current = fs
-                        if (_data.length > 0) {
-                            if (init) {
-                                setMessages(_data);
-                            } else {
-                                setMessages((items) => {
-                                    return items.concat(_data);
-                                });
-                            }
+                } else {
+                    _data = res.filter(r => {
+                        if (init) {
+                            return true
                         }
-                    }
-                }
-                if (direction === 'down') {
-                    if (lastSeq.current >= ls) {
-                        return
-                    } else {
-                        _data = res.filter(r => {
-                            if (init) {
-                                return true
-                            }
-                            return (r.sequence ?? 0) > lastSeq.current
-                        })
-                        lastSeq.current = ls
-                        if (_data.length > 0) {
-                            console.log('[add data]', _data);
+                        return (r.sequence ?? 0) < firstSeq.current
+                    })
+                    firstSeq.current = fs
+                    if (_data.length > 0) {
+                        if (init) {
+                            setMessages(_data);
+                        } else {
                             setMessages((items) => {
-                                const exitIds = items.map((i) => i.id)
-                                return _data.filter((i) => {
-                                    return !exitIds.includes(i.id)
-                                }).concat(items);
+                                return items.concat(_data);
                             });
-                            // messageListRef.current?.scrollToIndex(lastSeq.current)
                         }
                     }
                 }
-            }).catch((err) => {
-                console.log('err', err);
-            }).finally(() => {
-                // loadingRef.current = false;
-            })
+            }
+            if (direction === 'down') {
+                if (lastSeq.current >= ls) {
+                    return
+                } else {
+                    _data = res.filter(r => {
+                        if (init) {
+                            return true
+                        }
+                        return (r.sequence ?? 0) > lastSeq.current
+                    })
+                    lastSeq.current = ls
+                    if (_data.length > 0) {
+                        console.log('[add data]', _data);
+                        setMessages((items) => {
+                            const exitIds = items.map((i) => i.id)
+                            return _data.filter((i) => {
+                                return !exitIds.includes(i.id)
+                            }).concat(items);
+                        });
+                        // messageListRef.current?.scrollToIndex(lastSeq.current)
+                    }
+                }
+            }
+        }).catch((err) => {
+            console.log('message load error', err);
+        }).finally(() => {
+            // loadingRef.current = false;
+        })
     }, [])
 
 

@@ -18,6 +18,7 @@ import { ChatsStore } from "app/stores/auth";
 import { IconFont } from "app/components/IconFont/IconFont";
 import { ColorsState } from "app/stores/system";
 import userService from "app/services/user.service";
+import { LocalUserService } from "app/services/LocalUserService";
 
 type Props = StackScreenProps<App.StackParamList, 'UserChatScreen'>;
 
@@ -37,11 +38,15 @@ export const UserChatScreen = ({ navigation, route }: Props) => {
             return;
         }
         setChatItem(_chatItem)
+        const localUsers = await LocalUserService.findByIds([uid], false)
+        if (localUsers.length > 0) {
+            setUser(localUsers[0])
+        }
         const friend = await friendService.getFriendInfoByUserId(uid)
         if (friend !== null) {
             setUser(friend);
-            chatPageRef.current?.init(_chatItem, friend)
         }
+        chatPageRef.current?.init(_chatItem, friend ?? localUsers[0])
     }, [])
 
     const reloadChat = (item: ChatDetailItem) => {

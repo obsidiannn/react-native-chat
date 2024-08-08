@@ -6,6 +6,7 @@ import { IModel } from '@repo/enums';
 import fileService from './file.service';
 import { LocalChatService } from './LocalChatService';
 import chatMapper from 'app/utils/chat.mapper';
+import { LocalUserService } from './LocalUserService';
 
 const queryChatByIdIn = async (chatIds: string[]): Promise<Map<string, ChatDetailItem>> => {
     const chats = await LocalChatService.findByIdInWithTimeout(chatIds)
@@ -197,8 +198,53 @@ const refreshSequence = async (chats: ChatDetailItem[]): Promise<ChatDetailItem[
 
 
 const mineLocalChats = async (): Promise<ChatDetailItem[]> => {
-    const chats = await LocalChatService.queryEntity()
-    return chats.map(e => chatMapper.entity2Dto(e))
+    const entities = await LocalChatService.queryEntity()
+    const chats = entities.map(e => chatMapper.entity2Dto(e))
+    const result: ChatDetailItem[] = []
+    const groupIds: number[] = []
+    const userIds: number[] = []
+    const officialIds: number[] = []
+
+    chats.forEach(i => {
+        if (i.type === IModel.IChat.IChatTypeEnum.GROUP && i.sourceId) {
+            groupIds.push(i.sourceId)
+        }
+        if (i.type === IModel.IChat.IChatTypeEnum.NORMAL && i.sourceId) {
+            userIds.push(i.sourceId)
+        }
+        if (i.type === IModel.IChat.IChatTypeEnum.OFFICIAL && i.sourceId) {
+            officialIds.push(i.sourceId)
+        }
+    })
+    const users = await LocalUserService.findByIds(userIds, false)
+    const userHash = userService.initUserHash(users)
+    const groupHash = await groupService.queryLocalByIdIn(groupIds)
+    console.log('groupsgroupsgroups', groupHash);
+
+    chats.forEach(i => {
+        if (i) {
+            if (i.type === IModel.IChat.IChatTypeEnum.GROUP && i.sourceId) {
+                const source = groupHash.get(i.sourceId)
+                if (source !== null) {
+                    i.avatar = fileService.getFullUrl(source?.avatar ?? '')
+                    i.chatAlias = source?.name ?? ''
+                }
+            }
+            if (i.type === IModel.IChat.IChatTypeEnum.NORMAL && i.sourceId) {
+                const source = userHash.get(i.sourceId)
+                console.log('source', source);
+
+                if (source !== null) {
+                    i.avatar = fileService.getFullUrl(source?.avatar ?? '')
+                    i.chatAlias = source?.friendAlias ?? source?.nickName ?? ''
+                    i.describe = source?.sign ?? ''
+                }
+            }
+            result.push(i)
+        }
+    })
+    return result
+
 }
 
 const changeChat = async (dto: ChatDetailItem) => {

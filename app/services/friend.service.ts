@@ -17,23 +17,29 @@ const getReleationList = async (userIds: number[]) => {
  * @param userId 
  */
 const getFriendInfoByUserId = async (userId: number): Promise<IUser | null> => {
-    const user = await userService.findById(userId)
-    if (user === null) {
-        return null
-    }
-    if (user.friendId === null) {
-        const friendResp = await friendApi.getFriendIdByUserId([userId])
-        if (friendResp.items.length > 0) {
-            const { friends } = await friendApi.getBatchInfo(friendResp.items);
-            const friend = friends[0]
-            user.friendId = friend.id
-            user.remark = friend.remark
-            user.remarkIdx = friend.remarkIdx
-            user.chatId = friend.chatId
+    try {
+        const user = await userService.findById(userId)
+        if (user === null) {
+            return null
         }
-        // todo: await LocalUserService.update(user)
+        if (user.friendId === null) {
+            const friendResp = await friendApi.getFriendIdByUserId([userId])
+            if (friendResp.items.length > 0) {
+                const { friends } = await friendApi.getBatchInfo(friendResp.items);
+                const friend = friends[0]
+                user.friendId = friend.id
+                user.remark = friend.remark
+                user.remarkIdx = friend.remarkIdx
+                user.chatId = friend.chatId
+            }
+            // todo: await LocalUserService.update(user)
+        }
+        return user
+    } catch (error) {
+
     }
-    return user
+
+    return null
 }
 
 

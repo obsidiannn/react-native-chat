@@ -67,7 +67,7 @@ export class LocalUserService {
      * @param ids 
      * @returns 
      */
-    static async findByIds(ids: number[]): Promise<IUser[]> {
+    static async findByIds(ids: number[],withTimeout: boolean = true): Promise<IUser[]> {
         if (ids.length <= 0) {
             return []
         }
@@ -84,7 +84,7 @@ export class LocalUserService {
             return (db).select().from(users).where(
                 and(
                     inArray(users.id, ids),
-                    gte(users.refreshAt, currentSecond - cacheSeconds)
+                    (withTimeout? gte(users.refreshAt, currentSecond - cacheSeconds): undefined)
                 ))
                 ?? [];
         } catch (e) {

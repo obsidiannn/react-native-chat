@@ -10,6 +10,9 @@ import { MessageType } from "app/components/chat-ui";
 import chatUiAdapter from "app/utils/chat-ui.adapter";
 import { imageFormat } from "app/utils/media-util";
 import { LocalMessageService } from "./LocalMessageService";
+import { LocalUserService } from "./LocalUserService";
+import user from "app/api/auth/user";
+import { IUser } from "drizzle/schema";
 
 const _limit = 20
 
@@ -136,7 +139,6 @@ const getListFromDb = async (
     direction: 'up' | 'down',
     limit: number,
     key: string,
-    needDecode: boolean
 ): Promise<MessageType.Any[]> => {
     const queryParam = {
         chatId: chatId,
@@ -218,18 +220,24 @@ const getList = async (
     sequence: number,
     direction: 'up' | 'down',
     firstSeq: number,
-    needDecode: boolean = true,
+    enableLocalUser: boolean = true,
     limit: number = _limit
 ): Promise<MessageType.Any[]> => {
     // await LocalMessageService.deleteMessageByChatIdIn([chatId])
-    const list = await getMessageDetails(chatId, key, sequence, direction, firstSeq, needDecode, limit)
+    const list = await getMessageDetails(chatId, key, sequence, direction, firstSeq, limit)
     const userIds: number[] = []
     list.forEach(d => {
         if (d.senderId !== undefined && d.senderId !== null) {
             userIds.push(d.senderId)
         }
     })
-    const userHash = await userService.getUserHash(userIds)
+    let userHash: Map<number, IUser>
+    if (enableLocalUser) {
+        const users = await LocalUserService.findByIds(userIds, false)
+        userHash = userService.initUserHash(users)
+    } else {
+        userHash = await userService.getUserHash(userIds)
+    }
     console.log('message list', list);
 
     return list.map((item) => {
@@ -249,14 +257,13 @@ const getMessageDetails = async (
     sequence: number,
     direction: 'up' | 'down',
     firstSeq: number,
-    needDecode: boolean,
     limit: number
 ): Promise<MessageType.Any[]> => {
     if (chatId === null && chatId === undefined) {
         return []
     }
     // await LocalMessageService.deleteMessageByChatIdIn([chatId])
-    const list: MessageType.Any[] = await getListFromDb(chatId, sequence, direction, limit, key, needDecode)
+    const list: MessageType.Any[] = await getListFromDb(chatId, sequence, direction, limit, key)
     const checkResult = checkDiffFromWb(list, sequence, direction, limit, firstSeq)
     console.log('檢查', checkResult);
 
@@ -272,13 +279,20 @@ const getMessageDetails = async (
         // }
     }
 
-    const data = await messageApi.getMessageList({
-        chatId,
-        limit: checkResult.limit,
-        sequence: checkResult.seq,
-        direction,
-    });
-    if (data.items.length <= 0) {
+    let data = null
+
+    try {
+        data = await messageApi.getMessageList({
+            chatId,
+            limit: checkResult.limit,
+            sequence: checkResult.seq,
+            direction,
+        })
+    } catch (error) {
+        console.error(error)
+    }
+
+    if (!data || data.items.length <= 0) {
         return list
     }
     const mids: string[] = data.items.map(i => i.msgId)

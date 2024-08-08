@@ -84,18 +84,21 @@ const findById = async (id: number) => {
 }
 
 const getUserHash = async (ids: number[]): Promise<Map<number, IUser>> => {
+    const users = await findByIds(ids)
+    return initUserHash(users)
+}
+
+const initUserHash = (userList: IUser[]): Map<number, IUser> => {
     const result = new Map<number, IUser>()
-    if (ids.length <= 0) {
+    if (userList.length <= 0) {
         return result
     }
-    const users = await findByIds(ids)
-    console.log('findByIds', users);
-
-    users.forEach(u => {
+    userList.forEach(u => {
         result.set(u.id, u)
     })
     return result
 }
+
 
 const officialUserHash = async (ids: number[]): Promise<Map<number, OfficialUserItem>> => {
     const result = new Map<number, OfficialUserItem>()
@@ -125,6 +128,7 @@ export default {
     findByIds,
     findByUserName,
     getUserHash,
+    initUserHash,
     officialUserHash,
     setNonFriends,
     setFriends,

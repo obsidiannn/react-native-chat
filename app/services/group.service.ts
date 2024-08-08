@@ -62,6 +62,17 @@ const queryByIdIn = async (groupIds: number[]): Promise<Map<number, GroupDetailI
     return entityMap
 }
 
+const queryLocalByIdIn = async (groupIds: number[]): Promise<Map<number, GroupDetailItem>> => {
+    const entities = await LocalGroupService.findByIdInWithoutTimeout(groupIds)
+    const entityMap = new Map<number, GroupDetailItem>()
+    if (entities && entities.length > 0) {
+        for (let i = 0; i < entities.length; i++) {
+            const e = entities[i];
+            entityMap.set(e.id, groupMapper.entity2Dto(e))
+        }
+    }
+    return entityMap
+}
 // 獲取羣組列表
 const getMineList = async (_groupIds?: number[]): Promise<GroupDetailItem[]> => {
     const groupIds: number[] = []
@@ -367,5 +378,6 @@ export default {
     clearGroupMessages,
     queryByIdIn,
     searchGroup,
-    checkAndRefresh
+    checkAndRefresh,
+    queryLocalByIdIn
 }

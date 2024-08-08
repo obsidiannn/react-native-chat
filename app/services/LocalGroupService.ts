@@ -65,14 +65,11 @@ export class LocalGroupService {
         return await GetDB().select().from(groups).where(
             and(
                 inArray(groups.id, groupIds),
-                gt(groups.role, 0),
-                gte(groups.refreshAt, delaySecond())
             )
         )
     }
     // 存在过期策略的chat list
     static async findByIdInWithTimeout(groupIds: number[]): Promise<IGroup[]> {
-
         if (groupIds.length <= 0)
             return []
         const db = GetDB()
