@@ -56,8 +56,9 @@ declare namespace App {
     AddFriendModal: undefined;
     UserCenterScreen: undefined;
     ProfileScreen: undefined;
-    SafetyScreen:undefined;
+    SafetyScreen: undefined;
     SettingScreen: undefined;
     DiscoverScreen: undefined
+    UserBlockScreen: undefined
   }
 }

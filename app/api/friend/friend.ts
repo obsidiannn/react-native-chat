@@ -40,6 +40,9 @@ const dropByFriendId = async (id: number): Promise<{ chatId: string | null }> =>
  * @returns 
  */
 const blockFriend = async (id: number): Promise<{ isShow: number | null, chatId: string }> => await createInstance(true).post('/friends/block', { id });
+// 移除黑名单
+const blockOut = async (id: number): Promise<{ isShow: number | null, chatId: string }> => await createInstance(true).post('/friends/block-out', { id });
+const getBlockIdList = async (): Promise<BaseArrayResp<number>> => await createInstance(true).post('/friends/blocked-id-list');
 
 
 
@@ -52,5 +55,7 @@ export default {
   dropAllFriends,
   dropByFriendId,
   getFriendUserIds,
-  blockFriend
+  blockFriend,
+  blockOut,
+  getBlockIdList
 }

@@ -90,6 +90,34 @@ const getOnlineList = async () => {
     await LocalUserService.setFriends(userIds);
     return result as IUser[];
 }
+
+const getBlockedList = async () => {
+    const blockIdResp = await friendApi.getBlockIdList()
+
+    if (!blockIdResp || blockIdResp.items.length <= 0) {
+        return [];
+    }
+    const friendIds = blockIdResp.items
+    const friends = await findByIds(friendIds);
+    const userIds = select(friends, f => f.friendId, () => true)
+    const usersMap = await userService.getUserHash(userIds);
+    const result: IUser[] = []
+    friends.forEach(friend => {
+        const u = usersMap.get(friend.friendId)
+        if (u) {
+            result.push({
+                ...u,
+                friendId: friend.id,
+                chatId: friend.chatId,
+                friendAlias: friend.remark,
+                friendAliasIdx: friend.remarkIdx,
+                isFriend: 1,
+            })
+        }
+    })
+    return result as IUser[];
+}
+
 const removeAll = async () => {
     return true;
 }
@@ -101,6 +129,12 @@ const block = async (id: number): Promise<number | null> => {
     const result = await friendApi.blockFriend(id)
     await LocalChatService.deleteIdIn([result.chatId])
     return result.isShow
+}
+
+const blockOut = async (id: number): Promise<string | null> => {
+    const result = await friendApi.blockOut(id)
+    await LocalChatService.deleteIdIn([result.chatId])
+    return result.chatId
 }
 
 const remove = async (id: number): Promise<string | null> => {
@@ -125,5 +159,7 @@ export default {
     getReleationList,
     getOfflineList,
     getFriendInfoByUserId,
-    block
+    block,
+    blockOut,
+    getBlockedList
 };

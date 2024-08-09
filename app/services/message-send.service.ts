@@ -305,7 +305,7 @@ const getMessageDetails = async (
     data.items.forEach(item => {
         const detail = messageHash.get(item.msgId)
         if (detail !== undefined) {
-            remoteData.push(chatUiAdapter.messageTypeConvert(detail, key, {}, needDecode))
+            remoteData.push(chatUiAdapter.messageTypeConvert(detail, key, {}, true))
         }
     })
 
