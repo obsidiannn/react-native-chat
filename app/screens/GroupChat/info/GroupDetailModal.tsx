@@ -66,21 +66,21 @@ export default forwardRef((_, ref) => {
         if (!myWallet) {
             return
         }
-        const author = groupContext.selfMember
-        if (!author) {
+        const group = groupContext.group
+        if (!group) {
             return
         }
         let sharedSecret: string
-        if (author?.encPri !== '' && author?.encPri !== null && author?.encPri !== undefined) {
-            console.log('[groupa]', author);
+        if (group?.encPri !== '' && group?.encPri !== null && group?.encPri !== undefined) {
+            console.log('[groupa]', group);
 
-            const key = myWallet.computeSharedSecret(author.encPri)
-            const decode = quickCrypto.De(key, Buffer.from(author.encKey, 'hex'))
+            const key = myWallet.computeSharedSecret(group.encPri)
+            const decode = quickCrypto.De(key, Buffer.from(group.encKey, 'hex'))
             sharedSecret = Buffer.from(decode).toString('utf8')
         } else {
-            console.log('[groupb]', author);
+            console.log('[groupb]', group);
             const key = myWallet.computeSharedSecret(myWallet.getPublicKey())
-            const decode = quickCrypto.De(key, Buffer.from(author.encKey, 'hex'))
+            const decode = quickCrypto.De(key, Buffer.from(group.encKey, 'hex'))
             sharedSecret = Buffer.from(decode).toString('utf8')
         }
         console.log('sharedSecret==', sharedSecret);

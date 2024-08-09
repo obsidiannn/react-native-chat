@@ -3,7 +3,8 @@ import tools from './tools';
 import {
     GroupMemberItemVO,
     ChatDetailItem, DeleteMessageEvent, SocketJoinEvent,
-    SocketMessageEvent
+    SocketMessageEvent,
+    GroupDetailItem
 } from "@repo/types";
 import EventManager from 'app/services/event-manager.service'
 import { useTranslation } from 'react-i18next';
@@ -34,7 +35,7 @@ import chatService from "app/services/chat.service";
 export interface GroupChatPageRef {
     init: (
         chatItem: ChatDetailItem,
-        author: GroupMemberItemVO,
+        group: GroupDetailItem,
     ) => void;
     close: () => void;
 }
@@ -42,7 +43,6 @@ export default forwardRef((props, ref) => {
     const [messages, setMessages] = useState<MessageType.Any[]>([])
     const theme = useRecoilValue(ThemeState)
     const chatItemRef = useRef<ChatDetailItem>()
-    const authorRef = useRef<GroupMemberItemVO>()
     const author = useRecoilValue(AuthUser)
     const sharedSecretRef = useRef<string>('');
     const firstSeq = useRef<number>(0);
@@ -82,7 +82,7 @@ export default forwardRef((props, ref) => {
 
     const init = useCallback((
         chatItem: ChatDetailItem,
-        author: GroupMemberItemVO,
+        group: GroupDetailItem
     ) => {
         if (chatItem === null || chatItem === undefined) {
             return
@@ -98,23 +98,22 @@ export default forwardRef((props, ref) => {
         console.log('會話id conversationIdRef', chatItem.id)
         console.log('author=', author);
 
-        authorRef.current = author
         chatItemRef.current = chatItem
 
         if (sharedSecretRef.current) {
             return
         }
         let sharedSecret: string
-        if (author?.encPri !== '' && author?.encPri !== null && author?.encPri !== undefined) {
-            console.log('[groupa]', author);
+        if (group?.encPri !== '' && group?.encPri !== null && group?.encPri !== undefined) {
+            console.log('[groupa]', group);
 
-            const key = myWallet.computeSharedSecret(author.encPri)
-            const decode = quickCrypto.De(key, Buffer.from(author.encKey, 'hex'))
+            const key = myWallet.computeSharedSecret(group.encPri)
+            const decode = quickCrypto.De(key, Buffer.from(group.encKey, 'hex'))
             sharedSecret = Buffer.from(decode).toString('utf8')
         } else {
-            console.log('[groupb]', author);
+            console.log('[groupb]', group);
             const key = myWallet.computeSharedSecret(myWallet.getPublicKey())
-            const decode = quickCrypto.De(key, Buffer.from(author.encKey, 'hex'))
+            const decode = quickCrypto.De(key, Buffer.from(group.encKey, 'hex'))
             sharedSecret = Buffer.from(decode).toString('utf8')
             console.log('sharedSecret==', sharedSecret);
         }

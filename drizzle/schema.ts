@@ -109,3 +109,26 @@ export const groups = sqliteTable('groups', {
 }))
 
 export type IGroup = typeof groups.$inferSelect
+
+
+export const groupMembers = sqliteTable('group_members', {
+    id: integer('id').primaryKey(),
+	uid: integer('user_id'),
+	role: integer('role').default(0),
+	status: integer('status').default(0),
+	groupId: integer('group_id'),
+	groupAlias: text('group_alias'),
+	groupAliasIdx: text('group_alias_idx'),
+    avatar: text('avatar'),
+	nickName: text('nick_name'),
+    nickNameIdx: text('nick_name_idx'),
+	gender: integer('gender').default(0),
+	pubKey: text('pub_key'),
+	sign: text('sign'),
+    createdAt: integer('created_at'),
+    refreshAt: integer('refresh_at'),
+}, (entity) => ({
+    groupIdIdx: index('groupMemberIdIdx').on(entity.groupId),
+}))
+
+export type IGroupMember = typeof groupMembers.$inferSelect

@@ -59,38 +59,6 @@ export default forwardRef((_, ref) => {
     console.log('loadload');
 
 
-    const batchInviteJoin = useCallback(async (users: {
-        id: number;
-        pubKey: string;
-    }[]) => {
-
-        const myWallet = globalThis.wallet
-        if (!myWallet) {
-            return
-        }
-        const author = groupContext.selfMember
-        if (!author) {
-            return
-        }
-        let secretBuff
-        if (author?.encPri !== '' && author?.encPri !== null && author?.encPri !== undefined) {
-            console.log('a');
-            const key = wallet?.computeSharedSecret(author.encPri)
-            secretBuff = quickCrypto.De(key ?? '', Buffer.from(author.encKey, 'utf8'))
-        } else {
-            console.log('b');
-            const key = wallet?.computeSharedSecret(myWallet.getPublicKey())
-            // sharedSecret = quickAes.De(author?.encKey ?? '', key ?? '')
-            secretBuff = quickCrypto.De(key ?? '', Buffer.from(author.encKey, 'utf8'))
-        }
-        const groupPassword = quickCrypto.De(author?.encKey ?? '', secretBuff)
-        const groupInfo = {
-            id: groupContext.group?.id ?? -1,
-            groupPassword: Buffer.from(groupPassword).toString('hex')
-        }
-        await groupService.invite(users, groupInfo);
-    }, []);
-
     const changeTop = (val: number) => {
 
         groupContext.reloadChat({
@@ -235,7 +203,10 @@ export default forwardRef((_, ref) => {
                             if (!groupContext.group) {
                                 return;
                             }
-                            applyListModalRef.current?.open(groupContext.group?.id, groupContext.selfMember?.encKey ?? '', groupContext.selfMember?.encPri ?? '');
+                            applyListModalRef.current?.open(
+                                groupContext.group?.id,
+                                groupContext.group?.encKey ?? '',
+                                groupContext.group?.encPri ?? '');
                         }} icon={"arrowRight"} label={t('groupChat.title_apply_list')} />
                         {/* 清空群记录 */}
                         <MenuItem label={t('groupChat.title_drop_message')} labelColor="#FB3737"

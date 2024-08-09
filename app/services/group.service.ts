@@ -13,6 +13,8 @@ import { LocalMessageService } from "./LocalMessageService";
 import search from "app/api/discovery/search";
 import { LocalGroupService } from "./LocalGroupService";
 import groupMapper from "app/utils/group.mapper";
+import { LocalGroupMemberService } from "./LocalGroupMemberService";
+import groupMemberMapper from "app/utils/groupMember.mapper";
 
 const quit = async (gid: number) => {
     return true;
@@ -75,25 +77,30 @@ const queryLocalByIdIn = async (groupIds: number[]): Promise<Map<number, GroupDe
 }
 // 獲取羣組列表
 const getMineList = async (_groupIds?: number[]): Promise<GroupDetailItem[]> => {
-    const groupIds: number[] = []
-    if (!_groupIds) {
-        const idResp = await groupApi.mineGroupList({})
-        if (!idResp.items || idResp.items.length <= 0) {
-            return []
+    try {
+        const groupIds: number[] = []
+        if (!_groupIds) {
+            const idResp = await groupApi.mineGroupList({})
+            if (!idResp.items || idResp.items.length <= 0) {
+                return []
+            }
+            groupIds.push(...idResp.items)
+        } else {
+            groupIds.push(..._groupIds)
         }
-        groupIds.push(...idResp.items)
-    } else {
-        groupIds.push(..._groupIds)
+        const entityMap = await queryByIdIn(groupIds)
+        const result: GroupDetailItem[] = []
+        groupIds.forEach(id => {
+            const group = entityMap.get(id)
+            if (group) {
+                result.push(group)
+            }
+        })
+    } catch (error) {
+
     }
-    const entityMap = await queryByIdIn(groupIds)
-    const result: GroupDetailItem[] = []
-    groupIds.forEach(id => {
-        const group = entityMap.get(id)
-        if (group) {
-            result.push(group)
-        }
-    })
-    return result
+
+    return []
 }
 
 
@@ -142,21 +149,32 @@ const getMemberList = async (gid: number, requireUids?: number[]): Promise<Group
             groupId: i.groupId,
             uid: i.uid,
             role: i.role,
-            a: i.myAlias ? i.myAlias : user?.nickName ?? '',
-            ai: i.aliasIdx ? i.aliasIdx : user?.nickNameIdx ?? '',
+            groupAlias: i.myAlias ?? '',
+            groupAliasIdx: i.aliasIdx ?? '',
             name: user?.nickName ?? '',
             nameIndex: user?.nickNameIdx ?? '',
             pubKey: user?.pubKey ?? '',
             sign: user?.sign ?? '',
             gender: user?.gender ?? 0,
             avatar: user?.avatar ?? '',
-            encKey: i.encKey,
-            encPri: i.encPri
+            status: i.status,
+            createdAt: i.createdAt
         }
         return vo
     })
+    void LocalGroupMemberService.saveBatch(result.map(groupMemberMapper.dto2Entity), gid)
     return result
 }
+
+
+// 用於羣組成員索引表的數據接口
+const getLocalMemberList = async (gid: number): Promise<GroupMemberItemVO[]> => {
+    console.log('[sqlte] query group member', gid);
+
+    const items = await LocalGroupMemberService.findByIdWithoutTimeout(gid)
+    return items.map(groupMemberMapper.entity2Dto)
+}
+
 
 const alphabetList = (items: GroupMemberItemVO[]) => {
     items.sort((a, b) => a.ai.charCodeAt(0) - b.ai.charCodeAt(0));
@@ -360,6 +378,8 @@ export default {
     getList,
     getMembers,
     getMemberList,
+    getLocalMemberList,
+
     alphabetList,
     join,
     myApplyList,
@@ -370,7 +390,6 @@ export default {
     kickOut,
     getMineList,
     getMemberPage,
-
     adminAdd,
     adminRemove,
     adminAgree,

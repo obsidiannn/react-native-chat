@@ -19,6 +19,7 @@ import GroupInfoModal, { GroupInfoModalType } from './info/Index'
 import { ColorsState } from "app/stores/system";
 import chatService from "app/services/chat.service";
 import { IconFont } from "app/components/IconFont/IconFont";
+import { LocalGroupService } from "app/services/LocalGroupService";
 
 type Props = StackScreenProps<App.StackParamList, 'GroupChatScreen'>;
 
@@ -43,10 +44,18 @@ export const GroupChatScreen = ({ navigation, route }: Props) => {
 
     // TODO: 這裏是根據uid變化而部分請求接口的函數
     const refreshMember = useCallback(async (uids: number[]) => {
-        loadMembers()
+        loadMembers(false, group)
     }, []);
 
-    const loadMembers = useCallback(async () => {
+    const loadMembers = useCallback(async (init: boolean = false, group: GroupDetailItem) => {
+        if (init) {
+            const localMembers = await groupService.getLocalMemberList(groupIdRef.current)
+            const self = localMembers.find(m => m.uid === authUser?.id ?? -1)
+            selfMemberRef.current = self
+            setMembers(localMembers)
+            console.log('-----', self, localMembers);
+            setSelfMember(self)
+        }
         groupService.getMemberList(groupIdRef.current).then((res) => {
             setMembers(res)
             const self = res.find(m => m.uid === authUser?.id ?? -1)
@@ -54,21 +63,28 @@ export const GroupChatScreen = ({ navigation, route }: Props) => {
             if (self !== null) {
                 selfMemberRef.current = self
                 setSelfMember(self)
-                chatPageRef.current?.init(chatItemRef.current, self);
             }
         });
     }, []);
     const loadGroup = useCallback(async () => {
         const groupId = groupIdRef.current
+        const localGroup = await groupService.queryLocalByIdIn([groupId])
+        console.log('localgroup', localGroup);
+
         if (groupId) {
             const res = await groupService.getMineList([groupId])
             console.log('羣信息', res);
-            if (!res || res.length <= 0) {
-                toast(t('groupChat.error_group'))
-                return
+            if (res && res.length > 0) {
+                setGroup(res[0]);
+                return res[0]
             }
-            setGroup(res[0]);
         }
+        if (localGroup.has(groupId)) {
+            const _g = localGroup.get(groupId)
+            setGroup(_g)
+            return _g
+        }
+        return null
     }, [])
 
     const reloadChat = (chat: ChatDetailItem) => {
@@ -95,9 +111,12 @@ export const GroupChatScreen = ({ navigation, route }: Props) => {
 
         setChatItem(_chatItem)
 
+        const _group = await loadGroup()
         console.log('羣id', groupIdRef.current)
-        await loadGroup()
-        loadMembers();
+
+        loadMembers(true, _group);
+        chatPageRef.current?.init(chatItemRef.current, _group);
+
     }, [])
     useEffect(() => {
         // 監聽頁面獲取焦點
