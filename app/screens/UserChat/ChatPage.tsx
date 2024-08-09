@@ -1,4 +1,4 @@
-import { Chat, MessageType, User, lightTheme, darkTheme } from "app/components/chat-ui"
+import { Chat, MessageType, lightTheme, darkTheme } from "app/components/chat-ui"
 import tools from "./tools"
 import { forwardRef, useCallback, useImperativeHandle, useRef, useState } from "react"
 import generateUtil from "app/utils/generateUtil"
@@ -23,6 +23,8 @@ import messageSendService from "app/services/message-send.service"
 import chatUiAdapter from "app/utils/chat-ui.adapter"
 import { ThemeState } from "app/stores/system"
 import chatService from "app/services/chat.service"
+import { LocalChatService } from "app/services/LocalChatService"
+import { LocalMessageService } from "app/services/LocalMessageService"
 
 export interface ChatUIPageRef {
     init: (chatItem: ChatDetailItem, friend: IUser) => void
@@ -31,7 +33,7 @@ export interface ChatUIPageRef {
 
 const ChatPage = forwardRef((_, ref) => {
     const theme = useRecoilValue(ThemeState)
-    const author = useRecoilValue<IUser>(AuthUser)
+    const author = useRecoilValue(AuthUser)
 
     const [messages, setMessages] = useState<MessageType.Any[]>([])
     const friendRef = useRef<IUser | null>(null)
@@ -55,8 +57,7 @@ const ChatPage = forwardRef((_, ref) => {
         setMessages([message, ...messages])
     }
 
-    const updateMessage = (message: MessageType.Any) => {
-        console.log('update', message);
+    const updateMessage = async (message: MessageType.Any) => {
         if (message.sequence > lastSeq.current) {
             lastSeq.current = message.sequence
         }
@@ -70,6 +71,19 @@ const ChatPage = forwardRef((_, ref) => {
             }
             return items;
         })
+        if (chatItemRef.current) {
+            if(!message.roomId){
+                message.roomId = chatItemRef.current.id
+            }
+            if(message.metadata?.uidType){
+                message.metadata.uidType =1
+            }
+            if(message.senderId){
+                message.senderId = author?.id ?? 0;
+            }
+            await LocalMessageService.saveBatchEntity(chatUiAdapter.messageEntityConverts([message]))
+            LocalChatService.updateSequence(chatItemRef.current?.id, message.sequence)
+        }
     }
 
     const init = useCallback((chatItem: ChatDetailItem, friend: IUser) => {
@@ -117,8 +131,9 @@ const ChatPage = forwardRef((_, ref) => {
 
 
     const messageLoad = async (_chatItem: ChatDetailItem) => {
-        firstSeq.current = _chatItem.lastSequence
-        lastSeq.current = _chatItem.lastSequence
+        const localChat = await LocalChatService.findById(_chatItem.id);
+        firstSeq.current = localChat?.firstSequence ?? 0;
+        lastSeq.current = localChat?.lastSequence ?? 0
         console.log('[userchat]load local');
         await loadMessages('up', true);
         try {
@@ -163,28 +178,30 @@ const ChatPage = forwardRef((_, ref) => {
 
 
     const loadMessages = useCallback(async (direction: 'up' | 'down', init?: boolean, limit?: number) => {
-        const chatItem = chatItemRef.current
-        if (!chatItem || chatItem === null) {
+        if (!chatItemRef.current) {
             return
         }
         let seq = direction == 'up' ? firstSeq.current : lastSeq.current;
         if (!init) {
             if (direction === 'up') {
                 seq -= 1
-                if (seq <= (chatItem.firstSequence)) {
+                if (seq <= (firstSeq.current)) {
                     return
                 }
             } else {
                 seq += 1
             }
         }
-
-        console.log('load', direction, seq);
+        console.log('load', direction, firstSeq.current , lastSeq.current);
 
         return messageSendService.getList(
-            chatItem.id,
-            sharedSecretRef.current, seq, direction,
-            chatItem.firstSequence, init, limit
+            chatItemRef.current.id,
+            sharedSecretRef.current,
+            seq,
+            direction,
+            firstSeq.current,
+            init,
+            limit
         ).then((res) => {
             if (res.length <= 0) {
                 return
@@ -279,7 +296,7 @@ const ChatPage = forwardRef((_, ref) => {
                 type: 'image',
                 uri: photo.uri,
                 width: photo.width,
-                senderId: author.id,
+                senderId: author?.id ?? 0,
                 sequence: -1
             }
             addMessage(imageMessage)
@@ -308,7 +325,7 @@ const ChatPage = forwardRef((_, ref) => {
                         author: chatUiAdapter.userTransfer(author),
                         createdAt: Date.now(),
                         type: 'video',
-                        senderId: author.id,
+                        senderId: author?.id ?? 0,
                         sequence: -1,
                         height: formatVideo.height,
                         width: formatVideo.width,
@@ -349,7 +366,7 @@ const ChatPage = forwardRef((_, ref) => {
                     size: response.size ?? 0,
                     type: 'file',
                     uri: response.uri,
-                    senderId: author.id,
+                    senderId: author?.id ?? 0,
                     sequence: -1,
                     status: 'sending'
                 }
@@ -388,7 +405,7 @@ const ChatPage = forwardRef((_, ref) => {
                 type: 'image',
                 uri: response.uri,
                 width: response.width,
-                senderId: author.id,
+                senderId: author?.id ?? 0,
                 sequence: -1
             }
             addMessage(imageMessage)
@@ -454,7 +471,7 @@ const ChatPage = forwardRef((_, ref) => {
             tools={tools}
             messages={messages}
             onEndReached={async () => {
-                loadMessages('up')
+                loadMessages('down')
             }}
             showUserAvatars
             onMessageLongPress={(m, e) => {

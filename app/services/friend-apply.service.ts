@@ -3,14 +3,12 @@ import { IUser } from "drizzle/schema";
 import userService from "./user.service";
 import { FriendInviteApplyItem } from "@repo/types";
 const create = async (userId: number, remark: string) => {
-    console.log('do apply');
 
     return await friendApplyApi.create(userId, remark);
 }
 const getList = async () => {
     const result = await friendApplyApi.getList();
     if (result.ids && result.ids.length > 0) {
-        console.log(result.ids);
         const data = await friendApplyApi.getBatchInfo(result.ids)
         return data.items
     }
@@ -42,7 +40,6 @@ const getApplyListByReqUserId = async (userId: number, selfId: number): Promise<
         const userHash = await userService.getUserHash(uids)
         return result.items.map(ri => {
             const user = userHash.get(ri.friendId === selfId ? ri.uid : ri.friendId)
-            console.log('check', user);
 
             ri.isSelf = ri.friendId === selfId
             if (user) {

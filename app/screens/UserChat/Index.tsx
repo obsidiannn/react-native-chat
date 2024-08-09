@@ -19,6 +19,7 @@ import { IconFont } from "app/components/IconFont/IconFont";
 import { ColorsState } from "app/stores/system";
 import userService from "app/services/user.service";
 import { LocalUserService } from "app/services/LocalUserService";
+import { LocalChatService } from "app/services/LocalChatService";
 
 type Props = StackScreenProps<App.StackParamList, 'UserChatScreen'>;
 
@@ -31,13 +32,20 @@ export const UserChatScreen = ({ navigation, route }: Props) => {
     const chatPageRef = useRef<ChatUIPageRef>(null)
     const themeColor = useRecoilValue(ColorsState)
     const init = useCallback(async () => {
+        console.log("初始化聊天页面")
         const _chatItem = route.params.item
         const uid = _chatItem?.sourceId;
         if (!uid || !globalThis.wallet) {
             navigation.goBack();
             return;
         }
-        setChatItem(_chatItem)
+        const localChat = await LocalChatService.findById(_chatItem.id);
+        console.log('[chatui] init', localChat)
+        setChatItem({
+            ..._chatItem,
+            firstSequence: localChat?.firstSequence ?? 0,
+            lastSequence: localChat?.lastSequence ?? 0,
+        });
         const localUsers = await LocalUserService.findByIds([uid], false)
         if (localUsers.length > 0) {
             setUser(localUsers[0])
@@ -50,20 +58,20 @@ export const UserChatScreen = ({ navigation, route }: Props) => {
     }, [])
 
     const reloadChat = (item: ChatDetailItem) => {
-        chatService.changeChat(item).then(() => {
-            setChatItem(item)
-            setChatsStore((items) => {
-                const newItems = items.map(t => {
-                    if (item.id === t.id) {
-                        return { ...item }
-                    }
-                    return t
-                })
-                return newItems
-            })
-        }).catch(e => {
-            console.error(e)
-        })
+        // chatService.changeChat(item).then(() => {
+        //     setChatItem(item)
+        //     setChatsStore((items) => {
+        //         const newItems = items.map(t => {
+        //             if (item.id === t.id) {
+        //                 return { ...item }
+        //             }
+        //             return t
+        //         })
+        //         return newItems
+        //     })
+        // }).catch(e => {
+        //     console.error(e)
+        // })
     }
 
     const reloadUser = (item: IUser) => {
@@ -114,10 +122,7 @@ export const UserChatScreen = ({ navigation, route }: Props) => {
                         display: 'flex',
                         flexDirection: 'row'
                     }}>
-                        <TouchableOpacity onPress={() => {
-                            console.log('open');
-                            userChatInfoModalRef.current?.open()
-                        }} style={{
+                        <TouchableOpacity onPress={() => userChatInfoModalRef.current?.open()} style={{
                             backgroundColor: themeColor.background,
                             padding: 2,
                             borderRadius: s(8)

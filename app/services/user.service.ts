@@ -40,8 +40,6 @@ export class UserService {
 const findByUserName = async (username: string) => {
     const result = await userApi.findByUserName(username);
     if (result.id !== null) {
-        console.log('goon');
-
         return await findById(result.id);
     }
     return null;
@@ -68,7 +66,6 @@ const findByIds = async (ids: number[]): Promise<IUser[]> => {
                 friendId: 0
             } as IUser
         })
-        console.log('users', users);
 
         await LocalUserService.createMany(users)
         return [...localUsers, ...users]

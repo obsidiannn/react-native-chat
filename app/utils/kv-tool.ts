@@ -6,7 +6,6 @@ let kvMap = new Map<string, KV>();
 export const init = async ():Promise<KV> => {
     if(!globalKV || globalKV === undefined){
         const key = await getUniqueId() ?? "bobo";
-        console.log("global key:" + key)
         globalKV = new KV(key, key);
     }
     return globalKV

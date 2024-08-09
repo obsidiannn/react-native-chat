@@ -1,7 +1,7 @@
 import { IChat } from "drizzle/schema";
 import dayjs from 'dayjs'
 import { GetDB } from "app/utils/database";
-import { and, desc, eq, gte, inArray, sql } from "drizzle-orm";
+import { and, desc, eq, gte, inArray, lt, sql } from "drizzle-orm";
 import { chats } from "drizzle/schema";
 import { delaySecond } from "app/utils/delay";
 import { IModel } from "@repo/enums";
@@ -35,7 +35,15 @@ export class LocalChatService {
         }
         return null
     }
-
+    static async findById(id: string){
+        const db = GetDB()
+        if (!db) {
+            return null
+        }
+        return await db.query.chats.findFirst({
+            where: eq(chats.id, id),
+        })
+    }
     /**
      * 哪些id不在db内
      * @param chatIds 不存在的id
@@ -84,9 +92,17 @@ export class LocalChatService {
             )
         )
     }
-
+    static async updateSequence(chatId: string, sequence: number) {
+        console.log('updateSequence', chatId, sequence)
+        const db = await GetDB()
+        const result =  await db.update(chats).set({ lastSequence: sequence }).where(and(
+            eq(chats.id, chatId),
+            lt(chats.lastSequence, sequence)
+        )).returning()
+        console.log('updateSequence result', result)
+        return result
+    }
     static async save(chat: IChat): Promise<IChat> {
-        console.log('[sqlite] chat save');
 
         const entity = {
             ...chat,
@@ -108,7 +124,6 @@ export class LocalChatService {
         if (!db) {
             return
         }
-        console.log('[sqlite] chat saveBatch');
         const now = dayjs().unix()
         await db.transaction(async (tx) => {
             try {
@@ -123,8 +138,6 @@ export class LocalChatService {
         }, {
             behavior: "immediate",
         });
-
-        console.log('[sqlite] chat save batch ', entities.length);
 
     }
 

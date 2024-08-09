@@ -1,16 +1,13 @@
 import { globalKV, globalStorage } from "app/utils/kv-tool"
 import { getLists } from "app/api/sys/node"
-import { SYSTEM_API_URL, SYSTEM_PUBLIC_KEY, SIZE_BASE_HEIGHT } from "@env";
+import { SYSTEM_API_URL} from "@env";
 
 export class SystemService {
     static GetApiUrlByCache = () => {
         const apiUrl = globalStorage.get('string', 'NOW_API_URL')
-        console.log("@@@@@@@@apiUrl", apiUrl)
         if (apiUrl) {
             return apiUrl as string;
         }
-        console.log("@@@@@@@@apiUrl", SYSTEM_API_URL, SIZE_BASE_HEIGHT)
-        console.log("@@@@@@@@SYSTEM_PUBLIC_KEY", SYSTEM_PUBLIC_KEY)
         return SYSTEM_API_URL;
     }
     static GetApiUrl = () => {
@@ -29,8 +26,6 @@ export class SystemService {
     static refreshNodes = () => {
         return new Promise((resolve, reject) => {
             getLists().then(rep => {
-                console.log('api list:', rep);
-                console.log("rep:", rep);
                 const groupByType = rep.nodes.reduce((result, node) => {
                     const { type } = node;
                     if (!result[type]) {
@@ -39,7 +34,6 @@ export class SystemService {
                     result[type].push(node.addr);
                     return result;
                 }, {} as Record<string, Array<string>>);
-                console.log("groupByType:", groupByType);
                 if (Object.prototype.hasOwnProperty.call(groupByType, 'STATIC_URL')) {
                     globalKV.set("NOW_STATIC_URL", groupByType['STATIC_URL'][0]);
                     globalKV.set("STATIC_URL_LIST", JSON.stringify(groupByType['STATIC_URL']))

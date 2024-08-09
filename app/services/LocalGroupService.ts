@@ -1,7 +1,7 @@
 import { GetDB } from "app/utils/database"
 import { delaySecond } from "app/utils/delay"
 import dayjs from "dayjs"
-import { and, desc, eq, gt, gte, inArray, sql } from "drizzle-orm"
+import { and, desc, eq, gt, gte, inArray } from "drizzle-orm"
 import { IGroup, groups } from "drizzle/schema"
 
 export class LocalGroupService {
@@ -80,12 +80,10 @@ export class LocalGroupService {
                 gte(groups.refreshAt, delaySecond())
             )
         )
-        console.log('[sqlite] group query', result);
         return result
     }
 
     static async save(e: IGroup): Promise<IGroup> {
-        console.log('[sqlite] chat save');
 
         const entity = {
             ...e,
@@ -107,7 +105,6 @@ export class LocalGroupService {
         if (!db) {
             return
         }
-        console.log('[sqlite] groups saveBatch');
         const now = dayjs().unix()
         await db.transaction(async (tx) => {
             try {
@@ -122,8 +119,6 @@ export class LocalGroupService {
         }, {
             behavior: "immediate",
         });
-
-        console.log('[sqlite] groups save batch ', entities.length);
 
     }
 

@@ -37,7 +37,7 @@ i18n
         lng: 'zh-Hant-TW',
         supportedLngs: ['zh','zh-Hant-MO', 'zh-Hant-HK','zh-Hant','zh-Hans', 'zh-Hant-TW', 'zh-Hans-CN', 'zh-Hant-CN', 'en-US', 'en-GB'],
         fallbackLng: 'zh-Hant-TW',
-        debug: true,
+        debug: false,
         interpolation: {
             escapeValue: false,
         },

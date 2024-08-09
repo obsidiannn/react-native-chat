@@ -12,7 +12,6 @@ const getDeviceId = async () => {
     const { granted } = await ExpoTrackingTransparency.getTrackingPermissionsAsync();
     let uuid = '';
     if (granted) {
-        console.log("ExpoTrackingTransparency.getAdvertisingId()", ExpoTrackingTransparency.getAdvertisingId())
         uuid = ExpoTrackingTransparency.getAdvertisingId() ?? '';
     }
     if (!uuid) {

@@ -11,8 +11,6 @@ import { LocalUserService } from './LocalUserService';
 const queryChatByIdIn = async (chatIds: string[]): Promise<Map<string, ChatDetailItem>> => {
     const chats = await LocalChatService.findByIdInWithTimeout(chatIds)
     const chatsMap = new Map<string, ChatDetailItem>()
-
-    console.log('[sqlite] local chats ', chats);
     if (chats && chats.length > 0) {
 
         for (let i = 0; i < chats.length; i++) {
@@ -79,7 +77,6 @@ const mineChatList = async (_chatIds?: string[]): Promise<ChatDetailItem[]> => {
                 }
                 if (i.type === IModel.IChat.IChatTypeEnum.NORMAL && i.sourceId) {
                     const source = userHash.get(i.sourceId)
-                    console.log('source', source);
 
                     if (source !== null) {
                         i.avatar = fileService.getFullUrl(source?.avatar ?? '')
@@ -111,7 +108,6 @@ const checkAndRefresh = async (chats: ChatDetailItem[]): Promise<{
 
     try {
         const lastest = await LocalChatService.findLatestId()
-        console.log('latest', lastest);
 
         if (lastest) {
             const idResp = await chatApi.mineChatIdAfter(lastest)
@@ -128,7 +124,6 @@ const checkAndRefresh = async (chats: ChatDetailItem[]): Promise<{
             // return { olds, news }
         }
     } catch (e) {
-        console.log('[chat]检查chats异常', e);
     }
 
     if (!chats || chats.length <= 0) {
@@ -178,7 +173,6 @@ const refreshSequence = async (chats: ChatDetailItem[]): Promise<ChatDetailItem[
         })
         return chats.map(c => {
             const seq = seqMap.get(c.id)
-            console.log('seq', seq);
 
             if (seq) {
                 return {
@@ -219,8 +213,6 @@ const mineLocalChats = async (): Promise<ChatDetailItem[]> => {
     const users = await LocalUserService.findByIds(userIds, false)
     const userHash = userService.initUserHash(users)
     const groupHash = await groupService.queryLocalByIdIn(groupIds)
-    console.log('groupsgroupsgroups', groupHash);
-
     chats.forEach(i => {
         if (i) {
             if (i.type === IModel.IChat.IChatTypeEnum.GROUP && i.sourceId) {
@@ -232,7 +224,6 @@ const mineLocalChats = async (): Promise<ChatDetailItem[]> => {
             }
             if (i.type === IModel.IChat.IChatTypeEnum.NORMAL && i.sourceId) {
                 const source = userHash.get(i.sourceId)
-                console.log('source', source);
 
                 if (source !== null) {
                     i.avatar = fileService.getFullUrl(source?.avatar ?? '')

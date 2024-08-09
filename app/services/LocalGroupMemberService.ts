@@ -34,7 +34,6 @@ export class LocalGroupMemberService {
         if (!db) {
             return
         }
-        console.log('[sqlite] groupMember saveBatch');
 
         const result = await db.query.groupMembers.findFirst({
             where: eq(groupMembers.groupId, groupId),
@@ -63,8 +62,6 @@ export class LocalGroupMemberService {
         }, {
             behavior: "immediate",
         });
-
-        console.log('[sqlite] groupMember save batch ', entities.length);
 
     }
 

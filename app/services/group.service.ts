@@ -113,7 +113,7 @@ const checkAndRefresh = async (): Promise<GroupDetailItem[]> => {
     const news: GroupDetailItem[] = []
     try {
         const lastest = await LocalGroupService.findLatestId()
-        console.log('latest', lastest);
+
 
         if (lastest) {
             const idResp = await groupApi.groupIdAfter(lastest)
@@ -169,7 +169,7 @@ const getMemberList = async (gid: number, requireUids?: number[]): Promise<Group
 
 // 用於羣組成員索引表的數據接口
 const getLocalMemberList = async (gid: number): Promise<GroupMemberItemVO[]> => {
-    console.log('[sqlte] query group member', gid);
+
 
     const items = await LocalGroupMemberService.findByIdWithoutTimeout(gid)
     return items.map(groupMemberMapper.entity2Dto)
@@ -195,7 +195,6 @@ const create = async (name: string, avatar: string, isEnc: boolean, searchType: 
     }
 
     const groupPassword = generateUtil.generateId()
-    console.log('[group]create pwd=', groupPassword);
 
     const myWallet = globalThis.wallet
     const sharedSecret = myWallet?.computeSharedSecret(myWallet.getPublicKey())
@@ -216,7 +215,6 @@ const create = async (name: string, avatar: string, isEnc: boolean, searchType: 
     }
     const { id } = await groupApi.create(group);
     group.id = id
-    console.log('group create: ', group);
     return group;
 }
 
@@ -236,7 +234,6 @@ const invite = async (members: {
     const myWallet = globalThis.wallet
     // const sharedSecret = wallet?.computeSharedSecret(myWallet.getPublicKey())
     // const groupPassword = quickAes.De(groupInfo.encKey, sharedSecret ?? '');
-    console.log('[group]invite pwd=', groupInfo.groupPassword);
     const items: {
         uid: number;
         encPri: string

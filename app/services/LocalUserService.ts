@@ -1,5 +1,5 @@
 import { GetDB } from "app/utils/database";
-import { and, inArray, eq, lte, gte, desc, asc } from "drizzle-orm";
+import { and, inArray, eq, gte } from "drizzle-orm";
 import { users } from "drizzle/schema";
 import type { IUser } from "drizzle/schema";
 import dayjs from 'dayjs'
@@ -11,16 +11,13 @@ export class LocalUserService {
             ...data,
             refreshAt: dayjs().unix()
         }
-        console.log("add user", data);
         const old = await GetDB().query.users.findFirst({
             where: eq(users.id, data.id)
         })
-        console.log("old user", old);
         if (old) {
             const items = await GetDB().update(users).set(data).where(eq(users.id, data.id)).returning();
             return items[0];
         }
-        console.log("新增 user", old);
         const items = await GetDB().insert(users).values([data]).returning();
         return items[0];
     }
@@ -28,21 +25,17 @@ export class LocalUserService {
     static async deleteByIdIn(ids: number[]) {
         const db = GetDB()
         if (!db) {
-            console.log('err');
             return
         }
-        const deleteResult = await db.delete(users).where(inArray(users.id, ids)).returning({ deletedId: users.id })
-        console.log('delete result', deleteResult);
+        return await db.delete(users).where(inArray(users.id, ids)).returning({ deletedId: users.id })
+
     }
 
     static async createMany(data: IUser[]) {
         const db = GetDB()
         if (!db) {
-            console.log('err');
             return
         }
-
-        console.log('[sqlite] user saveBatch');
         const now = dayjs().unix()
         await db.transaction(async (tx) => {
             try {
@@ -57,8 +50,6 @@ export class LocalUserService {
         }, {
             behavior: "immediate",
         });
-
-        console.log('[sqlite] users save batch ', data.length);
     }
 
     /**
@@ -79,7 +70,6 @@ export class LocalUserService {
         const cacheSeconds = 5 * 60
         try {
             const currentSecond = dayjs().unix()
-            console.log('cacheSeconds', cacheSeconds);
 
             return (db).select().from(users).where(
                 and(

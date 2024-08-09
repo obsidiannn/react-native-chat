@@ -34,7 +34,6 @@ export const WelcomeScreen = ({ navigation }: Props) => {
     const locales = getLocales();
     if (locales.length > 0) {
       const locale = locales[0];
-      console.log(locale);
     }
   }, [])
   return (

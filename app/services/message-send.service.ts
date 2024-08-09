@@ -4,14 +4,13 @@ import quickAes from "app/utils/quick-crypto";
 import { manipulateAsync, SaveFormat } from 'expo-image-manipulator';
 import { uploadFile } from "./file.service";
 import { IModel } from "@repo/enums";
-import { MessageDetailItem, MessageExtra } from "@repo/types";
+import { MessageDetailItem } from "@repo/types";
 import userService from "./user.service";
 import { MessageType } from "app/components/chat-ui";
 import chatUiAdapter from "app/utils/chat-ui.adapter";
 import { imageFormat } from "app/utils/media-util";
 import { LocalMessageService } from "./LocalMessageService";
 import { LocalUserService } from "./LocalUserService";
-import user from "app/api/auth/user";
 import { IUser } from "drizzle/schema";
 
 const _limit = 20
@@ -305,13 +304,13 @@ const getMessageDetails = async (
     data.items.forEach(item => {
         const detail = messageHash.get(item.msgId)
         if (detail !== undefined) {
-            remoteData.push(chatUiAdapter.messageTypeConvert(detail, key, {}, needDecode))
+            remoteData.push(chatUiAdapter.messageTypeConvert(detail, key, {}, true))
         }
     })
 
     if (remoteData.length > 0) {
 
-        console.log('remote data', remoteData);
+        console.log('@@@@@@@remote data', remoteData);
         console.log('list data', list);
         if (list.length <= 0) {
             void LocalMessageService.saveBatchEntity(chatUiAdapter.messageEntityConverts(remoteData))

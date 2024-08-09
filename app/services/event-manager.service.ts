@@ -9,7 +9,6 @@ class EventEmitter {
 	}
 
 	addEventListener(event: string, listener: Function) {
-        console.log('[event] add listener',event);
         
 		if (typeof this.events[event] !== 'object') {
 			this.events[event] = [];
@@ -19,8 +18,6 @@ class EventEmitter {
 	}
 
 	addEventSingleListener(event: string, listener: Function) {
-        console.log('[event] add single listener',event);
-        
 		if (typeof this.events[event] !== 'object') {
 			this.events[event] = [];
 		}
@@ -30,7 +27,6 @@ class EventEmitter {
 
 
 	removeListener(event: string, listener: Function) {
-        console.log('[event] remove listener',event);
 		if (typeof this.events[event] === 'object') {
 			const idx = this.events[event].indexOf(listener);
 			if (idx > -1) {
@@ -55,7 +51,7 @@ class EventEmitter {
 		if(type === IModel.IClient.SocketTypeEnum.FRIEND_CHANGE){
 			return 'FRIEND_CHANGE'
 		}
-        return key
+        return key ?? ""
     }
 
 	generateChatTopic(chatId: string): string{
@@ -67,9 +63,6 @@ class EventEmitter {
 	 * 
 	 */
 	emit(event: string, ...args: IEvent[]) {
-        console.log('[event] emit',event);
-        console.log(typeof this.events[event]);
-        
 		if (typeof this.events[event] === 'object') {
 			this.events[event].forEach((listener: Function) => {
 				try {

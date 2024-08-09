@@ -109,14 +109,9 @@ export const requestDocumentPermission = async () => {
  */
 export const requestNotificationPermission = async () => {
     const result = await checkNotifications()
-    console.log('請求通知', result);
-    // const autoStart:boolean = await AutoStartModule.checkAutoStartPermission();
-    // console.log('自启动开关',autoStart);
-    let autoStart: boolean = false
     try {
         AutoStartModule.checkAutoStartPermission((isEnabled: boolean) => {
             autoStart = isEnabled
-            console.log('自启动开关', isEnabled);
         });
     } catch { }
 
@@ -127,9 +122,7 @@ export const requestNotificationPermission = async () => {
 
     const options: NotificationOption[] = ['alert', 'sound', 'badge', 'provisional', 'providesAppSettings']
     return requestNotifications(options).then((result: NotificationsResponse) => {
-        console.log('notify result = ', result.status);
         if (result.status === RESULTS.GRANTED) {
-            console.log('開啓權限成功')
         } else {
             if (result.status === RESULTS.BLOCKED || result.status === RESULTS.DENIED) {
                 if (!(globalStorage.contains(IGNORE_NOTIFY_APPLY_KEY) && globalStorage.getBoolean(IGNORE_NOTIFY_APPLY_KEY))) {
@@ -148,9 +141,7 @@ export const requestNotificationPermission = async () => {
 // 跳轉到權限設置
 const openNotifySetting = () => {
     const notifyModule = NativeModules.OpenSettingsModule
-    notifyModule.openNotificationSettings((res) => {
-        console.log(res);
-    })
+    notifyModule.openNotificationSettings()
 }
 
 const IGNORE_NOTIFY_APPLY_KEY = "IGNORE_NOTIFY_PERMISSION_APPLY"
@@ -179,7 +170,6 @@ export const requestPermission = async (permission: Permission) => {
                         });
                         break;
                     case RESULTS.GRANTED:
-                        console.log('The permission is granted');
                         resolve(true);
                         break;
                     case RESULTS.BLOCKED:

@@ -10,7 +10,6 @@ import { SystemService } from 'app/services/system.service';
 import {SYSTEM_PUBLIC_KEY} from "@env"
 const encodeInterceptor = async (wallet: Wallet, config: InternalAxiosRequestConfig): Promise<InternalAxiosRequestConfig<any>> => {
   const content = typeof config.data === 'string' ? config.data : JSON.stringify(config.data ?? {})
-  console.log('[request]', content);
 
   const time = Date.now();
   const sharedSecret = wallet.computeSharedSecret(SYSTEM_PUBLIC_KEY)
@@ -22,7 +21,6 @@ const encodeInterceptor = async (wallet: Wallet, config: InternalAxiosRequestCon
   config.headers.set('X-Req-Time', time);
   config.headers.set('X-Req-OS', Platform.OS);
   config.headers.set('X-Req-Pub-Key', wallet.getPublicKey());
-  console.log('[sharedSecret]', sharedSecret);
 
   const data = quickCrypto.En(sharedSecret, Buffer.from(content, "utf8"))
   config.data = Buffer.from(data).toString("hex");
@@ -45,7 +43,6 @@ const decodeInterceptor = async (wallet: Wallet, rep: AxiosResponse<any, any>): 
     toast(rel.msg);
     throw new Error(rel.err_msg);
   }
-  console.log('[response]',rel.data);
   
   return rel.data;
 }
@@ -61,7 +58,6 @@ export const createInstance = (en = true) => {
     timeout: 3000,
   });
   instance.interceptors.request.use(async (config) => {
-    console.log('[baseURL]', baseURL + config.url);
 
     const wallet = AuthService.GetWallet();
     if (!wallet) {
@@ -76,7 +72,6 @@ export const createInstance = (en = true) => {
     if (!wallet) {
       throw new Error('請先登錄');
     }
-    console.log(rep.config.url + ' 耗时', new Date().valueOf() - startTime, 'ms');
 
     return await decodeInterceptor(wallet, rep);
   }, (err) => {

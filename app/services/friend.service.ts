@@ -3,7 +3,6 @@ import userService from "./user.service";
 import { select } from "radash";
 import { IUser } from "drizzle/schema";
 import { LocalUserService } from "./LocalUserService";
-import chatService from "./chat.service";
 import { LocalChatService } from "./LocalChatService";
 import { LocalMessageService } from "./LocalMessageService";
 
@@ -64,7 +63,6 @@ const getOfflineList = async () => {
 }
 const getOnlineList = async () => {
     const friendIds = await getIds();
-    console.log('friendIds', friendIds);
 
     if (!friendIds || friendIds.length === 0) {
         return [];

@@ -82,7 +82,6 @@ export const uploadFile = async (uri: string): Promise<{
                     ContentType: mimeType ?? ''
                 }
             });
-            console.log("response", response)
             if (!response) {
                 reject(new Error('上傳失敗'));
             }
@@ -115,7 +114,6 @@ export const uploadImage = async (localImage: string) => {
         }
 
         const result = await uploadFile(localImage);
-        console.log("result:", result);
         return result.key;
     }
     return null
@@ -125,7 +123,7 @@ let baseUrl: string | undefined;
 
 const getFullUrl = (key: string) => {
     if (key.startsWith('http') || key.startsWith('data:') || key.startsWith('file://')) {
-        console.log('original', key);
+
         return key
     }
     if (!baseUrl) {
@@ -160,14 +158,12 @@ const downloadFile = async (url: string, path: string = ''): Promise<string> => 
     }
     // 判斷文件是否存在
     if (await isExist(path)) {
-        console.log('文件已存在', path);
         return path;
     }
     const result = await FileSystem.downloadAsync(url, path, {
         md5: true,
     });
 
-    console.log('download result', result)
     if (result.status !== 200) {
         // 刪除文件
         await FileSystem.deleteAsync(path)
@@ -210,7 +206,6 @@ const saveToAlbum = async (uri: string, extType = ''): Promise<boolean> => {
         }
 
         const ext = extType === '' ? mime.getExtension(mime.getType(uri) ?? '') : extType;
-        console.log('ext=', ext);
         if (ext == 'webp') {
             // const output = uri.replace(`.${ext}`, '.jpg');
             const output = await imageFormat(uri);
@@ -229,7 +224,6 @@ const saveToAlbum = async (uri: string, extType = ''): Promise<boolean> => {
         await MediaLibrary.createAlbumAsync('BoboChat', asset, false)
         return true;
     } catch (error: any) {
-        console.log('saveToAlbum error', error);
     }
     return false
 }
@@ -248,7 +242,6 @@ const saveFile = async (data: string, name: string): Promise<string | null> => {
         // 判斷文件是否存在
         const exists = await RNFS.exists(path);
         if (exists) {
-            console.log('文件已存在');
             // 在原來的文件名的基礎上加上時間戳
             const time = new Date().getTime();
             const ext = path.split('.').pop();

@@ -4,7 +4,7 @@ import { MMKV } from 'react-native-mmkv'
 export type IKVValueType = boolean | number | string | undefined | Uint8Array;
 export default class KV {
     private store: MMKV;
-    
+
     constructor(id: string, key: string | undefined) {
         this.store = new MMKV({ id, encryptionKey: key })
     }
@@ -12,9 +12,9 @@ export default class KV {
         this.store.set(key, val)
         return true
     }
-    getObj<T>(key: string){
+    getObj<T>(key: string) {
         const cacheVal = this.store.getString(key)
-        if(cacheVal){
+        if (cacheVal) {
             return JSON.parse(cacheVal as string) as T;
         }
         return null;
@@ -46,5 +46,15 @@ export default class KV {
     }
     keys() {
         return this.store.getAllKeys() ?? []
+    }
+    dels(keys: string[]) {
+        try {
+            for (const key of keys) {
+                this.store.delete(key)
+            }
+            return true;
+        } catch (error) {
+            throw error;
+        }
     }
 }
