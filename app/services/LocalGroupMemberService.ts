@@ -1,7 +1,7 @@
 import { GetDB } from "app/utils/database"
 import { delaySecond } from "app/utils/delay"
 import dayjs from "dayjs"
-import { and, asc, desc, eq, gt, gte, inArray, sql } from "drizzle-orm"
+import { and, asc, desc, eq, gte } from "drizzle-orm"
 import { IGroupMember, groupMembers } from "drizzle/schema"
 
 export class LocalGroupMemberService {

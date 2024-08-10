@@ -1,3 +1,4 @@
+import { IMessage } from 'drizzle/schema';
 import { createInstance } from '../req';
 import {
   BaseIdsArrayReq, BaseArrayResp,
@@ -18,7 +19,15 @@ const sendMessage = async (param: MessageSendReq): Promise<MessageSendResp> => a
 const getMessageList = async (param: MessageListReq): Promise<BaseArrayResp<MessageListItem>> => await createInstance(true).post('/chats/messages/list', param);
 
 // 消息列表
-const getMessageDetail = async (param: MessageDetailReq): Promise<BaseArrayResp<MessageDetailItem>> => await createInstance(true).post('/chats/messages/detail', param);
+const findByIds = async (param: {
+  chatId: string;
+  ids: string[];
+}): Promise<IMessage[]> => {
+  const rep: {
+    lists: IMessage[]
+  } = await createInstance(true).post('/chats/messages/detail', param);
+  return rep.lists;
+};
 
 // 撤回消息
 const pullBack = async (param: BaseIdsArrayReq) => await createInstance(true).post('/chats/messages/delete-batch', param);
@@ -51,7 +60,7 @@ const clearMineMessageAll = async () => await createInstance(true).post('/chats/
 export default {
   sendMessage,
   getMessageList,
-  getMessageDetail,
+  findByIds,
   pullBack,
   deleteSelfMsg,
   deleteChatByIds,

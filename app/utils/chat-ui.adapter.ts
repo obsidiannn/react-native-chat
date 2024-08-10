@@ -164,7 +164,7 @@ const messageEntityConverts = (messages: MessageType.Any[]): IMessage[] => {
 /**
  * 本地entity 转 messageType 
  */
-const messageEntityToItems = (entities: IMessage[], key: string, needDecode: boolean): MessageType.Any[] => {
+const messageEntityToItems = (entities: IMessage[], key: string = '', needDecode: boolean = false): MessageType.Any[] => {
     if (entities === undefined || entities === null || entities.length <= 0) {
         return []
     }

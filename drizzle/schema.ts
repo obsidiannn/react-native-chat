@@ -1,11 +1,12 @@
+import update from 'app/api/auth/update';
 import { sql } from 'drizzle-orm';
 import { sqliteTable, text, integer, index } from 'drizzle-orm/sqlite-core';
 
 export const users = sqliteTable('users', {
     id: integer('id').primaryKey(),
-    addr: text('addr'),
+    addr: text('addr').notNull(),
     avatar: text('avatar'),
-    pubKey: text('pubKey'),
+    pubKey: text('pubKey').notNull(),
     gender: integer('gender'),
     nickName: text('nickName'),
     nickNameIdx: text('nickNameIdx'),
@@ -30,18 +31,18 @@ export type IUser = typeof users.$inferSelect
 
 export const messages = sqliteTable("messages", {
     id: text("id").primaryKey(),
-    chatId: text("chat_id"),
-    type: integer("type"),
-    sequence: integer("sequence"),
-    uid: integer('uid'),
-    uidType: integer('uid_type'),
-    time: integer('time'),
-    state: integer('state'),
-    data: text('data', { length: 2048 }),
+    chatId: text("chat_id").notNull(),
+    type: integer("type").notNull(),
+    sequence: integer("sequence").notNull().default(-1),
+    uid: integer('uid').notNull(),
+    uidType: integer('uid_type').notNull(),
+    time: integer('time').notNull(),
+    state: integer('state').notNull(),
+    data: text('data').notNull(),
     extra: text('extra')
 }, (entity) => ({
-    chatIdx: index('msgChatIdx').on(entity.chatId),
-    sequenceIdx: index('sequenceIdx').on(entity.sequence),
+    chatIdx: index('messages_chat_id_index').on(entity.chatId),
+    sequenceIdx: index('messages_sequence_index').on(entity.sequence),
 }))
 
 export type IMessage = typeof messages.$inferSelect
@@ -58,6 +59,7 @@ export const chats = sqliteTable("chats", {
     firstSequence: integer('first_sequence'),
     lastTime: integer('last_time'),
     createdAt: integer('create_at'),
+    updatedAt: integer('update_at'),
     avatar: text('chat_avatar'),
     sourceId: text('source_id'),
     chatAlias: text('chat_alias'),

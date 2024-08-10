@@ -1,27 +1,18 @@
 import { IChat } from "drizzle/schema";
 import dayjs from 'dayjs'
 import { GetDB } from "app/utils/database";
-import { and, desc, eq, gte, inArray, lt, sql } from "drizzle-orm";
+import { and, desc, eq, gte, inArray, lt } from "drizzle-orm";
 import { chats } from "drizzle/schema";
 import { delaySecond } from "app/utils/delay";
-import { IModel } from "@repo/enums";
 
 
 export class LocalChatService {
-
-    static queryPage() {
-
-    }
-
     /**
      * 获取最新加入的chatId
      * @param chatIds 
      */
     static async findLatestId(): Promise<number | null> {
         const db = GetDB()
-        if (!db) {
-            return null
-        }
         const result = await db.query.chats.findFirst({
             columns: {
                 createdAt: true
@@ -36,12 +27,16 @@ export class LocalChatService {
         return null
     }
     static async findById(id: string){
-        const db = GetDB()
-        if (!db) {
-            return null
+        const items = await LocalChatService.findByIds([id]);
+        if (items.length > 0) {
+            return items[0]
         }
-        return await db.query.chats.findFirst({
-            where: eq(chats.id, id),
+        return null
+    }
+    static async findByIds(ids: string[]):Promise<IChat[]>{
+        const db = GetDB()
+        return await db.query.chats.findMany({
+            where: (chats, { inArray }) => inArray(chats.id, ids),
         })
     }
     /**
@@ -102,23 +97,40 @@ export class LocalChatService {
         console.log('updateSequence result', result)
         return result
     }
-    static async save(chat: IChat): Promise<IChat> {
-
-        const entity = {
-            ...chat,
-            refreshAt: dayjs().unix()
-        }
-        const old = await GetDB().query.chats.findFirst({
-            where: eq(chats.id, entity.id)
-        })
-        if (old) {
-            const items = await GetDB().update(chats).set(entity).where(eq(chats.id, entity.id)).returning();
-            return items[0];
-        }
-        const items = await GetDB().insert(chats).values([entity]).returning();
+    static async save(item: IChat) {
+        const items = await LocalChatService.addBatch([item]);
         return items[0];
     }
-
+    static async addBatch(items: IChat[]) {
+        const db = GetDB();
+        const ids = items.map(item => item.id);
+        const olds = await db.query.chats.findMany({
+            where: (chats, { inArray }) => inArray(chats.id, ids)
+        })
+        const inserts = items.filter(item => !olds.find(old => old.id === item.id))
+        if (inserts.length > 0) {
+            await db.insert(chats).values(inserts.map(item => {
+                return {
+                    ...item,
+                    refreshAt: dayjs().unix()
+                }
+            }))
+        }
+        for (const old of olds) {
+            const item = items.find(item => item.id === old.id)
+            let data: any = {
+                refreshAt: dayjs().unix()
+            }
+            if (item && (old.updatedAt !== item.updatedAt)) {
+                data = {
+                    ...data,
+                    updatedAt: item.updatedAt
+                }
+            }
+            await db.update(chats).set(data).where(eq(chats.id, old.id))
+        }
+        return items;
+    }
     static async saveBatch(entities: IChat[]) {
         const db = GetDB()
         if (!db) {
@@ -160,19 +172,9 @@ export class LocalChatService {
         )
     }
 
-
-    /**
-        * 檢索
-        * @param param 
-        * @returns 
-        */
-    static async queryEntity(): Promise<IChat[]> {
+    static async queryEntity() {
         const db = GetDB()
-        const data = await db.select().from(chats)
-            .orderBy(
-                sql`case when ${chats.type} = ${IModel.IChat.IChatTypeEnum.OFFICIAL} then 1 else 0 end desc `
-                , desc(chats.isTop))
-        return data
+        return await db.query.chats.findMany();
     }
 
 }

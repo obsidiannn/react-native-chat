@@ -55,7 +55,6 @@ export const captureImage = async () => {
 
 export const captureVideo = async (): Promise<ImagePicker.ImagePickerAsset | null> => {
     await requestCameraPermission();
-    console.log('1');
     // await requestMicrophonePermission();
 
     await ImagePicker.requestCameraPermissionsAsync();
@@ -77,14 +76,6 @@ export const imageFormat = async (input: string) => {
 }
 
 export const videoFormat = async (asset: ImagePicker.ImagePickerAsset): Promise<ImagePicker.ImagePickerAsset | null> => {
-    // const input = asset.uri
-    // const output = input.replace(/(.*)(\..*$)/, '$1_output.mp4');
-    //    const cmd = `-i ${input} -c:v mpeg4 ${output}`;
-    // const cmd = `-i ${input} -c:v libx264 ${output}`;
-    // //    const session = await FFmpegKit.execute(cmd);
-    // const session = await FFmpegKit.execute(cmd)
-    // const returnCode = await session.getReturnCode()
-
     const result = await Video.compress(
         asset.uri,
         {},

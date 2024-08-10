@@ -8,14 +8,141 @@ import { MessageDetailItem } from "@repo/types";
 import userService from "./user.service";
 import { MessageType } from "app/components/chat-ui";
 import chatUiAdapter from "app/utils/chat-ui.adapter";
-import { imageFormat } from "app/utils/media-util";
+import { captureImage, captureVideo, generateVideoThumbnail, imageFormat, videoFormat } from "app/utils/media-util";
 import { LocalMessageService } from "./LocalMessageService";
 import { LocalUserService } from "./LocalUserService";
 import { IUser } from "drizzle/schema";
-
+import { launchImageLibraryAsync, MediaTypeOptions } from "expo-image-picker";
+import generateUtil from "app/utils/generateUtil";
+import * as DocumentPicker from 'expo-document-picker';
 const _limit = 20
 
+export class MessageSendService {
+    static async captureCamera(author: IUser):Promise<MessageType.Image> {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const photo = await captureImage();
+                if (photo !== undefined) {
+                    const message: MessageType.Image = {
+                        author: chatUiAdapter.userTransfer(author),
+                        createdAt: Date.now(),
+                        height: photo.height,
+                        id: generateUtil.generateId(),
+                        name: photo.fileName ?? '',
+                        size: photo.fileSize ?? 0,
+                        type: 'image',
+                        uri: photo.uri,
+                        width: photo.width,
+                        senderId: author?.id ?? 0,
+                        sequence: -1
+                    }
+                    resolve(message);
+                }
+            } catch (err) {
+                reject(err);
+            }
+        })
+    }
+    // 视频录制
+    static async captureVideo(author: IUser): Promise<MessageType.Video> {
+        return new Promise(async (resolve, reject) => {
+            const video = await captureVideo();
+            if (!video) {
+                reject(new Error('视频录制失败'))
+                return;
+            }
+            const formatVideo = await videoFormat(video)
+            if (!formatVideo) {
+                reject(new Error('视频格式化失败'))
+                return;
+            }
+            const id = generateUtil.generateId()
+            const thumbnailPath = await generateVideoThumbnail(formatVideo.uri, id)
+            const message: MessageType.Video = {
+                id,
+                author: chatUiAdapter.userTransfer(author),
+                createdAt: Date.now(),
+                type: 'video',
+                senderId: author?.id ?? 0,
+                sequence: -1,
+                height: formatVideo.height,
+                width: formatVideo.width,
+                name: formatVideo.fileName ?? '',
+                size: formatVideo.fileSize ?? 0,
+                duration: formatVideo.duration ?? 0,
+                uri: formatVideo.uri,
+                thumbnail: thumbnailPath ?? '',
+                status: 'sending'
+            }
+            resolve(message)
+        })
+    }
+    static async imageSelection(author: IUser): Promise<MessageType.Image> {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const result = await launchImageLibraryAsync(
+                    {
+                        mediaTypes: MediaTypeOptions.Images,
+                        quality: 0.7,
+                        base64: true,
+                    }
+                )
+                const assets = result.assets
+                const response = assets?.[0]
+                if (response?.base64) {
+                    const message: MessageType.Image = {
+                        author: chatUiAdapter.userTransfer(author),
+                        createdAt: Date.now(),
+                        height: response.height,
+                        id: generateUtil.generateId(),
+                        name: response.fileName ?? response.uri?.split('/').pop() ?? '🖼',
+                        size: response.fileSize ?? 0,
+                        type: 'image',
+                        uri: response.uri,
+                        width: response.width,
+                        senderId: author?.id ?? 0,
+                        sequence: -1
+                    }
+                    resolve(message);
+                    return;
+                }
+            } catch (error) {
+                reject(error)
+            }
 
+        });
+    }
+    static async fileSelection(author: IUser): Promise<MessageType.File> {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const result = await DocumentPicker.getDocumentAsync({
+                    type: '*/*',
+                    copyToCacheDirectory: true,
+                });
+                if (result.assets !== null && result.assets.length > 0) {
+                    const response = result.assets[0]
+                    const message: MessageType.File = {
+                        author: chatUiAdapter.userTransfer(author),
+                        createdAt: Date.now(),
+                        id: generateUtil.generateId(),
+                        mimeType: response.mimeType ?? undefined,
+                        name: response.name,
+                        size: response.size ?? 0,
+                        type: 'file',
+                        uri: response.uri,
+                        senderId: author?.id ?? 0,
+                        sequence: -1,
+                        status: 'sending'
+                    }
+                    resolve(message)
+                }
+            } catch (error) {
+                reject(error)
+            }
+
+        });
+    }
+}
 const _send = async (chatId: string, key: string, mid: string, type: IModel.IChat.IMessageTypeEnum, data: {
     t: string;
     d: any;

@@ -1,137 +1,86 @@
 import { GetDB } from "app/utils/database";
-import { and, inArray, eq, gte } from "drizzle-orm";
+import dayjs from "dayjs";
+import { inArray, eq } from "drizzle-orm";
 import { users } from "drizzle/schema";
 import type { IUser } from "drizzle/schema";
-import dayjs from 'dayjs'
 
 export class LocalUserService {
-
-    static async add(data: IUser): Promise<IUser> {
-        data = {
-            ...data,
-            refreshAt: dayjs().unix()
-        }
-        const old = await GetDB().query.users.findFirst({
-            where: eq(users.id, data.id)
+    static async add(data: IUser) {
+        LocalUserService.addBatch([data])
+        return data;
+    }
+    static async addBatch(items: IUser[]) {
+        const db = GetDB();
+        const ids = items.map(item => item.id);
+        const olds = await db.query.users.findMany({
+            where: (users, { inArray }) => inArray(users.id, ids)
         })
-        if (old) {
-            const items = await GetDB().update(users).set(data).where(eq(users.id, data.id)).returning();
-            return items[0];
-        }
-        const items = await GetDB().insert(users).values([data]).returning();
-        return items[0];
-    }
-
-    static async deleteByIdIn(ids: number[]) {
-        const db = GetDB()
-        if (!db) {
-            return
-        }
-        return await db.delete(users).where(inArray(users.id, ids)).returning({ deletedId: users.id })
-
-    }
-
-    static async createMany(data: IUser[]) {
-        const db = GetDB()
-        if (!db) {
-            return
-        }
-        const now = dayjs().unix()
-        await db.transaction(async (tx) => {
-            try {
-                for (let index = 0; index < data.length; index++) {
-                    const e = data[index];
-                    await tx.insert(users).values(e).onConflictDoUpdate({ target: users.id, set: { ...e, refreshAt: now } })
+        const inserts = items.filter(item => !olds.find(old => old.id === item.id))
+        if (inserts.length > 0) {
+            await db.insert(users).values(inserts.map(item => {
+                return {
+                    ...item,
+                    refreshAt: dayjs().unix()
                 }
-            } catch (e) {
-                console.error(e)
-                tx.rollback()
+            }))
+        }
+        for (const old of olds) {
+            const item = items.find(item => item.id === old.id)
+            let data: any = {
+                refreshAt: dayjs().unix()
             }
-        }, {
-            behavior: "immediate",
-        });
+            if (item && (old.updatedAt !== item.updatedAt)) {
+                data = {
+                    ...data,
+                    nickName: item.nickName,
+                    avatar: item.avatar,
+                    gender: item.gender,
+                    sign: item.sign,
+                    updatedAt: item.updatedAt
+                }
+            }
+            await db.update(users).set(data).where(eq(users.id, old.id))
+        }
+        return items;
     }
-
-    /**
-     * 获取 sqlite 的user 
-     * 超时（1h）
-     * @param ids 
-     * @returns 
-     */
-    static async findByIds(ids: number[],withTimeout: boolean = true): Promise<IUser[]> {
+    static async findById(id: number){
+        const users= await LocalUserService.findByIds([id]);
+        return users.length>0?users[0]:null;
+    }
+    static async findByIds(ids: number[]):Promise<IUser[]> {
         if (ids.length <= 0) {
             return []
         }
         const db = GetDB()
-        if (!db) {
-            return []
-        }
-        // await UserModel.deleteAll()
-        const cacheSeconds = 5 * 60
-        try {
-            const currentSecond = dayjs().unix()
-
-            return (db).select().from(users).where(
-                and(
-                    inArray(users.id, ids),
-                    (withTimeout? gte(users.refreshAt, currentSecond - cacheSeconds): undefined)
-                ))
-                ?? [];
-        } catch (e) {
-            console.error(e);
-        }
-        return []
-    }
-
-    static async findByUserName(username: string): Promise<IUser | undefined> {
-        const cacheSeconds = 5 * 60
-        const currentSecond = dayjs().unix()
-        return await GetDB().query.users.findFirst({
-            where: and(
-                eq(users.userName, username),
-                gte(users.refreshAt, currentSecond - cacheSeconds)
-            )
+        return await db.query.users.findMany({
+            where: (users, { inArray }) => inArray(users.id, ids),
         })
     }
 
-    static async findByAddr(addr: string): Promise<IUser | undefined> {
-        return await GetDB().query.users.findFirst({
-            where: eq(users.addr, addr)
+    static async findByUserName(username: string) {
+        const db = GetDB()
+        return await db.query.users.findFirst({
+            where: (users, { eq }) => eq(users.userName, username),
         })
     }
 
-    static async setFriends(ids: number[]) {
+    static async findByAddr(addr: string) {
+        const db = GetDB()
+        return await db.query.users.findFirst({
+            where: (users, { eq }) => eq(users.addr, addr),
+        })
+    }
+
+    static async setFriends(ids: number[],isFriend: number) {
         if (ids.length <= 0) {
             return;
         }
         const db = GetDB()
-        if (!db) {
-            return
-        }
-        return await db.update(users).set({
-            isFriend: 1
-        }).where(inArray(users.id, ids));
+        return await db.update(users).set({isFriend}).where(inArray(users.id, ids));
     }
-    static async getFriends(): Promise<IUser[]> {
+    static async getFriends() {
         const db = GetDB()
-        if (!db) {
-            return []
-        }
         return await db.select().from(users).where(eq(users.isFriend, 1));
-    }
-
-
-    static async block(userIds: number[]) {
-        if (userIds.length <= 0) {
-            return;
-        }
-        const db = GetDB()
-        if (!db) {
-            return
-        }
-        return await db.update(users).set({
-            isFriend: 0,
-        }).where(inArray(users.id, userIds));
     }
 
 }
