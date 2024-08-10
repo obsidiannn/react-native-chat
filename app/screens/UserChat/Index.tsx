@@ -58,20 +58,20 @@ export const UserChatScreen = ({ navigation, route }: Props) => {
     }, [])
 
     const reloadChat = (item: ChatDetailItem) => {
-        // chatService.changeChat(item).then(() => {
-        //     setChatItem(item)
-        //     setChatsStore((items) => {
-        //         const newItems = items.map(t => {
-        //             if (item.id === t.id) {
-        //                 return { ...item }
-        //             }
-        //             return t
-        //         })
-        //         return newItems
-        //     })
-        // }).catch(e => {
-        //     console.error(e)
-        // })
+        chatService.changeChat(item).then(() => {
+            setChatItem(item)
+            setChatsStore((items) => {
+                const newItems = items.map(t => {
+                    if (item.id === t.id) {
+                        return { ...item }
+                    }
+                    return t
+                })
+                return newItems
+            })
+        }).catch(e => {
+            console.error(e)
+        })
     }
 
     const reloadUser = (item: IUser) => {

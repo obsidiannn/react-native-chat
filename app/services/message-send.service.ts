@@ -266,16 +266,9 @@ const getMessageDetails = async (
     const checkResult = checkDiffFromWb(list, sequence, direction, limit, firstSeq)
     console.log('檢查', checkResult);
 
-    if (checkResult.limit < 0) {
+    if (direction == "up") {
         // 無需請求遠端
         return list
-    } else if (checkResult.limit < _limit) {
-        // // 存在部分情況
-        // if (direction === 'up' ) {
-        //     if(sequence - _limit < 1)
-        //     // 這種也無需請求遠端
-        //     return list
-        // }
     }
 
     let data = null

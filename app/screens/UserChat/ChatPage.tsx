@@ -25,6 +25,7 @@ import { ThemeState } from "app/stores/system"
 import chatService from "app/services/chat.service"
 import { LocalChatService } from "app/services/LocalChatService"
 import { LocalMessageService } from "app/services/LocalMessageService"
+import { Platform } from "react-native"
 
 export interface ChatUIPageRef {
     init: (chatItem: ChatDetailItem, friend: IUser) => void
@@ -138,7 +139,7 @@ const ChatPage = forwardRef((_, ref) => {
         await loadMessages('up', true);
         try {
             console.log('刷新chat');
-            const oldSeq = _chatItem.lastSequence
+            const oldSeq = localChat?.lastSequence ?? 0
             const newChatItem = await chatService.refreshSequence([_chatItem])
             _chatItem = newChatItem[0]
             // 有未讀
@@ -158,7 +159,7 @@ const ChatPage = forwardRef((_, ref) => {
         if (type === IModel.IClient.SocketTypeEnum.MESSAGE) {
             const _eventItem = e as SocketMessageEvent
             if (lastSeq.current < _eventItem.sequence && author?.id !== _eventItem.senderId) {
-                console.log("socket 监听到新的消息了")
+                console.log("socket 监听到新的消息了",Platform.OS)
                 loadMessages('down')
             }
         }
