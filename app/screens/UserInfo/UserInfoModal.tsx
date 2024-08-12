@@ -129,7 +129,3 @@ export default forwardRef((props: {
         </BaseModal>
     );
 })
-
-// const styles = StyleSheet.create({
-
-// });

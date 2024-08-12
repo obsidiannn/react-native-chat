@@ -1,4 +1,4 @@
-import { ColorsState, ThemeState } from "app/stores/system"
+import { ColorsState } from "app/stores/system"
 
 import { Platform, View } from "react-native"
 import { useRecoilValue } from "recoil"

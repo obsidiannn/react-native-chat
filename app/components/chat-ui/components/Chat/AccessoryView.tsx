@@ -1,7 +1,6 @@
 import { ColorValue, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
 import { ChatUiToolsKitProps } from "../../types";
-import { Image } from "expo-image";
 import { s, verticalScale } from "app/utils/size";
 import { colors } from "app/theme";
 import { IconFont } from "app/components/IconFont/IconFont";

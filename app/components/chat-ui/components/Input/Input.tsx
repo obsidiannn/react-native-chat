@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Pressable, TextInput, TextInputProps, TouchableOpacity, View } from 'react-native'
+import { TextInput, TextInputProps, View } from 'react-native'
 
 import { MessageType } from '../../types'
 import { ThemeContext, translate, unwrap, UserContext } from '../../utils'

@@ -3,7 +3,7 @@ import { ScreenModal, ScreenModalType } from "app/components/ScreenModal";
 import { ColorsState, ThemeState } from "app/stores/system";
 import { s } from "app/utils/size";
 import { forwardRef, useImperativeHandle, useRef, useState } from "react"
-import { ScrollView, Text, TextInput, TextStyle, TouchableOpacity, View, ViewStyle } from "react-native"
+import { ScrollView, Text, TextStyle, TouchableOpacity, View, ViewStyle } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useRecoilValue } from "recoil";
 export interface LangModalType {

@@ -1,6 +1,7 @@
 import { IModel } from "@repo/enums";
 import { IEvent } from "@repo/types";
-
+import {DeviceEventEmitter} from 'react-native'
+const s = DeviceEventEmitter.addListener('xx',() => {})
 class EventEmitter {
 	private events: { [key: string]: any };
 

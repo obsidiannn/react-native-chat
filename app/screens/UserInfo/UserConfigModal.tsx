@@ -1,4 +1,4 @@
-import { StyleSheet, View, TouchableOpacity, TextInput } from "react-native";
+import { View, TouchableOpacity, TextInput } from "react-native";
 import { useRef, useContext, forwardRef, useImperativeHandle, useState } from "react";
 import { ConfirmModal, ConfirmModalType } from "app/components/ConfirmModal";
 import { s } from "app/utils/size";
@@ -223,10 +223,3 @@ export default forwardRef((props: {
         <ConfirmModal ref={confirmModalRef} />
     </BaseModal>
 })
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: 'white',
-    },
-});

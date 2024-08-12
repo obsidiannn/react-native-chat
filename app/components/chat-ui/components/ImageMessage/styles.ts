@@ -16,7 +16,6 @@ const styles = ({
   user?: User
 }) =>
   StyleSheet.create({
-   
     minimizedImage: {
       borderRadius: 15,
       height: 64,

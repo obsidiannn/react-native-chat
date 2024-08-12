@@ -17,9 +17,9 @@ export class LocalMessageService {
         const exists = await db.query.messages.findMany({
             where: (messages, { inArray }) => inArray(messages.id, items.map(item => item.id)),
         })
-        items = items.filter(item => !exists.find(exist => exist.id === item.id))
-        if (items.length > 0) {
-            await db.insert(messages).values(items)
+        const inserts = items.filter(item => !exists.find(exist => exist.id === item.id))
+        if (inserts.length > 0) {
+            await db.insert(messages).values(inserts)
         }
         return true;
     }

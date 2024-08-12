@@ -23,16 +23,16 @@ import { LocalMessageService } from "app/services/LocalMessageService"
 import { Platform } from "react-native"
 import { CloudMessageService } from "app/services/MessageService"
 import { LocalUserService } from "app/services/LocalUserService"
-
+import NetInfo from "@react-native-community/netinfo";
 export interface ChatUIPageRef {
-    init: (chatItem: ChatDetailItem, friend: IUser) => void
+    init: (chatId: string, friendId: number) => void
     close: () => void
 }
 
 const ChatPage = forwardRef((_, ref) => {
-
     const firstSeq = useRef<number>(0)
     const lastSeq = useRef<number>(0)
+    const [messages, setMessages] = useState<MessageType.Any[]>([])
     const remoteLastSeq = useRef<number>(0);
     const chatRef = useRef<IChat | null>(null);
     const friendRef = useRef<IUser | null>(null)
@@ -49,6 +49,9 @@ const ChatPage = forwardRef((_, ref) => {
     }, [])
     // 获取最新数据 也是从seq开始获取最近的 20 条
     const loadRemoteMessages = useCallback(async (chatId: string, seq: number) => {
+        if(remoteMessageLoading.current){
+            return;
+        }
         remoteMessageLoading.current = true;
         try {
             const ids = await CloudMessageService.getLatestIds(chatId, seq);
@@ -84,8 +87,6 @@ const ChatPage = forwardRef((_, ref) => {
     }, [])
     const theme = useRecoilValue(ThemeState)
     const author = useRecoilValue(AuthUser)
-
-    const [messages, setMessages] = useState<MessageType.Any[]>([])
     const sharedSecretRef = useRef<string>('')
     const chatItemRef = useRef<ChatDetailItem | null>(null)
 
@@ -140,18 +141,19 @@ const ChatPage = forwardRef((_, ref) => {
         if (globalThis.wallet && friendRef.current) {
             sharedSecretRef.current = globalThis.wallet.computeSharedSecret(friendRef.current.pubKey);
         }
-        // 判断网络是否在线
-        if (true) {
-            await loadRemoteMessages(chatId, firstSeq.current);
-            await loadChat(chatId);
-            await loadRemoteFriend(friendId);
-            // 开始监听 socket 事件
-            const _eventKey = EventManager.generateKey(IModel.IClient.SocketTypeEnum.MESSAGE, chatId)
-            EventManager.addEventSingleListener(_eventKey, handleEvent)
-            const _msg = { type: IModel.IClient.SocketTypeEnum.SOCKET_JOIN, chatIds: [chatId] } as SocketJoinEvent
-            const eventKey = EventManager.generateKey(_msg.type, '')
-            EventManager.emit(eventKey, _msg)
-        }
+        // 开始监听 socket 事件
+        const _eventKey = EventManager.generateKey(IModel.IClient.SocketTypeEnum.MESSAGE, chatId)
+        EventManager.addEventSingleListener(_eventKey, handleEvent)
+        const _msg = { type: IModel.IClient.SocketTypeEnum.SOCKET_JOIN, chatIds: [chatId] } as SocketJoinEvent
+        const eventKey = EventManager.generateKey(_msg.type, '')
+        EventManager.emit(eventKey, _msg)
+        NetInfo.fetch().then(async (state) => {
+            if (state.isConnected) {
+                await loadRemoteMessages(chatId, lastSeq.current);
+                await loadRemoteChat(chatId);
+                await loadRemoteFriend(friendId);
+            }
+        })
     }, [])
 
     useImperativeHandle(ref, () => {
@@ -266,9 +268,7 @@ const ChatPage = forwardRef((_, ref) => {
         <Chat
             tools={tools}
             messages={messages}
-            onEndReached={async () => {
-                loadHistoryMessages(chatItemRef.current?.id ?? '', firstSeq.current)
-            }}
+            onEndReached={() => loadHistoryMessages(chatItemRef.current?.id ?? '', firstSeq.current)}
             showUserAvatars
             onMessageLongPress={(m, e) => {
                 longPressModalRef.current?.open({ message: m, e })
