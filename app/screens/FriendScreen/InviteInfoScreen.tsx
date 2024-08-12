@@ -4,25 +4,24 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useEffect, useState } from "react";
 import friendApplyService from "app/services/friend-apply.service";
 import { IUser } from "drizzle/schema";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilValue } from "recoil";
 import { useTranslation } from 'react-i18next';
 import { s, verticalScale } from "app/utils/size";
 import Navbar from "app/components/Navbar";
 import { Button } from "app/components";
-import { AuthUser, ChatsStore } from "app/stores/auth";
+import { AuthUser } from "app/stores/auth";
 import { ColorsState } from "app/stores/system";
-import { FriendChangeEvent, IServer } from "@repo/types";
+import { IServer } from "@repo/types";
 import { App } from "types/app";
 import { IModel } from "@repo/enums";
 import InfoCard from "../UserInfo/components/info-card";
 import chatService from "app/services/chat.service";
-import EventManager from 'app/services/event-manager.service'
+import eventUtil from "app/utils/event-util";
 
 type Props = StackScreenProps<App.StackParamList, 'InviteInfoScreen'>;
 export const InviteInfoScreen = ({ navigation, route }: Props) => {
     const insets = useSafeAreaInsets();
     const [loading, setLoading] = useState(false);
-    const setChatStore = useSetRecoilState(ChatsStore)
     const themeColor = useRecoilValue(ColorsState)
     const currentUser = useRecoilValue(AuthUser)
     const { t } = useTranslation('screens')
@@ -95,19 +94,15 @@ export const InviteInfoScreen = ({ navigation, route }: Props) => {
                                 if (res && res.chatId) {
                                     const chats = await chatService.mineChatList([res.chatId])
                                     if (chats.length > 0) {
-                                        setChatStore(items => {
-                                            const chat = items.find(i => i.id === res.chatId)
-                                            if (!chat) {
-                                                return items.concat(chats[0])
-                                            }
-                                            return items
+                                        // 发送会话新增event 
+                                        eventUtil.sendChatEvent(res.chatId, 'add', {
+                                            ...chats[0]
                                         })
-
-                                        const eventKey = EventManager.generateKey(IModel.IClient.SocketTypeEnum.FRIEND_CHANGE)
-                                        EventManager.emit(eventKey, {
-                                            friendId: res.friendId ?? 0,
-                                            remove: false
-                                        } as FriendChangeEvent)
+                                        // 发送好友新增event 
+                                        eventUtil.sendFriendChangeEvent(
+                                            res.friendId ?? 0,
+                                            false
+                                        )
                                     }
                                 }
                             } catch (e) {

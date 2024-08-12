@@ -1,20 +1,16 @@
-import { View, TouchableOpacity } from "react-native";
+import { View } from "react-native";
 import { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import InfoCard from "./components/info-card";
 import { IUser } from "drizzle/schema";
-import { useTranslation } from 'react-i18next';
 import { s } from "app/utils/size";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilValue } from "recoil";
 import { ColorsState } from "app/stores/system";
 import { Button } from "app/components";
 import BaseModal from "app/components/base-modal";
 import UserConfigModal, { UserConfigModalType } from "./UserConfigModal";
 import friendService from "app/services/friend.service";
-import { FriendChangeEvent } from "../../../../../packages/types/dist/client/message";
-import { IModel } from "@repo/enums";
-import EventManager from 'app/services/event-manager.service'
-import { ChatsStore } from "app/stores/auth";
 import chatService from "app/services/chat.service";
+import eventUtil from "app/utils/event-util";
 
 
 export interface UserBlockModalType {
@@ -26,8 +22,6 @@ export default forwardRef((_, ref) => {
     const themeColor = useRecoilValue(ColorsState)
     const [visible, setVisible] = useState<boolean>(false)
     const userConfigModalRef = useRef<UserConfigModalType>(null)
-
-    const setChatsStore = useSetRecoilState(ChatsStore)
 
     const onClose = () => {
         setUser(null)
@@ -64,24 +58,9 @@ export default forwardRef((_, ref) => {
                                     const chatId = await friendService.blockOut(user.friendId)
                                     if (chatId) {
                                         const chat = await chatService.mineChatList([chatId])
-                                        setChatsStore(items => {
-                                            const old = items.find(i => i.id === chatId)
-                                            if (old) {
-                                                return items
-                                            } else {
-                                                return items.concat(chat)
-                                            }
-                                        })
+                                        eventUtil.sendChatEvent(chatId, 'add', chat[0])
                                     }
-
-                                    const event: FriendChangeEvent = {
-                                        friendId: user.id ?? 0,
-                                        remove: false,
-                                        type: IModel.IClient.SocketTypeEnum.FRIEND_CHANGE
-                                    }
-                                    const eventKey = EventManager.generateKey(event.type)
-                                    EventManager.emit(eventKey, event)
-
+                                    eventUtil.sendFriendChangeEvent(user.id ?? 0, false)
                                     onClose()
                                 }
                             }}

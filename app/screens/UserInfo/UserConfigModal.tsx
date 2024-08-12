@@ -4,19 +4,17 @@ import { ConfirmModal, ConfirmModalType } from "app/components/ConfirmModal";
 import { s } from "app/utils/size";
 import { IconFont } from "app/components/IconFont/IconFont";
 import { FormLine } from "app/components/FormLine";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilValue } from "recoil";
 import { ColorsState } from "app/stores/system";
 import { IUser } from "drizzle/schema";
 import BaseModal from "app/components/base-modal";
 import { UserChatUIContext } from "../UserChat/context";
 import { colors } from "app/theme";
 import friendService from "app/services/friend.service";
-import { ClearChatMessageEvent, FriendChangeEvent } from "@repo/types";
 import { IModel } from "@repo/enums";
-import EventManager from 'app/services/event-manager.service'
-import { ChatsStore } from "app/stores/auth";
 import { navigate } from "app/navigators";
 import { LocalUserService } from "app/services/LocalUserService";
+import eventUtil from "app/utils/event-util";
 
 export interface UserConfigModalType {
     open: () => void
@@ -27,11 +25,11 @@ export default forwardRef((props: {
 }, ref) => {
     const [visible, setVisible] = useState(false)
     const themeColor = useRecoilValue(ColorsState)
-    const setChatsStore = useSetRecoilState(ChatsStore)
     const confirmModalRef = useRef<ConfirmModalType>(null);
     const [editing, setEditing] = useState(false)
     const userContext = useContext(UserChatUIContext)
     const [friendAlias, setFriendAlias] = useState('')
+
     const isEditable = (): boolean => {
         return editing && props.friend !== null && ((props.friend.isFriend ?? 0) > 0)
     }
@@ -166,20 +164,13 @@ export default forwardRef((props: {
                                 if (props.friend?.friendId) {
                                     const isShow = await friendService.block(props.friend?.friendId)
                                     if (isShow !== null && props.friend?.chatId) {
-                                        setChatsStore((items) => {
-                                            return items.filter(i => i.id !== props.friend?.chatId)
-                                        })
-                                        await LocalUserService.block([props.friend.id])
-
+                                        if (props.friend?.chatId) {
+                                            eventUtil.sendChatEvent(props.friend.chatId, 'remove')
+                                        }
+                                        await LocalUserService.setFriends([props.friend.id], IModel.ICommon.ICommonBoolEnum.NO)
                                     }
 
-                                    const event: FriendChangeEvent = {
-                                        friendId: props.friend.id ?? 0,
-                                        remove: true,
-                                        type: IModel.IClient.SocketTypeEnum.FRIEND_CHANGE
-                                    }
-                                    const eventKey = EventManager.generateKey(event.type)
-                                    EventManager.emit(eventKey, event)
+                                    eventUtil.sendFriendChangeEvent(props.friend.id ?? 0, true)
                                 }
                             }
                         })
@@ -203,14 +194,10 @@ export default forwardRef((props: {
                             onSubmit: () => {
                                 friendService.remove(props.friend?.friendId ?? 0).then((chatId) => {
                                     if (chatId) {
-                                        const event: ClearChatMessageEvent = { chatId, type: IModel.IClient.SocketTypeEnum.CLEAR_ALL_MESSAGE }
-                                        const eventKey = EventManager.generateChatTopic(chatId)
-                                        EventManager.emit(eventKey, event)
+                                        eventUtil.sendClearMsgEvent(chatId)
+                                        // 发送chat remove event 
+                                        eventUtil.sendChatEvent(chatId, 'remove')
                                     }
-                                    // 修改chats 
-                                    setChatsStore((items) => {
-                                        return items.filter(i => i.id !== props.friend?.chatId)
-                                    })
                                     navigate('TabStack')
                                 })
                             }

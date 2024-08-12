@@ -14,7 +14,6 @@ import { UserChatUIContext } from "./context";
 import chatService from "app/services/chat.service";
 import UserChatInfoModal, { UserChatInfoModalRef } from "./UserChatInfoModal";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { ChatsStore } from "app/stores/auth";
 import { IconFont } from "app/components/IconFont/IconFont";
 import { ColorsState } from "app/stores/system";
 import userService from "app/services/user.service";
@@ -22,12 +21,13 @@ import { LocalUserService } from "app/services/LocalUserService";
 import { LocalChatService } from "app/services/LocalChatService";
 import chatMapper from "app/utils/chat.mapper";
 import NetInfo from '@react-native-community/netinfo'
+import eventUtil from "app/utils/event-util";
 
 type Props = StackScreenProps<App.StackParamList, 'UserChatScreen'>;
 
 export const UserChatScreen = ({ navigation, route }: Props) => {
     const $topContainerInsets = useSafeAreaInsetsStyle(["top"])
-    const setChatsStore = useSetRecoilState(ChatsStore)
+
     const [chatItem, setChatItem] = useState<ChatDetailItem>()
     const userChatInfoModalRef = useRef<UserChatInfoModalRef>(null)
     const [user, setUser] = useState<IUser | null>(null);
@@ -100,14 +100,8 @@ export const UserChatScreen = ({ navigation, route }: Props) => {
     const reloadChat = (item: ChatDetailItem) => {
         chatService.changeChat(item).then(() => {
             setChatItem(item)
-            setChatsStore((items) => {
-                const newItems = items.map(t => {
-                    if (item.id === t.id) {
-                        return { ...item }
-                    }
-                    return t
-                })
-                return newItems
+            eventUtil.sendChatEvent(item.id, 'update', {
+                ...item
             })
         }).catch(e => {
             console.error(e)

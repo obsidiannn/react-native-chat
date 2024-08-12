@@ -1,5 +1,5 @@
 import { IModel } from "@repo/enums";
-import { IEvent } from "@repo/types";
+import { ChatChangeEvent, ChatDetailItem, IEvent } from "@repo/types";
 
 class EventEmitter {
 	private events: { [key: string]: any };
@@ -83,6 +83,7 @@ class EventEmitter {
 			});
 		}
 	}
+
 }
 
 const events = new EventEmitter();

@@ -40,7 +40,9 @@ export default forwardRef((_, ref) => {
         userContext.reloadChat({
             ...chat, isTop: val
         })
+        
     }
+
 
     const changeMute = (val: number) => {
         userContext.reloadChat({
