@@ -3,9 +3,7 @@ import { useRef, useContext, useMemo, forwardRef, useImperativeHandle } from "re
 import { ConfirmModal, ConfirmModalType } from "app/components/ConfirmModal";
 import messageSenderService from "app/services/message-send.service";
 import ActionItem from "./action-item";
-import { ClearChatMessageEvent } from "@repo/types";
 import { IModel } from "@repo/enums";
-import EventManager from 'app/services/event-manager.service'
 import chatApi from "app/api/chat/chat";
 import { s } from "app/utils/size";
 import { colors } from "app/theme";
@@ -18,6 +16,7 @@ import { UserChatUIContext } from "./context";
 import { IconFont } from "app/components/IconFont/IconFont";
 import UserInfoModal, { UserInfoModalType } from "../UserInfo/UserInfoModal";
 import { AuthUser } from "app/stores/auth";
+import eventUtil from "app/utils/event-util";
 
 export interface UserChatInfoModalRef {
     open: () => void
@@ -160,9 +159,7 @@ export default forwardRef((_, ref) => {
                         content: t('chat.btn_message_delete_desc'),
                         onSubmit: () => {
                             messageSenderService.clearMineMessage([chat?.id ?? ""]).then(() => {
-                                const event: ClearChatMessageEvent = { chatId: chat?.id ?? '', type: IModel.IClient.SocketTypeEnum.CLEAR_ALL_MESSAGE }
-                                const eventKey = EventManager.generateChatTopic(chat?.id ?? '')
-                                EventManager.emit(eventKey, event)
+                                eventUtil.sendClearMsgEvent(chat.id)
                                 toast(t('chat.success_cleaned'))
                             })
                         }

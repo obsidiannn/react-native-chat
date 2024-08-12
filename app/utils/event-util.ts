@@ -1,6 +1,6 @@
 
 import EventManager from 'app/services/event-manager.service'
-import { ChatChangeEvent, ChatDetailItem, ClearChatMessageEvent, FriendChangeEvent } from '@repo/types'
+import { ChatChangeEvent, ChatDetailItem, ClearChatMessageEvent, FriendChangeEvent, SocketJoinEvent } from '@repo/types'
 import { IModel } from '@repo/enums'
 
 const sendClearMsgEvent = (chatId: string) => {
@@ -43,8 +43,15 @@ const sendFriendChangeEvent = (friendId: number, remove: boolean) => {
     } as FriendChangeEvent)
 }
 
+const sendSocketJoinEvent = (chatId: string) => {
+    const _msg = { type: IModel.IClient.SocketTypeEnum.SOCKET_JOIN, chatIds: [chatId] } as SocketJoinEvent
+    const eventKey = EventManager.generateKey(_msg.type, '')
+    EventManager.emit(eventKey, _msg)
+}
+
 export default {
     sendChatEvent,
     sendFriendChangeEvent,
-    sendClearMsgEvent
+    sendClearMsgEvent,
+    sendSocketJoinEvent
 }

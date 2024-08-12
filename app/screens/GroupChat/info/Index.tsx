@@ -1,4 +1,3 @@
-import { ClearChatMessageEvent } from "@repo/types";
 import { StyleSheet, Switch, Text, View } from "react-native"
 import { Button } from "app/components/Button"
 import MenuItem from "./components/MenuItem";
@@ -6,26 +5,25 @@ import QRcodeModal, { QRcodeModalRef } from "./QrcodeModal";
 import ApplyListModal, { ApplyListModalRef } from "./ApplyListModal";
 import { ConfirmModal, ConfirmModalType } from "app/components/ConfirmModal";
 import GoodManager, { GroupManagerModalRef } from "./GroupManagerModal";
-import { forwardRef, useCallback, useContext, useImperativeHandle, useMemo, useRef, useState } from "react";
+import { forwardRef, useContext, useImperativeHandle, useMemo, useRef, useState } from "react";
 import SelectMemberModal, { SelectMemberModalType } from "app/components/SelectMemberModal/Index"
 import groupService from "app/services/group.service";
 import { GroupChatUiContext } from "../context";
-import EventManager from 'app/services/event-manager.service'
 import { useTranslation } from 'react-i18next';
 import { IModel } from "@repo/enums";
 import toast from "app/utils/toast";
 import { s } from "app/utils/size";
 import messageSendService from "app/services/message-send.service";
-import quickCrypto from "app/utils/quick-crypto";
 import BaseModal from "app/components/base-modal";
 import { useRecoilValue } from "recoil";
-import { ColorsState, ThemeState } from "app/stores/system"
+import { ColorsState } from "app/stores/system"
 import { colors } from "app/theme";
 import { ScrollView } from "react-native-gesture-handler";
 import GroupDetailModal, { GroupDetailModalType } from "./GroupDetailModal";
 
 import chatApi from "app/api/chat/chat";
 import { IconFont } from "app/components/IconFont/IconFont";
+import eventUtil from "app/utils/event-util";
 
 export interface GroupInfoModalType {
     open: () => void
@@ -216,9 +214,7 @@ export default forwardRef((_, ref) => {
                                     content: t('groupChat.title_drop_message_desc'),
                                     onSubmit: () => {
                                         groupService.clearGroupMessages([groupContext.group.id], [groupContext.group?.chatId]).then(() => {
-                                            const event: ClearChatMessageEvent = { chatId: groupContext.group.chatId, type: IModel.IClient.SocketTypeEnum.CLEAR_ALL_MESSAGE }
-                                            const eventKey = EventManager.generateChatTopic(groupContext.group.chatId)
-                                            EventManager.emit(eventKey, event)
+                                            eventUtil.sendClearMsgEvent(groupContext.group.chatId)
                                         })
                                     }
                                 });
@@ -238,9 +234,8 @@ export default forwardRef((_, ref) => {
                         desc: t('groupChat.title_drop_message_desc'),
                         onSubmit: () => {
                             groupService.clearGroupMessages([groupContext.group.id], [groupContext.group?.chatId]).then(() => {
-                                const event: ClearChatMessageEvent = { chatId: groupContext.group.chatId, type: IModel.IClient.SocketTypeEnum.CLEAR_ALL_MESSAGE }
-                                const eventKey = EventManager.generateChatTopic(groupContext.group.chatId)
-                                EventManager.emit(eventKey, event)
+
+                                eventUtil.sendClearMsgEvent(groupContext.group.chatId)
                             })
                         }
                     });
@@ -259,9 +254,7 @@ export default forwardRef((_, ref) => {
                                 content: t('groupChat.title_drop_message_desc'),
                                 onSubmit: () => {
                                     messageSendService.clearMineMessage([groupContext.group.chatId]).then(res => {
-                                        const event: ClearChatMessageEvent = { chatId: groupContext.group.chatId, type: IModel.IClient.SocketTypeEnum.CLEAR_ALL_MESSAGE }
-                                        const eventKey = EventManager.generateChatTopic(groupContext.group.chatId)
-                                        EventManager.emit(eventKey, event)
+                                        eventUtil.sendClearMsgEvent(groupContext.group.chatId)
                                         toast(t('groupChat.option_success'))
                                     })
                                 }

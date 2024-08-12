@@ -8,7 +8,7 @@ import VideoPlayModal, { IVideoPreviewModal } from "app/components/VideoModal"
 import FilePreviewModal, { ChatUIFileModalRef } from "app/components/FileModal"
 import LoadingModal, { LoadingModalType } from "app/components/loading-modal"
 import { useTranslation } from "react-i18next"
-import { ChatDetailItem, DeleteMessageEvent, SocketJoinEvent, SocketMessageEvent } from "@repo/types"
+import { ChatDetailItem, DeleteMessageEvent, SocketMessageEvent } from "@repo/types"
 import { IUser } from "drizzle/schema"
 import { useRecoilValue } from "recoil"
 import { AuthUser } from "app/stores/auth"
@@ -162,9 +162,7 @@ const ChatPage = forwardRef((_, ref) => {
         // 开始监听 socket 事件
         const _eventKey = EventManager.generateKey(IModel.IClient.SocketTypeEnum.MESSAGE, chatId)
         EventManager.addEventSingleListener(_eventKey, handleEvent)
-        const _msg = { type: IModel.IClient.SocketTypeEnum.SOCKET_JOIN, chatIds: [chatId] } as SocketJoinEvent
-        const eventKey = EventManager.generateKey(_msg.type, '')
-        EventManager.emit(eventKey, _msg)
+
         NetInfo.fetch().then(async (state) => {
             if (state.isConnected) {
                 chatService.querySequence([chatId]).then(res => {

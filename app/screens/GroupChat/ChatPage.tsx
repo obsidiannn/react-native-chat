@@ -30,6 +30,7 @@ import generateUtil from "app/utils/generateUtil";
 import { GestureResponderEvent } from "react-native";
 import { ThemeState } from "app/stores/system";
 import chatService from "app/services/chat.service";
+import eventUtil from "app/utils/event-util";
 
 
 export interface GroupChatPageRef {
@@ -119,10 +120,8 @@ export default forwardRef((props, ref) => {
         }
         console.log('sharedSecret==', sharedSecret);
         sharedSecretRef.current = sharedSecret
-        // join room
-        const _msg = { type: IModel.IClient.SocketTypeEnum.SOCKET_JOIN, chatIds: [chatItem.id] } as SocketJoinEvent
-        const eventKey = EventManager.generateKey(_msg.type, '')
-        EventManager.emit(eventKey, _msg)
+        // join room event
+        eventUtil.sendSocketJoinEvent(chatItem.id)
 
         // 註冊 message 接收
         const _eventKey = EventManager.generateKey(IModel.IClient.SocketTypeEnum.MESSAGE, chatItem.id)
