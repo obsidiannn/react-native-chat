@@ -1,7 +1,6 @@
 import { IModel } from "@repo/enums";
 import { IEvent } from "@repo/types";
-import {DeviceEventEmitter} from 'react-native'
-const s = DeviceEventEmitter.addListener('xx',() => {})
+
 class EventEmitter {
 	private events: { [key: string]: any };
 
@@ -10,6 +9,7 @@ class EventEmitter {
 	}
 
 	addEventListener(event: string, listener: Function) {
+		console.log('[event] add listener', event);
 
 		if (typeof this.events[event] !== 'object') {
 			this.events[event] = [];
@@ -19,6 +19,8 @@ class EventEmitter {
 	}
 
 	addEventSingleListener(event: string, listener: Function) {
+		console.log('[event] add single listener', event);
+
 		if (typeof this.events[event] !== 'object') {
 			this.events[event] = [];
 		}
@@ -28,6 +30,7 @@ class EventEmitter {
 
 
 	removeListener(event: string, listener: Function) {
+		console.log('[event] remove listener', event);
 		if (typeof this.events[event] === 'object') {
 			const idx = this.events[event].indexOf(listener);
 			if (idx > -1) {
@@ -52,8 +55,11 @@ class EventEmitter {
 		if (type === IModel.IClient.SocketTypeEnum.FRIEND_CHANGE) {
 			return 'FRIEND_CHANGE'
 		}
-        return key ?? ""
-    }
+		if (type === IModel.IClient.SocketTypeEnum.CHAT_CHANGE) {
+			return 'CHAT_CHANGE'
+		}
+		return key ?? 'unknown'
+	}
 
 	generateChatTopic(chatId: string): string {
 		return 'msg_' + chatId
@@ -61,7 +67,7 @@ class EventEmitter {
 
 
 	/**
-	 *
+	 * 
 	 */
 	emit(event: string, ...args: IEvent[]) {
 		console.log('[event] emit', event);

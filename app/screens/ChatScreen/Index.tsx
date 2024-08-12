@@ -17,7 +17,7 @@ import { App } from "types/app";
 import { ChatsStore } from "app/stores/auth";
 import friendService from "app/services/friend.service";
 import { IUser } from "drizzle/schema";
-import { ChatDetailItem, FriendChangeEvent, GroupDetailItem } from "@repo/types";
+import { ChatChangeEvent, ChatDetailItem, FriendChangeEvent, GroupDetailItem } from "@repo/types";
 import groupService from "app/services/group.service";
 import EventManager from 'app/services/event-manager.service'
 import { IModel } from "@repo/enums";
@@ -42,12 +42,14 @@ export const ChatScreen = ({ navigation }: Props) => {
             setFriends(val)
         })
         groupService.getMineList().then(res => {
-            console.log('group init', res);
             setGroups(res)
         })
 
         const eventKey = EventManager.generateKey(IModel.IClient.SocketTypeEnum.FRIEND_CHANGE)
         EventManager.addEventListener(eventKey, friendChangeHandle)
+
+        const chatEventKey = EventManager.generateKey(IModel.IClient.SocketTypeEnum.CHAT_CHANGE)
+        EventManager.addEventListener(chatEventKey, chatChangeEventHandler)
     }, [])
 
     const friendChangeHandle = (event: FriendChangeEvent) => {
@@ -71,6 +73,34 @@ export const ChatScreen = ({ navigation }: Props) => {
             })
         }
     }
+
+    const chatChangeEventHandler = (event: ChatChangeEvent) => {
+        if (event.operate === 'add') {
+            setChatsStore(items => {
+                const has = items.find(i => i.id === event.chatId)
+                if (!has && event.item) {
+                    return items.concat(event.item)
+                }
+                return items
+            })
+        }
+        if (event.operate === 'update') {
+            setChatsStore(items => {
+                return items.map(i => {
+                    if (i.id === event.chatId && event.item) {
+                        return { ...event.item }
+                    }
+                    return i
+                })
+            })
+        }
+        if (event.operate === 'remove') {
+            setChatsStore(items => {
+                return items.filter(i => i.id !== event.chatId)
+            })
+        }
+    }
+
 
     const dataRefresh = (idx: number) => {
         if (idx === 0) {

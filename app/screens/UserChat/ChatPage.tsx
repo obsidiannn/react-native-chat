@@ -246,7 +246,6 @@ const ChatPage = forwardRef((_, ref) => {
     }
 
     const handleMessagePress = async (message: MessageType.Any) => {
-
         if (message.type === 'file') {
             fileModalRef.current?.open({
                 encKey: '',
