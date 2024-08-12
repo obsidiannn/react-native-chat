@@ -62,8 +62,8 @@ const getOfflineList = async () => {
     const users = await LocalUserService.getFriends();
     return users;
 }
-const getOnlineList = async () => {
-    const friendIds = await getIds();
+const getOnlineList = async (ids?: number[]) => {
+    const friendIds = ids ? ids : await getIds();
     console.log('friendIds', friendIds);
 
     if (!friendIds || friendIds.length === 0) {

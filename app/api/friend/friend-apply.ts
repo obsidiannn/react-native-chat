@@ -5,7 +5,7 @@ import { FriendInviteApplyItem, BaseArrayResp } from "@repo/types";
 
 const create = async (userId: number, remark: string): Promise<null> => await createInstance(true).post('/friend-applies/create', { friendId: userId, remark });
 
-const agree = async (id: number): Promise<null> => await createInstance(true).post('/friend-applies/agree', { id });
+const agree = async (id: number): Promise<{ chatId: string, friendId: number }> => await createInstance(true).post('/friend-applies/agree', { id });
 
 const reject = async (id: number, reson?: string): Promise<null> => await createInstance(true).post('/friend-applies/reject', {
   id,

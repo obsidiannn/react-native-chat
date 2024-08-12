@@ -9,8 +9,8 @@ class EventEmitter {
 	}
 
 	addEventListener(event: string, listener: Function) {
-        console.log('[event] add listener',event);
-        
+		console.log('[event] add listener', event);
+
 		if (typeof this.events[event] !== 'object') {
 			this.events[event] = [];
 		}
@@ -19,8 +19,8 @@ class EventEmitter {
 	}
 
 	addEventSingleListener(event: string, listener: Function) {
-        console.log('[event] add single listener',event);
-        
+		console.log('[event] add single listener', event);
+
 		if (typeof this.events[event] !== 'object') {
 			this.events[event] = [];
 		}
@@ -30,7 +30,7 @@ class EventEmitter {
 
 
 	removeListener(event: string, listener: Function) {
-        console.log('[event] remove listener',event);
+		console.log('[event] remove listener', event);
 		if (typeof this.events[event] === 'object') {
 			const idx = this.events[event].indexOf(listener);
 			if (idx > -1) {
@@ -42,40 +42,40 @@ class EventEmitter {
 		}
 	}
 
-    generateKey(type: number,key?: string): string{
-        if(type === IModel.IClient.SocketTypeEnum.MESSAGE){
-            return 'msg_' + key
-        }
-		if(type === IModel.IClient.SocketTypeEnum.SOCKET_JOIN){
+	generateKey(type: number, key?: string): string {
+		if (type === IModel.IClient.SocketTypeEnum.MESSAGE) {
+			return 'msg_' + key
+		}
+		if (type === IModel.IClient.SocketTypeEnum.SOCKET_JOIN) {
 			return 'SOCKET_JOIN_EVENT'
 		}
-		if(type === IModel.IClient.SocketTypeEnum.GLOBAL_MESSAGE){
+		if (type === IModel.IClient.SocketTypeEnum.GLOBAL_MESSAGE) {
 			return 'GLOBAL_MESSAGE'
 		}
-		if(type === IModel.IClient.SocketTypeEnum.FRIEND_CHANGE){
+		if (type === IModel.IClient.SocketTypeEnum.FRIEND_CHANGE) {
 			return 'FRIEND_CHANGE'
 		}
-        return key
-    }
+		return key ?? 'unknown'
+	}
 
-	generateChatTopic(chatId: string): string{
+	generateChatTopic(chatId: string): string {
 		return 'msg_' + chatId
-    }
+	}
 
 
 	/**
 	 * 
 	 */
 	emit(event: string, ...args: IEvent[]) {
-        console.log('[event] emit',event);
-        console.log(typeof this.events[event]);
-        
+		console.log('[event] emit', event);
+		console.log(typeof this.events[event]);
+
 		if (typeof this.events[event] === 'object') {
 			this.events[event].forEach((listener: Function) => {
 				try {
 					listener.apply(this, args);
 				} catch (e) {
-					console.error('[event error]',e)
+					console.error('[event error]', e)
 				}
 			});
 		}
