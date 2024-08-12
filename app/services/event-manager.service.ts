@@ -46,6 +46,9 @@ class EventEmitter {
 		if (type === IModel.IClient.SocketTypeEnum.MESSAGE) {
 			return 'msg_' + key
 		}
+		if (type === IModel.IClient.SocketTypeEnum.CLEAR_ALL_MESSAGE) {
+			return 'CLEAR_ALL_MESSAGE_' + key
+		}
 		if (type === IModel.IClient.SocketTypeEnum.SOCKET_JOIN) {
 			return 'SOCKET_JOIN_EVENT'
 		}
