@@ -3,7 +3,6 @@ import { ColorsState, ThemeState } from "app/stores/system";
 import { s } from "app/utils/size";
 import { forwardRef, ReactNode, useCallback, useImperativeHandle, useRef, useState } from "react"
 import { ColorValue, Linking, ScrollView, Text, TextStyle, TouchableOpacity, View, ViewStyle } from "react-native"
-import ky from "ky";
 import { useRecoilValue } from "recoil";
 import { IServer } from "@repo/types";
 import AppApi from "app/api/sys/app";

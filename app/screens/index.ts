@@ -26,3 +26,5 @@ export * from './ProfileScreen/ProfileScreen'
 export * from './SafetyScreen/SafetyScreen'
 export * from './SettingScreen/SettingScreen'
 export * from './UnlockScreen'
+
+export * from './UserInfo/UserBlockScreen'

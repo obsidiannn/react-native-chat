@@ -4,24 +4,25 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useEffect, useState } from "react";
 import friendApplyService from "app/services/friend-apply.service";
 import { IUser } from "drizzle/schema";
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { useTranslation } from 'react-i18next';
 import { s, verticalScale } from "app/utils/size";
 import Navbar from "app/components/Navbar";
 import { Button } from "app/components";
-import { AuthUser } from "app/stores/auth";
+import { AuthUser, ChatsStore } from "app/stores/auth";
 import { ColorsState } from "app/stores/system";
-import { IServer } from "@repo/types";
+import { FriendChangeEvent, IServer } from "@repo/types";
 import { App } from "types/app";
 import { IModel } from "@repo/enums";
-import UserInfo from "app/components/UserInfo";
-import { IconFont } from "app/components/IconFont/IconFont";
 import InfoCard from "../UserInfo/components/info-card";
+import chatService from "app/services/chat.service";
+import EventManager from 'app/services/event-manager.service'
+
 type Props = StackScreenProps<App.StackParamList, 'InviteInfoScreen'>;
 export const InviteInfoScreen = ({ navigation, route }: Props) => {
     const insets = useSafeAreaInsets();
     const [loading, setLoading] = useState(false);
-    const [remark, setRemark] = useState<string>('');
+    const setChatStore = useSetRecoilState(ChatsStore)
     const themeColor = useRecoilValue(ColorsState)
     const currentUser = useRecoilValue(AuthUser)
     const { t } = useTranslation('screens')
@@ -85,16 +86,37 @@ export const InviteInfoScreen = ({ navigation, route }: Props) => {
 
                 <View style={styles.actionContainer}>
                     {info?.friendApply.status === IModel.IFriendApply.Status.PENDING && !info.isSelf ? <>
-                        <Button fullWidth size="large" onPress={() => {
+                        <Button fullWidth size="large" onPress={async () => {
                             if (loading) {
                                 return
                             };
-                            setLoading(true);
-                            friendApplyService.agree(info.friendApply.id).then(() => {
-                                navigation.goBack();
-                            }).finally(() => {
+                            try {
+                                const res = await friendApplyService.agree(info.friendApply.id)
+                                if (res && res.chatId) {
+                                    const chats = await chatService.mineChatList([res.chatId])
+                                    if (chats.length > 0) {
+                                        setChatStore(items => {
+                                            const chat = items.find(i => i.id === res.chatId)
+                                            if (!chat) {
+                                                return items.concat(chats[0])
+                                            }
+                                            return items
+                                        })
+
+                                        const eventKey = EventManager.generateKey(IModel.IClient.SocketTypeEnum.FRIEND_CHANGE)
+                                        EventManager.emit(eventKey, {
+                                            friendId: res.friendId ?? 0,
+                                            remove: false
+                                        } as FriendChangeEvent)
+                                    }
+                                }
+                            } catch (e) {
+
+                            } finally {
                                 setLoading(false);
-                            });
+                                navigation.goBack();
+                            }
+
                         }} label={t('friend.btn_apply')} />
 
                         <Button type="secondary" containerStyle={{

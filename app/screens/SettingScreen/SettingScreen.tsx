@@ -6,12 +6,12 @@ import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { s } from "app/utils/size"
 import Navbar from "app/components/Navbar"
 import { CardMenu } from "app/components/CardMenu/CardMenu"
-import  {ConfirmModal, ConfirmModalType } from "app/components/ConfirmModal"
+import { ConfirmModal, ConfirmModalType } from "app/components/ConfirmModal"
 import { useRef } from "react"
 import { quit } from "app/utils/account"
 import { navigate } from "app/navigators"
 import { App } from "types/app"
-import { StackScreenProps } from "@react-navigation/stack" 
+import { StackScreenProps } from "@react-navigation/stack"
 import { LangModal, LangModalType } from "./LangModal"
 import { UpgradeModal, UpgradeModalType } from "./UpgradeModal"
 import * as Application from 'expo-application';
@@ -31,7 +31,7 @@ export const SettingScreen = ({ navigation }: Props) => {
         paddingTop: insets.top,
         backgroundColor: $colors.secondaryBackground,
     }}>
-        <Navbar title="设置"/>
+        <Navbar title="设置" />
         <View style={{
             flex: 1,
             marginTop: s(30),
@@ -67,13 +67,26 @@ export const SettingScreen = ({ navigation }: Props) => {
                         upgradeModalRef.current?.open()
                     },
                     rightArrow: <View style={{
-                        flexDirection:"row",
-                        alignItems:"center"
+                        flexDirection: "row",
+                        alignItems: "center"
                     }}>
                         <Text style={{
                             color: $colors.secondaryText
                         }}>{version}</Text>
-                         <IconFont name="arrowRight" color={$colors.border} size={14} />
+                        <IconFont name="arrowRight" color={$colors.border} size={14} />
+                    </View>
+                },
+                {
+                    icon: <IconFont name="userRemove" color={$colors.text} size={24} />,
+                    title: "黑名单",
+                    onPress: () => {
+                        navigate('UserBlockScreen')
+                    },
+                    rightArrow: <View style={{
+                        flexDirection: "row",
+                        alignItems: "center"
+                    }}>
+                        <IconFont name="arrowRight" color={$colors.border} size={14} />
                     </View>
                 },
             ]} />
@@ -99,11 +112,11 @@ export const SettingScreen = ({ navigation }: Props) => {
                     },
                     rightArrow: null,
                     textStyle: {
-                        color:"#FB3737"
+                        color: "#FB3737"
                     }
                 },
                 {
-                    icon:  <IconFont name="logout" color={colors.palette.red500} size={24} />,
+                    icon: <IconFont name="logout" color={colors.palette.red500} size={24} />,
                     title: "退出登录",
                     onPress: () => {
                         confirmModalRef.current?.open({
@@ -121,7 +134,7 @@ export const SettingScreen = ({ navigation }: Props) => {
                     },
                     rightArrow: null,
                     textStyle: {
-                        color:"#FB3737"
+                        color: "#FB3737"
                     }
                 },
             ]} />

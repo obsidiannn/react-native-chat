@@ -55,7 +55,21 @@ export const ChatScreen = ({ navigation }: Props) => {
             setFriends((items) => {
                 return items.filter(i => i.id !== event.friendId)
             })
-        } else { }
+        } else {
+            // 新增好友的情况
+            friendService.getOnlineList([event.friendId]).then(res => {
+                if (res.length > 0) {
+                    const friend = res[0]
+                    setFriends((items) => {
+                        const f = items.find(i => i.id === friend.id)
+                        if (!f) {
+                            return items.concat(friend)
+                        }
+                        return items
+                    })
+                }
+            })
+        }
     }
 
     const dataRefresh = (idx: number) => {

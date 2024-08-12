@@ -3,8 +3,9 @@ import { Image } from "expo-image";
 import { s } from "app/utils/size";
 
 interface IContactListItemProps {
-    icon: string|null;
-    title: string|null;
+    icon: string | null;
+    title: string | null;
+    secondTitle?: string
     badgeNumber?: number | null;
     subTitle?: string | null;
     onPress?: () => void;
@@ -27,6 +28,7 @@ export default (props: IContactListItemProps) => {
         }}>
             <View style={styles.titleContainer}>
                 <Text style={styles.title}>{props.title}</Text>
+                <Text>{props.secondTitle }</Text>
             </View>
             <View style={styles.subTitleContainer}>
                 <Text style={styles.subTitle}>{props.subTitle}</Text>
