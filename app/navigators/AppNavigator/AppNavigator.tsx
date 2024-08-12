@@ -46,8 +46,14 @@ const AppStack = () => {
   const loadOnlineData = useCallback(() => {
     NetInfo.fetch().then(async (state) => {
       if (state.isConnected) {
-        await SystemService.refreshNodes()
-        setNetworkState(true)
+        try {
+          await SystemService.refreshNodes()
+          setNetworkState(true)
+
+        } catch (e) {
+          console.error(e);
+
+        }
         AuthService.getInfo().then((v) => {
           setAuthUser(v)
           AppState.addEventListener('change', nextAppState => {
@@ -78,7 +84,7 @@ const AppStack = () => {
         setNetworkState(false)
       }
     })
-  },[])
+  }, [])
   const init = useCallback(async () => {
     await KVInit();
     const now = getNow()
@@ -92,9 +98,12 @@ const AppStack = () => {
       })
       await DBInit(global.wallet.getAddress());
       // 加载离线chat 
-      chatService.mineLocalChats().then(res => {
-        setChatsStore(res)
-      })
+      console.log('加载离线chat');
+      const localChats = await chatService.mineLocalChats()
+      if (localChats) {
+        setChatsStore(localChats)
+      }
+
       let currentUser: IUser | undefined = undefined
       const user = await LocalUserService.findByAddr(global.wallet.getAddress())
 

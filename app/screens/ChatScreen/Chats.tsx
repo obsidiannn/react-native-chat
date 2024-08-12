@@ -82,11 +82,13 @@ const ChatView = () => {
         if (item.type === IModel.IChat.IChatTypeEnum.NORMAL) {
             navigate('UserChatScreen', {
                 item,
+                chatId: item.id
             })
         } else if (item.type === IModel.IChat.IChatTypeEnum.GROUP) {
             console.log('group item', item);
             navigate('GroupChatScreen', {
-                item
+                item,
+                chatId: item.id
             })
         } else if (item.type === IModel.IChat.IChatTypeEnum.OFFICIAL) {
             // console.log('official item', item);

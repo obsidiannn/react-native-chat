@@ -17,16 +17,17 @@ const sendMessage = async (param: MessageSendReq): Promise<MessageSendResp> => a
 
 // 消息列表
 const getMessageList = async (param: MessageListReq): Promise<BaseArrayResp<MessageListItem>> => await createInstance(true).post('/chats/messages/list', param);
+const getMessageListIds = async (param: MessageListReq): Promise<BaseArrayResp<string>> => await createInstance(true).post('/chats/messages/list-ids', param);
 
 // 消息列表
 const findByIds = async (param: {
   chatId: string;
   ids: string[];
-}): Promise<IMessage[]> => {
+}): Promise<MessageDetailItem[]> => {
   const rep: {
-    lists: IMessage[]
+    items: MessageDetailItem[]
   } = await createInstance(true).post('/chats/messages/detail', param);
-  return rep.lists;
+  return rep.items;
 };
 
 // 撤回消息
@@ -60,6 +61,7 @@ const clearMineMessageAll = async () => await createInstance(true).post('/chats/
 export default {
   sendMessage,
   getMessageList,
+  getMessageListIds,
   findByIds,
   pullBack,
   deleteSelfMsg,

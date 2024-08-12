@@ -1,9 +1,10 @@
 import { IChat } from "drizzle/schema";
 import dayjs from 'dayjs'
 import { GetDB } from "app/utils/database";
-import { and, desc, eq, gte, inArray, lt } from "drizzle-orm";
+import { and, desc, eq, gte, inArray, lt, sql } from "drizzle-orm";
 import { chats } from "drizzle/schema";
 import { delaySecond } from "app/utils/delay";
+import { IModel } from "@repo/enums";
 
 
 export class LocalChatService {
@@ -26,14 +27,14 @@ export class LocalChatService {
         }
         return null
     }
-    static async findById(id: string){
+    static async findById(id: string) {
         const items = await LocalChatService.findByIds([id]);
         if (items.length > 0) {
             return items[0]
         }
         return null
     }
-    static async findByIds(ids: string[]):Promise<IChat[]>{
+    static async findByIds(ids: string[]): Promise<IChat[]> {
         const db = GetDB()
         return await db.query.chats.findMany({
             where: (chats, { inArray }) => inArray(chats.id, ids),
@@ -90,7 +91,7 @@ export class LocalChatService {
     static async updateSequence(chatId: string, sequence: number) {
         console.log('updateSequence', chatId, sequence)
         const db = await GetDB()
-        const result =  await db.update(chats).set({ lastSequence: sequence }).where(and(
+        const result = await db.update(chats).set({ lastSequence: sequence }).where(and(
             eq(chats.id, chatId),
             lt(chats.lastSequence, sequence)
         )).returning()
@@ -174,7 +175,13 @@ export class LocalChatService {
 
     static async queryEntity() {
         const db = GetDB()
-        return await db.query.chats.findMany();
+        console.log('init ');
+        const data = await db.select().from(chats)
+            .orderBy(
+                sql`case when ${chats.type} = ${IModel.IChat.IChatTypeEnum.OFFICIAL} then 1 else 0 end desc `,
+                desc(chats.isTop)
+            )
+        return data
     }
 
 }

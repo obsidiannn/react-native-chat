@@ -1,6 +1,6 @@
 import { Chat, MessageType, lightTheme, darkTheme } from "app/components/chat-ui"
 import tools from "./tools"
-import { forwardRef, useCallback, useImperativeHandle, useRef, useState } from "react"
+import { forwardRef, useCallback, useContext, useImperativeHandle, useRef, useState } from "react"
 import generateUtil from "app/utils/generateUtil"
 import LongPressModal, { LongPressModalType } from "app/components/LongPressModal"
 import { PreviewData } from "@flyerhq/react-native-link-preview"
@@ -9,7 +9,7 @@ import FilePreviewModal, { ChatUIFileModalRef } from "app/components/FileModal"
 import LoadingModal, { LoadingModalType } from "app/components/loading-modal"
 import { useTranslation } from "react-i18next"
 import { ChatDetailItem, DeleteMessageEvent, SocketJoinEvent, SocketMessageEvent } from "@repo/types"
-import { IChat, IUser } from "drizzle/schema"
+import { IUser } from "drizzle/schema"
 import { useRecoilValue } from "recoil"
 import { AuthUser } from "app/stores/auth"
 
@@ -22,10 +22,12 @@ import { LocalChatService } from "app/services/LocalChatService"
 import { LocalMessageService } from "app/services/LocalMessageService"
 import { Platform } from "react-native"
 import { CloudMessageService } from "app/services/MessageService"
-import { LocalUserService } from "app/services/LocalUserService"
 import NetInfo from "@react-native-community/netinfo";
+import { UserChatUIContext } from "./context"
+import chatService from "app/services/chat.service"
 export interface ChatUIPageRef {
-    init: (chatId: string, friendId: number) => void
+    init: (chatItem: ChatDetailItem, friend: IUser) => void
+    refreshSequence: (firstSeq: number, lastSeq: number) => void
     close: () => void
 }
 
@@ -34,34 +36,64 @@ const ChatPage = forwardRef((_, ref) => {
     const lastSeq = useRef<number>(0)
     const [messages, setMessages] = useState<MessageType.Any[]>([])
     const remoteLastSeq = useRef<number>(0);
-    const chatRef = useRef<IChat | null>(null);
-    const friendRef = useRef<IUser | null>(null)
     const remoteMessageLoading = useRef<boolean>(false);
+    const userContext = useContext(UserChatUIContext)
+
     // 加载历史数据 历史数据只会出现在本地
     const loadHistoryMessages = useCallback(async (chatId: string, seq: number) => {
-        const items = await LocalMessageService.getList(chatId, seq, 20);
-        setMessages(olds => {
-            const tmps = [...olds, ...chatUiAdapter.messageEntityToItems(items)]
-            firstSeq.current = tmps[tmps.length - 1].sequence;
-            lastSeq.current = tmps[0].sequence;
-            return tmps;
-        })
+        let init = false
+        if (seq < 0) {
+            init = true
+            seq = Number.MAX_VALUE
+        }
+        const items = await LocalMessageService.getList(chatId, seq, 10);
+        console.log('【本地消息】', items);
+
+        if (items.length > 0) {
+            setMessages(olds => {
+                const tmps = chatUiAdapter.messageEntityToItems(items)
+                let result = []
+                if (olds.length > 0) {
+                    const oldMin = olds[olds.length - 1].sequence
+                    result = olds.concat(tmps.filter(t => {
+                        return t.sequence < oldMin
+                    }))
+                } else {
+                    result = tmps
+                }
+                if (init) {
+                    lastSeq.current = result[0].sequence
+                }
+                firstSeq.current = result[result.length - 1].sequence
+                return result;
+            })
+        }
     }, [])
     // 获取最新数据 也是从seq开始获取最近的 20 条
     const loadRemoteMessages = useCallback(async (chatId: string, seq: number) => {
-        if(remoteMessageLoading.current){
+        if (remoteMessageLoading.current) {
             return;
         }
         remoteMessageLoading.current = true;
         try {
-            const ids = await CloudMessageService.getLatestIds(chatId, seq);
-            const items = await CloudMessageService.findByIds(chatId, ids);
-            setMessages(olds => {
-                const tmps = [...olds, ...chatUiAdapter.messageEntityToItems(items)]
-                firstSeq.current = tmps[tmps.length - 1].sequence;
-                lastSeq.current = tmps[0].sequence;
-                return tmps;
-            })
+            const items = await CloudMessageService.getRemoteList(chatId, sharedSecretRef.current, seq, 20);
+            if (items.length > 0) {
+                setMessages(olds => {
+                    let result = []
+                    if (olds.length > 0) {
+                        const oldMin = olds[olds.length - 1].sequence
+                        result = items.filter(t => {
+                            return t.sequence < oldMin
+                        }).concat(olds)
+                    } else {
+                        result = items
+                    }
+                    firstSeq.current = result[result.length - 1].sequence
+                    lastSeq.current = result[0].sequence
+                    return result;
+                })
+            }
+
             if (remoteLastSeq.current > lastSeq.current) {
                 loadRemoteMessages(chatId, lastSeq.current);
             }
@@ -70,21 +102,7 @@ const ChatPage = forwardRef((_, ref) => {
         }
 
     }, [])
-    const loadChat = useCallback(async (chatId: string) => {
-        chatRef.current = await LocalChatService.findById(chatId);
-    }, [])
-    const loadFriend = useCallback(async (friendId: number) => {
-        friendRef.current = await LocalUserService.findById(friendId)
-    }, [])
-    const loadRemoteFriend = useCallback(async (friendId: number) => { }, [])
-    const loadRemoteChat = useCallback(async (chatId: string) => {
-        // 远程的数据
-        // 并更新本地
-        // 更新 remoteLastSeq
-        if (remoteLastSeq.current > lastSeq.current) {
-            loadRemoteMessages(chatId, lastSeq.current);
-        }
-    }, [])
+
     const theme = useRecoilValue(ThemeState)
     const author = useRecoilValue(AuthUser)
     const sharedSecretRef = useRef<string>('')
@@ -134,12 +152,12 @@ const ChatPage = forwardRef((_, ref) => {
         messageSendService.send(chatItemRef.current?.id ?? '', sharedSecretRef.current, message).then(updateMessage)
     }
 
-    const init = useCallback(async (chatId: string, friendId: number) => {
-        await loadChat(chatId);
-        await loadFriend(friendId);
-        await loadHistoryMessages(chatId, firstSeq.current);
-        if (globalThis.wallet && friendRef.current) {
-            sharedSecretRef.current = globalThis.wallet.computeSharedSecret(friendRef.current.pubKey);
+    const init = useCallback(async (chatItem: ChatDetailItem, friend: IUser) => {
+        const chatId = chatItem.id
+        chatItemRef.current = chatItem
+        await loadHistoryMessages(chatId, -1);
+        if (globalThis.wallet && friend) {
+            sharedSecretRef.current = globalThis.wallet.computeSharedSecret(friend.pubKey);
         }
         // 开始监听 socket 事件
         const _eventKey = EventManager.generateKey(IModel.IClient.SocketTypeEnum.MESSAGE, chatId)
@@ -149,9 +167,12 @@ const ChatPage = forwardRef((_, ref) => {
         EventManager.emit(eventKey, _msg)
         NetInfo.fetch().then(async (state) => {
             if (state.isConnected) {
-                await loadRemoteMessages(chatId, lastSeq.current);
-                await loadRemoteChat(chatId);
-                await loadRemoteFriend(friendId);
+                chatService.querySequence([chatId]).then(res => {
+                    if (res.items.length > 0) {
+                        remoteLastSeq.current = res.items[0].lastSequence
+                        loadRemoteMessages(chatId, lastSeq.current);
+                    }
+                })
             }
         })
     }, [])
@@ -164,8 +185,11 @@ const ChatPage = forwardRef((_, ref) => {
     })
 
     const close = useCallback(() => {
-        const _eventKey = EventManager.generateKey(IModel.IClient.SocketTypeEnum.MESSAGE, chatRef.current?.id ?? '')
-        EventManager.removeListener(_eventKey, handleEvent)
+        const chatId = chatItemRef.current?.id
+        if (chatId) {
+            const _eventKey = EventManager.generateKey(IModel.IClient.SocketTypeEnum.MESSAGE, chatId)
+            EventManager.removeListener(_eventKey, handleEvent)
+        }
         setMessages([]);
         firstSeq.current = 0;
         lastSeq.current = 0;
@@ -180,7 +204,7 @@ const ChatPage = forwardRef((_, ref) => {
                 console.log("socket 监听到新的消息了", Platform.OS)
                 remoteLastSeq.current = _eventItem.sequence;
                 if (!remoteMessageLoading.current) {
-                    loadRemoteMessages(chatRef.current?.id ?? '', lastSeq.current);
+                    loadRemoteMessages(chatItemRef.current?.id ?? '', lastSeq.current);
                 }
             }
         }

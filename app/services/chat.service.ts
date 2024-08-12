@@ -155,6 +155,11 @@ const checkAndRefresh = async (chats: ChatDetailItem[]): Promise<{
     return { news, olds }
 }
 
+const querySequence = async (chatIds: string[]) => {
+    const sequenceResp = await chatApi.queryChatSequence(chatIds)
+    return sequenceResp
+}
+
 /**
  * 加载sequence
  * @param chats  
@@ -210,7 +215,7 @@ const mineLocalChats = async (): Promise<ChatDetailItem[]> => {
             officialIds.push(i.sourceId)
         }
     })
-    const users = await LocalUserService.findByIds(userIds, false)
+    const users = await LocalUserService.findByIds(userIds)
     const userHash = userService.initUserHash(users)
     const groupHash = await groupService.queryLocalByIdIn(groupIds)
     chats.forEach(i => {
@@ -253,4 +258,5 @@ export default {
     batchSaveLocal,
     refreshSequence,
     checkAndRefresh,
+    querySequence
 }

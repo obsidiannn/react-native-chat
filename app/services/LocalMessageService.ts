@@ -35,6 +35,7 @@ export class LocalMessageService {
         })
         return results.sort((a, b) => (b.sequence ?? 1) - (a.sequence ?? 1))
     }
+    
     static async findByIds(ids: string[]) {
         const db = GetDB()
         return await db.query.messages.findMany({

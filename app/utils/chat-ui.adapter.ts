@@ -6,7 +6,7 @@ import { GroupMemberItemVO, MessageDetailItem, MessageExtra } from "@repo/types"
 import quickCrypto from "./quick-crypto"
 import { MessageType, User } from "app/components/chat-ui"
 
-const userTransfer = (user: IUser|null): User => {
+const userTransfer = (user: IUser | null): User => {
     if (user === undefined || user === null) {
         return {} as User
     }
@@ -58,7 +58,7 @@ const groupRoleTransfer = (role: number): 'admin' | 'agent' | 'moderator' | 'use
 const messageTypeConvert = (
     detail: MessageDetailItem,
     key: string,
-    author: User,
+    author: User | null,
     needDecode: boolean
 ): MessageType.Any => {
     const _data = needDecode ? decrypt(key, detail?.content ?? '') : JSON.parse(detail?.content ?? '') as { t: string, d: string }
@@ -145,20 +145,51 @@ const messageTypeConvert = (
 
 const messageEntityConverts = (messages: MessageType.Any[]): IMessage[] => {
     return messages.map(m => {
-        const entity: IMessage = {
-            id: m.id,
-            chatId: m.roomId ?? '',
-            type: messageTypeCodeConvert(m.type),
-            sequence: m.sequence,
-            time: m.createdAt ?? new Date().valueOf(),
-            uid: m.senderId,
-            uidType: m.metadata?.uidType,
-            state: m.status === 'error' ? IModel.IChat.IMessageStatusEnum.DELETED : IModel.IChat.IMessageStatusEnum.NORMAL,
-            data: convertPartialContent(m as MessageType.PartialAny),
-            extra: JSON.stringify(m.metadata ?? {})
-        }
-        return entity
+        return messageDto2Entity(m)
     })
+}
+
+/**
+ * 消息实体类转消息包装类
+ * @param m 
+ * @returns 
+ */
+const messageApi2Entity = (m: MessageDetailItem): IMessage => {
+
+    const entity: IMessage = {
+        id: m.id,
+        chatId: m.chatId,
+        type: m.type,
+        sequence: m.sequence,
+        time: m.createdAt ?? new Date().valueOf(),
+        uid: m.fromUid,
+        uidType: m.fromUidType,
+        state: m.status,
+        data: convertPartialContent(m as MessageType.PartialAny),
+        extra: JSON.stringify(m.metadata ?? {})
+    }
+    return entity
+}
+
+/**
+ * 消息实体类转消息包装类
+ * @param m 
+ * @returns 
+ */
+const messageDto2Entity = (m: MessageType.Any): IMessage => {
+    const entity: IMessage = {
+        id: m.id,
+        chatId: m.roomId ?? '',
+        type: messageTypeCodeConvert(m.type),
+        sequence: m.sequence,
+        time: m.createdAt ?? new Date().valueOf(),
+        uid: m.senderId,
+        uidType: m.metadata?.uidType,
+        state: m.status === 'error' ? IModel.IChat.IMessageStatusEnum.DELETED : IModel.IChat.IMessageStatusEnum.NORMAL,
+        data: convertPartialContent(m as MessageType.PartialAny),
+        extra: JSON.stringify(m.metadata ?? {})
+    }
+    return entity
 }
 
 /**
@@ -321,7 +352,7 @@ const convertPartialContent = (m: MessageType.PartialAny): string => {
 
 const decrypt = (key: string, content: string) => {
     try {
-        const decrypted = quickCrypto.De(key,Buffer.from(content,'hex'));
+        const decrypted = quickCrypto.De(key, Buffer.from(content, 'hex'));
         const data = Buffer.from(decrypted).toString('utf8');
         return JSON.parse(data) as { t: string, d: any };
     } catch (error) {
@@ -331,11 +362,13 @@ const decrypt = (key: string, content: string) => {
         d: '解密失敗'
     }
 }
+
 export default {
     userTransfer,
     groupMemberTransfer,
     messageTypeConvert,
     messageEntityConverts,
+    messageDto2Entity,
     convertPartialContent,
     messageEntityToItems
 } 

@@ -20,6 +20,8 @@ import { ColorsState } from "app/stores/system";
 import userService from "app/services/user.service";
 import { LocalUserService } from "app/services/LocalUserService";
 import { LocalChatService } from "app/services/LocalChatService";
+import chatMapper from "app/utils/chat.mapper";
+import NetInfo from '@react-native-community/netinfo'
 
 type Props = StackScreenProps<App.StackParamList, 'UserChatScreen'>;
 
@@ -31,30 +33,68 @@ export const UserChatScreen = ({ navigation, route }: Props) => {
     const [user, setUser] = useState<IUser | null>(null);
     const chatPageRef = useRef<ChatUIPageRef>(null)
     const themeColor = useRecoilValue(ColorsState)
+
+    const loadLocalChat = useCallback(async (chatId: string): Promise<ChatDetailItem | null> => {
+        const localChat = await LocalChatService.findById(chatId);
+        if (localChat) {
+            const item = chatMapper.entity2Dto(localChat)
+            setChatItem(item)
+            return item
+        }
+        return null
+    }, [])
+
+    const loadRemoteChat = useCallback(async (chatId: string): Promise<ChatDetailItem | null> => {
+        const remoteChats = await chatService.mineChatList([chatId])
+        if (remoteChats.length > 0) {
+            setChatItem(remoteChats[0])
+            return remoteChats[0]
+        }
+        return null
+    }, [])
+
+    const loadFriend = useCallback(async (friendId: number): Promise<IUser | null> => {
+        const localFriend = await LocalUserService.findById(friendId)
+        if (localFriend) {
+            setUser(localFriend)
+            return localFriend
+        }
+        return null
+    }, [])
+
     const init = useCallback(async () => {
         console.log("初始化聊天页面")
-        const _chatItem = route.params.item
-        const uid = _chatItem?.sourceId;
-        if (!uid || !globalThis.wallet) {
+        const chatId = route.params.chatId
+        if (!globalThis.wallet) {
             navigation.goBack();
             return;
         }
-        const localChat = await LocalChatService.findById(_chatItem.id);
-        console.log('[chatui] init', localChat)
-        setChatItem({
-            ..._chatItem,
-            firstSequence: localChat?.firstSequence ?? 0,
-            lastSequence: localChat?.lastSequence ?? 0,
-        });
-        const localUsers = await LocalUserService.findByIds([uid], false)
-        if (localUsers.length > 0) {
-            setUser(localUsers[0])
+        const netInfo = await NetInfo.fetch()
+        let chatResult = await loadLocalChat(chatId)
+        let localUser = null
+        let localChat = true
+        if (!chatResult) {
+            if (netInfo.isConnected) {
+                const remoteChat = await loadRemoteChat(chatId)
+                if (remoteChat) {
+                    localChat = false
+                }
+            }
+        } else {
+            localUser = await loadFriend(chatResult.sourceId)
         }
-        const friend = await friendService.getFriendInfoByUserId(uid)
-        if (friend !== null) {
-            setUser(friend);
+        console.log('chatItem = ', chatResult);
+
+        if (!localUser || chatResult === null) {
+            return
         }
-        chatPageRef.current?.init(_chatItem, friend ?? localUsers[0])
+
+        friendService.getFriendInfoByUserId(chatResult.sourceId).then(friend => {
+            if (friend !== null) {
+                setUser(friend);
+            }
+        })
+        chatPageRef.current?.init(chatResult, localUser)
     }, [])
 
     const reloadChat = (item: ChatDetailItem) => {
@@ -84,7 +124,6 @@ export const UserChatScreen = ({ navigation, route }: Props) => {
         }
 
     }
-
 
     useEffect(() => {
         navigation.addListener('focus', () => {

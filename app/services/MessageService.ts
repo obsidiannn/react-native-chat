@@ -8,7 +8,8 @@ import { MessageType } from "app/components/chat-ui";
 import chatUiAdapter from "app/utils/chat-ui.adapter";
 import { imageFormat } from "app/utils/media-util";
 import { LocalMessageService } from "./LocalMessageService";
-import { IMessage } from "drizzle/schema";
+import { IMessage, IUser } from "drizzle/schema";
+import userService from "./user.service";
 export class CloudMessageService {
     private static async _send(chatId: string, key: string, message: MessageType.Any, data: {
         t: string;
@@ -27,17 +28,8 @@ export class CloudMessageService {
         });
         message.status = "sent";
         message.sequence = result.sequence;
-        LocalMessageService.add({
-            id: message.id,
-            chatId: message.roomId ?? '',
-            type: IModel.IChat.IMessageTypeEnum.NORMAL,
-            sequence: message.sequence,
-            uid: message.senderId,
-            uidType: message.,
-            time: message.createdAt ?? 0,
-            state: message.status,
-            data:JSON.stringify(data),
-        });
+
+        LocalMessageService.add(chatUiAdapter.messageDto2Entity(message));
         return message;
     }
     private static async _sendText(chatId: string, key: string, message: MessageType.Text) {
@@ -119,33 +111,93 @@ export class CloudMessageService {
                 throw new ToastException('不支持的消息類型');
         }
     }
-    static async findByIds(chatId: string, ids: string[]) {
+    static async findByIds(chatId: string, ids: string[], key: string): Promise<MessageType.Any[]> {
         // 过滤出已缓存的
-        let items:IMessage[] = await LocalMessageService.findByIds(ids)
+        const items: IMessage[] = await LocalMessageService.findByIds(ids)
+        const result = [...chatUiAdapter.messageEntityToItems(items, key)]
         const cloudIds = ids.filter(id => !items.find(item => item.id === id));
-        if(cloudIds.length > 0){
+        if (cloudIds.length > 0) {
             const cloudItems = await messageApi.findByIds({ chatId, ids: cloudIds });
-            // 存储到缓存中
-            await LocalMessageService.addBatch(cloudItems);
-            items = [...items, ...cloudItems];
+            if (cloudItems.length > 0) {
+                const remoteData = cloudItems.map(i => chatUiAdapter.messageTypeConvert(i, key, null, true))
+                result.push(...remoteData)
+                // 存储到缓存中
+                await LocalMessageService.addBatch(chatUiAdapter.messageEntityConverts(remoteData));
+            }
         }
-        return items.sort((a, b) => a.sequence - b.sequence);
+        return result.sort((a, b) => {
+            return b.sequence - a.sequence
+        });
     }
     // 获取最新消息的 id 列表
-    static async getLatestIds(chatId: string, sequence: number,limit:number= 20): Promise<string[]> {
+    static async getLatestIds(chatId: string, sequence: number, limit: number = 20): Promise<string[]> {
         // 根据sequence 获取最新的 id 列表
         return [];
     }
 
     // 删除所有我的消息
-    static async flushAll(){
+    static async flushAll() {
     }
     // 删除消息对于我的关联
     static async delByIds(ids: string[]) {
-        
         await LocalMessageService.delByIds(ids)
         return messageApi.deleteSelfMsg({ ids: ids })
     }
+
+    /**
+     * 獲取消息列表
+     * @param chatId
+     * @param key
+     * @param sequence
+     * @param direction
+     * @returns
+     */
+    static async getRemoteList(
+        chatId: string,
+        key: string,
+        sequence: number,
+        limit: number
+    ): Promise<MessageType.Any[]> {
+        const list = await CloudMessageService.getMessageDetails(chatId, key, sequence, limit)
+        const userIds: number[] = []
+        list.forEach(d => {
+            if (d.senderId !== undefined && d.senderId !== null) {
+                userIds.push(d.senderId)
+            }
+        })
+        let userHash: Map<number, IUser> = await userService.getUserHash(userIds)
+        return list.map((item) => {
+            const user = userHash.get(item?.senderId ?? -1)
+            if (user) {
+                return {
+                    ...item,
+                    author: chatUiAdapter.userTransfer(user)
+                }
+            }
+            return item
+        });
+    }
+
+    static async getMessageDetails(
+        chatId: string,
+        key: string,
+        sequence: number,
+        limit: number
+    ): Promise<MessageType.Any[]> {
+        const idsResp = await messageApi.getMessageListIds({
+            chatId,
+            limit: limit,
+            sequence,
+            direction: 'down',
+        })
+        if (!idsResp || idsResp.items.length <= 0) {
+            return []
+        }
+        const result: MessageType.Any[] = await CloudMessageService.findByIds(chatId, idsResp.items, key)
+        return result
+    }
+
+
 }
 
 

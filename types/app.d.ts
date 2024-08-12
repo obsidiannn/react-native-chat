@@ -10,6 +10,7 @@ declare namespace App {
     ChatScreen: undefined;
     UserScreen: undefined;
     UserChatScreen: {
+      chatId: string
       item: ChatDetailItem
       fromNotify?: boolean
     };
