@@ -5,6 +5,9 @@ import { MessageType, Size } from '../../types'
 import { formatBytes, formatDuration, ThemeContext, UserContext } from '../../utils'
 import styles from './styles'
 import { s } from 'app/utils/size'
+import { IconFont } from 'app/components/IconFont/IconFont'
+import { colors } from 'app/theme'
+import fileService from 'app/services/file.service'
 
 export interface VideoMessageProps {
     message: MessageType.DerivedVideo
@@ -53,7 +56,7 @@ export const VideoMessage = ({ message, messageWidth }: VideoMessageProps) => {
             <ImageBackground
                 accessibilityRole='image'
                 resizeMode={'cover'}
-                source={{ uri: message.thumbnail }}
+                source={{ uri: fileService.getFullUrl(message.thumbnail) }}
                 style={
                     {
                         ...(aspectRatio < 1
@@ -63,12 +66,23 @@ export const VideoMessage = ({ message, messageWidth }: VideoMessageProps) => {
                     }
                 }
             >
-                <Image source={require('../../assets/play.svg')}
+                {/* <Image source={require('../../assets/play.svg')}
                     style={{
                         alignSelf: 'center',
                         width: s(64),
                         height: s(64)
-                    }} />
+                    }} /> */}
+                <View style={{
+                    alignSelf: 'center',
+                    backgroundColor: 'black',
+                    padding: s(10),
+                    borderRadius: s(36),
+                    opacity: 0.6,
+                    borderWidth: s(1),
+                    borderColor: colors.palette.neutral100
+                }}>
+                    <IconFont name='play' size={36} color={colors.palette.neutral100} />
+                </View>
                 <Text style={durationText}>{formatDuration(message.duration)}</Text>
             </ImageBackground>
 

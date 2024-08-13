@@ -54,7 +54,6 @@ const styles = ({
       maxWidth: messageWidth,
     },
     messageBody: {
-      
     },
     messageHeader: {
       display: 'flex',

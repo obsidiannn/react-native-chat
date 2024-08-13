@@ -2,6 +2,9 @@
 
 
 const palette = {
+
+  green300: '#00D32D',
+
   neutral100: "#FFFFFF",
   neutral200: "#F4F2F1",
   neutral300: "#D7CEC9",
@@ -47,7 +50,7 @@ const palette = {
 
   angry100: "#F2D6CD",
   angry500: "#C03403",
-  
+
   red500: "#fb3737",
 
   overlay20: "rgba(25, 16, 21, 0.2)",

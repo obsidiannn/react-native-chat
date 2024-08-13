@@ -12,6 +12,7 @@ import { Image } from 'expo-image'
 import { ThemeContext, translate } from '../../utils'
 import { s } from 'app/utils/size'
 import { colors } from 'app/theme'
+import { IconFont } from 'app/components/IconFont/IconFont'
 
 export interface AttachmentButtonAdditionalProps {
   touchableOpacityProps?: TouchableOpacityProps
@@ -46,11 +47,7 @@ export const AttachmentButton = ({
           padding: s(8),
           borderRadius: s(24)
         }}>
-          <Image
-            source={require('../../assets/plus.svg')}
-            // source={require('../../assets/icon-attachment.png')}
-            style={[styles.image, { tintColor: colors.palette.neutral100 }]}
-          />
+          <IconFont name='plus' size={28} color={colors.palette.neutral100} />
         </View>
       )}
     </TouchableOpacity>

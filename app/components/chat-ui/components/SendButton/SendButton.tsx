@@ -1,15 +1,13 @@
 import * as React from 'react'
 import {
   GestureResponderEvent,
-  Image,
   StyleSheet,
-  Text,
   TouchableOpacity,
   TouchableOpacityProps,
   View,
 } from 'react-native'
 
-import {  ThemeContext, translate } from '../../utils'
+import { ThemeContext, translate } from '../../utils'
 import { colors } from 'app/theme'
 import { IconFont } from 'app/components/IconFont/IconFont'
 
@@ -50,18 +48,7 @@ export const SendButton = ({
         }]
       }}>
         <IconFont name='send' color={colors.palette.neutral100} />
-        {/* <Text style={{
-          color: colors.palette.neutral100,
-        }}>{
-            translate('chatUI.btnSend')
-          }</Text> */}
       </View>
-      {/* {theme.icons?.sendButtonIcon?.() ?? (
-        <Image
-          source={require('../../assets/icon-send.png')}
-          style={{ tintColor: theme.colors.inputText }}
-        />
-      )} */}
     </TouchableOpacity>
   )
 }

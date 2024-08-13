@@ -310,7 +310,7 @@ const ChatPage = forwardRef((_, ref) => {
                 longPressModalRef.current?.open({ message: m, e })
             }}
             usePreviewData={false}
-            theme={theme === 'dark' ? darkTheme : lightTheme}
+            theme={theme === 'dark' ? darkTheme : darkTheme}
             onAttachmentPress={handleAttachmentPress}
             onMessagePress={handleMessagePress}
             onPreviewDataFetched={handlePreviewDataFetched}

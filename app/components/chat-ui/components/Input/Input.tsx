@@ -88,12 +88,7 @@ export const Input = ({
             }}
           />
         ) : null)}
-      {/* <TouchableOpacity>
-        <Image source={require('../../assets/emoji.svg')} style={{
-              width: 36,
-              height: 36
-        }}/>
-      </TouchableOpacity> */}
+ 
       <TextInput
         multiline
         placeholder={translate('chatUI.inputPlaceholder')}

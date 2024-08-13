@@ -3,6 +3,8 @@ import { Image, StyleSheet, View } from 'react-native'
 
 import { MessageType, Theme } from '../../types'
 import { CircularActivityIndicator } from '../CircularActivityIndicator'
+import { IconFont } from 'app/components/IconFont/IconFont'
+import { colors } from 'app/theme'
 
 export const StatusIcon = React.memo(
   ({
@@ -23,20 +25,12 @@ export const StatusIcon = React.memo(
         case 'delivered':
         case 'sent':
           statusIcon = theme.icons?.deliveredIcon?.() ?? (
-            <Image
-              source={require('../../assets/icon-delivered.png')}
-              style={{ tintColor: theme.colors.primary }}
-              testID='DeliveredIcon'
-            />
+            <IconFont name='checkMark' color={colors.palette.green300} size={24} />
           )
           break
         case 'error':
           statusIcon = theme.icons?.errorIcon?.() ?? (
-            <Image
-              source={require('../../assets/icon-error.png')}
-              style={{ tintColor: theme.colors.error }}
-              testID='ErrorIcon'
-            />
+            <IconFont name='circleClose' color={theme.colors.error} size={24} />
           )
           break
         case 'seen':

@@ -18,6 +18,7 @@ import styles from './styles'
 import { VideoMessage } from '../VideoMessage'
 import AvatarX from 'app/components/AvatarX'
 import fileService from 'app/services/file.service'
+import { s } from 'app/utils/size'
 
 export interface MessageTopLevelProps extends TextMessageTopLevelProps {
   /** Called when user makes a long press on any message */
@@ -216,6 +217,7 @@ export const Message = React.memo(
                   <Text style={theme.fonts.userNameTextStyle}>{message.author.firstName}</Text>
                 </View>
                 <View>
+
                   <Pressable
                     onStartShouldSetResponderCapture={(ev) => { return true }}
                     onLongPress={(e) => {
@@ -226,17 +228,39 @@ export const Message = React.memo(
                   >
                     {renderBubbleContainer()}
                   </Pressable>
+
                 </View>
               </View>
-              <Avatar
-                {...{
-                  author: message.author,
-                  currentUserIsAuthor,
-                  showAvatar,
-                  showUserAvatars,
-                  theme,
-                }}
-              />
+              <View style={{
+                display: 'flex',
+                flexDirection: 'column',
+                height: '100%',
+                justifyContent: 'space-between'
+              }}>
+                {/* 'delivered' | 'error' | 'seen' | 'sending' | 'sent' */}
+                <Avatar
+                  {...{
+                    author: message.author,
+                    currentUserIsAuthor,
+                    showAvatar,
+                    showUserAvatars,
+                    theme,
+                  }}
+                />
+                <View style={{
+                  marginLeft: s(8),
+                }}>
+                  <StatusIcon
+                    {...{
+                      currentUserIsAuthor,
+                      showStatus: true,
+                      // status: message.status,
+                      status: 'sending',
+                      theme,
+                    }}
+                  />
+                </View>
+              </View>
             </>
             :
             (
@@ -271,14 +295,6 @@ export const Message = React.memo(
             )
         }
 
-        <StatusIcon
-          {...{
-            currentUserIsAuthor,
-            showStatus,
-            status: message.status,
-            theme,
-          }}
-        />
       </View>
     )
   }

@@ -4,6 +4,7 @@ import { MessageType, Theme } from '../../types'
 import { getUserAvatarNameColor, getUserInitials } from '../../utils'
 import AvatarX from 'app/components/AvatarX'
 import fileService from 'app/services/file.service'
+import { s } from 'app/utils/size'
 
 export const Avatar = React.memo(
   ({
@@ -54,7 +55,7 @@ export const Avatar = React.memo(
 
     return showUserAvatars ? (
       <View testID='AvatarContainer' style={{
-        ...(currentUserIsAuthor ? { marginLeft: 16 } : { marginRight: 16 })
+        ...(currentUserIsAuthor ? { marginHorizontal: s(8) } : { marginHorizontal: s(8)  })
       }}>
         {showAvatar ? renderAvatar() : <View style={styles.placeholder} />}
       </View>
