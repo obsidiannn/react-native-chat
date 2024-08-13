@@ -10,6 +10,7 @@ import {
 import { ThemeContext, translate } from '../../utils'
 import { colors } from 'app/theme'
 import { IconFont } from 'app/components/IconFont/IconFont'
+import { s } from 'app/utils/size'
 
 export interface SendButtonPropsAdditionalProps {
   touchableOpacityProps?: TouchableOpacityProps
@@ -41,8 +42,8 @@ export const SendButton = ({
     >
       <View style={{
         backgroundColor: theme.colors.secondary,
-        padding: 4,
-        borderRadius: 24,
+        padding: s(4),
+        borderRadius: s(24),
         transform: [{
           rotate: '90deg'
         }]
@@ -55,6 +56,6 @@ export const SendButton = ({
 
 const styles = StyleSheet.create({
   sendButton: {
-    marginLeft: 16,
+    marginLeft: s(16),
   },
 })

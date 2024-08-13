@@ -1,6 +1,7 @@
 import { StyleSheet } from 'react-native'
 
 import { Theme } from '../../types'
+import { s, vs } from 'app/utils/size'
 
 export default ({ theme }: { theme: Theme }) =>
   StyleSheet.create({
@@ -11,7 +12,7 @@ export default ({ theme }: { theme: Theme }) =>
     },
     emptyComponentContainer: {
       alignItems: 'center',
-      marginHorizontal: 24,
+      marginHorizontal: s(24),
       transform: [{ rotateX: '180deg' }],
     },
     emptyComponentTitle: {
@@ -26,16 +27,16 @@ export default ({ theme }: { theme: Theme }) =>
       flexGrow: 1,
     },
     footer: {
-      height: 16,
+      height: vs(16),
     },
     footerLoadingPage: {
       alignItems: 'center',
       justifyContent: 'center',
-      marginTop: 16,
-      height: 32,
+      marginTop: vs(16),
+      height: vs(32),
     },
     header: {
-      height: 4,
+      height: vs(4),
     },
     keyboardAccessoryView: {
       backgroundColor: theme.colors.inputBackground,

@@ -1,6 +1,7 @@
 import { PreviewData } from '@flyerhq/react-native-link-preview'
 import * as React from 'react'
 import { ColorValue, ImageURISource, TextStyle } from 'react-native'
+import { IconFontNameType } from '../IconFont/IconFont'
 
 export namespace MessageType {
   export type Any = Custom | File | Image | Text | Unsupported | Video
@@ -229,6 +230,6 @@ export interface User {
 
 export interface ChatUiToolsKitProps {
   title: string
-  icon: string
+  icon: IconFontNameType
   key: string
 }

@@ -1,6 +1,7 @@
 import { StyleSheet } from 'react-native'
 
 import { MessageType, Theme } from '../../types'
+import { s, vs } from 'app/utils/size'
 
 const styles = ({
   currentUserIsAuthor,
@@ -22,7 +23,7 @@ const styles = ({
       justifyContent: !currentUserIsAuthor ? 'flex-end' : 'flex-start',
       flex: 1,
       marginBottom: message.type === 'dateHeader' ? 0 : 8 + message.offset,
-      marginLeft: 20,
+      marginLeft: s(20),
       flexDirection: 'row',
     },
     contentContainer: {
@@ -47,8 +48,8 @@ const styles = ({
     dateHeader: {
       alignItems: 'center',
       justifyContent: 'center',
-      marginBottom: 32,
-      marginTop: 16,
+      marginBottom: vs(32),
+      marginTop: vs(16),
     },
     pressable: {
       maxWidth: messageWidth,
@@ -60,7 +61,7 @@ const styles = ({
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'flex-end',
-      padding: 4
+      padding: s(4)
     }
   })
 

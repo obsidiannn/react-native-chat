@@ -5,6 +5,7 @@ import { MessageType, Theme } from '../../types'
 import { CircularActivityIndicator } from '../CircularActivityIndicator'
 import { IconFont } from 'app/components/IconFont/IconFont'
 import { colors } from 'app/theme'
+import { s, vs } from 'app/utils/size'
 
 export const StatusIcon = React.memo(
   ({
@@ -63,9 +64,9 @@ export const StatusIcon = React.memo(
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    height: 16,
+    height: vs(16),
     justifyContent: 'center',
-    paddingHorizontal: 4,
-    width: 16,
+    paddingHorizontal: s(4),
+    width: s(16),
   },
 })

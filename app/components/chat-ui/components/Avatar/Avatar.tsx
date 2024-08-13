@@ -55,7 +55,7 @@ export const Avatar = React.memo(
 
     return showUserAvatars ? (
       <View testID='AvatarContainer' style={{
-        ...(currentUserIsAuthor ? { marginHorizontal: s(8) } : { marginHorizontal: s(8)  })
+        ...(currentUserIsAuthor ? { marginHorizontal: s(8) } : { marginHorizontal: s(8) })
       }}>
         {showAvatar ? renderAvatar() : <View style={styles.placeholder} />}
       </View>
@@ -66,19 +66,19 @@ export const Avatar = React.memo(
 const styles = StyleSheet.create({
   avatarBackground: {
     alignItems: 'center',
-    borderRadius: 24,
-    height: 48,
-    width: 48,
+    borderRadius: s(24),
+    height: s(48),
+    width: s(48),
     justifyContent: 'center',
   },
   image: {
     alignItems: 'center',
-    borderRadius: 24,
-    width: 48,
-    height: 48,
+    borderRadius: s(24),
+    width: s(48),
+    height: s(48),
     justifyContent: 'center',
   },
   placeholder: {
-    width: 40,
+    width: s(40),
   },
 })

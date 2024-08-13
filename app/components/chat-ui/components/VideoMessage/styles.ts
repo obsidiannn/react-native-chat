@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native'
 import { MessageType, Theme, User } from '../../types'
+import { s, vs } from 'app/utils/size'
 
 const styles = ({
     aspectRatio,
@@ -22,11 +23,11 @@ const styles = ({
         },
         minimizedImage: {
             borderRadius: 15,
-            height: 64,
+            height: vs(64),
             marginLeft: theme.insets.messageInsetsVertical,
-            marginRight: 16,
+            marginRight: s(16),
             marginVertical: theme.insets.messageInsetsVertical,
-            width: 64,
+            width: s(64),
         },
         minimizedImageContainer: {
             display: 'flex',
@@ -41,14 +42,14 @@ const styles = ({
             ...(theme.fonts.receivedMessageBodyTextStyle),
                 color: 'white',
                 position: 'absolute',
-                left: 10,
-                bottom: 5
+                left: s(10),
+                bottom: vs(5)
         },
         sizeText: {
             ...(user?.id === message.author.id
                 ? theme.fonts.sentMessageCaptionTextStyle
                 : theme.fonts.receivedMessageCaptionTextStyle),
-            marginTop: 4,
+            marginTop: vs(4),
         },
         textContainer: {
             flexShrink: 1,
@@ -57,7 +58,7 @@ const styles = ({
         },
         verticalImage: {
             height: messageWidth,
-            minWidth: 170,
+            minWidth: s(170),
             width: messageWidth * aspectRatio,
         },
     })

@@ -41,7 +41,7 @@ import { Button } from 'app/components/Button'
 import { s } from 'app/utils/size'
 import fileService from 'app/services/file.service'
 import toast from 'app/utils/toast'
- 
+
 // import { KeyboardAwareScrollView,KeyboardProvider } from 'react-native-keyboard-controller'
 
 // Untestable
@@ -325,8 +325,8 @@ export const Chat = ({
         showUserAvatars &&
           message.type !== 'dateHeader'
           // && message.author.id !== user.id
-          ? Math.floor(Math.min(size.width * 0.70, 440))
-          : Math.floor(Math.min(size.width * 0.72, 440))
+          ? Math.floor(Math.min(size.width * 0.70, s(440)))
+          : Math.floor(Math.min(size.width * 0.72, s(440)))
 
       const roundBorder =
         message.type !== 'dateHeader' && message.nextMessageInGroup

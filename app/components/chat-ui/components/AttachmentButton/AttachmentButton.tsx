@@ -1,14 +1,11 @@
 import * as React from 'react'
 import {
   GestureResponderEvent,
-
-  StyleSheet,
   TouchableOpacity,
   TouchableOpacityProps,
   View,
 } from 'react-native'
 
-import { Image } from 'expo-image'
 import { ThemeContext, translate } from '../../utils'
 import { s } from 'app/utils/size'
 import { colors } from 'app/theme'
@@ -54,9 +51,4 @@ export const AttachmentButton = ({
   )
 }
 
-const styles = StyleSheet.create({
-  image: {
-    width: 24,
-    height: 24
-  },
-})
+

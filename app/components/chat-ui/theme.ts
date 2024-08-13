@@ -2,6 +2,7 @@ import { ColorValue } from 'react-native'
 
 import { Theme } from './types'
 import { $dark, colors } from 'app/theme'
+import { s, vs } from 'app/utils/size'
 
 // For internal usage only. Use values from theme itself.
 
@@ -49,8 +50,8 @@ const SECONDARY_DARK = '#2b2250'
 /** Default chat theme which implements {@link Theme} */
 export const defaultTheme: Theme = {
   borders: {
-    inputBorderRadius: 10,
-    messageBorderRadius: 20,
+    inputBorderRadius: s(10),
+    messageBorderRadius: s(20),
     chatTopRadius: 0
   },
   colors: {
@@ -70,91 +71,91 @@ export const defaultTheme: Theme = {
   fonts: {
     dateDividerTextStyle: {
       color: NEUTRAL_2,
-      fontSize: 12,
+      fontSize: s(12),
       fontWeight: '800',
-      lineHeight: 16,
+      lineHeight: vs(16),
     },
     emptyChatPlaceholderTextStyle: {
       color: NEUTRAL_2,
-      fontSize: 16,
+      fontSize: s(16),
       fontWeight: '500',
-      lineHeight: 24,
+      lineHeight: vs(24),
     },
     inputTextStyle: {
-      fontSize: 16,
+      fontSize: s(16),
       fontWeight: '500',
-      lineHeight: 24,
+      lineHeight: vs(24),
     },
     receivedMessageBodyTextStyle: {
       color: NEUTRAL_0,
-      fontSize: 16,
+      fontSize: s(16),
       fontWeight: '500',
-      lineHeight: 24,
+      lineHeight: vs(24),
     },
     receivedMessageCaptionTextStyle: {
       color: NEUTRAL_2,
-      fontSize: 12,
+      fontSize: s(12),
       fontWeight: '500',
       lineHeight: 16,
     },
     receivedMessageLinkDescriptionTextStyle: {
       color: NEUTRAL_0,
-      fontSize: 14,
+      fontSize: s(14),
       fontWeight: '400',
-      lineHeight: 20,
+      lineHeight: vs(20),
     },
     receivedMessageLinkTitleTextStyle: {
       color: NEUTRAL_0,
-      fontSize: 16,
+      fontSize: s(16),
       fontWeight: '800',
-      lineHeight: 22,
+      lineHeight: vs(22),
     },
     sentMessageBodyTextStyle: {
       color: NEUTRAL_7,
-      fontSize: 16,
+      fontSize: s(16),
       fontWeight: '500',
-      lineHeight: 24,
+      lineHeight: vs(24),
     },
     sentMessageCaptionTextStyle: {
       color: NEUTRAL_7_WITH_OPACITY,
-      fontSize: 12,
+      fontSize: s(12),
       fontWeight: '500',
-      lineHeight: 16,
+      lineHeight: vs(16),
     },
     sentMessageLinkDescriptionTextStyle: {
       color: NEUTRAL_7,
-      fontSize: 14,
+      fontSize: s(14),
       fontWeight: '400',
-      lineHeight: 20,
+      lineHeight: vs(20),
     },
     sentMessageLinkTitleTextStyle: {
       color: NEUTRAL_7,
-      fontSize: 16,
+      fontSize: s(16),
       fontWeight: '800',
-      lineHeight: 22,
+      lineHeight: vs(22),
     },
     userAvatarTextStyle: {
       color: NEUTRAL_7,
-      fontSize: 12,
+      fontSize: s(12),
       fontWeight: '800',
-      lineHeight: 16,
+      lineHeight: vs(16),
     },
     userNameTextStyle: {
-      fontSize: 12,
+      fontSize: s(12),
       fontWeight: '800',
-      lineHeight: 16,
+      lineHeight: vs(16),
     },
   },
   insets: {
-    messageInsetsHorizontal: 20,
-    messageInsetsVertical: 16,
+    messageInsetsHorizontal: s(20),
+    messageInsetsVertical: vs(16),
   },
 }
 
 export const lightTheme: Theme = {
   borders: {
-    inputBorderRadius: 5,
-    messageBorderRadius: 20,
+    inputBorderRadius: s(5),
+    messageBorderRadius: s(20),
     chatTopRadius: 0
   },
   colors: {
@@ -176,94 +177,94 @@ export const lightTheme: Theme = {
   fonts: {
     dateDividerTextStyle: {
       color: NEUTRAL_2,
-      fontSize: 12,
+      fontSize: s(12),
       fontWeight: '800',
-      lineHeight: 16,
+      lineHeight: vs(16),
     },
     emptyChatPlaceholderTextStyle: {
       // color: NEUTRAL_2,
       color: colors.palette.gray200,
-      fontSize: 12,
+      fontSize: s(12),
       fontWeight: '400',
-      lineHeight: 20,
+      lineHeight: vs(20),
     },
     inputTextStyle: {
-      fontSize: 14,
+      fontSize: s(14),
       fontWeight: '500',
-      lineHeight: 20,
+      lineHeight: vs(20),
     },
     receivedMessageBodyTextStyle: {
       color: NEUTRAL_0,
-      fontSize: 14,
+      fontSize: s(14),
       fontWeight: '500',
-      lineHeight: 24,
+      lineHeight: vs(24),
     },
     receivedMessageCaptionTextStyle: {
       color: NEUTRAL_2,
-      fontSize: 12,
+      fontSize: s(12),
       fontWeight: '500',
-      lineHeight: 16,
+      lineHeight: vs(16),
     },
     receivedMessageLinkDescriptionTextStyle: {
       color: NEUTRAL_0,
-      fontSize: 14,
+      fontSize: s(14),
       fontWeight: '400',
-      lineHeight: 20,
+      lineHeight: vs(20),
     },
     receivedMessageLinkTitleTextStyle: {
-      color: colors.palette.gray600, 
-      fontSize: 16,
+      color: colors.palette.gray600,
+      fontSize: s(16),
       fontWeight: '800',
-      lineHeight: 18,
+      lineHeight: vs(18),
     },
     sentMessageBodyTextStyle: {
       color: colors.palette.gray600,
-      fontSize: 15,
+      fontSize: s(15),
       fontWeight: '400',
-      lineHeight: 18,
+      lineHeight: vs(18),
     },
     sentMessageCaptionTextStyle: {
       color: NEUTRAL_7_WITH_OPACITY,
-      fontSize: 12,
+      fontSize: s(12),
       fontWeight: '500',
-      lineHeight: 16,
+      lineHeight: vs(16),
     },
     sentMessageLinkDescriptionTextStyle: {
       color: NEUTRAL_7,
-      fontSize: 14,
+      fontSize: s(14),
       fontWeight: '400',
-      lineHeight: 20,
+      lineHeight: vs(20),
     },
     sentMessageLinkTitleTextStyle: {
       color: NEUTRAL_7,
-      fontSize: 16,
+      fontSize: s(16),
       fontWeight: '800',
-      lineHeight: 22,
+      lineHeight: vs(22),
     },
     userAvatarTextStyle: {
       color: NEUTRAL_7,
-      fontSize: 12,
+      fontSize: s(12),
       fontWeight: '800',
-      lineHeight: 16,
+      lineHeight: vs(16),
     },
     userNameTextStyle: {
-      fontSize: 12,
       fontWeight: '800',
-      lineHeight: 16,
+      fontSize: s(12),
+      lineHeight: vs(16),
     },
   },
   insets: {
-    messageInsetsHorizontal: 20,
-    messageInsetsVertical: 16,
+    messageInsetsHorizontal: s(20),
+    messageInsetsVertical: vs(16),
   },
 }
 
 /** Dark chat theme which implements {@link Theme} */
 export const darkTheme: Theme = {
   borders: {
-    inputBorderRadius: 10,
-    messageBorderRadius: 20,
-    chatTopRadius: 20
+    inputBorderRadius: s(5),
+    messageBorderRadius: s(20),
+    chatTopRadius: 0
   },
   colors: {
     background: colors.palette.gray700,
@@ -284,85 +285,84 @@ export const darkTheme: Theme = {
   fonts: {
     dateDividerTextStyle: {
       color: NEUTRAL_2,
-      fontSize: 12,
-
-      lineHeight: 16,
+      fontSize: s(12),
+      lineHeight: vs(16),
     },
     emptyChatPlaceholderTextStyle: {
       color: NEUTRAL_2,
-      fontSize: 16,
       fontWeight: '500',
-      lineHeight: 24,
+      fontSize: s(16),
+      lineHeight: vs(24),
     },
     inputTextStyle: {
-      fontSize: 16,
+      fontSize: s(14),
       fontWeight: '500',
-      lineHeight: 24,
+      lineHeight: vs(20),
     },
     receivedMessageBodyTextStyle: {
       color: NEUTRAL_0,
-      fontSize: 16,
+      fontSize: s(14),
       fontWeight: '500',
-      lineHeight: 24,
+      lineHeight: vs(24),
     },
     receivedMessageCaptionTextStyle: {
       color: NEUTRAL_2,
-      fontSize: 12,
+      fontSize: s(12),
       fontWeight: '500',
-      lineHeight: 16,
+      lineHeight: vs(16),
     },
     receivedMessageLinkDescriptionTextStyle: {
       color: NEUTRAL_0,
-      fontSize: 14,
+      fontSize: s(14),
       fontWeight: '400',
-      lineHeight: 20,
+      lineHeight: vs(20),
     },
     receivedMessageLinkTitleTextStyle: {
       color: NEUTRAL_0,
-      fontSize: 16,
+      fontSize: s(16),
       fontWeight: '800',
-      lineHeight: 18,
+      lineHeight: vs(18),
     },
     sentMessageBodyTextStyle: {
       color: NEUTRAL_7,
-      fontSize: 15,
+      fontSize: s(15),
       fontWeight: '400',
-      lineHeight: 18,
+      lineHeight: vs(18),
     },
     sentMessageCaptionTextStyle: {
       color: NEUTRAL_7_WITH_OPACITY,
-      fontSize: 12,
+      fontSize: s(12),
       fontWeight: '500',
-      lineHeight: 16,
+      lineHeight: vs(16),
     },
     sentMessageLinkDescriptionTextStyle: {
       color: NEUTRAL_7,
-      fontSize: 14,
+      fontSize: s(14),
       fontWeight: '400',
-      lineHeight: 20,
+      lineHeight: vs(20),
     },
     sentMessageLinkTitleTextStyle: {
       color: NEUTRAL_7,
-      fontSize: 16,
+      fontSize: s(16),
       fontWeight: '800',
-      lineHeight: 22,
+      lineHeight: vs(22),
     },
     userAvatarTextStyle: {
       color: NEUTRAL_7,
-      fontSize: 12,
+      fontSize: s(12),
       fontWeight: '800',
-      lineHeight: 16,
+      lineHeight: vs(16),
     },
     userNameTextStyle: {
-      fontSize: 12,
       fontWeight: '500',
-      lineHeight: 16,
+      fontSize: s(12),
+      lineHeight: vs(16),
       color: colors.palette.neutral100
     },
   },
   insets: {
-    messageInsetsHorizontal: 20,
-    messageInsetsVertical: 16,
+    messageInsetsHorizontal: s(20),
+    messageInsetsVertical: vs(16),
   },
 }
 

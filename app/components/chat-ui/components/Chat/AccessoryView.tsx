@@ -1,7 +1,7 @@
 import { ColorValue, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
 import { ChatUiToolsKitProps } from "../../types";
-import { s, verticalScale } from "app/utils/size";
+import { s, verticalScale, vs } from "app/utils/size";
 import { colors } from "app/theme";
 import { IconFont } from "app/components/IconFont/IconFont";
 
@@ -17,13 +17,13 @@ export default (props: InputToolsProps) => {
         {(tools ?? []).map((tool, i) => {
             return <TouchableOpacity onPress={() => onPress(tool)} key={tool.key} style={{
                 ...styles.item,
-                marginTop: i > 3 ? 10 : 0,
+                marginTop: i > 3 ? vs(10) : 0,
 
             }}>
                 <View style={{
                     backgroundColor: props.backgroundColor ?? colors.palette.gray400,
-                    padding: 4,
-                    borderRadius: 12
+                    padding: s(4),
+                    borderRadius: s(12)
                 }}>
                     <IconFont name={tool.icon} color={props.color} />
                 </View>
@@ -35,8 +35,8 @@ export default (props: InputToolsProps) => {
 }
 const styles = StyleSheet.create({
     container: {
-        paddingHorizontal: 10,
-        paddingVertical: 20,
+        paddingHorizontal: s(10),
+        paddingVertical: vs(20),
         backgroundColor: colors.palette.gray200,
         width: '100%',
         display: 'flex',
@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
     item: {
         width: '25%',
         alignItems: 'center',
-        paddingVertical: s(12),
+        paddingVertical: vs(12),
         display: 'flex',
         flexDirection: 'column',
     },
@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
     },
     icon: {
         width: s(46),
-        height: s(46),
+        height: vs(46),
         borderRadius: s(10),
 
     },

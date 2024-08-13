@@ -16,8 +16,6 @@ import { StatusIcon } from '../StatusIcon'
 import { TextMessage, TextMessageTopLevelProps } from '../TextMessage'
 import styles from './styles'
 import { VideoMessage } from '../VideoMessage'
-import AvatarX from 'app/components/AvatarX'
-import fileService from 'app/services/file.service'
 import { s } from 'app/utils/size'
 
 export interface MessageTopLevelProps extends TextMessageTopLevelProps {
@@ -254,8 +252,7 @@ export const Message = React.memo(
                     {...{
                       currentUserIsAuthor,
                       showStatus: true,
-                      // status: message.status,
-                      status: 'sending',
+                      status: message.status,
                       theme,
                     }}
                   />

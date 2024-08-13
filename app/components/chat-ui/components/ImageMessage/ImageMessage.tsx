@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Image, ImageBackground, Text, View } from 'react-native'
+import { Image, Text, View } from 'react-native'
 
 import { MessageType, Size } from '../../types'
 import { formatBytes, ThemeContext, UserContext } from '../../utils'

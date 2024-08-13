@@ -1,15 +1,15 @@
 import { StyleSheet } from 'react-native'
 
 import { Theme } from '../../types'
-import { s } from 'app/utils/size'
+import { s, vs } from 'app/utils/size'
 
 export default ({ theme }: { theme: Theme }) =>
   StyleSheet.create({
     container: {
       alignItems: 'center',
       flexDirection: 'row',
-      paddingHorizontal: 20,
-      paddingVertical: 10,
+      paddingHorizontal: s(20),
+      paddingVertical: vs(10),
       backgroundColor: theme.colors.inputValueBackground,
       borderRadius: s(36),
       margin: s(12)
@@ -18,15 +18,15 @@ export default ({ theme }: { theme: Theme }) =>
       ...theme.fonts.inputTextStyle,
       color: theme.colors.inputText,
       flex: 1,
-      maxHeight: 100,
+      maxHeight: vs(100),
       // Fixes default paddings for Android
-      borderRadius: 8,
+      borderRadius: s(8),
       backgroundColor: theme.colors.inputValueBackground,
-      paddingBottom: 5,
-      paddingLeft: 8,
-      paddingTop: 5,
+      paddingBottom: s(5),
+      paddingLeft: s(8),
+      paddingTop: vs(5),
     },
     marginRight: {
-      marginRight: 16,
+      marginRight: s(16),
     },
   })

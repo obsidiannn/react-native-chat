@@ -2,6 +2,7 @@ import { StyleSheet } from 'react-native'
 
 import { MessageType, Theme, User } from '../../types'
 import { colors } from 'app/theme'
+import { s, vs } from 'app/utils/size'
 
 const styles = ({
   message,
@@ -35,9 +36,9 @@ const styles = ({
           ? `${String(theme.colors.sentMessageDocumentIcon)}33`
           : `${String(theme.colors.receivedMessageDocumentIcon)}33`,
       borderRadius: 21,
-      height: 42,
+      height: vs(42),
       justifyContent: 'center',
-      width: 42,
+      width: s(42),
     },
     name: {
       ...(user?.id === message.author.id
@@ -53,11 +54,11 @@ const styles = ({
         ? theme.fonts.sentMessageCaptionTextStyle
         : theme.fonts.receivedMessageCaptionTextStyle),
       color: colors.palette.gray400,
-      marginTop: 4,
+      marginTop: vs(4),
     },
     textContainer: {
       flexShrink: 1,
-      marginLeft: 16,
+      marginLeft: s(16),
     },
   })
 
