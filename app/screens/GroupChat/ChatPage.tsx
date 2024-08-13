@@ -29,6 +29,8 @@ import { LocalMessageService } from "app/services/LocalMessageService";
 import { CloudMessageService } from "app/services/MessageService";
 import NetInfo from "@react-native-community/netinfo";
 import { LocalChatService } from "app/services/LocalChatService";
+import { LocalUserService } from "app/services/LocalUserService";
+import userService from "app/services/user.service";
 
 export interface GroupChatPageRef {
     init: (
@@ -107,8 +109,21 @@ export default forwardRef((_, ref) => {
         console.log('【本地消息】', items);
 
         if (items.length > 0) {
+            const userIds = items.map(i => i.uid)
+            const users = await LocalUserService.findByIds(userIds)
+            const userHash = userService.initUserHash(users)
+            const tmps = items.map((e) => {
+                const item = chatUiAdapter.messageEntity2Dto(e)
+                const user = userHash.get(item?.senderId ?? -1)
+                if (user) {
+                    return {
+                        ...item,
+                        author: chatUiAdapter.userTransfer(user)
+                    }
+                }
+                return item
+            });
             setMessages(olds => {
-                const tmps = chatUiAdapter.messageEntityToItems(items)
                 let result = []
                 if (olds.length > 0) {
                     const oldMin = olds[olds.length - 1].sequence

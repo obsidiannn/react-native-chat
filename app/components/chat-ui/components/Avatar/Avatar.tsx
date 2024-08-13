@@ -1,8 +1,9 @@
 import * as React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
-import { Image } from 'expo-image'
 import { MessageType, Theme } from '../../types'
 import { getUserAvatarNameColor, getUserInitials } from '../../utils'
+import AvatarX from 'app/components/AvatarX'
+import fileService from 'app/services/file.service'
 
 export const Avatar = React.memo(
   ({
@@ -24,19 +25,21 @@ export const Avatar = React.memo(
         theme.colors.userAvatarNameColors
       )
       const initials = getUserInitials(author)
+      console.log('[avatar]', author.imageUrl);
 
       if (author.imageUrl) {
 
         return (
-          <Image
-            accessibilityRole='image'
-            source={{ uri: author.imageUrl }}
-            style={
-              {
-                ...styles.image,
-                backgroundColor: theme.colors.userAvatarImageBackground
-              }}
-          />
+          <AvatarX uri={fileService.getFullUrl(author.imageUrl ?? '')} />
+          // <Image
+          //   accessibilityRole='image'
+          //   source={{ uri: author.imageUrl }}
+          //   style={
+          //     {
+          //       ...styles.image,
+          //       backgroundColor: theme.colors.userAvatarImageBackground
+          //     }}
+          // />
         )
       } else {
         console.log('miss avatar: ', author);

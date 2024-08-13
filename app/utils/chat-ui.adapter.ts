@@ -5,6 +5,7 @@ import { IModel } from "@repo/enums"
 import { GroupMemberItemVO, MessageDetailItem, MessageExtra } from "@repo/types"
 import quickCrypto from "./quick-crypto"
 import { MessageType, User } from "app/components/chat-ui"
+import en from "app/i18n/en"
 
 const userTransfer = (user: IUser | null): User => {
     if (user === undefined || user === null) {
@@ -200,86 +201,90 @@ const messageEntityToItems = (entities: IMessage[], key: string = '', needDecode
         return []
     }
     return entities.map(entity => {
-        const data = needDecode ? decrypt(key, entity.data ?? '') : JSON.parse(entity.data ?? '')
-        // const time = new Date().getTime()
-        console.log('[time]', entity.time);
-        // const time = 
-        const time = entity.time !== null ? entity.time : new Date().valueOf()
-        let message: MessageType.Any
-        switch (data.type) {
-            case 'text':
-                message = {
-                    id: entity.id,
-                    author: {},
-                    createdAt: time,
-                    updatedAt: time,
-                    text: data.text,
-                    type: 'text',
-                    sequence: entity.sequence,
-                    roomId: entity.chatId,
-                    senderId: entity.uid,
-                } as MessageType.Text
-                break
-            case 'image':
-                const content: MessageType.PartialImage = data as MessageType.PartialImage
-                message = {
-                    id: entity.id,
-                    author: {},
-                    createdAt: entity.time,
-                    sequence: entity.sequence,
-                    roomId: entity.chatId,
-                    senderId: entity.uid,
-                    ...content,
-                    uri: fileService.getFullUrl(content.uri),
-                    type: 'image',
-                } as MessageType.Image
-                break
-            case 'video':
-                const videoData: MessageType.PartialVideo = data as MessageType.PartialVideo
-                message = {
-                    id: entity.id,
-                    author: {},
-                    createdAt: time,
-                    sequence: entity.sequence,
-                    roomId: entity.chatId,
-                    senderId: entity.uid,
-                    ...videoData,
-                    thumbnail: fileService.getFullUrl(videoData.thumbnail),
-                    type: 'video',
-                } as MessageType.Video
-                break
-            case 'file':
-                const fileData: MessageType.PartialFile = data as MessageType.PartialFile
-                message = {
-                    id: entity.id,
-                    author: {},
-                    createdAt: time,
-                    sequence: entity.sequence,
-                    roomId: entity.chatId,
-                    senderId: entity.uid,
-                    ...fileData,
-                    uri: fileService.getFullUrl(fileData.uri),
-                    type: 'file',
-                } as MessageType.File
-                break
-            default:
-                message = {
-                    type: 'unsupported',
-                    id: entity.id,
-                    author: {},
-                    createdAt: time,
-                    sequence: entity.sequence,
-                    roomId: entity.chatId,
-                    senderId: entity.uid
-                } as MessageType.Unsupported
-                break
-        }
-        message.metadata = {
-            ...message.metadata,
-            'uidType': entity.uidType
-        }
-        return message
+        return messageEntity2Dto(entity, key, needDecode)
     })
+}
+
+const messageEntity2Dto = (entity: IMessage, key: string = '', needDecode: boolean = false) => {
+    const data = needDecode ? decrypt(key, entity.data ?? '') : JSON.parse(entity.data ?? '')
+    // const time = new Date().getTime()
+    console.log('[time]', entity.time);
+    // const time = 
+    const time = entity.time !== null ? entity.time : new Date().valueOf()
+    let message: MessageType.Any
+    switch (data.type) {
+        case 'text':
+            message = {
+                id: entity.id,
+                author: {},
+                createdAt: time,
+                updatedAt: time,
+                text: data.text,
+                type: 'text',
+                sequence: entity.sequence,
+                roomId: entity.chatId,
+                senderId: entity.uid,
+            } as MessageType.Text
+            break
+        case 'image':
+            const content: MessageType.PartialImage = data as MessageType.PartialImage
+            message = {
+                id: entity.id,
+                author: {},
+                createdAt: entity.time,
+                sequence: entity.sequence,
+                roomId: entity.chatId,
+                senderId: entity.uid,
+                ...content,
+                uri: fileService.getFullUrl(content.uri),
+                type: 'image',
+            } as MessageType.Image
+            break
+        case 'video':
+            const videoData: MessageType.PartialVideo = data as MessageType.PartialVideo
+            message = {
+                id: entity.id,
+                author: {},
+                createdAt: time,
+                sequence: entity.sequence,
+                roomId: entity.chatId,
+                senderId: entity.uid,
+                ...videoData,
+                thumbnail: fileService.getFullUrl(videoData.thumbnail),
+                type: 'video',
+            } as MessageType.Video
+            break
+        case 'file':
+            const fileData: MessageType.PartialFile = data as MessageType.PartialFile
+            message = {
+                id: entity.id,
+                author: {},
+                createdAt: time,
+                sequence: entity.sequence,
+                roomId: entity.chatId,
+                senderId: entity.uid,
+                ...fileData,
+                uri: fileService.getFullUrl(fileData.uri),
+                type: 'file',
+            } as MessageType.File
+            break
+        default:
+            message = {
+                type: 'unsupported',
+                id: entity.id,
+                author: {},
+                createdAt: time,
+                sequence: entity.sequence,
+                roomId: entity.chatId,
+                senderId: entity.uid
+            } as MessageType.Unsupported
+            break
+    }
+    message.metadata = {
+        ...message.metadata,
+        'uidType': entity.uidType
+    }
+    return message
 }
 
 const messageTypeCodeConvert = (type: string): number => {
@@ -370,5 +375,6 @@ export default {
     messageEntityConverts,
     messageDto2Entity,
     convertPartialContent,
-    messageEntityToItems
+    messageEntityToItems,
+    messageEntity2Dto
 } 

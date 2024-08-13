@@ -25,6 +25,9 @@ import { CloudMessageService } from "app/services/MessageService"
 import NetInfo from "@react-native-community/netinfo";
 import { UserChatUIContext } from "./context"
 import chatService from "app/services/chat.service"
+import { LocalUserService } from "app/services/LocalUserService"
+import userService from "app/services/user.service"
+import user from "app/api/auth/user"
 export interface ChatUIPageRef {
     init: (chatItem: ChatDetailItem, friend: IUser) => void
     refreshSequence: (firstSeq: number, lastSeq: number) => void
@@ -48,10 +51,22 @@ const ChatPage = forwardRef((_, ref) => {
         }
         const items = await LocalMessageService.getList(chatId, seq, 10);
         console.log('【本地消息】', items);
-
         if (items.length > 0) {
+            const userIds = items.map(i => i.uid)
+            const users = await LocalUserService.findByIds(userIds)
+            const userHash = userService.initUserHash(users)
+            const tmps = items.map((e) => {
+                const item = chatUiAdapter.messageEntity2Dto(e)
+                const user = userHash.get(item?.senderId ?? -1)
+                if (user) {
+                    return {
+                        ...item,
+                        author: chatUiAdapter.userTransfer(user)
+                    }
+                }
+                return item
+            });
             setMessages(olds => {
-                const tmps = chatUiAdapter.messageEntityToItems(items)
                 let result = []
                 if (olds.length > 0) {
                     const oldMin = olds[olds.length - 1].sequence

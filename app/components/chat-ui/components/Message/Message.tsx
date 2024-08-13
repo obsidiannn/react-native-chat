@@ -16,6 +16,8 @@ import { StatusIcon } from '../StatusIcon'
 import { TextMessage, TextMessageTopLevelProps } from '../TextMessage'
 import styles from './styles'
 import { VideoMessage } from '../VideoMessage'
+import AvatarX from 'app/components/AvatarX'
+import fileService from 'app/services/file.service'
 
 export interface MessageTopLevelProps extends TextMessageTopLevelProps {
   /** Called when user makes a long press on any message */
@@ -146,7 +148,7 @@ export const Message = React.memo(
             messageWidth,
             message
 
-          }}  />)(
+          }} />)(
             // type-coverage:ignore-next-line
             excludeDerivedMessageProps(message) as MessageType.File,
             messageWidth
