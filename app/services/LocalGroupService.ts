@@ -58,6 +58,16 @@ export class LocalGroupService {
         return groupIds
     }
 
+    static async findByIdIn(groupIds: number[]): Promise<IGroup[]> {
+        if (groupIds.length <= 0)
+            return []
+        return await GetDB().select().from(groups).where(
+            and(
+                inArray(groups.id, groupIds),
+            )
+        )
+    }
+
     // 不存在过期策略的chat list
     static async findByIdInWithoutTimeout(groupIds: number[]): Promise<IGroup[]> {
         if (groupIds.length <= 0)

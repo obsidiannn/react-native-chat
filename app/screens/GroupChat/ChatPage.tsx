@@ -1,25 +1,19 @@
-import React, { forwardRef, useCallback, useContext, useEffect, useImperativeHandle, useMemo, useRef, useState } from "react";
+import React, { forwardRef, useCallback, useImperativeHandle, useRef, useState } from "react";
 import tools from './tools';
 import {
-    GroupMemberItemVO,
-    ChatDetailItem, DeleteMessageEvent, SocketJoinEvent,
+    ChatDetailItem, DeleteMessageEvent,
     SocketMessageEvent,
     GroupDetailItem
 } from "@repo/types";
 import EventManager from 'app/services/event-manager.service'
 import { useTranslation } from 'react-i18next';
 import { Chat, MessageType, darkTheme, lightTheme } from "app/components/chat-ui";
-import { MediaTypeOptions, launchImageLibraryAsync } from 'expo-image-picker'
-import * as DocumentPicker from 'expo-document-picker';
 import chatUiAdapter from "app/utils/chat-ui.adapter";
 import { useRecoilValue } from "recoil";
-import messageSendService from "app/services/message-send.service";
+import messageSendService, { MessageSendService } from "app/services/message-send.service";
 import { PreviewData } from "@flyerhq/react-native-link-preview";
-
 import VideoPlayModal, { IVideoPreviewModal } from "app/components/VideoModal"
 import FilePreviewModal, { ChatUIFileModalRef } from "app/components/FileModal"
-
-import { captureImage, captureVideo, videoFormat, generateVideoThumbnail } from 'app/utils/media-util';
 import LongPressModal, { LongPressModalType } from "app/components/LongPressModal";
 import LoadingModal, { LoadingModalType } from 'app/components/loading-modal';
 
@@ -31,7 +25,10 @@ import { GestureResponderEvent } from "react-native";
 import { ThemeState } from "app/stores/system";
 import chatService from "app/services/chat.service";
 import eventUtil from "app/utils/event-util";
-
+import { LocalMessageService } from "app/services/LocalMessageService";
+import { CloudMessageService } from "app/services/MessageService";
+import NetInfo from "@react-native-community/netinfo";
+import { LocalChatService } from "app/services/LocalChatService";
 
 export interface GroupChatPageRef {
     init: (
@@ -40,19 +37,23 @@ export interface GroupChatPageRef {
     ) => void;
     close: () => void;
 }
-export default forwardRef((props, ref) => {
+export default forwardRef((_, ref) => {
     const [messages, setMessages] = useState<MessageType.Any[]>([])
-    const theme = useRecoilValue(ThemeState)
     const chatItemRef = useRef<ChatDetailItem>()
     const author = useRecoilValue(AuthUser)
     const sharedSecretRef = useRef<string>('');
+
     const firstSeq = useRef<number>(0);
     const lastSeq = useRef<number>(0);
+    const remoteMessageLoading = useRef<boolean>(false)
+    const remoteLastSeq = useRef<number>(0)
+
     const encVideoPreviewRef = useRef<IVideoPreviewModal>();
     const longPressModalRef = useRef<LongPressModalType>();
     const loadingModalRef = useRef<LoadingModalType>(null)
-    const { t } = useTranslation('screen-group-chat')
     const fileModalRef = useRef<ChatUIFileModalRef>()
+    const theme = useRecoilValue(ThemeState)
+    const { t } = useTranslation('screen-group-chat')
 
 
     const addMessage = (message: MessageType.Any) => {
@@ -62,10 +63,11 @@ export default forwardRef((props, ref) => {
         }
         console.log('------add message', sequence);
         setMessages([message, ...messages])
+        messageSendService.send(chatItemRef.current?.id ?? '', sharedSecretRef.current, message)
+            .then(updateMessage)
     }
 
-    const updateMessage = (message: MessageType.Any) => {
-        console.log('update', message);
+    const updateMessage = async (message: MessageType.Any) => {
         if (message.sequence > lastSeq.current) {
             lastSeq.current = message.sequence
         }
@@ -79,9 +81,86 @@ export default forwardRef((props, ref) => {
             }
             return items;
         })
+        if (chatItemRef.current) {
+            if (!message.roomId) {
+                message.roomId = chatItemRef.current.id
+            }
+            if (message.metadata?.uidType) {
+                message.metadata.uidType = 1
+            }
+            if (message.senderId) {
+                message.senderId = author?.id ?? 0;
+            }
+            await LocalMessageService.addBatch(chatUiAdapter.messageEntityConverts([message]))
+            LocalChatService.updateSequence(chatItemRef.current?.id, message.sequence)
+        }
     }
 
-    const init = useCallback((
+    // 加载历史数据 历史数据只会出现在本地
+    const loadHistoryMessages = useCallback(async (chatId: string, seq: number) => {
+        let init = false
+        if (seq < 0) {
+            init = true
+            seq = Number.MAX_VALUE
+        }
+        const items = await LocalMessageService.getList(chatId, seq, 20);
+        console.log('【本地消息】', items);
+
+        if (items.length > 0) {
+            setMessages(olds => {
+                const tmps = chatUiAdapter.messageEntityToItems(items)
+                let result = []
+                if (olds.length > 0) {
+                    const oldMin = olds[olds.length - 1].sequence
+                    result = olds.concat(tmps.filter(t => {
+                        return t.sequence < oldMin
+                    }))
+                } else {
+                    result = tmps
+                }
+                if (init) {
+                    lastSeq.current = result[0].sequence
+                }
+                firstSeq.current = result[result.length - 1].sequence
+                return result;
+            })
+        }
+    }, [])
+    // 获取最新数据 也是从seq开始获取最近的 20 条
+    const loadRemoteMessages = useCallback(async (chatId: string, seq: number) => {
+        if (remoteMessageLoading.current) {
+            return;
+        }
+        remoteMessageLoading.current = true;
+        try {
+            const items = await CloudMessageService.getRemoteList(chatId, sharedSecretRef.current, seq, 20);
+            if (items.length > 0) {
+                setMessages(olds => {
+                    let result = []
+                    if (olds.length > 0) {
+                        const oldMin = olds[olds.length - 1].sequence
+                        result = items.filter(t => {
+                            return t.sequence < oldMin
+                        }).concat(olds)
+                    } else {
+                        result = items
+                    }
+                    firstSeq.current = result[result.length - 1].sequence
+                    lastSeq.current = result[0].sequence
+                    return result;
+                })
+            }
+
+            if (remoteLastSeq.current > lastSeq.current) {
+                loadRemoteMessages(chatId, lastSeq.current);
+            }
+        } finally {
+            remoteMessageLoading.current = false;
+        }
+
+    }, [])
+
+    const init = useCallback(async (
         chatItem: ChatDetailItem,
         group: GroupDetailItem
     ) => {
@@ -98,12 +177,7 @@ export default forwardRef((props, ref) => {
         }
         console.log('會話id conversationIdRef', chatItem.id)
         console.log('author=', author);
-
-        chatItemRef.current = chatItem
-
-        if (sharedSecretRef.current) {
-            return
-        }
+        const chatId = chatItem.id
         let sharedSecret: string
         if (group?.encPri !== '' && group?.encPri !== null && group?.encPri !== undefined) {
             console.log('[groupa]', group);
@@ -118,8 +192,13 @@ export default forwardRef((props, ref) => {
             sharedSecret = Buffer.from(decode).toString('utf8')
             console.log('sharedSecret==', sharedSecret);
         }
+
         console.log('sharedSecret==', sharedSecret);
+        chatItemRef.current = chatItem
         sharedSecretRef.current = sharedSecret
+
+        await loadHistoryMessages(chatItem.id, -1)
+
         // join room event
         eventUtil.sendSocketJoinEvent(chatItem.id)
 
@@ -127,7 +206,16 @@ export default forwardRef((props, ref) => {
         const _eventKey = EventManager.generateKey(IModel.IClient.SocketTypeEnum.MESSAGE, chatItem.id)
         EventManager.addEventSingleListener(_eventKey, handleEvent)
 
-        messageLoad(chatItem)
+        NetInfo.fetch().then(async (state) => {
+            if (state.isConnected) {
+                chatService.querySequence([chatId]).then(res => {
+                    if (res.items.length > 0) {
+                        remoteLastSeq.current = res.items[0].lastSequence
+                        loadRemoteMessages(chatId, lastSeq.current);
+                    }
+                })
+            }
+        })
 
     }, []);
 
@@ -146,37 +234,15 @@ export default forwardRef((props, ref) => {
         close,
     }));
 
-
-    const messageLoad = async (_chatItem: ChatDetailItem) => {
-        firstSeq.current = _chatItem.lastSequence
-        lastSeq.current = _chatItem.lastSequence
-        console.log('[groupchat]load local');
-        await loadMessages('up', true);
-        try {
-            console.log('刷新chat');
-            const oldSeq = _chatItem.lastSequence
-            const newChatItem = await chatService.refreshSequence([_chatItem])
-            _chatItem = newChatItem[0]
-            // 有未讀
-            const limit = _chatItem.lastSequence - oldSeq
-            if (limit > 0) {
-                console.log('[groupchat]load remote');
-                loadMessages('down', false, limit);
-            }
-        } catch (e) {
-            console.error(e)
-        }
-    }
-
-
     const handleEvent = (e: any) => {
         const { type } = e
-        console.log('[event]', e);
-        console.log('checkauthor', author?.id)
         if (type === IModel.IClient.SocketTypeEnum.MESSAGE) {
             const _eventItem = e as SocketMessageEvent
-            if (lastSeq.current < _eventItem.sequence && author?.id !== _eventItem.senderId) {
-                loadMessages('down')
+            if (lastSeq.current < _eventItem.sequence && author?.id !== _eventItem.senderId && remoteLastSeq.current < _eventItem.sequence) {
+                remoteLastSeq.current = _eventItem.sequence
+                if (!remoteMessageLoading.current) {
+                    loadRemoteMessages(chatItemRef.current?.id ?? '', lastSeq.current)
+                }
             }
         }
         if (type === IModel.IClient.SocketTypeEnum.CLEAR_ALL_MESSAGE) {
@@ -192,249 +258,33 @@ export default forwardRef((props, ref) => {
         }
     }
 
-    const loadMessages = useCallback(async (direction: 'up' | 'down', init?: boolean, limit?: number) => {
-        const chatItem = chatItemRef.current
-        if (!chatItem || chatItem === null) {
-            return
-        }
-
-        let seq = direction == 'up' ? firstSeq.current : lastSeq.current;
-        if (!init) {
-            if (direction === 'up') {
-                seq -= 1
-                if (seq <= (chatItem.firstSequence)) {
-                    return
-                }
-            } else {
-                seq += 1
-            }
-        } else {
-            if (seq <= 1) {
-                seq = 10
-            }
-        }
-        console.log('load group', direction, seq);
-
-
-        return messageSendService.getList(
-            chatItem.id,
-            sharedSecretRef.current,
-            seq,
-            direction,
-            chatItem.firstSequence,
-            true, limit
-        )
-            .then((res) => {
-                if (res.length <= 0) {
-                    return
-                }
-
-                const maxSeq = res[0].sequence ?? 0
-                const minSeq = res[res.length - 1].sequence ?? 0
-                let _data: any[] = []
-                if (direction === 'up') {
-                    if (!init && firstSeq.current <= minSeq) {
-                        return
-                    } else {
-                        _data = res.filter(r => {
-                            if (init) {
-                                return true
-                            }
-                            return (r.sequence ?? 0) < firstSeq.current
-                        })
-                        firstSeq.current = minSeq
-                        if (_data.length > 0) {
-                            setMessages((items) => {
-                                return items.concat(_data)
-                            });
-                        }
-                    }
-                }
-
-                if (direction === 'down') {
-                    if (lastSeq.current >= maxSeq) {
-                        return
-                    } else {
-                        _data = res.filter(r => {
-                            if (init) {
-                                return true
-                            }
-                            return (r.sequence ?? 0) > lastSeq.current
-                        })
-                        lastSeq.current = maxSeq
-                        if (_data.length > 0) {
-                            setMessages((items) => {
-                                return _data.concat(items);
-                            });
-
-                        }
-                    }
-                }
-
-            }).catch((err) => {
-                console.log('err', err);
-            }).finally(() => {
-            })
-    }, [])
-
     /**
      * 发送消息
      * @param key 
      */
     const handleAttachmentPress = async (key: string) => {
+        if (!author) return
         switch (key) {
             case 'camera':
-                handleCamera()
+                MessageSendService.captureCamera(author).then(addMessage)
                 break
             case 'video':
-                handleVideo()
+                loadingModalRef.current?.open(t('common.loading'))
+                MessageSendService.captureVideo(author).then(addMessage)
+                    .finally(() => {
+                        loadingModalRef.current?.close()
+                    })
                 break
             case 'albums':
-                handleImageSelection()
+                MessageSendService.imageSelection(author).then(addMessage)
                 break
             case 'file':
-                handleFileSelection()
+                MessageSendService.fileSelection(author).then(addMessage)
                 break
             default: break
         }
     }
 
-    // 发送文件
-    const handleFileSelection = async () => {
-        try {
-            const result = await DocumentPicker.getDocumentAsync({
-                type: '*/*',
-                copyToCacheDirectory: true,
-            });
-            if (result.assets !== null && result.assets.length > 0) {
-                const response = result.assets[0]
-                const fileMessage: MessageType.File = {
-                    author: chatUiAdapter.userTransfer(author),
-                    createdAt: Date.now(),
-                    id: generateUtil.generateId(),
-                    mimeType: response.mimeType ?? undefined,
-                    name: response.name,
-                    size: response.size ?? 0,
-                    type: 'file',
-                    uri: response.uri,
-                    senderId: author?.id ?? 0,
-                    sequence: -1,
-                    status: 'sending'
-                }
-                addMessage(fileMessage)
-                messageSendService.send(chatItemRef.current?.id ?? '', sharedSecretRef.current, fileMessage)
-                    .then(res => {
-                        updateMessage(res)
-                    })
-            }
-
-        } catch { }
-    }
-
-    /**
-     * 发送图片
-     */
-    const handleImageSelection = async () => {
-        const result = await launchImageLibraryAsync(
-            {
-                mediaTypes: MediaTypeOptions.Images,
-                quality: 0.7,
-                base64: true,
-            }
-        )
-        const assets = result.assets
-        const response = assets?.[0]
-
-        if (response?.base64) {
-            const imageMessage: MessageType.Image = {
-                author: chatUiAdapter.userTransfer(author),
-                createdAt: Date.now(),
-                height: response.height,
-                id: generateUtil.generateId(),
-                name: response.fileName ?? response.uri?.split('/').pop() ?? '🖼',
-                size: response.fileSize ?? 0,
-                type: 'image',
-                // uri: `data:image/*;base64,${response.base64}`,
-                uri: response.uri,
-                width: response.width,
-                senderId: author?.id ?? 0,
-                sequence: -1
-            }
-            addMessage(imageMessage)
-            messageSendService.send(chatItemRef.current?.id ?? '', sharedSecretRef.current, imageMessage)
-                .then(res => {
-                    updateMessage(res)
-                })
-        }
-
-    }
-
-    /**
-     * 拍照处理
-     */
-    const handleCamera = async () => {
-        const photo = await captureImage();
-        if (photo !== undefined) {
-            const imageMessage: MessageType.Image = {
-                author: chatUiAdapter.userTransfer(author),
-                createdAt: Date.now(),
-                height: photo.height,
-                id: generateUtil.generateId(),
-                name: photo.fileName ?? '',
-                size: photo.fileSize ?? 0,
-                type: 'image',
-                uri: photo.uri,
-                width: photo.width,
-                senderId: author?.id ?? 0,
-                sequence: -1
-            }
-            addMessage(imageMessage)
-            messageSendService.send(chatItemRef.current?.id ?? '', sharedSecretRef.current, imageMessage)
-                .then(res => {
-                    updateMessage(res)
-                })
-        }
-    }
-
-    /**
-     * video处理
-     */
-    const handleVideo = async () => {
-        const video = await captureVideo();
-        if (video !== undefined && video !== null) {
-            loadingModalRef.current?.open(t('label_pending'))
-            try {
-                const formatVideo = await videoFormat(video)
-                if (formatVideo !== null) {
-                    const mid = generateUtil.generateId()
-                    const thumbnailPath = await generateVideoThumbnail(formatVideo.uri, mid)
-                    const message: MessageType.Video = {
-                        id: generateUtil.generateId(),
-                        author: chatUiAdapter.userTransfer(author),
-                        createdAt: Date.now(),
-                        type: 'video',
-                        senderId: author?.id ?? 0,
-                        sequence: -1,
-                        height: formatVideo.height,
-                        width: formatVideo.width,
-                        name: formatVideo.fileName ?? '',
-                        size: formatVideo.fileSize ?? 0,
-                        duration: formatVideo.duration ?? 0,
-                        uri: formatVideo.uri,
-                        thumbnail: thumbnailPath ?? '',
-                        status: 'sending'
-                    }
-                    addMessage(message)
-                    messageSendService.send(chatItemRef.current?.id ?? '', sharedSecretRef.current, message)
-                        .then(res => {
-                            updateMessage(res)
-                        })
-                }
-            } finally {
-                loadingModalRef.current?.close()
-            }
-        }
-    }
 
     const handleMessagePress = async (message: MessageType.Any) => {
         if (message.type === 'file') {
@@ -478,11 +328,6 @@ export default forwardRef((props, ref) => {
             sequence: -1
         }
         addMessage(textMessage)
-        messageSendService.send(chatItemRef.current?.id ?? '', sharedSecretRef.current, textMessage)
-            .then(res => {
-                console.log('message', res);
-                updateMessage(res)
-            })
     }
 
     /**
@@ -494,14 +339,6 @@ export default forwardRef((props, ref) => {
             message: m,
             e
         })
-
-        // deleteFunc: async () => {
-        //     const chatId = chatItemRef.current?.id ?? ''
-        //     await messageSendService.deleteMessage(chatId, [m.id])
-        //     const event: DeleteMessageEvent = { msgIds: [m.id], type: IModel.IClient.SocketTypeEnum.DELETE_MESSAGE }
-        //     const eventKey = EventManager.generateChatTopic(chatId)
-        //     EventManager.emit(eventKey, event)
-        // }
     }
 
     return (
@@ -510,7 +347,7 @@ export default forwardRef((props, ref) => {
                 tools={tools}
                 messages={messages}
                 onEndReached={async () => {
-                    loadMessages('up')
+                    loadHistoryMessages(chatItemRef.current?.id ?? '', firstSeq.current)
                 }}
                 showUserAvatars
                 onMessageLongPress={handleLongPress}

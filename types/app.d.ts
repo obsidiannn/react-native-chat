@@ -15,6 +15,7 @@ declare namespace App {
       fromNotify?: boolean
     };
     GroupChatScreen: {
+      chatId: string
       item: ChatDetailItem
       fromNotify?: boolean
     };

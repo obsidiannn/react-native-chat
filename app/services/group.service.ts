@@ -65,7 +65,7 @@ const queryByIdIn = async (groupIds: number[]): Promise<Map<number, GroupDetailI
 }
 
 const queryLocalByIdIn = async (groupIds: number[]): Promise<Map<number, GroupDetailItem>> => {
-    const entities = await LocalGroupService.findByIdInWithoutTimeout(groupIds)
+    const entities = await LocalGroupService.findByIdIn(groupIds)
     const entityMap = new Map<number, GroupDetailItem>()
     if (entities && entities.length > 0) {
         for (let i = 0; i < entities.length; i++) {
@@ -169,8 +169,6 @@ const getMemberList = async (gid: number, requireUids?: number[]): Promise<Group
 
 // 用於羣組成員索引表的數據接口
 const getLocalMemberList = async (gid: number): Promise<GroupMemberItemVO[]> => {
-
-
     const items = await LocalGroupMemberService.findByIdWithoutTimeout(gid)
     return items.map(groupMemberMapper.entity2Dto)
 }

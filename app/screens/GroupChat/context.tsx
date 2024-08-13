@@ -3,14 +3,14 @@ import { createContext } from "react";
 
 
 export interface GroupChatUiContextType {
-	group: GroupDetailItem 
+	group: GroupDetailItem
 	members: GroupMemberItemVO[]
-	selfMember: GroupMemberItemVO 
-	chatItem: ChatDetailItem 
-	reloadMember: () => Promise<void>
+	selfMember: GroupMemberItemVO
+	chatItem: ChatDetailItem
+	reloadMember: (groupId: number) => Promise<void>
 	reloadMemberByUids: (uids: number[]) => Promise<void>
-	reloadGroup: () => Promise<void>
-	reloadChat: (chat: ChatDetailItem) => void 
+	reloadGroup: (groupId: number) => Promise<GroupDetailItem>
+	reloadChat: (chat: ChatDetailItem) => void
 }
 
 export const GroupChatUiContext = createContext({} as GroupChatUiContextType)

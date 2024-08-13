@@ -13,76 +13,92 @@ import { useTranslation } from 'react-i18next';
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { App } from "types/app";
 import { AuthUser } from "app/stores/auth";
-import toast from "app/utils/toast";
+import NetInfo from '@react-native-community/netinfo'
 import { s } from "app/utils/size";
 import GroupInfoModal, { GroupInfoModalType } from './info/Index'
 import { ColorsState } from "app/stores/system";
 import chatService from "app/services/chat.service";
 import { IconFont } from "app/components/IconFont/IconFont";
-import { LocalGroupService } from "app/services/LocalGroupService";
+import { LocalChatService } from "app/services/LocalChatService";
+import chatMapper from "app/utils/chat.mapper";
 
 type Props = StackScreenProps<App.StackParamList, 'GroupChatScreen'>;
 
 
 export const GroupChatScreen = ({ navigation, route }: Props) => {
     const insets = useSafeAreaInsets();
-    const chatItemRef = useRef<ChatDetailItem>()
-    const [chatItem, setChatItem] = useState<ChatDetailItem>()
+    const [chatItem, setChatItem] = useState<ChatDetailItem | null>()
+    const [members, setMembers] = useState<GroupMemberItemVO[]>([]);
+    const [group, setGroup] = useState<GroupDetailItem | null>()
+    const authUser = useRecoilValue<IUser | null>(AuthUser)
 
-    const groupIdRef = useRef<number>(-1)
-    const [group, setGroup] = useState<GroupDetailItem>()
-    const authUser = useRecoilValue<IUser>(AuthUser)
-    // const groupRef = useRef<GroupDetailItem>()
     const groupInfoModalRef = useRef<GroupInfoModalType>(null)
     const chatPageRef = useRef<GroupChatPageRef>(null);
-    const [members, setMembers] = useState<GroupMemberItemVO[]>([]);
+    const [selfMember, setSelfMember] = useState<GroupMemberItemVO>()
 
     const themeColor = useRecoilValue(ColorsState)
-    const selfMemberRef = useRef<GroupMemberItemVO>()
-    const [selfMember, setSelfMember] = useState<GroupMemberItemVO>()
     const { t } = useTranslation('screens')
 
     // TODO: 這裏是根據uid變化而部分請求接口的函數
     const refreshMember = useCallback(async (uids: number[]) => {
-        loadMembers(false, group)
+        loadMembers(group?.id ?? 0)
     }, []);
 
-    const loadMembers = useCallback(async (init: boolean = false, group: GroupDetailItem) => {
-        if (init) {
-            const localMembers = await groupService.getLocalMemberList(groupIdRef.current)
-            const self = localMembers.find(m => m.uid === authUser?.id ?? -1)
-            selfMemberRef.current = self
-            setMembers(localMembers)
-            console.log('-----', self, localMembers);
-            setSelfMember(self)
+    const loadLocalChat = useCallback(async (chatId: string): Promise<ChatDetailItem | null> => {
+        const localChat = await LocalChatService.findById(chatId);
+        if (localChat) {
+            const item = chatMapper.entity2Dto(localChat)
+            setChatItem(item)
+            return item
         }
-        groupService.getMemberList(groupIdRef.current).then((res) => {
+        return null
+    }, [])
+
+    const loadRemoteChat = useCallback(async (chatId: string): Promise<ChatDetailItem | null> => {
+        const remoteChats = await chatService.mineChatList([chatId])
+        if (remoteChats.length > 0) {
+            setChatItem(remoteChats[0])
+            return remoteChats[0]
+        }
+        return null
+    }, [])
+
+    const loadLocalMembers = useCallback(async (groupId: number) => {
+        const localMembers = await groupService.getLocalMemberList(groupId)
+        const self = localMembers.find(m => m.uid === authUser?.id ?? -1)
+        setMembers(localMembers)
+        console.log('-----', self, localMembers);
+        setSelfMember(self)
+        return localMembers.length > 0
+    }, [])
+
+    const loadMembers = useCallback(async (groupId: number) => {
+        groupService.getMemberList(groupId).then((res) => {
             setMembers(res)
             const self = res.find(m => m.uid === authUser?.id ?? -1)
-            console.log('self===', authUser, self);
-            if (self !== null) {
-                selfMemberRef.current = self
+            if (self) {
                 setSelfMember(self)
             }
         });
     }, []);
-    const loadGroup = useCallback(async () => {
-        const groupId = groupIdRef.current
-        const localGroup = await groupService.queryLocalByIdIn([groupId])
-        console.log('localgroup', localGroup);
 
-        if (groupId) {
-            const res = await groupService.getMineList([groupId])
-            console.log('羣信息', res);
-            if (res && res.length > 0) {
-                setGroup(res[0]);
-                return res[0]
-            }
-        }
+    const loadLocalGroup = useCallback(async (groupId: number) => {
+        const localGroup = await groupService.queryLocalByIdIn([groupId])
         if (localGroup.has(groupId)) {
-            const _g = localGroup.get(groupId)
-            setGroup(_g)
-            return _g
+            const v = localGroup.get(groupId)
+            setGroup(v)
+            return v
+        }
+        return null
+    }, [])
+
+
+    const loadGroup = useCallback(async (groupId: number) => {
+        const res = await groupService.getMineList([groupId])
+        console.log('羣信息', res);
+        if (res && res.length > 0) {
+            setGroup(res[0]);
+            return res[0]
         }
         return null
     }, [])
@@ -96,26 +112,49 @@ export const GroupChatScreen = ({ navigation, route }: Props) => {
     }
 
     const init = useCallback(async () => {
+
+        console.log("初始化group聊天")
+        const chatId = route.params.chatId
         if (!globalThis.wallet) {
-            toast(t('groupChat.error_wallet_init'));
+            navigation.goBack();
             return;
         }
 
-        const _chatItem = route.params.item as ChatDetailItem
-        chatItemRef.current = _chatItem
-        groupIdRef.current = _chatItem.sourceId
+        const netInfo = await NetInfo.fetch()
+        let chatResult = await loadLocalChat(chatId)
+        let localUser = false
+        let localChat = true
+        if (!chatResult) {
+            if (netInfo.isConnected) {
+                const remoteChat = await loadRemoteChat(chatId)
+                if (remoteChat) {
+                    localChat = false
+                }
+            }
+        } else {
+            localUser = await loadLocalMembers(chatResult.sourceId)
+            console.log('goon', localUser);
+        }
+        console.log('chatItem = ', chatResult);
+        if (chatResult === null) {
+            return
+        }
+        const groupId = chatResult.sourceId
+        let g = await loadLocalGroup(groupId)
+        if (!g) {
+            g = await loadGroup(groupId)
+        } else {
+            loadGroup(groupId)
+        }
+        console.log('loadgroup=', g);
 
-        console.log('chatPage', _chatItem);
+        if (!g) {
+            navigation.goBack();
+            return
+        }
 
-        console.log("sourceId", groupIdRef.current, _chatItem.sourceId);
-
-        setChatItem(_chatItem)
-
-        const _group = await loadGroup()
-        console.log('羣id', groupIdRef.current)
-
-        loadMembers(true, _group);
-        chatPageRef.current?.init(chatItemRef.current, _group);
+        loadMembers(chatResult.sourceId)
+        chatPageRef.current?.init(chatResult, g)
 
     }, [])
     useEffect(() => {

@@ -90,7 +90,7 @@ export default forwardRef((_, ref) => {
         }
 
         groupService.invite(users, groupInfo).then(() => {
-            groupContext.reloadMember()
+            groupContext.reloadMember(groupInfo.id)
         })
     }, []);
 
