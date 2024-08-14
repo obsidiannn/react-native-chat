@@ -172,7 +172,8 @@ export const lightTheme: Theme = {
     userAvatarImageBackground: 'transparent',
     userAvatarNameColors: COLORS,
     sentMessageBackground: colors.palette.gray200,
-    receivedMessageBackground: colors.palette.gray50
+    receivedMessageBackground: colors.palette.gray50,
+    pressed: colors.palette.blue200
   },
   fonts: {
     dateDividerTextStyle: {
@@ -280,7 +281,8 @@ export const darkTheme: Theme = {
     userAvatarImageBackground: 'transparent',
     userAvatarNameColors: COLORS,
     sentMessageBackground: colors.palette.blue600,
-    receivedMessageBackground: colors.palette.gray600
+    receivedMessageBackground: colors.palette.gray600,
+    pressed: colors.palette.blue200
   },
   fonts: {
     dateDividerTextStyle: {

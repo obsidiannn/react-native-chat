@@ -28,6 +28,7 @@ import chatService from "app/services/chat.service"
 import { LocalUserService } from "app/services/LocalUserService"
 import userService from "app/services/user.service"
 import eventUtil from "app/utils/event-util"
+import { ms } from "app/utils/size"
 export interface ChatUIPageRef {
     init: (chatItem: ChatDetailItem, friend: IUser) => void
     refreshSequence: (firstSeq: number, lastSeq: number) => void
@@ -171,7 +172,7 @@ const ChatPage = forwardRef((_, ref) => {
         const chatId = chatItem.id
         chatItemRef.current = chatItem
         console.log('[[[initinit');
-        
+
         await loadHistoryMessages(chatId, -1);
         if (globalThis.wallet && friend) {
             sharedSecretRef.current = globalThis.wallet.computeSharedSecret(friend.pubKey);
@@ -306,17 +307,44 @@ const ChatPage = forwardRef((_, ref) => {
         eventUtil.sendTypeingEvent(chatItemRef.current?.id ?? '', v, author?.id ?? 0)
     }
 
+    const messageDelete = (msgId: string) => {
+        if (chatItemRef.current) {
+            messageSendService.deleteMessage(chatItemRef.current.id, [msgId])
+                .then(() => {
+                    setMessages((items) => {
+                        return items.filter(i => i.id !== msgId)
+                    })
+                })
+        }
+    }
+
+    /**
+     * 长按效果处理
+     * @param pressed 
+     * @param msgId 
+     */
+    const longPressHandle = (pressed: boolean, msgId: string) => {
+        setMessages((items) => {
+            return items.map(i => {
+                if (i.id === msgId) {
+                    return { ...i, pressed, }
+                }
+                return i
+            })
+        })
+    }
+
     return <>
         <Chat
             tools={tools}
             messages={messages}
             onEndReached={async () => {
                 console.log('onend');
-                
                 loadHistoryMessages(chatItemRef.current?.id ?? '', firstSeq.current)
             }}
             showUserAvatars
             onMessageLongPress={(m, e) => {
+                longPressHandle(true, m.id)
                 longPressModalRef.current?.open({ message: m, e })
             }}
             usePreviewData={false}
@@ -328,10 +356,13 @@ const ChatPage = forwardRef((_, ref) => {
             user={chatUiAdapter.userTransfer(author)}
             onTypingChange={handleTypingChange}
         />
-        <LongPressModal ref={longPressModalRef} />
         <VideoPlayModal ref={encVideoPreviewRef} />
         <FilePreviewModal ref={fileModalRef} />
         <LoadingModal ref={loadingModalRef} />
+        <LongPressModal ref={longPressModalRef}
+            onDelete={messageDelete} onClose={(msgId: string) => {
+                longPressHandle(false, msgId)
+            }} />
     </>
 })
 

@@ -33,6 +33,7 @@ export namespace MessageType {
     updatedAt?: number
     sequence: number
     senderId: number
+    pressed?: boolean
   }
 
   export interface DerivedMessageProps extends Base {
@@ -139,6 +140,7 @@ export namespace MessageType {
     id: string
     text: string
     type: 'dateHeader'
+    pressed?: boolean
   }
 }
 
@@ -170,6 +172,7 @@ export interface ThemeBorders {
 
 export interface ThemeColors {
   background: ColorValue
+  pressed: ColorValue
   error: ColorValue
   inputBackground: ColorValue
   inputValueBackground: ColorValue

@@ -54,12 +54,6 @@ export const TextMessage = ({
       user,
     })
 
-  const handleEmailPress = (email: string) => {
-    try {
-      Linking.openURL(`mailto:${email}`)
-    } catch {}
-  }
-
   const handlePreviewDataFetched = (data: PreviewData) => {
     setPreviewData(data)
     onPreviewDataFetched?.({

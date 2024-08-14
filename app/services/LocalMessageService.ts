@@ -23,7 +23,7 @@ export class LocalMessageService {
         }
         return true;
     }
-    static async getList(chatId: string,sequence: number, limit:number): Promise<IMessage[]> {
+    static async getList(chatId: string, sequence: number, limit: number): Promise<IMessage[]> {
         const db = GetDB()
         const results = await db.query.messages.findMany({
             where: (messages, { eq, lte, and }) => and(
@@ -35,7 +35,7 @@ export class LocalMessageService {
         })
         return results.sort((a, b) => (b.sequence ?? 1) - (a.sequence ?? 1))
     }
-    
+
     static async findByIds(ids: string[]) {
         const db = GetDB()
         return await db.query.messages.findMany({
@@ -61,6 +61,16 @@ export class LocalMessageService {
         const db = GetDB()
         return await db.delete(messages).where(
             and(inArray(messages.id, ids))
+        )
+    }
+    static async deleteAll() {
+        const db = GetDB()
+        return await db.delete(messages)
+    }
+    static async delByChatIdIn(chatIds: string[]) {
+        const db = GetDB()
+        return await db.delete(messages).where(
+            and(inArray(messages.chatId, chatIds))
         )
     }
 }

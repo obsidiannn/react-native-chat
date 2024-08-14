@@ -6,7 +6,6 @@ import { useState } from "react"
 import { StyleSheet, View } from "react-native"
 import { useRecoilValue } from "recoil"
 import { navigate } from "app/navigators"
-import { useTranslation } from "react-i18next"
 import { ColorsState } from "app/stores/system"
 import { IUser } from "drizzle/schema"
 import ContractListItem from "app/components/ContractListItem"
@@ -51,16 +50,8 @@ const FriendListView = (props: { contacts: IUser[] }) => {
           data={props.contacts}
           renderItem={({ item, index }) => {
             return <ContractListItem onPress={async () => {
-              const chatDetails = await chatService.mineChatList([String(item.chatId)]);
-              if (!chatDetails || chatDetails.length <= 0) {
-                toast("會話不存在")
-                return
-              }
-              const chatDetail = chatDetails[0]
-              console.log('chatDetail', chatDetail);
               navigate('UserChatScreen', {
-                item: chatDetail,
-                userId: chatDetail.sourceId
+                chatId: item.chatId,
               })
             }}
               icon={fileService.getFullUrl(item.avatar ?? '')}

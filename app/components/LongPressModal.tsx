@@ -1,13 +1,20 @@
 
 import { Pressable, TouchableOpacity, StyleSheet, Text, View, GestureResponderEvent, Platform } from "react-native"
-import { forwardRef, useImperativeHandle, useState } from "react";
+import { forwardRef, useImperativeHandle, useState, useTransition } from "react";
 import { MessageType } from "./chat-ui";
-import { s } from "app/utils/size";
-import { Image } from "expo-image";
+import { ms, s } from "app/utils/size";
+import * as clipboard from 'expo-clipboard';
 import { IconFont } from "./IconFont/IconFont";
 import { useRecoilValue } from "recoil";
 import { ColorsState } from "app/stores/system";
+import toast from "app/utils/toast";
+import { useTranslation } from "react-i18next";
 
+interface LongPressProps {
+    onDelete?: (msgId: string) => void
+    onClose?: (msgId: string) => void
+
+}
 
 export interface LongPressModalType {
     open: (params: {
@@ -16,20 +23,26 @@ export interface LongPressModalType {
     }) => void;
 }
 
-export default forwardRef((props, ref) => {
+export default forwardRef((props: LongPressProps, ref) => {
     const [visible, setVisible] = useState(false)
     const [layout, setLayout] = useState<number[]>([])
     const [height, setHeight] = useState<number>(0)
     const themeColor = useRecoilValue(ColorsState)
+    const [message, setMessage] = useState<MessageType.Any | null>(null)
+    const { t } = useTranslation('screens')
+
     const openModal = () => {
         setVisible(true)
     }
 
     const closeModal = () => {
+        if (props.onClose && message) {
+            props.onClose(message.id)
+        }
         setVisible(false)
         setLayout([])
+        setMessage(null)
     }
-
 
     useImperativeHandle(ref, () => ({
         open: (params: {
@@ -40,6 +53,7 @@ export default forwardRef((props, ref) => {
                 console.log('layout', x, y, w, h);
                 setLayout([x, y, w, h])
             })
+            setMessage(params.message)
             openModal()
         }
     }));
@@ -70,7 +84,13 @@ export default forwardRef((props, ref) => {
                         backgroundColor: themeColor.background
                     }}
                 >
-                    <TouchableOpacity style={styles.line_button_style}>
+                    <TouchableOpacity style={styles.line_button_style} onPress={() => {
+                        if (message && message.type === 'text') {
+                            clipboard.setStringAsync(message.text ?? '').then(res => {
+                                toast(t('userInfo.success_copied'));
+                            })
+                        }
+                    }}>
                         <IconFont name="copy" color={themeColor.text} size={32} />
                         <Text style={{ color: themeColor.text }}>复制</Text>
                     </TouchableOpacity>
@@ -86,7 +106,12 @@ export default forwardRef((props, ref) => {
                         <IconFont name="multipleSelection" color={themeColor.text} size={32} />
                         <Text style={{ color: themeColor.text }}>多选</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={[styles.line_button_style, { marginRight: 0 }]}>
+                    <TouchableOpacity style={[styles.line_button_style, { marginRight: 0 }]}
+                        onPress={() => {
+                            if (message) {
+                                props.onDelete && props.onDelete(message.id)
+                            }
+                        }}>
                         <IconFont name="trash" color={themeColor.text} size={32} />
                         <Text style={{ color: themeColor.text }}>删除</Text>
                     </TouchableOpacity>

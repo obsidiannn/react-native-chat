@@ -18,7 +18,7 @@ import * as DocumentPicker from 'expo-document-picker';
 const _limit = 20
 
 export class MessageSendService {
-    static async captureCamera(author: IUser):Promise<MessageType.Image> {
+    static async captureCamera(author: IUser): Promise<MessageType.Image> {
         return new Promise(async (resolve, reject) => {
             try {
                 const photo = await captureImage();
@@ -433,14 +433,14 @@ const getMessageDetails = async (
         console.log('@@@@@@@remote data', remoteData);
         console.log('list data', list);
         if (list.length <= 0) {
-            void LocalMessageService.saveBatchEntity(chatUiAdapter.messageEntityConverts(remoteData))
+            void LocalMessageService.addBatch(chatUiAdapter.messageEntityConverts(remoteData))
             return remoteData
         }
 
         const localSequence = new Set(list.map(r => r.sequence))
         const saveData = remoteData.filter(r => !localSequence.has(r.sequence))
-
-        LocalMessageService.saveBatchEntity(chatUiAdapter.messageEntityConverts(saveData))
+s
+        LocalMessageService.addBatch(chatUiAdapter.messageEntityConverts(saveData))
         const result = list.concat(saveData).sort((a, b) => { return (b.sequence ?? 0) - (a.sequence ?? 0) })
         console.log('[msg result]', result);
 
@@ -458,7 +458,7 @@ const removeBatch = async (chatId: string, mids: string[]) => {
 // 清除所有消息
 // 發起更新chatItem的事件
 const clearMineMessage = async (chatIds: string[]) => {
-    await LocalMessageService.deleteMessageByChatIdIn(chatIds)
+    await LocalMessageService.delByChatIdIn(chatIds)
     return messageApi.clearMineMessage({ chatIds: chatIds })
 }
 
@@ -466,12 +466,12 @@ const clearMineMessage = async (chatIds: string[]) => {
  * 刪除羣消息
  */
 const dropGroupMessage = async (chatIds: string[]) => {
-    await LocalMessageService.deleteMessageByChatIdIn(chatIds)
+    await LocalMessageService.delByChatIdIn(chatIds)
     return messageApi.clearGroupMessageByChatIds({ chatIds: chatIds })
 }
 
 const deleteMessage = async (chatId: string, ids: string[]) => {
-    await LocalMessageService.deleteMessageByMsgIds(chatId, ids)
+    await LocalMessageService.delByIds(ids)
     return messageApi.deleteSelfMsg({ ids: ids })
 }
 

@@ -11,7 +11,6 @@ import { useRecoilValue } from "recoil";
 import { ColorsState } from "app/stores/system";
 import strUtil from "app/utils/str-util";
 import { IconFont } from "app/components/IconFont/IconFont";
-import AvatarComponent from "app/components/Avatar";
 import fileService from "app/services/file.service";
 import AvatarX from "app/components/AvatarX";
 export default (props: {
