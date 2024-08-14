@@ -16,6 +16,9 @@ import { AuthUser } from "app/stores/auth";
 import { s } from "app/utils/size";
 import { navigate } from "app/navigators";
 import { IModel } from "@repo/enums";
+import { Button } from "app/components";
+import chatService from "app/services/chat.service";
+import eventUtil from "app/utils/event-util";
 
 
 type Props = StackScreenProps<App.StackParamList, 'FriendInviteRecordScreen'>;
@@ -95,7 +98,34 @@ export const FriendInviteRecordScreen = ({ navigation }: Props) => {
                         }
                         if (item.friendApply.status === IModel.IFriendApply.Status.PENDING) {
                             if (item.friendApply.friendId === currentUser?.id) {
-                                return <InviteItem user={item.user} item={item.friendApply} isLast={index === items.length - 1} />
+                                return <InviteItem
+                                    user={item.user}
+                                    item={item.friendApply}
+                                    isLast={index === items.length - 1}
+                                    renderRight={() => <Button
+                                        containerStyle={{ borderRadius: s(24) }}
+                                        label="添加" onPress={async () => {
+                                            try {
+                                                const res = await friendApplyService.agree(item.friendApply.id)
+                                                if (res && res.chatId) {
+                                                    const chats = await chatService.mineChatList([res.chatId])
+                                                    if (chats.length > 0) {
+                                                        // 发送会话新增event 
+                                                        eventUtil.sendChatEvent(res.chatId, 'add', {
+                                                            ...chats[0]
+                                                        })
+                                                        // 发送好友新增event 
+                                                        eventUtil.sendFriendChangeEvent(
+                                                            res.friendId ?? 0,
+                                                            false
+                                                        )
+                                                    }
+                                                }
+                                            } catch (e) {
+
+                                            } 
+                                        }} />}
+                                />
                             }
                         }
                         return <InviteItem user={item.user} item={item.friendApply} isLast={index === items.length - 1} />

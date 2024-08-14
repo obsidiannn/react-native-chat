@@ -67,7 +67,7 @@ const findByIds = async (ids: number[]): Promise<IUser[]> => {
             } as IUser
         })
 
-        await LocalUserService.createMany(users)
+        await LocalUserService.addBatch(users)
         return [...localUsers, ...users]
     }
     return localUsers as IUser[];

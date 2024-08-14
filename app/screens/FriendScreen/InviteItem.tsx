@@ -15,8 +15,9 @@ export default (props: {
     item: IServer.IFriendApply,
     user: IUser,
     isLast: boolean,
+    renderRight?: () => React.ReactNode
 }) => {
-    const { item, isLast, user } = props;
+    const { item, isLast, user, renderRight } = props;
     const { t } = useTranslation('screens')
     return <TouchableOpacity onPress={() => {
         if (item.status === IModel.IFriendApply.Status.PENDING) {
@@ -41,14 +42,16 @@ export default (props: {
                 <Text style={styles.nameText}>{user.nickName}</Text>
             </View>
             <View style={styles.statusContainer}>
-                <Text style={{
-                    ...styles.statusText,
-                    color: item.status === IModel.IFriendApply.Status.PENDING ? '#009B0F' : '#999',
-                }}>
-                    {item.status === IModel.IFriendApply.Status.PASSED && t('friend.status_apply_passed')}
-                    {item.status === IModel.IFriendApply.Status.REJECT && t('friend.status_apply_rejected')}
-                    {item.status === IModel.IFriendApply.Status.PENDING && t('friend.status_apply_pending')}
-                </Text>
+                {renderRight ? renderRight() :
+                    <Text style={{
+                        ...styles.statusText,
+                        color: item.status === IModel.IFriendApply.Status.PENDING ? '#009B0F' : '#999',
+                    }}>
+                        {item.status === IModel.IFriendApply.Status.PASSED && t('friend.status_apply_passed')}
+                        {item.status === IModel.IFriendApply.Status.REJECT && t('friend.status_apply_rejected')}
+                        {item.status === IModel.IFriendApply.Status.PENDING && t('friend.status_apply_pending')}
+                    </Text>
+                }
             </View>
         </View>
     </TouchableOpacity>
