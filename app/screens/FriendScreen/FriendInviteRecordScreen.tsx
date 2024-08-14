@@ -15,6 +15,7 @@ import { useRecoilValue } from "recoil";
 import { AuthUser } from "app/stores/auth";
 import { s } from "app/utils/size";
 import { navigate } from "app/navigators";
+import { IModel } from "@repo/enums";
 
 
 type Props = StackScreenProps<App.StackParamList, 'FriendInviteRecordScreen'>;
@@ -91,6 +92,11 @@ export const FriendInviteRecordScreen = ({ navigation }: Props) => {
                         console.log("renderItem", item.user)
                         if (!item.user) {
                             return null
+                        }
+                        if (item.friendApply.status === IModel.IFriendApply.Status.PENDING) {
+                            if (item.friendApply.friendId === currentUser?.id) {
+                                return <InviteItem user={item.user} item={item.friendApply} isLast={index === items.length - 1} />
+                            }
                         }
                         return <InviteItem user={item.user} item={item.friendApply} isLast={index === items.length - 1} />
                     }}

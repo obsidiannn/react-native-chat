@@ -96,8 +96,9 @@ const getMineList = async (_groupIds?: number[]): Promise<GroupDetailItem[]> => 
                 result.push(group)
             }
         })
+        return result
     } catch (error) {
-
+        console.log(error)
     }
 
     return []

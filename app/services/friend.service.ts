@@ -5,6 +5,7 @@ import { IUser } from "drizzle/schema";
 import { LocalUserService } from "./LocalUserService";
 import { LocalChatService } from "./LocalChatService";
 import { LocalMessageService } from "./LocalMessageService";
+import { IModel } from "@repo/enums";
 
 const getReleationList = async (userIds: number[]) => {
     return await friendApi.getRelationList(userIds);
@@ -86,7 +87,7 @@ const getOnlineList = async (ids?: number[]) => {
         }
     })
     // await userService.setNonFriends(userIds);
-    await LocalUserService.setFriends(userIds);
+    await LocalUserService.setFriends(userIds,IModel.ICommon.ICommonBoolEnum.YES);
     return result as IUser[];
 }
 

@@ -43,11 +43,11 @@ export class LocalUserService {
         }
         return items;
     }
-    static async findById(id: number){
-        const users= await LocalUserService.findByIds([id]);
-        return users.length>0?users[0]:null;
+    static async findById(id: number) {
+        const users = await LocalUserService.findByIds([id]);
+        return users.length > 0 ? users[0] : null;
     }
-    static async findByIds(ids: number[]):Promise<IUser[]> {
+    static async findByIds(ids: number[]): Promise<IUser[]> {
         if (ids.length <= 0) {
             return []
         }
@@ -71,12 +71,15 @@ export class LocalUserService {
         })
     }
 
-    static async setFriends(ids: number[],isFriend: number) {
+    static async setFriends(ids: number[], isFriend: number) {
         if (ids.length <= 0) {
             return;
         }
         const db = GetDB()
-        return await db.update(users).set({isFriend}).where(inArray(users.id, ids));
+        return await db.update(users).set({
+            isFriend,
+            refreshAt: dayjs().unix()
+        }).where(inArray(users.id, ids));
     }
     static async getFriends() {
         const db = GetDB()

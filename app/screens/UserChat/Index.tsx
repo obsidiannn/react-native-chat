@@ -108,14 +108,15 @@ export const UserChatScreen = ({ navigation, route }: Props) => {
     const typingHandle = (e: ChatTypingEvent) => {
         console.log('chat event::::::::::: ', e);
         if (currentUser) {
-            if (currentUser?.id === e.senderId) {
+            if (currentUser?.id !== e.senderId) {
                 setTyping(e.flag)
+                if (e.flag) {
+                    setTimeout(() => {
+                        setTyping(false)
+                    }, 3000);
+                }
             }
-            if (e.flag) {
-                setTimeout(() => {
-                    setTyping(false)
-                }, 3000);
-            }
+            
         }
     }
 
@@ -146,7 +147,7 @@ export const UserChatScreen = ({ navigation, route }: Props) => {
             init()
         });
         return () => {
-            const typeKey = EventManaer.generateKey(IModel.IClient.SocketTypeEnum.RECIEVE_TYPING_CHANGE, chatItem?.id)
+            const typeKey = EventManaer.generateKey(IModel.IClient.SocketTypeEnum.RECIEVE_TYPING_CHANGE, route.params.chatId)
             EventManaer.removeListener(typeKey, typingHandle)
             navigation.removeListener('focus', () => { })
         }

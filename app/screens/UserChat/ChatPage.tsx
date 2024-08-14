@@ -170,6 +170,8 @@ const ChatPage = forwardRef((_, ref) => {
     const init = useCallback(async (chatItem: ChatDetailItem, friend: IUser) => {
         const chatId = chatItem.id
         chatItemRef.current = chatItem
+        console.log('[[[initinit');
+        
         await loadHistoryMessages(chatId, -1);
         if (globalThis.wallet && friend) {
             sharedSecretRef.current = globalThis.wallet.computeSharedSecret(friend.pubKey);
@@ -308,7 +310,11 @@ const ChatPage = forwardRef((_, ref) => {
         <Chat
             tools={tools}
             messages={messages}
-            onEndReached={() => loadHistoryMessages(chatItemRef.current?.id ?? '', firstSeq.current)}
+            onEndReached={async () => {
+                console.log('onend');
+                
+                loadHistoryMessages(chatItemRef.current?.id ?? '', firstSeq.current)
+            }}
             showUserAvatars
             onMessageLongPress={(m, e) => {
                 longPressModalRef.current?.open({ message: m, e })
