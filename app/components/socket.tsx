@@ -5,12 +5,13 @@ import { useRecoilValue, useSetRecoilState } from 'recoil';
 import EventManager from 'app/services/event-manager.service'
 
 import { AuthUser, ChatsStore } from 'app/stores/auth';
-import { ChatDetailItem, SocketJoinEvent, SocketMessageEvent } from '@repo/types';
+import { ChatDetailItem, ChatTypingEvent, SocketJoinEvent, SocketMessageEvent } from '@repo/types';
 import { IModel } from '@repo/enums';
 import { IUser } from 'drizzle/schema';
 import { computeDataHash } from 'app/utils/wallet';
 import { globalKV } from 'app/utils/kv-tool';
 import { SystemService } from 'app/services/system.service';
+import eventUtil from 'app/utils/event-util';
 
 export interface SocketContextType {
     socket: Socket
@@ -39,14 +40,22 @@ export const SocketProvider = ({ children }: { children: any }) => {
     const socketRef = useRef<Socket>()
     const currentUser = useRecoilValue(AuthUser)
     const connectedRef = useRef<boolean>(false)
-    const [connected, setConnected] = useState<boolean>(false)
     const appStateRef = useRef<AppStateStatus>("active")
     const setChatsStore = useSetRecoilState(ChatsStore)
     const joinedRef = useRef<Set<string>>(new Set())
     useEffect(() => {
         const _eventKey = EventManager.generateKey(IModel.IClient.SocketTypeEnum.SOCKET_JOIN, '')
         EventManager.addEventSingleListener(_eventKey, handleJoin)
+        const typingEventKey = EventManager.generateKey(IModel.IClient.SocketTypeEnum.TYPING_CHANGE, '')
+        EventManager.addEventSingleListener(typingEventKey, handleTyping)
     }, [])
+    // 输入中事件上报
+    const handleTyping = (e: ChatTypingEvent) => {
+        if (socketRef.current && socketRef.current?.active === true) {
+            console.log('[typing] submit:', e);
+            socketRef.current.emit('typing', JSON.stringify(e))
+        }
+    }
 
     const handleJoin = (e: any) => {
         console.log('socket join event', e);
@@ -140,7 +149,7 @@ export const SocketProvider = ({ children }: { children: any }) => {
     const initListener = () => {
         if (!socketRef.current) {
             console.log('init listener error');
-            
+
             return
         }
         if (!socketRef.current.hasListeners('connect')) {
@@ -148,7 +157,6 @@ export const SocketProvider = ({ children }: { children: any }) => {
             socketRef.current.on('connect', () => {
                 connectedRef.current = true;
                 console.log('[socket] conencted');
-                setConnected(true)
                 reJoin()
             })
         }
@@ -181,7 +189,6 @@ export const SocketProvider = ({ children }: { children: any }) => {
                 connectedRef.current = false;
                 joinedRef.current?.clear()
                 socketRef.current?.removeAllListeners()
-                setConnected(false)
                 if (appStateRef.current == "active") {
                     setTimeout(() => {
                         init()
@@ -189,6 +196,16 @@ export const SocketProvider = ({ children }: { children: any }) => {
                 }
             })
         }
+
+        if (!socketRef.current.hasListeners('typing')) {
+            console.log('init listener [typing]');
+            socketRef.current.on('typing', (msg) => {
+                const _msg = JSON.parse(msg) as ChatTypingEvent
+                console.log('[socket] typing', _msg)
+                eventUtil.sendRecieveTypeingEvent(_msg)
+            })
+        }
+
         socketRef.current.connect()
     }
 
@@ -196,7 +213,7 @@ export const SocketProvider = ({ children }: { children: any }) => {
         const result: string[] = []
         if (chatIds.length > 0 && socketRef.current) {
             chatIds.forEach(c => {
-                if(socketRef.current && socketRef.current?.active === true){
+                if (socketRef.current && socketRef.current?.active === true) {
                     socketRef.current.emit('join', c)
                     console.log('加入room', c, socketRef.current !== null);
                 }

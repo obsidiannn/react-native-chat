@@ -25,6 +25,8 @@ export interface InputTopLevelProps {
   /** Will be called on {@link SendButton} tap. Has {@link MessageType.PartialText} which can
    * be transformed to {@link MessageType.Text} and added to the messages list. */
   onSendPress: (message: MessageType.PartialText) => void
+  // 输入的值
+  onTypingChange?: (val: boolean) => void
   /** Controls the visibility behavior of the {@link SendButton} based on the
    * `TextInput` state. Defaults to `editing`. */
   sendButtonVisibilityMode?: 'always' | 'editing'
@@ -48,11 +50,12 @@ export const Input = ({
   onSendPress,
   sendButtonVisibilityMode,
   textInputProps,
+  onTypingChange
 }: InputProps) => {
   const theme = React.useContext(ThemeContext)
   const user = React.useContext(UserContext)
   const { container, input, marginRight } = styles({ theme })
-
+  const [typing, setTyping] = React.useState<boolean>(false)
   // Use `defaultValue` if provided
   const [text, setText] = React.useState(textInputProps?.defaultValue ?? '')
 
@@ -72,8 +75,14 @@ export const Input = ({
     /* istanbul ignore next */
     if (trimmedValue) {
       onSendPress({ text: trimmedValue, type: 'text' })
+      handleTyping(false)
       setText('')
     }
+  }
+
+  const handleTyping = (flag: boolean) => {
+    setTyping(flag)
+    onTypingChange && onTypingChange(flag)
   }
 
   return (
@@ -88,7 +97,7 @@ export const Input = ({
             }}
           />
         ) : null)}
- 
+
       <TextInput
         multiline
         placeholder={translate('chatUI.inputPlaceholder')}
@@ -100,6 +109,12 @@ export const Input = ({
         onChangeText={handleChangeText}
         cursorColor={theme.colors.inputCursorColor}
         value={value}
+        onFocus={() => {
+          handleTyping(true)
+        }}
+        onBlur={() => {
+          handleTyping(false)
+        }}
       />
       {sendButtonVisibilityMode === 'always' ||
         (sendButtonVisibilityMode === 'editing' && user && value.trim()) ? (

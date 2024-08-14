@@ -90,6 +90,7 @@ export interface ChatProps extends ChatTopLevelProps {
    * to the very end of the list (minus `onEndReachedThreshold`).
    * See {@link ChatProps.flatListProps} to set it up. */
   onEndReached?: () => Promise<void>
+  onTypingChange?: (val: boolean) => void
   /** Show user names for received messages. Useful for a group chat. Will be
    * shown only on text messages. */
   showUserNames?: boolean
@@ -125,6 +126,7 @@ export const Chat = ({
   onMessagePress,
   onPreviewDataFetched,
   onSendPress,
+  onTypingChange,
   renderBubble,
   renderCustomMessage,
   renderFileMessage,
@@ -470,35 +472,7 @@ export const Chat = ({
               <>{customBottomComponent()}</>
             </>
           ) : (
-            // <>
-            // <>{renderScrollable({})}</>
-            // <KeyboardAwareScrollView style={keyboardAccessoryView}
-            // disableScrollOnKeyboardHide
-            // bottomOffset={50}
-            // >
-            //   <Input
-            //     {...{
-            //       ...unwrap(inputProps),
-            //       isAttachmentUploading,
-            //       onAttachmentPress: renderToolWindow,
-            //       onSendPress,
-            //       sendButtonVisibilityMode,
-            //       textInputProps,
-            //     }}
-            //   />
 
-            //   {/* <> {
-            //     toolOpen ? (
-            //       <View style={{
-            //         width: '100%',
-            //       }}>
-            //         <AccessoryView tools={tools} onPress={async (tool) => {
-            //         }} />
-            //       </View>
-            //     ) : null
-            //   }</> */}
-            // </KeyboardAwareScrollView>
-            // </>
             <KeyboardAccessoryView
               {...{
                 renderScrollable,
@@ -514,6 +488,7 @@ export const Chat = ({
                   renderScrollable,
                   sendButtonVisibilityMode,
                   textInputProps,
+                  onTypingChange
                 }}
               />
               {

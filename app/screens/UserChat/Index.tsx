@@ -5,7 +5,7 @@ import { useSafeAreaInsetsStyle } from "app/utils/useSafeAreaInsetsStyle";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import ChatPage, { ChatUIPageRef } from "./ChatPage";
-import { ChatDetailItem } from "@repo/types";
+import { ChatDetailItem, ChatTypingEvent } from "@repo/types";
 import { IUser } from "drizzle/schema";
 import { StackScreenProps } from "@react-navigation/stack";
 import { App } from "types/app";
@@ -13,7 +13,7 @@ import friendService from "app/services/friend.service";
 import { UserChatUIContext } from "./context";
 import chatService from "app/services/chat.service";
 import UserChatInfoModal, { UserChatInfoModalRef } from "./UserChatInfoModal";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilValue } from "recoil";
 import { IconFont } from "app/components/IconFont/IconFont";
 import { ColorsState } from "app/stores/system";
 import userService from "app/services/user.service";
@@ -22,7 +22,10 @@ import { LocalChatService } from "app/services/LocalChatService";
 import chatMapper from "app/utils/chat.mapper";
 import NetInfo from '@react-native-community/netinfo'
 import eventUtil from "app/utils/event-util";
-
+import EventManaer from 'app/services/event-manager.service'
+import { IModel } from "@repo/enums";
+import { AuthUser } from "app/stores/auth";
+import { Text } from "react-native";
 type Props = StackScreenProps<App.StackParamList, 'UserChatScreen'>;
 
 export const UserChatScreen = ({ navigation, route }: Props) => {
@@ -33,7 +36,8 @@ export const UserChatScreen = ({ navigation, route }: Props) => {
     const [user, setUser] = useState<IUser | null>(null);
     const chatPageRef = useRef<ChatUIPageRef>(null)
     const themeColor = useRecoilValue(ColorsState)
-
+    const currentUser = useRecoilValue(AuthUser)
+    const [typing, setTyping] = useState(false)
     const loadLocalChat = useCallback(async (chatId: string): Promise<ChatDetailItem | null> => {
         const localChat = await LocalChatService.findById(chatId);
         if (localChat) {
@@ -95,7 +99,25 @@ export const UserChatScreen = ({ navigation, route }: Props) => {
             }
         })
         chatPageRef.current?.init(chatResult, localUser)
+
+        const typeKey = EventManaer.generateKey(IModel.IClient.SocketTypeEnum.RECIEVE_TYPING_CHANGE, chatId)
+        EventManaer.addEventListener(typeKey, typingHandle)
+
     }, [])
+
+    const typingHandle = (e: ChatTypingEvent) => {
+        console.log('chat event::::::::::: ', e);
+        if (currentUser) {
+            if (currentUser?.id === e.senderId) {
+                setTyping(e.flag)
+            }
+            if (e.flag) {
+                setTimeout(() => {
+                    setTyping(false)
+                }, 3000);
+            }
+        }
+    }
 
     const reloadChat = (item: ChatDetailItem) => {
         chatService.changeChat(item).then(() => {
@@ -124,10 +146,19 @@ export const UserChatScreen = ({ navigation, route }: Props) => {
             init()
         });
         return () => {
+            const typeKey = EventManaer.generateKey(IModel.IClient.SocketTypeEnum.RECIEVE_TYPING_CHANGE, chatItem?.id)
+            EventManaer.removeListener(typeKey, typingHandle)
             navigation.removeListener('focus', () => { })
         }
     }, [navigation])
 
+
+    const renderTitle = () => {
+        return <>
+            <Text style={{ fontSize: s(18), color: themeColor.text }} >{chatItem?.chatAlias ?? user?.nickName}</Text>
+            <Text style={{ fontSize: s(8) }}>{typing ? "typing..." : null}</Text>
+        </>
+    }
 
     return <View style={[styles.container, $topContainerInsets, {
         backgroundColor: '#ffffff'
@@ -138,7 +169,8 @@ export const UserChatScreen = ({ navigation, route }: Props) => {
             reloadUser,
             reloadChat
         }}>
-            <Navbar title={chatItem?.chatAlias}
+            <Navbar
+                renderCenter={renderTitle}
                 onLeftPress={() => {
                     void chatPageRef.current?.close()
                     if (route.params.fromNotify) {

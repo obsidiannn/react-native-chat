@@ -27,7 +27,7 @@ import { UserChatUIContext } from "./context"
 import chatService from "app/services/chat.service"
 import { LocalUserService } from "app/services/LocalUserService"
 import userService from "app/services/user.service"
-import user from "app/api/auth/user"
+import eventUtil from "app/utils/event-util"
 export interface ChatUIPageRef {
     init: (chatItem: ChatDetailItem, friend: IUser) => void
     refreshSequence: (firstSeq: number, lastSeq: number) => void
@@ -300,6 +300,10 @@ const ChatPage = forwardRef((_, ref) => {
         addMessage(textMessage)
     }
 
+    const handleTypingChange = (v: boolean) => {
+        eventUtil.sendTypeingEvent(chatItemRef.current?.id ?? '', v, author?.id ?? 0)
+    }
+
     return <>
         <Chat
             tools={tools}
@@ -316,6 +320,7 @@ const ChatPage = forwardRef((_, ref) => {
             onPreviewDataFetched={handlePreviewDataFetched}
             onSendPress={handleSendPress}
             user={chatUiAdapter.userTransfer(author)}
+            onTypingChange={handleTypingChange}
         />
         <LongPressModal ref={longPressModalRef} />
         <VideoPlayModal ref={encVideoPreviewRef} />

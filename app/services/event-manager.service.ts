@@ -61,6 +61,12 @@ class EventEmitter {
 		if (type === IModel.IClient.SocketTypeEnum.CHAT_CHANGE) {
 			return 'CHAT_CHANGE'
 		}
+		if (type === IModel.IClient.SocketTypeEnum.TYPING_CHANGE) {
+			return 'TYPING_CHANGE'
+		}
+		if (type === IModel.IClient.SocketTypeEnum.RECIEVE_TYPING_CHANGE) {
+			return 'RECIEVE_TYPING_CHANGE_' + key
+		}
 		return key ?? 'unknown'
 	}
 
