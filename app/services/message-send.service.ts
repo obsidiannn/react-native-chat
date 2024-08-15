@@ -4,7 +4,7 @@ import quickAes from "app/utils/quick-crypto";
 import { manipulateAsync, SaveFormat } from 'expo-image-manipulator';
 import { uploadFile } from "./file.service";
 import { IModel } from "@repo/enums";
-import { MessageDetailItem } from "@repo/types";
+import { MessageDetailItem, MessageExtra } from "@repo/types";
 import userService from "./user.service";
 import { MessageType } from "app/components/chat-ui";
 import chatUiAdapter from "app/utils/chat-ui.adapter";
@@ -143,10 +143,16 @@ export class MessageSendService {
         });
     }
 }
-const _send = async (chatId: string, key: string, mid: string, type: IModel.IChat.IMessageTypeEnum, data: {
-    t: string;
-    d: any;
-}) => {
+const _send = async (chatId: string,
+    key: string,
+    mid: string,
+    type: IModel.IChat.IMessageTypeEnum,
+    data: {
+        t: string;
+        d: any;
+    },
+    extra?: MessageExtra
+) => {
     if (!data.d) {
         throw new ToastException('消息內容不能爲空');
     }
@@ -159,7 +165,8 @@ const _send = async (chatId: string, key: string, mid: string, type: IModel.ICha
         chatId: chatId,
         type,
         isEnc: 1,
-        content: Buffer.from(encode).toString('hex')
+        content: Buffer.from(encode).toString('hex'),
+        extra
     });
 }
 
@@ -187,7 +194,14 @@ const sendText = async (chatId: string, key: string, message: MessageType.Text) 
         t: 'text',
         d: message.text,
     }
-    const res = await _send(chatId, key, message.id, IModel.IChat.IMessageTypeEnum.NORMAL, data);
+    const extra: MessageExtra = {}
+    if (message?.metadata?.replyId) {
+        console.log('extra>>');
+        extra.replyId = message?.metadata?.replyId
+    }
+    console.log('extra...', extra);
+
+    const res = await _send(chatId, key, message.id, IModel.IChat.IMessageTypeEnum.NORMAL, data, extra);
     message.sequence = res.sequence;
     return message
 }
@@ -202,10 +216,14 @@ const sendImage = async (chatId: string, key: string, message: MessageType.Image
     const originKey = await uploadFile(originalWebp);
 
     message.uri = originKey.key
+    const extra: MessageExtra = {}
+    if (message?.metadata?.replyId) {
+        extra.replyId = message?.metadata?.replyId
+    }
     const result = await _send(chatId, key, message.id, IModel.IChat.IMessageTypeEnum.NORMAL, {
         t: 'image',
         d: chatUiAdapter.convertPartialContent(message)
-    });
+    }, extra);
     message.status = 'sent'
     message.sequence = result.sequence
 
@@ -228,10 +246,14 @@ const sendVideo = async (chatId: string, key: string, message: MessageType.Video
     message.thumbnail = thumbailResult.key
     message.metadata = { 'original': transFilePath }
 
+    const extra: MessageExtra = {}
+    if (message?.metadata?.replyId) {
+        extra.replyId = message?.metadata?.replyId
+    }
     const result = await _send(chatId, key, message.id, IModel.IChat.IMessageTypeEnum.NORMAL, {
         t: 'video',
         d: chatUiAdapter.convertPartialContent(message)
-    });
+    }, extra);
     message.status = 'sent'
     message.sequence = result.sequence
     return message
@@ -248,11 +270,15 @@ const sendFile = async (chatId: string, key: string, message: MessageType.File) 
     message.metadata = { 'original': file }
     // const fileInfo = await fileService.getFileInfo(file);
     // fileInfo?.exists && (file.md5 = fileInfo.md5 ?? '');
+    const extra: MessageExtra = {}
+    if (message?.metadata?.replyId) {
+        extra.replyId = message?.metadata?.replyId
+    }
     console.log('處理完成準備發送', file);
     const result = await _send(chatId, key, message.id, IModel.IChat.IMessageTypeEnum.NORMAL, {
         t: 'file',
         d: chatUiAdapter.convertPartialContent(message)
-    });
+    }, extra);
     message.status = 'sent'
     message.sequence = result.sequence
     return message
@@ -439,7 +465,7 @@ const getMessageDetails = async (
 
         const localSequence = new Set(list.map(r => r.sequence))
         const saveData = remoteData.filter(r => !localSequence.has(r.sequence))
-s
+        s
         LocalMessageService.addBatch(chatUiAdapter.messageEntityConverts(saveData))
         const result = list.concat(saveData).sort((a, b) => { return (b.sequence ?? 0) - (a.sequence ?? 0) })
         console.log('[msg result]', result);

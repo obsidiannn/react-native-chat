@@ -19,6 +19,11 @@ import { VideoMessage } from '../VideoMessage'
 import { s } from 'app/utils/size'
 import Checkbox from 'expo-checkbox'
 import { colors } from 'app/theme'
+import { FileMessageReply } from '../FileMessage/FileMessageReply'
+import { VideoMessageReply } from '../VideoMessage/VideoMessageReply'
+import { ImageMessageReply } from '../ImageMessage/ImageMessageReply'
+import { TextMessageReply } from '../TextMessage/TextMessageReply'
+import chatUiAdapter from 'app/utils/chat-ui.adapter'
 
 export interface MessageTopLevelProps extends TextMessageTopLevelProps {
   /** Called when user makes a long press on any message */
@@ -216,6 +221,32 @@ export const Message = React.memo(
       }
     }
 
+
+    const renderReply = () => {
+      if (!message.reply) {
+        return null
+      }
+      switch (message.reply.type) {
+        case 'file':
+          return <FileMessageReply {...{
+            message: message.reply
+          }} />
+        case 'video':
+          return <VideoMessageReply {...{ message: message.reply, messageWidth: 100 }} />
+        case 'image':
+          return <ImageMessageReply
+            {...{
+              message: message.reply
+            }}
+          />
+        case 'text':
+          return <TextMessageReply message={message.reply} />
+        default:
+          return null
+      }
+    }
+
+
     return (
       <View style={container}>
         {enableMultiSelect ? <Checkbox
@@ -239,6 +270,7 @@ export const Message = React.memo(
             }}>
 
               <View style={messageBody}>
+
                 <View style={messageHeader}>
                   <Text style={[theme.fonts.dateDividerTextStyle, { marginRight: 8 }]}>{formatDate(message.createdAt ?? 0)}</Text>
                   <Text style={theme.fonts.userNameTextStyle}>{message.author.firstName}</Text>
@@ -254,7 +286,17 @@ export const Message = React.memo(
                   >
                     {renderBubbleContainer()}
                   </Pressable>
-
+                  {message?.reply ? <View style={{
+                    backgroundColor: colors.palette.gray100,
+                    alignItems: 'center',
+                    display: 'flex',
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                    paddingVertical: s(8)
+                  }}>
+                    <Text>{message?.reply.author.firstName} : </Text>
+                    {renderReply()}
+                  </View> : null}
                 </View>
               </View>
               <View style={{

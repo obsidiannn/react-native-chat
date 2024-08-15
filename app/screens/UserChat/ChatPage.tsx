@@ -62,6 +62,10 @@ const ChatPage = forwardRef((_, ref) => {
             const userHash = userService.initUserHash(users)
             const tmps = items.map((e) => {
                 const item = chatUiAdapter.messageEntity2Dto(e)
+                if (item.id === 'b8f91823a840b9ba440dcbbc') {
+                    console.log('itemmmmmm', item);
+
+                }
                 const user = userHash.get(item?.senderId ?? -1)
                 if (user) {
                     return {
@@ -74,13 +78,15 @@ const ChatPage = forwardRef((_, ref) => {
             setMessages(olds => {
                 let result = []
                 if (olds.length > 0) {
-                    const oldMin = olds[olds.length - 1].sequence
+                    const existIds = olds.map(o => o.id)
                     result = olds.concat(tmps.filter(t => {
-                        return t.sequence < oldMin
+                        return !existIds.includes(t.id)
                     }))
                 } else {
                     result = tmps
                 }
+                console.log('addddd', result);
+
                 if (init) {
                     lastSeq.current = result[0].sequence
                 }
@@ -139,16 +145,7 @@ const ChatPage = forwardRef((_, ref) => {
         if (message.sequence > lastSeq.current) {
             lastSeq.current = message.sequence
         }
-        setMessages(items => {
-            for (let index = items.length - 1; index >= 0; index--) {
-                const item = items[index]
-                if (item.id === message.id) {
-                    items[index] = { ...message }
-                    break
-                }
-            }
-            return items;
-        })
+
         if (chatItemRef.current) {
             if (!message.roomId) {
                 message.roomId = chatItemRef.current.id
@@ -159,18 +156,44 @@ const ChatPage = forwardRef((_, ref) => {
             if (message.senderId) {
                 message.senderId = author?.id ?? 0;
             }
+            // 如果是自己发出的消息，如果有引用，肯定已经加载到message list里面了
+            if (message.metadata?.replyId) {
+                const replyMsg = messages.find(m => m.id === message.metadata?.replyId)
+                if (replyMsg) {
+                    message.reply = replyMsg
+                }
+            }
             await LocalMessageService.addBatch(chatUiAdapter.messageEntityConverts([message]))
             LocalChatService.updateSequence(chatItemRef.current?.id, message.sequence)
         }
+        setMessages(items => {
+            for (let index = items.length - 1; index >= 0; index--) {
+                const item = items[index]
+                if (item.id === message.id) {
+                    items[index] = { ...message }
+                    break
+                }
+            }
+            return items;
+        })
     }
     // 发送消息
     const addMessage = (message: MessageType.Any) => {
+        if (replyMsg) {
+            message.metadata = {
+                ...message.metadata,
+                replyId: replyMsg.id
+            }
+        }
         const { sequence = 0 } = message
         if (sequence > lastSeq.current) {
             lastSeq.current = sequence
         }
         setMessages([message, ...messages])
-        messageSendService.send(chatItemRef.current?.id ?? '', sharedSecretRef.current, message).then(updateMessage)
+        messageSendService.send(chatItemRef.current?.id ?? '', sharedSecretRef.current, message).then((res) => {
+            updateMessage(res)
+            setReplyMsg(null)
+        })
     }
 
     const init = useCallback(async (chatItem: ChatDetailItem, friend: IUser) => {

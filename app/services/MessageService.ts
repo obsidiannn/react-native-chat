@@ -111,16 +111,41 @@ export class CloudMessageService {
                 throw new ToastException('不支持的消息類型');
         }
     }
-    static async findByIds(chatId: string, ids: string[], key: string): Promise<MessageType.Any[]> {
+    static async findByIds(chatId: string, ids: string[], key: string, initReply = true): Promise<MessageType.Any[]> {
         // 过滤出已缓存的
         const items: IMessage[] = await LocalMessageService.findByIds(ids)
-        const result = [...chatUiAdapter.messageEntityToItems(items, key)]
+        const result = items.map(i => {
+            return chatUiAdapter.messageEntity2Dto(i, key, initReply)
+        })
         const cloudIds = ids.filter(id => !items.find(item => item.id === id));
         if (cloudIds.length > 0) {
             const cloudItems = await messageApi.findByIds({ chatId, ids: cloudIds });
             if (cloudItems.length > 0) {
-                const remoteData = cloudItems.map(i => chatUiAdapter.messageTypeConvert(i, key, null, true))
-                result.push(...remoteData)
+                const replyIds: string[] = []
+                const remoteData = cloudItems.map(i => {
+                    const item = chatUiAdapter.messageTypeConvert(i, key, null, true)
+                    if (item.metadata?.replyId) {
+                        replyIds.push(item.metadata.replyId)
+                    }
+                    return item
+                })
+                const replyMap = new Map<string, MessageType.Any>()
+                if (replyIds.length > 0) {
+                    const replys = await this.findByIds(chatId, replyIds, key, false)
+                    replys.forEach(r => {
+                        replyMap.set(r.id, r)
+                    })
+                }
+                result.push(...remoteData.map(r => {
+                    if (r.metadata?.replyId) {
+                        const rpl = replyMap.get(r.metadata?.replyId)
+                        return {
+                            ...r, reply: rpl
+                        }
+                    }
+                    return r
+                }))
+
                 // 存储到缓存中
                 await LocalMessageService.addBatch(chatUiAdapter.messageEntityConverts(remoteData));
             }
@@ -160,11 +185,14 @@ export class CloudMessageService {
     ): Promise<MessageType.Any[]> {
         const list = await CloudMessageService.getMessageDetails(chatId, key, sequence, limit)
         const userIds: number[] = []
+
         list.forEach(d => {
             if (d.senderId !== undefined && d.senderId !== null) {
                 userIds.push(d.senderId)
             }
+
         })
+
         let userHash: Map<number, IUser> = await userService.getUserHash(userIds)
         return list.map((item) => {
             const user = userHash.get(item?.senderId ?? -1)

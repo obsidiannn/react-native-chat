@@ -126,10 +126,10 @@ export default forwardRef((_, ref) => {
             setMessages(olds => {
                 let result = []
                 if (olds.length > 0) {
-                    const oldMin = olds[olds.length - 1].sequence
-                    result = olds.concat(tmps.filter(t => {
-                        return t.sequence < oldMin
-                    }))
+                   const existIds = olds.map(o=>o.id)
+                   result = olds.concat(tmps.filter(t=>{
+                        return !existIds.includes(t.id)
+                   }))
                 } else {
                     result = tmps
                 }

@@ -1,4 +1,3 @@
-import { IMessage } from 'drizzle/schema';
 import { createInstance } from '../req';
 import {
   BaseIdsArrayReq, BaseArrayResp,

@@ -33,8 +33,7 @@ export namespace MessageType {
     updatedAt?: number
     sequence: number
     senderId: number
-    reply?: MessageType.Any
-    replyId?: string
+    reply?: MessageType.DerivedAny
   }
 
   export interface DerivedMessageProps extends Base {
@@ -118,7 +117,7 @@ export namespace MessageType {
     type: 'image'
   }
 
-  export interface Video extends Base, PartialVideo{
+  export interface Video extends Base, PartialVideo {
     type: 'video'
   }
 

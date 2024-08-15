@@ -156,6 +156,14 @@ const messageEntityConverts = (messages: MessageType.Any[]): IMessage[] => {
  * @returns 
  */
 const messageDto2Entity = (m: MessageType.Any): IMessage => {
+    const extra = {
+        ...m.metadata,
+        ...(m.reply ? {
+            reply: m.reply
+        } : {})
+    }
+    console.log('extra===', extra);
+
     const entity: IMessage = {
         id: m.id,
         chatId: m.roomId ?? '',
@@ -163,10 +171,10 @@ const messageDto2Entity = (m: MessageType.Any): IMessage => {
         sequence: m.sequence,
         time: m.createdAt ?? new Date().valueOf(),
         uid: m.senderId,
-        uidType: m.metadata?.uidType,
+        uidType: m.metadata?.uidType ?? IModel.IChat.MessageUserType.DEFAULT,
         state: m.status === 'error' ? IModel.IChat.IMessageStatusEnum.DELETED : IModel.IChat.IMessageStatusEnum.NORMAL,
         data: convertPartialContent(m as MessageType.PartialAny),
-        extra: JSON.stringify(m.metadata ?? {}),
+        extra: JSON.stringify(extra),
         replyId: m.metadata?.replyId ?? null
     }
     return entity
@@ -185,10 +193,11 @@ const messageEntityToItems = (entities: IMessage[], key: string = '', needDecode
 }
 
 // 数据库entity 转 chatui 结构体
-const messageEntity2Dto = (entity: IMessage, key: string = '', needDecode: boolean = false): MessageType.Any => {
+const messageEntity2Dto = (entity: IMessage, key: string = '', needDecode: boolean = false, initReply = true): MessageType.Any => {
     const data = needDecode ? decrypt(key, entity.data ?? '') : JSON.parse(entity.data ?? '')
     const time = entity.time !== null ? entity.time : new Date().valueOf()
     let message: MessageType.Any
+    const extra = JSON.parse(entity.extra ?? '{}')
     switch (data.type) {
         case 'text':
             message = {
@@ -201,6 +210,7 @@ const messageEntity2Dto = (entity: IMessage, key: string = '', needDecode: boole
                 sequence: entity.sequence,
                 roomId: entity.chatId,
                 senderId: entity.uid,
+                ...(initReply && extra.reply ? {reply: string2Dto(extra.reply)} : {})
             } as MessageType.Text
             break
         case 'image':
@@ -215,6 +225,7 @@ const messageEntity2Dto = (entity: IMessage, key: string = '', needDecode: boole
                 ...content,
                 uri: fileService.getFullUrl(content.uri),
                 type: 'image',
+                ...(initReply && extra.reply ? {reply: string2Dto(extra.reply)} : {})
             } as MessageType.Image
             break
         case 'video':
@@ -229,6 +240,7 @@ const messageEntity2Dto = (entity: IMessage, key: string = '', needDecode: boole
                 ...videoData,
                 thumbnail: fileService.getFullUrl(videoData.thumbnail),
                 type: 'video',
+                ...(initReply && extra.reply ? {reply: string2Dto(extra.reply)} : {})
             } as MessageType.Video
             break
         case 'file':
@@ -243,6 +255,7 @@ const messageEntity2Dto = (entity: IMessage, key: string = '', needDecode: boole
                 ...fileData,
                 uri: fileService.getFullUrl(fileData.uri),
                 type: 'file',
+                ...(initReply && extra.reply ? {reply: string2Dto(extra.reply)} : {})
             } as MessageType.File
             break
         default:
@@ -254,6 +267,7 @@ const messageEntity2Dto = (entity: IMessage, key: string = '', needDecode: boole
                 sequence: entity.sequence,
                 roomId: entity.chatId,
                 senderId: entity.uid,
+                ...(initReply && extra.reply ? {reply: string2Dto(extra.reply)} : {})
             } as MessageType.Unsupported
             break
     }
@@ -263,6 +277,48 @@ const messageEntity2Dto = (entity: IMessage, key: string = '', needDecode: boole
         'replyId': entity.replyId
     }
     return message
+}
+
+const string2Dto = (value: string): MessageType.Any | null => {
+    try {
+        console.log('string2Dto', value);
+        let message: MessageType.Any | null = null
+        const data = JSON.parse(JSON.stringify(value))
+        switch (data.type) {
+            case 'text':
+                message = {
+                    ...data
+                } as MessageType.Text
+                break
+            case 'image':
+                message = {
+                    ...data
+                } as MessageType.Image
+                break
+            case 'video':
+                // const videoData: MessageType.PartialVideo = data as MessageType.PartialVideo
+                message = {
+                    ...data
+                } as MessageType.Video
+                break
+            case 'file':
+                // const fileData: MessageType.PartialFile = data as MessageType.PartialFile
+                message = {
+                    ...data
+                } as MessageType.File
+                break
+            default:
+                message = {
+                    ...data
+                } as MessageType.Unsupported
+                break
+        }
+        return message
+    } catch (error) {
+        console.log('errrrrrrrrrrrrr', error);
+
+    }
+    return null
 }
 
 /**
