@@ -28,7 +28,6 @@ import chatService from "app/services/chat.service"
 import { LocalUserService } from "app/services/LocalUserService"
 import userService from "app/services/user.service"
 import eventUtil from "app/utils/event-util"
-import { ms } from "app/utils/size"
 export interface ChatUIPageRef {
     init: (chatItem: ChatDetailItem, friend: IUser) => void
     refreshSequence: (firstSeq: number, lastSeq: number) => void
@@ -97,10 +96,9 @@ const ChatPage = forwardRef((_, ref) => {
                 setMessages(olds => {
                     let result = []
                     if (olds.length > 0) {
-                        const oldMin = olds[olds.length - 1].sequence
-                        result = items.filter(t => {
-                            return t.sequence < oldMin
-                        }).concat(olds)
+                        const exsitIds = olds.map(o => o.id)
+                        result = items.filter(t => !exsitIds.includes(t.id)).concat(olds)
+                        // 
                     } else {
                         result = items
                     }
@@ -113,6 +111,7 @@ const ChatPage = forwardRef((_, ref) => {
             if (remoteLastSeq.current > lastSeq.current) {
                 loadRemoteMessages(chatId, lastSeq.current);
             }
+            
         } finally {
             remoteMessageLoading.current = false;
         }
@@ -219,6 +218,7 @@ const ChatPage = forwardRef((_, ref) => {
             if (lastSeq.current < _eventItem.sequence && author?.id !== _eventItem.senderId) {
                 console.log("socket 监听到新的消息了", Platform.OS)
                 remoteLastSeq.current = _eventItem.sequence;
+                console.log(remoteMessageLoading.current,"当前远程请求状态")
                 if (!remoteMessageLoading.current) {
                     loadRemoteMessages(chatItemRef.current?.id ?? '', lastSeq.current);
                 }
