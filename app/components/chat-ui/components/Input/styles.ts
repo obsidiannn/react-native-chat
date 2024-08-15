@@ -5,6 +5,16 @@ import { s, vs } from 'app/utils/size'
 
 export default ({ theme }: { theme: Theme }) =>
   StyleSheet.create({
+    multiContainer: {
+      alignItems: 'center',
+      justifyContent: 'center',
+      flexDirection: 'row',
+      paddingHorizontal: s(20),
+      paddingVertical: vs(10),
+      backgroundColor: theme.colors.inputValueBackground,
+      borderRadius: s(36),
+      margin: s(12)
+    },
     container: {
       alignItems: 'center',
       flexDirection: 'row',

@@ -1,7 +1,7 @@
 import { ColorValue } from 'react-native'
 
 import { Theme } from './types'
-import { $dark, colors } from 'app/theme'
+import { colors } from 'app/theme'
 import { s, vs } from 'app/utils/size'
 
 // For internal usage only. Use values from theme itself.

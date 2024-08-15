@@ -1,4 +1,4 @@
-import { Chat, MessageType, lightTheme, darkTheme } from "app/components/chat-ui"
+import { Chat, MessageType, lightTheme, darkTheme, ChatUiToolsKitProps } from "app/components/chat-ui"
 import tools from "./tools"
 import { forwardRef, useCallback, useContext, useImperativeHandle, useRef, useState } from "react"
 import generateUtil from "app/utils/generateUtil"
@@ -20,7 +20,7 @@ import chatUiAdapter from "app/utils/chat-ui.adapter"
 import { ThemeState } from "app/stores/system"
 import { LocalChatService } from "app/services/LocalChatService"
 import { LocalMessageService } from "app/services/LocalMessageService"
-import { Platform } from "react-native"
+import { Platform, Text, TouchableOpacity } from "react-native"
 import { CloudMessageService } from "app/services/MessageService"
 import NetInfo from "@react-native-community/netinfo";
 import { UserChatUIContext } from "./context"
@@ -28,6 +28,8 @@ import chatService from "app/services/chat.service"
 import { LocalUserService } from "app/services/LocalUserService"
 import userService from "app/services/user.service"
 import eventUtil from "app/utils/event-util"
+import Navbar from "app/components/Navbar"
+import { colors } from "app/theme"
 export interface ChatUIPageRef {
     init: (chatItem: ChatDetailItem, friend: IUser) => void
     refreshSequence: (firstSeq: number, lastSeq: number) => void
@@ -41,6 +43,9 @@ const ChatPage = forwardRef((_, ref) => {
     const remoteLastSeq = useRef<number>(0);
     const remoteMessageLoading = useRef<boolean>(false);
     const userContext = useContext(UserChatUIContext)
+    const [multi, setMulti] = useState<boolean>(false)
+    const [replyMsg, setReplyMsg] = useState<MessageType.Any | null>(null)
+    const [checkedIdList, setCheckedIdList] = useState<string[]>([])
 
     // 加载历史数据 历史数据只会出现在本地
     const loadHistoryMessages = useCallback(async (chatId: string, seq: number) => {
@@ -111,7 +116,7 @@ const ChatPage = forwardRef((_, ref) => {
             if (remoteLastSeq.current > lastSeq.current) {
                 loadRemoteMessages(chatId, lastSeq.current);
             }
-            
+
         } finally {
             remoteMessageLoading.current = false;
         }
@@ -158,6 +163,7 @@ const ChatPage = forwardRef((_, ref) => {
             LocalChatService.updateSequence(chatItemRef.current?.id, message.sequence)
         }
     }
+    // 发送消息
     const addMessage = (message: MessageType.Any) => {
         const { sequence = 0 } = message
         if (sequence > lastSeq.current) {
@@ -218,7 +224,7 @@ const ChatPage = forwardRef((_, ref) => {
             if (lastSeq.current < _eventItem.sequence && author?.id !== _eventItem.senderId) {
                 console.log("socket 监听到新的消息了", Platform.OS)
                 remoteLastSeq.current = _eventItem.sequence;
-                console.log(remoteMessageLoading.current,"当前远程请求状态")
+                console.log(remoteMessageLoading.current, "当前远程请求状态")
                 if (!remoteMessageLoading.current) {
                     loadRemoteMessages(chatItemRef.current?.id ?? '', lastSeq.current);
                 }
@@ -290,6 +296,11 @@ const ChatPage = forwardRef((_, ref) => {
             )
         )
     }
+
+    /**
+     * 
+     * @param message 发送文本消息
+     */
     const handleSendPress = (message: MessageType.PartialText) => {
         const textMessage: MessageType.Text = {
             author: chatUiAdapter.userTransfer(author),
@@ -303,6 +314,10 @@ const ChatPage = forwardRef((_, ref) => {
         addMessage(textMessage)
     }
 
+    /**
+     * 输入中状态
+     * @param v 
+     */
     const handleTypingChange = (v: boolean) => {
         eventUtil.sendTypeingEvent(chatItemRef.current?.id ?? '', v, author?.id ?? 0)
     }
@@ -319,24 +334,42 @@ const ChatPage = forwardRef((_, ref) => {
     }
 
     /**
-     * 长按效果处理
-     * @param pressed 
+     * 长按效果处理 打开悬浮窗
+     * @param pressed true 开启，false 关闭
      * @param msgId 
      */
     const longPressHandle = (pressed: boolean, msgId: string) => {
-        setMessages((items) => {
-            return items.map(i => {
-                if (i.id === msgId) {
-                    return { ...i, pressed, }
-                }
-                return i
-            })
-        })
+        if (pressed) {
+            setCheckedIdList([msgId])
+        } else {
+            setCheckedIdList([])
+        }
+    }
+
+    const renderMultiNavbar = () => {
+        if (multi) {
+            return <Navbar style={{
+                position: 'absolute',
+            }} renderLeft={() => <TouchableOpacity
+                onPress={() => {
+                    setMulti(false)
+                    setCheckedIdList([])
+                }}
+            >
+                <Text style={{
+                    color: colors.palette.primary
+                }}>取消</Text>
+            </TouchableOpacity>
+            } />
+        }
+        return null
     }
 
     return <>
+        {renderMultiNavbar()}
         <Chat
-            tools={tools}
+            enableMultiSelect={multi}
+            tools={tools as ChatUiToolsKitProps[]}
             messages={messages}
             onEndReached={async () => {
                 console.log('onend');
@@ -355,12 +388,44 @@ const ChatPage = forwardRef((_, ref) => {
             onSendPress={handleSendPress}
             user={chatUiAdapter.userTransfer(author)}
             onTypingChange={handleTypingChange}
+            checkedIdList={checkedIdList}
+            onChecked={(id, v) => {
+                if (v) {
+                    setCheckedIdList(ids => {
+                        return ids.filter(i => i !== id).concat(id)
+                    })
+                } else {
+                    setCheckedIdList(ids => {
+                        return ids.filter(i => i !== id)
+                    })
+                }
+            }}
+            reply={replyMsg}
+            onCloseReply={() => {
+                setReplyMsg(null)
+            }}
         />
         <VideoPlayModal ref={encVideoPreviewRef} />
         <FilePreviewModal ref={fileModalRef} />
         <LoadingModal ref={loadingModalRef} />
         <LongPressModal ref={longPressModalRef}
-            onDelete={messageDelete} onClose={(msgId: string) => {
+            onReply={(_m) => {
+                setReplyMsg(_m)
+            }}
+            onMulti={(id, val) => {
+                if (val) {
+                    if (id !== '') {
+                        setCheckedIdList([id])
+                        setReplyMsg(null)
+                    }
+                } else {
+                    setCheckedIdList([])
+                    setReplyMsg(null)
+                }
+                setMulti(val)
+            }}
+            onDelete={messageDelete}
+            onClose={(msgId: string) => {
                 longPressHandle(false, msgId)
             }} />
     </>

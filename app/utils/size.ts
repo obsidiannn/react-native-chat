@@ -1,4 +1,5 @@
-import { SIZE_BASE_WIDTH,SIZE_BASE_HEIGHT } from '@env';
+import { SIZE_BASE_WIDTH, SIZE_BASE_HEIGHT } from '@env';
+import { max } from 'drizzle-orm';
 import { Dimensions } from 'react-native';
 
 const { width, height } = Dimensions.get('window');
@@ -17,6 +18,26 @@ export const s = scale;
 export const vs = verticalScale;
 export const ms = moderateScale;
 export const mvs = moderateVerticalScale;
+
+
+/**
+ * 图片 等比例缩小
+ * @param width 
+ * @param height 
+ * @returns 
+ */
+export const imageReduce = (width: number, height: number, maxWidth: number): { w: number, h: number } => {
+    if (width <= 0 || height <= 0) {
+        return { w: maxWidth, h: maxWidth }
+    }
+    let w = width, h = height
+    if (width > maxWidth) {
+        w = maxWidth
+        h = (maxWidth * height) / width
+    }
+    return { w, h }
+}
+
 
 export const bytesToSize = (bytes: number) => {
     const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];

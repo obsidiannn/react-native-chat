@@ -11,9 +11,14 @@ import toast from "app/utils/toast";
 import { useTranslation } from "react-i18next";
 
 interface LongPressProps {
+    // 删除回调
     onDelete?: (msgId: string) => void
+    // 关闭回调
     onClose?: (msgId: string) => void
-
+    // 多选回调
+    onMulti?: (msgId: string, multi: boolean) => void
+    // 回复回调
+    onReply?: (data: MessageType.Any) => void
 }
 
 export interface LongPressModalType {
@@ -42,6 +47,7 @@ export default forwardRef((props: LongPressProps, ref) => {
         setVisible(false)
         setLayout([])
         setMessage(null)
+        props.onMulti && props.onMulti(message?.id ?? '', false)
     }
 
     useImperativeHandle(ref, () => ({
@@ -98,11 +104,23 @@ export default forwardRef((props: LongPressProps, ref) => {
                         <IconFont name="share" color={themeColor.text} size={32} />
                         <Text style={{ color: themeColor.text }}>分享</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.line_button_style}>
+                    <TouchableOpacity style={styles.line_button_style} onPress={() => {
+                        if (message) {
+                            setVisible(false)
+                            setLayout([])
+                            setMessage(null)
+                            props.onReply && props.onReply(message)
+                        }
+                    }}>
                         <IconFont name="quote" color={themeColor.text} size={32} />
                         <Text style={{ color: themeColor.text }}>引用</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.line_button_style}>
+                    <TouchableOpacity style={styles.line_button_style} onPress={() => {
+                        setVisible(false)
+                        setLayout([])
+                        setMessage(null)
+                        props.onMulti && props.onMulti(message?.id ?? '', true)
+                    }}>
                         <IconFont name="multipleSelection" color={themeColor.text} size={32} />
                         <Text style={{ color: themeColor.text }}>多选</Text>
                     </TouchableOpacity>

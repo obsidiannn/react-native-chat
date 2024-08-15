@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { TextInput, TextInputProps, View } from 'react-native'
+import { TextInput, TextInputProps, View, TouchableOpacity, Text } from 'react-native'
 
 import { MessageType } from '../../types'
 import { ThemeContext, translate, unwrap, UserContext } from '../../utils'
@@ -13,6 +13,13 @@ import {
 } from '../CircularActivityIndicator'
 import { SendButton } from '../SendButton'
 import styles from './styles'
+import { IconFont } from 'app/components/IconFont/IconFont'
+import { s } from 'app/utils/size'
+import { FileMessageReply } from '../FileMessage/FileMessageReply'
+import { colors } from 'app/theme'
+import { ImageMessageReply } from '../ImageMessage/ImageMessageReply'
+import { TextMessageReply } from '../TextMessage/TextMessageReply'
+import { VideoMessageReply } from '../VideoMessage/VideoMessageReply'
 
 export interface InputTopLevelProps {
   /** Whether attachment is uploading. Will replace attachment button with a
@@ -31,6 +38,11 @@ export interface InputTopLevelProps {
    * `TextInput` state. Defaults to `editing`. */
   sendButtonVisibilityMode?: 'always' | 'editing'
   textInputProps?: TextInputProps
+  // 启用多选
+  enableMultiSelect: boolean
+  replyDerived: MessageType.DerivedAny | null
+  // 关闭引用
+  onCloseReply?: (id: string) => void
 }
 
 export interface InputAdditionalProps {
@@ -50,12 +62,14 @@ export const Input = ({
   onSendPress,
   sendButtonVisibilityMode,
   textInputProps,
-  onTypingChange
+  onTypingChange,
+  enableMultiSelect,
+  replyDerived,
+  onCloseReply
 }: InputProps) => {
   const theme = React.useContext(ThemeContext)
   const user = React.useContext(UserContext)
-  const { container, input, marginRight } = styles({ theme })
-  const [typing, setTyping] = React.useState<boolean>(false)
+  const { container, multiContainer, input, marginRight } = styles({ theme })
   // Use `defaultValue` if provided
   const [text, setText] = React.useState(textInputProps?.defaultValue ?? '')
 
@@ -81,52 +95,118 @@ export const Input = ({
   }
 
   const handleTyping = (flag: boolean) => {
-    setTyping(flag)
+
     onTypingChange && onTypingChange(flag)
   }
 
-  return (
-    <View style={container}>
-      {user &&
-        (isAttachmentUploading ? (
-          <CircularActivityIndicator
-            {...{
-              ...attachmentCircularActivityIndicatorProps,
-              color: theme.colors.inputText,
-              style: marginRight,
-            }}
-          />
-        ) : null)}
+  const renderInput = () => {
+    if (enableMultiSelect) {
+      return <View style={multiContainer}>
+        <TouchableOpacity>
+          <IconFont name='download' color={theme.colors.inputText} />
+        </TouchableOpacity>
+        <TouchableOpacity style={{ marginLeft: s(36) }}>
+          <IconFont name='trash' color={theme.colors.inputText} />
+        </TouchableOpacity>
+      </View>
+    } else {
+      return <View style={container}>
+        {user &&
+          (isAttachmentUploading ? (
+            <CircularActivityIndicator
+              {...{
+                ...attachmentCircularActivityIndicatorProps,
+                color: theme.colors.inputText,
+                style: marginRight,
+              }}
+            />
+          ) : null)}
 
-      <TextInput
-        multiline
-        placeholder={translate('chatUI.inputPlaceholder')}
-        placeholderTextColor={`${String(theme.colors.inputText)}80`}
-        underlineColorAndroid='transparent'
-        {...textInputProps}
-        // Keep our implementation but allow user to use these `TextInputProps`
-        style={[input, textInputProps?.style]}
-        onChangeText={handleChangeText}
-        cursorColor={theme.colors.inputCursorColor}
-        value={value}
-        onFocus={() => {
-          handleTyping(true)
-        }}
-        onBlur={() => {
-          handleTyping(false)
-        }}
-      />
-      {sendButtonVisibilityMode === 'always' ||
-        (sendButtonVisibilityMode === 'editing' && user && value.trim()) ? (
-        <SendButton onPress={handleSend} />
-      ) : (
-        !!onAttachmentPress && (
-          <AttachmentButton
-            {...unwrap(attachmentButtonProps)}
-            onPress={onAttachmentPress}
-          />
-        )
-      )}
+        <TextInput
+          multiline
+          placeholder={translate('chatUI.inputPlaceholder')}
+          placeholderTextColor={`${String(theme.colors.inputText)}80`}
+          underlineColorAndroid='transparent'
+          {...textInputProps}
+          style={[input, textInputProps?.style]}
+          onChangeText={handleChangeText}
+          cursorColor={theme.colors.inputCursorColor}
+          value={value}
+          onFocus={() => {
+            handleTyping(true)
+          }}
+          onBlur={() => {
+            handleTyping(false)
+          }}
+        />
+        {sendButtonVisibilityMode === 'always' ||
+          (sendButtonVisibilityMode === 'editing' && user && value.trim()) ? (
+          <SendButton onPress={handleSend} />
+        ) : (
+          !!onAttachmentPress && (
+            <AttachmentButton
+              {...unwrap(attachmentButtonProps)}
+              onPress={onAttachmentPress}
+            />
+          )
+        )}</View>
+    }
+  }
+
+  const renderReply = () => {
+    if (!replyDerived) {
+      return null
+    }
+    switch (replyDerived.type) {
+      case 'file':
+        return <FileMessageReply {...{
+          message: replyDerived
+        }} />
+      case 'video':
+        return <VideoMessageReply {...{ message: replyDerived, messageWidth: 100 }} />
+      case 'image':
+        return <ImageMessageReply
+          {...{
+            message: replyDerived
+          }}
+        />
+      case 'text':
+        return <TextMessageReply message={replyDerived} />
+      default:
+        return null
+    }
+  }
+
+
+  return (
+    <View>
+      {renderInput()}
+      {replyDerived ? <View style={{
+        backgroundColor: colors.palette.gray100,
+        alignItems: 'center',
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'center',
+        paddingVertical: s(8)
+      }}>
+        <Text>{replyDerived.author.firstName} : </Text>
+        {renderReply()}
+        <TouchableOpacity
+          style={{
+            padding: s(2),
+            backgroundColor: colors.palette.gray300,
+            borderRadius: s(24),
+            marginLeft: s(8)
+          }}
+          onPress={() => {
+            onCloseReply && onCloseReply(replyDerived.id)
+          }}
+        >
+          <IconFont name='close' color={'white'} size={18} />
+        </TouchableOpacity>
+      </View> : null}
     </View>
+
+
   )
 }

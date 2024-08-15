@@ -9,26 +9,32 @@ const styles = ({
   messageWidth,
   roundBorder,
   theme,
+  enableMultiSelect,
+  checked
 }: {
   currentUserIsAuthor: boolean
   message: MessageType.DerivedAny
   messageWidth: number
   roundBorder: boolean
   theme: Theme
+  enableMultiSelect: boolean,
+  checked: boolean
 }) =>
   StyleSheet.create({
     container: {
-      alignItems: 'flex-start',
       alignSelf: currentUserIsAuthor ? 'flex-end' : 'flex-start',
-      justifyContent: !currentUserIsAuthor ? 'flex-end' : 'flex-start',
+      justifyContent: currentUserIsAuthor ? (
+        enableMultiSelect ? 'space-between' : 'flex-end'
+      ) : 'flex-start',
       flex: 1,
       marginBottom: message.type === 'dateHeader' ? 0 : 8 + message.offset,
-      marginLeft: s(20),
       flexDirection: 'row',
+      width: '100%',
+      alignItems: 'center',
     },
     contentContainer: {
       backgroundColor:
-        message.pressed ? theme.colors.pressed : (
+        checked ? theme.colors.pressed : (
           !currentUserIsAuthor || message.type === 'image'
             ? theme.colors.receivedMessageBackground
             : theme.colors.sentMessageBackground

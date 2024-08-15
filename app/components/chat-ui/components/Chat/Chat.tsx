@@ -105,6 +105,9 @@ export interface ChatProps extends ChatTopLevelProps {
   timeFormat?: string
   user: User
   tools?: ChatUiToolsKitProps[]
+  checkedIdList?: string[]
+  onChecked?: (id: string, v: boolean) => void
+  reply: MessageType.Any | null
 }
 
 /** Entry component, represents the complete chat */
@@ -141,6 +144,11 @@ export const Chat = ({
   usePreviewData = true,
   user,
   tools,
+  enableMultiSelect,
+  checkedIdList = [],
+  onChecked,
+  reply,
+  onCloseReply
 }: ChatProps) => {
   const {
     container,
@@ -164,6 +172,11 @@ export const Chat = ({
   const [stackEntry, setStackEntry] = React.useState<StatusBarProps>({})
   const [toolOpen, setToolOpen] = React.useState<boolean>(false)
 
+  const checkIds = React.useMemo(() => {
+    return [...checkedIdList]
+  }, [checkedIdList])
+
+
 
   const { chatMessages, gallery } = calculateChatMessages(messages, user, {
     customDateHeaderText,
@@ -171,6 +184,20 @@ export const Chat = ({
     showUserNames,
     timeFormat,
   })
+
+  const replyMessage = React.useMemo(() => {
+    if (reply) {
+      const result = calculateChatMessages([reply], user, {
+        dateFormat,
+        showUserNames,
+        timeFormat,
+      })
+      if (result && result.chatMessages.length > 0) {
+        return result.chatMessages[0]
+      }
+    }
+    return null
+  }, [reply])
 
   const previousChatMessages = usePrevious(chatMessages)
 
@@ -198,11 +225,6 @@ export const Chat = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chatMessages])
 
-  // React.useEffect(() => {
-  //   initLocale(locale)
-  // }, [locale])
-
-  // Untestable
   /* istanbul ignore next */
   if (animationRef.current && enableAnimation) {
     InteractionManager.runAfterInteractions(animate)
@@ -357,6 +379,11 @@ export const Chat = ({
             showStatus,
             showUserAvatars,
             usePreviewData,
+            enableMultiSelect,
+            checked: () => {
+              return checkedIdList.findIndex(i => i === message.id) > -1
+            },
+            onChecked
           }}
         />
       )
@@ -488,7 +515,10 @@ export const Chat = ({
                   renderScrollable,
                   sendButtonVisibilityMode,
                   textInputProps,
-                  onTypingChange
+                  onTypingChange,
+                  enableMultiSelect,
+                  replyDerived: replyMessage,
+                  onCloseReply
                 }}
               />
               {

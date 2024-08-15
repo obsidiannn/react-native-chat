@@ -13,6 +13,7 @@ const Navbar = (props: {
     renderCenter?: () => React.ReactNode;
     title?: string;
     rightStyle?: ViewStyle
+    style?: ViewStyle
 }) => {
     const {
         title = '',
@@ -45,7 +46,7 @@ const Navbar = (props: {
 
     return <View style={[$container, {
         backgroundColor: $colors.secondaryBackground
-    }]}>
+    }, props.style]}>
         {<View style={$leftContainer}>
             {
                 renderLeft ? renderLeft() : <Pressable style={[

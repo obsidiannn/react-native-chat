@@ -17,6 +17,8 @@ import { TextMessage, TextMessageTopLevelProps } from '../TextMessage'
 import styles from './styles'
 import { VideoMessage } from '../VideoMessage'
 import { s } from 'app/utils/size'
+import Checkbox from 'expo-checkbox'
+import { colors } from 'app/theme'
 
 export interface MessageTopLevelProps extends TextMessageTopLevelProps {
   /** Called when user makes a long press on any message */
@@ -56,6 +58,8 @@ export interface MessageTopLevelProps extends TextMessageTopLevelProps {
   ) => React.ReactNode
   /** Show user avatars for received messages. Useful for a group chat. */
   showUserAvatars?: boolean
+  // 多选状态
+  enableMultiSelect?: boolean
 }
 
 export interface MessageProps extends MessageTopLevelProps {
@@ -66,6 +70,9 @@ export interface MessageProps extends MessageTopLevelProps {
   showAvatar: boolean
   showName: boolean
   showStatus: boolean
+  enableMultiSelect: boolean
+  checked: () => boolean
+  onChecked?: (id: string, checked: boolean) => void
 }
 
 /** Base component for all message types in the chat. Renders bubbles around
@@ -90,19 +97,24 @@ export const Message = React.memo(
     showStatus,
     showUserAvatars,
     usePreviewData,
+    enableMultiSelect,
+    checked,
+    onChecked
   }: MessageProps) => {
     const theme = React.useContext(ThemeContext)
     const user = React.useContext(UserContext)
 
     const currentUserIsAuthor =
       message.type !== 'dateHeader' && user?.id === message.author.id
-
+    const checkVal = checked()
     const { container, contentContainer, dateHeader, pressable, messageBody, messageHeader } = styles({
       currentUserIsAuthor,
       message,
       messageWidth,
       roundBorder,
       theme,
+      enableMultiSelect,
+      checked: checkVal
     })
     // 日期拆分不用了
     // if (message.type === 'dateHeader') {
@@ -206,16 +218,32 @@ export const Message = React.memo(
 
     return (
       <View style={container}>
+        {enableMultiSelect ? <Checkbox
+          value={checkVal}
+          color={colors.palette.primary}
+          style={{
+            marginLeft: s(12),
+            borderRadius: s(24)
+          }}
+          onValueChange={(v) => {
+            console.log(v);
+
+            onChecked && onChecked(message.id, v)
+          }}
+        /> : null}
         {
           currentUserIsAuthor ?
-            <>
+            <View style={{
+              display: 'flex',
+              flexDirection: 'row',
+            }}>
+
               <View style={messageBody}>
                 <View style={messageHeader}>
                   <Text style={[theme.fonts.dateDividerTextStyle, { marginRight: 8 }]}>{formatDate(message.createdAt ?? 0)}</Text>
                   <Text style={theme.fonts.userNameTextStyle}>{message.author.firstName}</Text>
                 </View>
                 <View>
-
                   <Pressable
                     onStartShouldSetResponderCapture={(ev) => { return true }}
                     onLongPress={(e) => {
@@ -258,10 +286,14 @@ export const Message = React.memo(
                   />
                 </View>
               </View>
-            </>
+            </View>
             :
             (
-              <>
+              <View style={{
+                display: 'flex',
+                flexDirection: 'row',
+              }}>
+
                 <Avatar
                   {...{
                     author: message.author,
@@ -280,15 +312,14 @@ export const Message = React.memo(
                     onStartShouldSetResponderCapture={(ev) => { return true }}
                     onLongPress={(e) => {
                       onMessageLongPress?.(excludeDerivedMessageProps(message), e)
-                    }
-                    }
+                    }}
                     onPress={() => onMessagePress?.(excludeDerivedMessageProps(message))}
                     style={pressable}
                   >
                     {renderBubbleContainer()}
                   </Pressable>
                 </View>
-              </>
+              </View>
             )
         }
 

@@ -5,7 +5,6 @@ import { IModel } from "@repo/enums"
 import { GroupMemberItemVO, MessageDetailItem, MessageExtra } from "@repo/types"
 import quickCrypto from "./quick-crypto"
 import { MessageType, User } from "app/components/chat-ui"
-import en from "app/i18n/en"
 
 const userTransfer = (user: IUser | null): User => {
     if (user === undefined || user === null) {
@@ -28,7 +27,7 @@ const groupMemberTransfer = (member: GroupMemberItemVO): User => {
     return {
         id: member.id.toString(),
         createdAt: new Date().getDate(),
-        firstName: member.a,
+        firstName: member.name,
         imageUrl: member.avatar,
         role: groupRoleTransfer(member.role)
     }
@@ -49,7 +48,7 @@ const groupRoleTransfer = (role: number): 'admin' | 'agent' | 'moderator' | 'use
 
 
 /**
- * message api struct 转换为 chatui message struct
+ * message server 结构体 转换为 chatui 结构体
  * @param detail 
  * @param key 
  * @param author 
@@ -80,7 +79,7 @@ const messageTypeConvert = (
                 type: 'text',
                 sequence: detail.sequence,
                 roomId: detail.chatId,
-                senderId: detail.fromUid
+                senderId: detail.fromUid,
             } as MessageType.Text
             break
         case 'image':
@@ -133,13 +132,14 @@ const messageTypeConvert = (
                 createdAt: time,
                 sequence: detail.sequence,
                 roomId: detail.chatId,
-                senderId: detail.fromUid
+                senderId: detail.fromUid,
             } as MessageType.Unsupported
             break
     }
     message.metadata = {
         ...message.metadata,
-        'uidType': detail.fromUidType
+        'uidType': detail.fromUidType,
+        'replyId': extra.replyId
     }
     return message;
 }
@@ -151,29 +151,7 @@ const messageEntityConverts = (messages: MessageType.Any[]): IMessage[] => {
 }
 
 /**
- * 消息实体类转消息包装类
- * @param m 
- * @returns 
- */
-const messageApi2Entity = (m: MessageDetailItem): IMessage => {
-
-    const entity: IMessage = {
-        id: m.id,
-        chatId: m.chatId,
-        type: m.type,
-        sequence: m.sequence,
-        time: m.createdAt ?? new Date().valueOf(),
-        uid: m.fromUid,
-        uidType: m.fromUidType,
-        state: m.status,
-        data: convertPartialContent(m as MessageType.PartialAny),
-        extra: JSON.stringify(m.metadata ?? {})
-    }
-    return entity
-}
-
-/**
- * 消息实体类转消息包装类
+ * chatui 结构体转 数据库entity 
  * @param m 
  * @returns 
  */
@@ -188,13 +166,14 @@ const messageDto2Entity = (m: MessageType.Any): IMessage => {
         uidType: m.metadata?.uidType,
         state: m.status === 'error' ? IModel.IChat.IMessageStatusEnum.DELETED : IModel.IChat.IMessageStatusEnum.NORMAL,
         data: convertPartialContent(m as MessageType.PartialAny),
-        extra: JSON.stringify(m.metadata ?? {})
+        extra: JSON.stringify(m.metadata ?? {}),
+        replyId: m.metadata?.replyId ?? null
     }
     return entity
 }
 
 /**
- * 本地entity 转 messageType 
+ * 本地entity 转 chatui 结构体 
  */
 const messageEntityToItems = (entities: IMessage[], key: string = '', needDecode: boolean = false): MessageType.Any[] => {
     if (entities === undefined || entities === null || entities.length <= 0) {
@@ -205,11 +184,9 @@ const messageEntityToItems = (entities: IMessage[], key: string = '', needDecode
     })
 }
 
-const messageEntity2Dto = (entity: IMessage, key: string = '', needDecode: boolean = false) => {
+// 数据库entity 转 chatui 结构体
+const messageEntity2Dto = (entity: IMessage, key: string = '', needDecode: boolean = false): MessageType.Any => {
     const data = needDecode ? decrypt(key, entity.data ?? '') : JSON.parse(entity.data ?? '')
-    // const time = new Date().getTime()
-    console.log('[time]', entity.time);
-    // const time = 
     const time = entity.time !== null ? entity.time : new Date().valueOf()
     let message: MessageType.Any
     switch (data.type) {
@@ -276,17 +253,23 @@ const messageEntity2Dto = (entity: IMessage, key: string = '', needDecode: boole
                 createdAt: time,
                 sequence: entity.sequence,
                 roomId: entity.chatId,
-                senderId: entity.uid
+                senderId: entity.uid,
             } as MessageType.Unsupported
             break
     }
     message.metadata = {
         ...message.metadata,
-        'uidType': entity.uidType
+        'uidType': entity.uidType,
+        'replyId': entity.replyId
     }
     return message
 }
 
+/**
+ * chatui 消息类型 转换为 server端的message type
+ * @param type 
+ * @returns 
+ */
 const messageTypeCodeConvert = (type: string): number => {
     let code = IModel.IChat.IMessageTypeEnum.NORMAL
     switch (type) {

@@ -33,7 +33,8 @@ export namespace MessageType {
     updatedAt?: number
     sequence: number
     senderId: number
-    pressed?: boolean
+    reply?: MessageType.Any
+    replyId?: string
   }
 
   export interface DerivedMessageProps extends Base {

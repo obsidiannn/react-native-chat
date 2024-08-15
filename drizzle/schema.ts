@@ -1,4 +1,3 @@
-import update from 'app/api/auth/update';
 import { sql } from 'drizzle-orm';
 import { sqliteTable, text, integer, index } from 'drizzle-orm/sqlite-core';
 
@@ -39,7 +38,8 @@ export const messages = sqliteTable("messages", {
     time: integer('time').notNull(),
     state: integer('state').notNull(),
     data: text('data').notNull(),
-    extra: text('extra')
+    extra: text('extra'),
+    replyId: text('reply_id')
 }, (entity) => ({
     chatIdx: index('messages_chat_id_index').on(entity.chatId),
     sequenceIdx: index('messages_sequence_index').on(entity.sequence),
