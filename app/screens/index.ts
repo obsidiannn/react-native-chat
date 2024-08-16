@@ -28,3 +28,5 @@ export * from './SettingScreen/SettingScreen'
 export * from './UnlockScreen'
 
 export * from './UserInfo/UserBlockScreen'
+
+export * from './CollectScreen/Index'

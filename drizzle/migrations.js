@@ -2,11 +2,19 @@
 
 import journal from './meta/_journal.json';
 import m0000 from './0000_cute_meggan.sql';
+import m0001 from './0001_shiny_firebrand.sql';
+import m0002 from './0002_slippery_nicolaos.sql';
+import m0003 from './0003_chubby_valeria_richards.sql';
+import m0004 from './0004_flaky_firestar.sql';
 
   export default {
     journal,
     migrations: {
-      m0000
+      m0000,
+m0001,
+m0002,
+m0003,
+m0004
     }
   }
   

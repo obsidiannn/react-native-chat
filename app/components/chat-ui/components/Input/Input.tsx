@@ -43,6 +43,7 @@ export interface InputTopLevelProps {
   replyDerived: MessageType.DerivedAny | null
   // 关闭引用
   onCloseReply?: (id: string) => void
+  onCollectPress: () => void
 }
 
 export interface InputAdditionalProps {
@@ -65,7 +66,8 @@ export const Input = ({
   onTypingChange,
   enableMultiSelect,
   replyDerived,
-  onCloseReply
+  onCloseReply,
+  onCollectPress
 }: InputProps) => {
   const theme = React.useContext(ThemeContext)
   const user = React.useContext(UserContext)
@@ -102,10 +104,15 @@ export const Input = ({
   const renderInput = () => {
     if (enableMultiSelect) {
       return <View style={multiContainer}>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => {
+          // 收藏
+          onCollectPress && onCollectPress()
+        }}>
           <IconFont name='download' color={theme.colors.inputText} />
         </TouchableOpacity>
-        <TouchableOpacity style={{ marginLeft: s(36) }}>
+        <TouchableOpacity style={{ marginLeft: s(36) }} onPress={() => {
+          // 转发
+        }}>
           <IconFont name='trash' color={theme.colors.inputText} />
         </TouchableOpacity>
       </View>

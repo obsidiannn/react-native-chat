@@ -144,6 +144,9 @@ const messageTypeConvert = (
     return message;
 }
 
+
+
+
 const messageEntityConverts = (messages: MessageType.Any[]): IMessage[] => {
     return messages.map(m => {
         return messageDto2Entity(m)
@@ -210,7 +213,7 @@ const messageEntity2Dto = (entity: IMessage, key: string = '', needDecode: boole
                 sequence: entity.sequence,
                 roomId: entity.chatId,
                 senderId: entity.uid,
-                ...(initReply && extra.reply ? {reply: string2Dto(extra.reply)} : {})
+                ...(initReply && extra.reply ? { reply: string2Dto(extra.reply) } : {})
             } as MessageType.Text
             break
         case 'image':
@@ -225,7 +228,7 @@ const messageEntity2Dto = (entity: IMessage, key: string = '', needDecode: boole
                 ...content,
                 uri: fileService.getFullUrl(content.uri),
                 type: 'image',
-                ...(initReply && extra.reply ? {reply: string2Dto(extra.reply)} : {})
+                ...(initReply && extra.reply ? { reply: string2Dto(extra.reply) } : {})
             } as MessageType.Image
             break
         case 'video':
@@ -240,7 +243,7 @@ const messageEntity2Dto = (entity: IMessage, key: string = '', needDecode: boole
                 ...videoData,
                 thumbnail: fileService.getFullUrl(videoData.thumbnail),
                 type: 'video',
-                ...(initReply && extra.reply ? {reply: string2Dto(extra.reply)} : {})
+                ...(initReply && extra.reply ? { reply: string2Dto(extra.reply) } : {})
             } as MessageType.Video
             break
         case 'file':
@@ -255,7 +258,7 @@ const messageEntity2Dto = (entity: IMessage, key: string = '', needDecode: boole
                 ...fileData,
                 uri: fileService.getFullUrl(fileData.uri),
                 type: 'file',
-                ...(initReply && extra.reply ? {reply: string2Dto(extra.reply)} : {})
+                ...(initReply && extra.reply ? { reply: string2Dto(extra.reply) } : {})
             } as MessageType.File
             break
         default:
@@ -267,7 +270,7 @@ const messageEntity2Dto = (entity: IMessage, key: string = '', needDecode: boole
                 sequence: entity.sequence,
                 roomId: entity.chatId,
                 senderId: entity.uid,
-                ...(initReply && extra.reply ? {reply: string2Dto(extra.reply)} : {})
+                ...(initReply && extra.reply ? { reply: string2Dto(extra.reply) } : {})
             } as MessageType.Unsupported
             break
     }
@@ -394,6 +397,29 @@ const convertPartialContent = (m: MessageType.PartialAny): string => {
     return partial === null ? '{}' : JSON.stringify(partial)
 }
 
+const convertPartialItem = (value: string): MessageType.PartialAny | null => {
+    let message: MessageType.PartialAny | null = null
+    const _data = JSON.parse(value) as { t: string, d: string }
+    const t = _data.t;
+    switch (t) {
+        case 'text':
+            message = JSON.parse(_data.d) as MessageType.PartialText
+            break
+        case 'image':
+            message = JSON.parse(_data.d) as MessageType.PartialImage
+            break
+        case 'video':
+            message = JSON.parse(_data.d) as MessageType.PartialVideo
+            break
+        case 'file':
+            message = JSON.parse(_data.d) as MessageType.PartialFile
+            break
+        default:
+            break
+    }
+    return message
+}
+
 const decrypt = (key: string, content: string) => {
     try {
         const decrypted = quickCrypto.De(key, Buffer.from(content, 'hex'));
@@ -413,7 +439,8 @@ export default {
     messageTypeConvert,
     messageEntityConverts,
     messageDto2Entity,
-    convertPartialContent,
     messageEntityToItems,
-    messageEntity2Dto
+    messageEntity2Dto,
+    convertPartialContent,
+    convertPartialItem
 } 

@@ -62,5 +62,6 @@ declare namespace App {
     SettingScreen: undefined;
     DiscoverScreen: undefined
     UserBlockScreen: undefined
+    CollectScreen: undefined
   }
 }

@@ -148,7 +148,8 @@ export const Chat = ({
   checkedIdList = [],
   onChecked,
   reply,
-  onCloseReply
+  onCloseReply,
+  onCollectPress
 }: ChatProps) => {
   const {
     container,
@@ -518,7 +519,8 @@ export const Chat = ({
                   onTypingChange,
                   enableMultiSelect,
                   replyDerived: replyMessage,
-                  onCloseReply
+                  onCloseReply,
+                  onCollectPress
                 }}
               />
               {

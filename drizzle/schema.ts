@@ -115,18 +115,18 @@ export type IGroup = typeof groups.$inferSelect
 
 export const groupMembers = sqliteTable('group_members', {
     id: integer('id').primaryKey(),
-	uid: integer('user_id'),
-	role: integer('role').default(0),
-	status: integer('status').default(0),
-	groupId: integer('group_id'),
-	groupAlias: text('group_alias'),
-	groupAliasIdx: text('group_alias_idx'),
+    uid: integer('user_id'),
+    role: integer('role').default(0),
+    status: integer('status').default(0),
+    groupId: integer('group_id'),
+    groupAlias: text('group_alias'),
+    groupAliasIdx: text('group_alias_idx'),
     avatar: text('avatar'),
-	nickName: text('nick_name'),
+    nickName: text('nick_name'),
     nickNameIdx: text('nick_name_idx'),
-	gender: integer('gender').default(0),
-	pubKey: text('pub_key'),
-	sign: text('sign'),
+    gender: integer('gender').default(0),
+    pubKey: text('pub_key'),
+    sign: text('sign'),
     createdAt: integer('created_at'),
     refreshAt: integer('refresh_at'),
 }, (entity) => ({
@@ -134,3 +134,23 @@ export const groupMembers = sqliteTable('group_members', {
 }))
 
 export type IGroupMember = typeof groupMembers.$inferSelect
+
+
+// 收藏
+export const collects = sqliteTable('collects', {
+    id: integer('id').primaryKey({ autoIncrement: true }),
+    fromAuthorId: integer('from_author_id'),
+    fromAuthor: text('from_author'),
+    chatId: text('chat_id').notNull(),
+    msgId: text('msg_id').notNull(),
+    type: text("collect_type").notNull(),
+    readCount: integer("read_count").default(0).notNull(),
+    title: text('title'),
+    data: text('data').notNull(),
+    createdAt: integer('created_at'),
+}, (entity) => ({
+    collectTypeIdx: index('collectTypeIdx').on(entity.type),
+    collectMsgIdx: index('collectMsgIdx').on(entity.msgId),
+}))
+
+export type ICollect = typeof collects.$inferSelect

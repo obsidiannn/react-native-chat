@@ -160,6 +160,7 @@ const AppStack = () => {
       <Stack.Screen name="DiscoverScreen" component={Screens.DiscoverScreen} />
       <Stack.Screen name="GroupInfoScreen" component={Screens.GroupInfoScreen} />
       <Stack.Screen name="UserBlockScreen" component={Screens.UserBlockScreen} />
+      <Stack.Screen name="CollectScreen" component={Screens.CollectScreen} />
     </Stack.Navigator>
   )
 }

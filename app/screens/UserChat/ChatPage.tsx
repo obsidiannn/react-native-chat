@@ -30,6 +30,9 @@ import userService from "app/services/user.service"
 import eventUtil from "app/utils/event-util"
 import Navbar from "app/components/Navbar"
 import { colors } from "app/theme"
+import { LocalCollectService } from "app/services/LocalCollectService"
+import collectMapper from "app/utils/collect.mapper"
+import toast from "app/utils/toast"
 export interface ChatUIPageRef {
     init: (chatItem: ChatDetailItem, friend: IUser) => void
     refreshSequence: (firstSeq: number, lastSeq: number) => void
@@ -388,6 +391,26 @@ const ChatPage = forwardRef((_, ref) => {
         return null
     }
 
+    const onCollectPress = async () => {
+        console.log('onCollectPress',checkedIdList);
+        
+        if (checkedIdList.length > 0) {
+            const msgs = messages.filter(m => {
+                return checkedIdList.includes(m.id)
+            })
+            if (msgs.length > 0) {
+                const collects = msgs.map(m => collectMapper.convertEntity(m))
+                LocalCollectService.addBatch(collects)
+                    .then(() => {
+                        setCheckedIdList([])
+                        setMulti(false)
+                        setReplyMsg(null)
+                        toast('操作成功')
+                    })
+            }
+        }
+    }
+
     return <>
         {renderMultiNavbar()}
         <Chat
@@ -427,6 +450,7 @@ const ChatPage = forwardRef((_, ref) => {
             onCloseReply={() => {
                 setReplyMsg(null)
             }}
+            onCollectPress={onCollectPress}
         />
         <VideoPlayModal ref={encVideoPreviewRef} />
         <FilePreviewModal ref={fileModalRef} />
