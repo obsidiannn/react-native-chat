@@ -1,10 +1,12 @@
 export default {
     welcome: {
         title: "Hello, welcome to use.",
-        signIn: "登 录",
-        signUp: "注册 bobo 账号",
-        agree: "我已阅读并同意",
+        signIn: "sign in",
+        signUp: "sign up bobo account",
+        agree: "I have read and agree to",
         agreement_privacy: "agreement privacy",
-        agreement_user: "agreement user"
+        agreement_user: "agreement user",
+        confirm_title:'Confirm that you have read and agree to the relevant agreements.',
+        confirm_content:'Confirm that you have read and agree to the relevant agreements.',
     }
 }

@@ -1,4 +1,6 @@
-export default {
+import { ColorValue } from "react-native";
+
+export const $colors: Record<string, ColorValue> = {
     white: "white",
     black: "black",
     slate50: "#f8fafc",
@@ -67,4 +69,15 @@ export default {
     red800: "#991b1b",
     red900: "#7f1d1d",
     red950: "#450a0a",
+    neutra50: "#fafafa",
+    neutra100: "#f5f5f5",
+    neutra200: "#e5e5e5",
+    neutra300: "#d4d4d4",
+    neutra400: "#a3a3a3",
+    neutra500: "#737373",
+    neutra600: "#525252",
+    neutra700: "#404040",
+    neutra800: "#262626",
+    neutra900: "#171717",
+    neutra950: "#0a0a0a",
 }

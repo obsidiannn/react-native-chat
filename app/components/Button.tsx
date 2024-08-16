@@ -1,11 +1,10 @@
 
-import { ColorsState } from "app/stores/system";
+import { $colors } from "app/Colors";
 import { colors } from "app/theme";
 import { s } from "app/utils/size";
 import { ReactNode } from "react";
 import { ActivityIndicator, ColorValue, Text, TextStyle, TouchableOpacity, ViewStyle } from "react-native";
-import { backgroundUpload } from "react-native-compressor";
-import { useRecoilValue } from "recoil";
+
 export interface BackupPriKeyModalType {
   open: () => void,
   close: () => void
@@ -23,10 +22,10 @@ export interface ButtonProps {
   textStyle?: TextStyle;
   onPress?: () => void;
   fullRounded?: boolean;
-  icon?: ReactNode
+  icon?: ReactNode;
+  theme?: "dark" | "light";
 }
 export const Button = (props: ButtonProps) => {
-  const $colors = useRecoilValue(ColorsState);
   const {
     fullWidth = false,
     rounded = true,
@@ -38,7 +37,8 @@ export const Button = (props: ButtonProps) => {
     type = "primary",
     loading,
     disabled,
-    icon
+    icon,
+    theme = "dark"
   } = props;
   const $container: Record<string, ViewStyle> = {
     "small": {
@@ -60,13 +60,13 @@ export const Button = (props: ButtonProps) => {
   }
   const $containerType: Record<string, ViewStyle> = {
     "primary": {
-      backgroundColor: props.backgroundColor ?? $colors.primary,
+      backgroundColor: props.backgroundColor ?? theme == "dark" ? $colors.blue700 : $colors.slate600,
     },
     "secondary": {
       height: Number($container[size].height) - 2,
       borderWidth: s(1),
       borderColor: "#D1D5DB",
-      backgroundColor: "white",
+      backgroundColor: $colors.white,
     }
   }
   const $label: Record<string, TextStyle> = {
@@ -81,10 +81,10 @@ export const Button = (props: ButtonProps) => {
   }
   const $labelType: Record<string, TextStyle> = {
     "primary": {
-      color: "white",
+      color: $colors.white,
     },
     "secondary": {
-      color: "black"
+      color: $colors.black
     }
   }
   return <TouchableOpacity disabled={disabled} onPress={props.onPress} style={[
@@ -99,19 +99,19 @@ export const Button = (props: ButtonProps) => {
     } : {}],
     { display: 'flex', flexDirection: 'row', alignItems: 'center' }
   ]}>
-    {loading ? <ActivityIndicator color={textStyle?.color ?? $colors.text} /> : null}
+    {loading ? <ActivityIndicator color={textStyle?.color ?? $colors.white} /> : null}
     {icon ? icon : null}
     <Text style={[
       {
-        color: "white",
+        color: $colors.white,
         textAlign: "center",
       },
       $label[size],
       $labelType[type],
       textStyle,
-      ...[disabled ? {
-        color: colors.palette.neutral100
-      } : {}],
+      disabled ? {
+        color: $colors.neutra100
+      } : null,
     ]}>{label}</Text>
   </TouchableOpacity>
 }

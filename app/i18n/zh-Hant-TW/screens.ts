@@ -5,7 +5,9 @@ export default {
         signUp: "注册 bobo 账号",
         agree: "我已阅读并同意",
         agreement_privacy: "隐私政策",
-        agreement_user: "可接受条款"
+        agreement_user: "可接受条款",
+        confirm_title:'确认阅读并同意相关协议',
+        confirm_content:'确认阅读并同意相关协议',
     },
     chat: {
         btn_send: "发送",

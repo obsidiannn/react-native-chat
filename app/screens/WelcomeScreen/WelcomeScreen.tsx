@@ -1,11 +1,10 @@
 import React, { useEffect, useRef, useState } from "react"
 import { Image } from "expo-image"
-import { ImageStyle, View, Text, Appearance, Pressable, ViewStyle, TextStyle } from "react-native";
+import { ImageStyle, View, Text, Pressable, ViewStyle, TextStyle } from "react-native";
 import { s } from 'app/utils/size';
 import { useRecoilValue } from "recoil"
-import { ColorsState } from "app/stores/system"
+import { ColorsState, ThemeState } from "app/stores/system"
 import { useTranslation } from 'react-i18next';
-import { getLocales } from "expo-localization";
 import { Screen } from "app/components";
 import { Button } from "app/components/Button";
 import { StackScreenProps } from "@react-navigation/stack";
@@ -15,7 +14,7 @@ import { ConfirmModal, ConfirmModalType } from "app/components/ConfirmModal";
 
 type Props = StackScreenProps<App.StackParamList, 'WelcomeScreen'>;
 export const WelcomeScreen = ({ navigation }: Props) => {
-  const colorScheme = Appearance.getColorScheme();
+  const $theme = useRecoilValue(ThemeState)
   const $colors = useRecoilValue(ColorsState);
   const [protocolStatus, setProtocolStatus] = useState(false)
   const confirmModalRef = useRef<ConfirmModalType>();
@@ -31,13 +30,9 @@ export const WelcomeScreen = ({ navigation }: Props) => {
     },
   ];
   useEffect(() => {
-    const locales = getLocales();
-    if (locales.length > 0) {
-      const locale = locales[0];
-    }
   }, [])
   return (
-    <Screen statusBarStyle={colorScheme == "dark" ? 'dark' : 'light'} safeAreaEdges={["top"]} preset="scroll" backgroundColor={$colors.background}>
+    <Screen statusBarStyle={$theme} safeAreaEdges={["top"]} preset="scroll" backgroundColor={$colors.background}>
       <Text style={[$titleText, {
         color: $colors.text
       }]}>{t('welcome.title')}</Text>
@@ -45,14 +40,14 @@ export const WelcomeScreen = ({ navigation }: Props) => {
       <View style={[$buttonContainer, {
         marginTop: s(40)
       }]}>
-        <Button onPress={() => navigation.navigate("UnlockScreen")} fullWidth size="large" label={t("welcome.signIn")} type="primary" />
+        <Button theme={$theme} onPress={() => navigation.navigate("UnlockScreen")} fullWidth size="large" label={t("welcome.signIn")} type="primary" />
       </View>
       <View style={$buttonContainer}>
-        <Button onPress={() => {
+        <Button theme={$theme} onPress={() => {
           if (!protocolStatus) {
             confirmModalRef.current?.open({
-              title: "确认阅读并同意相关协议",
-              content: "确认阅读并同意相关协议",
+              title: t('welcome.confirm_title'),
+              content: t('welcome.confirm_content'),
               onSubmit: () => {
                 navigation.navigate("SignUpScreen")
               }
@@ -74,7 +69,7 @@ export const WelcomeScreen = ({ navigation }: Props) => {
               url: protocol.url
             })
           }}>
-            <Text style={[$checkboxText, { color: $colors.secondaryText }]}>《{t("welcome." + protocol.name)}》</Text>
+            <Text style={[$checkboxText, { color: $colors.secondaryText }]}>{t("welcome." + protocol.name)}</Text>
           </Pressable>
         })}
       </View>
