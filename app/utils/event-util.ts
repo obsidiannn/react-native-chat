@@ -56,7 +56,8 @@ const sendTypeingEvent = (chatId: string, flag: boolean, senderId: number) => {
     const _msg = {
         type: IModel.IClient.SocketTypeEnum.TYPING_CHANGE,
         chatId,
-        flag, senderId
+        flag,
+        senderId
     } as ChatTypingEvent
     const eventKey = EventManager.generateKey(_msg.type, '')
     EventManager.emit(eventKey, _msg)

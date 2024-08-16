@@ -1,7 +1,7 @@
 import { StyleSheet, Text, TextInput } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Navbar from "app/components/Navbar";
 import { View, Switch } from "react-native";
 
@@ -45,7 +45,20 @@ export const GroupCreateScreen = ({ route, navigation }: Props) => {
         isEnc: true,
         cover: ''
     })
-
+    useEffect(() => {
+        const focus= navigation.addListener('focus', () => {
+            const avatar = "https://api.dicebear.com/8.x/fun-emoji/svg?seed=" + Math.random().toString(36).substring(2, 7);
+            setCreateState((old) => {
+                return {
+                    ...old,
+                    avatar
+                }
+            })
+        })
+        return () => {
+            focus()
+        }
+    },[])
     const doGroupCreate = async () => {
         if (!createState.name) {
             toast(t('groupCreate.require_name'))
@@ -100,7 +113,6 @@ export const GroupCreateScreen = ({ route, navigation }: Props) => {
             loadingModalRef.current?.close()
         }
     }
-
     return (
         <View style={{
             ...styles.container,

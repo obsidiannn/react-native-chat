@@ -111,8 +111,7 @@ const ChatPage = forwardRef((_, ref) => {
                     let result = []
                     if (olds.length > 0) {
                         const exsitIds = olds.map(o => o.id)
-                        result = items.filter(t => !exsitIds.includes(t.id)).concat(olds)
-                        // 
+                        result = items.filter(t => !exsitIds.includes(t.id)).concat(olds) 
                     } else {
                         result = items
                     }

@@ -71,17 +71,14 @@ export const Input = ({
 }: InputProps) => {
   const theme = React.useContext(ThemeContext)
   const user = React.useContext(UserContext)
-  const { container, multiContainer, input, marginRight } = styles({ theme })
+const { container, multiContainer, input, marginRight } = styles({ theme })
+  const [typing, setTyping] = React.useState<boolean>(false)
+  const typingRef = React.useRef(typing)
   // Use `defaultValue` if provided
   const [text, setText] = React.useState(textInputProps?.defaultValue ?? '')
 
   const value = textInputProps?.value ?? text
 
-  const handleChangeText = (newText: string) => {
-    // Track local state in case `onChangeText` is provided and `value` is not
-    setText(newText)
-    textInputProps?.onChangeText?.(newText)
-  }
 
   const handleSend = () => {
     const trimmedValue = value.trim()
@@ -99,6 +96,17 @@ export const Input = ({
   const handleTyping = (flag: boolean) => {
 
     onTypingChange && onTypingChange(flag)
+  }
+  const handleChangeText = (newText: string) => {
+    // Track local state in case `onChangeText` is provided and `value` is not
+    setText(newText)
+    textInputProps?.onChangeText?.(newText)
+    if(!typingRef.current){
+      handleTyping(true)
+      setTimeout(()=>{
+        handleTyping(false)
+      }, 3000)
+    }
   }
 
   const renderInput = () => {
