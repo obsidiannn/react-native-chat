@@ -1,19 +1,19 @@
-import { Pressable, StyleProp, Text, TextStyle, View, ViewStyle } from "react-native";
+import { Pressable, Text, TextStyle, View, ViewStyle } from "react-native";
 import React from "react";
-import { Image, ImageStyle } from "expo-image";
+import { ImageStyle } from "expo-image";
 import { goBack } from "app/navigators";
 import { s } from "app/utils/size";
-import { ColorsState, ThemeState } from "app/stores/system";
-import { useRecoilValue } from "recoil";
 import { IconFont } from "./IconFont/IconFont";
+import { $colors } from "app/Colors";
 const Navbar = (props: {
     onLeftPress?: () => void;
     renderRight?: () => React.ReactNode;
     renderLeft?: () => React.ReactNode;
     renderCenter?: () => React.ReactNode;
     title?: string;
-    rightStyle?: ViewStyle
-    style?: ViewStyle
+    rightStyle?: ViewStyle;
+    theme?: 'light' | 'dark';
+    style?: ViewStyle;
 }) => {
     const {
         title = '',
@@ -23,9 +23,6 @@ const Navbar = (props: {
         renderRight,
         rightStyle
     } = props;
-    const $theme = useRecoilValue(ThemeState)
-    const $colors = useRecoilValue(ColorsState)
-
     const renderTitle = () => {
         if (renderCenter) {
             return <View style={[$centerContainer]}>
@@ -36,7 +33,7 @@ const Navbar = (props: {
                 <Text style={[
                     $centerText,
                     {
-                        color: $colors.text,
+                        color: props.theme == "dark" ? $colors.white : $colors.neutra600
                     },
                 ]}>{title}</Text>
             </View>
@@ -45,17 +42,17 @@ const Navbar = (props: {
     }
 
     return <View style={[$container, {
-        backgroundColor: $colors.secondaryBackground
+        backgroundColor: props.theme == "dark" ? $colors.slate950 : $colors.neutra100,
     }, props.style]}>
         {<View style={$leftContainer}>
             {
                 renderLeft ? renderLeft() : <Pressable style={[
                     $leftIconContainer,
                     {
-                        backgroundColor: $colors.background
+                        backgroundColor: props.theme == "dark" ? $colors.slate800 : $colors.white
                     }
                 ]} onPress={() => onLeftPress()}>
-                    <IconFont name="arrowLeft" color={$colors.text} size={14} />
+                    <IconFont name="arrowLeft" color={props.theme == "dark" ? $colors.white : $colors.black} size={14} />
                 </Pressable>
             }
         </View>}

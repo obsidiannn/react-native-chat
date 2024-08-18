@@ -23,7 +23,6 @@ export const ChatsStore = atom<ChatDetailItem[]>({
             onSet((newValue) => {
                 const ids = newValue.map(c => c.id)
                 globalKV.set('chats_idx', ids.join(','))
-
                 const _msg = { type: IModel.IClient.SocketTypeEnum.SOCKET_JOIN, chatIds: newValue.map(c => c.id) } as SocketJoinEvent
                 const eventKey = EventManager.generateKey(_msg.type, '')
                 EventManager.emit(eventKey, _msg)

@@ -12,10 +12,12 @@ import {
   View,
   ViewStyle,
 } from "react-native"
-import { colors } from "../theme"
 import { ExtendedEdge, useSafeAreaInsetsStyle } from "../utils/useSafeAreaInsetsStyle"
+import { $colors } from "app/Colors"
+import ExpoStatusBar from "expo-status-bar/build/ExpoStatusBar"
 
 interface BaseScreenProps {
+  theme?: "light" | "dark";
   /**
    * Children components.
    */
@@ -227,20 +229,20 @@ function ScreenWithScrolling(props: ScreenProps) {
  */
 export function Screen(props: ScreenProps) {
   const {
-    backgroundColor = colors.background,
     KeyboardAvoidingViewProps,
     keyboardOffset = 0,
     safeAreaEdges,
     StatusBarProps,
-    statusBarStyle = "dark",
+    theme="dark",
   } = props
 
   const $containerInsets = useSafeAreaInsetsStyle(safeAreaEdges)
 
   return (
-    <View style={[$containerStyle, { backgroundColor }, $containerInsets]}>
-      <StatusBar style={statusBarStyle} {...StatusBarProps} />
-
+    <View style={[$containerStyle, {
+      backgroundColor: theme === "dark" ? $colors.slate600 : $colors.neutra600,
+    }, $containerInsets]}>
+      <ExpoStatusBar style="auto" {...StatusBarProps} />
       <KeyboardAvoidingView
         behavior={isIos ? "padding" : "height"}
         keyboardVerticalOffset={keyboardOffset}

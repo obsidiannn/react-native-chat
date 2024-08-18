@@ -3,7 +3,7 @@ import { Image } from "expo-image"
 import { ImageStyle, View, Text, Pressable, ViewStyle, TextStyle } from "react-native";
 import { s } from 'app/utils/size';
 import { useRecoilValue } from "recoil"
-import { ColorsState, ThemeState } from "app/stores/system"
+import { ThemeState } from "app/stores/system"
 import { useTranslation } from 'react-i18next';
 import { Screen } from "app/components";
 import { Button } from "app/components/Button";
@@ -11,11 +11,11 @@ import { StackScreenProps } from "@react-navigation/stack";
 import { Checkbox } from "./Checkbox";
 import { App } from "types/app";
 import { ConfirmModal, ConfirmModalType } from "app/components/ConfirmModal";
+import { $colors } from "app/Colors";
 
 type Props = StackScreenProps<App.StackParamList, 'WelcomeScreen'>;
 export const WelcomeScreen = ({ navigation }: Props) => {
   const $theme = useRecoilValue(ThemeState)
-  const $colors = useRecoilValue(ColorsState);
   const [protocolStatus, setProtocolStatus] = useState(false)
   const confirmModalRef = useRef<ConfirmModalType>();
   const { t } = useTranslation("screens");
@@ -32,9 +32,9 @@ export const WelcomeScreen = ({ navigation }: Props) => {
   useEffect(() => {
   }, [])
   return (
-    <Screen statusBarStyle={$theme} safeAreaEdges={["top"]} preset="scroll" backgroundColor={$colors.background}>
+    <Screen theme={$theme} safeAreaEdges={["top"]} preset="scroll">
       <Text style={[$titleText, {
-        color: $colors.text
+        color: $theme == "dark" ? $colors.white : $colors.black
       }]}>{t('welcome.title')}</Text>
       <Image style={$bg} source={require("assets/images/welcomeBg.webp")} cachePolicy="disk" />
       <View style={[$buttonContainer, {
@@ -48,9 +48,7 @@ export const WelcomeScreen = ({ navigation }: Props) => {
             confirmModalRef.current?.open({
               title: t('welcome.confirm_title'),
               content: t('welcome.confirm_content'),
-              onSubmit: () => {
-                navigation.navigate("SignUpScreen")
-              }
+              onSubmit: () => navigation.navigate("SignUpScreen")
             });
             return;
           }
@@ -60,7 +58,7 @@ export const WelcomeScreen = ({ navigation }: Props) => {
       <View style={$checkboxContainer}>
         <Checkbox onChange={() => setProtocolStatus(!protocolStatus)} checked={protocolStatus} />
         <Pressable onPress={() => setProtocolStatus(!protocolStatus)}>
-          <Text style={[$checkboxText, { color: $colors.secondaryText }]}>{t("welcome.agree")}</Text>
+          <Text style={[$checkboxText, { color: $theme=="dark" ? $colors.slate200 :$colors.slate400 }]}>{t("welcome.agree")}</Text>
         </Pressable>
         {protocols.map((protocol) => {
           return <Pressable key={protocol.name} onPress={() => {
@@ -69,7 +67,7 @@ export const WelcomeScreen = ({ navigation }: Props) => {
               url: protocol.url
             })
           }}>
-            <Text style={[$checkboxText, { color: $colors.secondaryText }]}>{t("welcome." + protocol.name)}</Text>
+            <Text style={[$checkboxText, { color:$theme=="dark" ? $colors.slate400 :$colors.slate700 }]}>{t("welcome." + protocol.name)}</Text>
           </Pressable>
         })}
       </View>
@@ -81,6 +79,7 @@ const $titleText: TextStyle = {
   marginTop: s(65),
   fontSize: 36,
   textAlign: 'center',
+  fontWeight: "500",
   marginBottom: s(20),
 }
 const $bg: ImageStyle = {

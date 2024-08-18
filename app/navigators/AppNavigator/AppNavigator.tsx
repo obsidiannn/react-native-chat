@@ -117,7 +117,7 @@ const AppStack = () => {
   }, [])
   const setThemeState = useSetRecoilState(ThemeState);
   useEffect(() => {
-    const v = Appearance.getColorScheme()
+    const v = 'light';//Appearance.getColorScheme()
     setThemeState(v === "dark" ? 'dark' : 'light');
     StatusBar.setBarStyle(v === "dark" ? 'dark-content' : 'light-content');
     const subscription = Appearance.addChangeListener(({ colorScheme }) => setThemeState(colorScheme === "dark" ? 'dark' : 'light'));
@@ -126,7 +126,6 @@ const AppStack = () => {
         setNetworkState(true)
       } else {
         setNetworkState(false)
-        console.log('Disconnected');
       }
     });
     init();
@@ -137,8 +136,9 @@ const AppStack = () => {
   }, []);
   return (
     <Stack.Navigator
-      initialRouteName="WelcomeScreen"
-      screenOptions={{ headerShown: false, navigationBarColor: colors.background }}
+      //initialRouteName="WelcomeScreen"
+      initialRouteName="SignUpScreen" 
+      screenOptions={{ headerShown: false, navigationBarColor: "red" }}
     >
       <Stack.Screen name="TabStack" component={TabStack} />
       <Stack.Screen name="UserChatScreen" component={Screens.UserChatScreen} />
