@@ -30,3 +30,5 @@ export * from './UnlockScreen'
 export * from './UserInfo/UserBlockScreen'
 
 export * from './CollectScreen/Index'
+export * from './SettingScreen/SystemFeedback'
+export * from './SettingScreen/DonateScreen'

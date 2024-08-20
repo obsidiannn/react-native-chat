@@ -56,4 +56,15 @@ export class AuthService {
         return null
     }
 
+
+    static doFeedback = async (categoryId: number, urls: string[], content: string): Promise<number | null> => {
+        const resp = await authApi.doFeedback({
+            categoryId, content, imageUrls: urls
+        })
+        if (resp) {
+            return resp.id
+        }
+        return null
+    }
+
 }

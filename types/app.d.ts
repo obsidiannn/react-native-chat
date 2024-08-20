@@ -63,5 +63,7 @@ declare namespace App {
     DiscoverScreen: undefined
     UserBlockScreen: undefined
     CollectScreen: undefined
+    SystemFeedbackScreen: undefined
+    DonateScreen: undefined
   }
 }

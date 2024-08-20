@@ -4,9 +4,8 @@ import BaseModal from "app/components/base-modal";
 import LoadingModal, { LoadingModalType } from "app/components/loading-modal";
 import { AuthService } from "app/services/auth.service";
 import fileService from "app/services/file.service";
-import messageSendService from "app/services/message-send.service";
 import { ColorsState } from "app/stores/system";
-import { captureImage, pickerImage, pickerImages } from "app/utils/media-util";
+import { pickerImages } from "app/utils/media-util";
 import { s } from "app/utils/size";
 import toast from "app/utils/toast";
 import { Image } from "expo-image";
@@ -83,7 +82,7 @@ export default forwardRef((_, ref) => {
                 onClose()
             }
         } catch (error) {
-            
+
         } finally {
             loadingModalRef.current?.close()
         }

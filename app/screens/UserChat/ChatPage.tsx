@@ -33,6 +33,7 @@ import { colors } from "app/theme"
 import { LocalCollectService } from "app/services/LocalCollectService"
 import collectMapper from "app/utils/collect.mapper"
 import toast from "app/utils/toast"
+import VoicePhoneModal, { VoicePhoneModalType } from "app/components/VoicePhoneModal"
 export interface ChatUIPageRef {
     init: (chatItem: ChatDetailItem, friend: IUser) => void
     refreshSequence: (firstSeq: number, lastSeq: number) => void
@@ -111,7 +112,7 @@ const ChatPage = forwardRef((_, ref) => {
                     let result = []
                     if (olds.length > 0) {
                         const exsitIds = olds.map(o => o.id)
-                        result = items.filter(t => !exsitIds.includes(t.id)).concat(olds) 
+                        result = items.filter(t => !exsitIds.includes(t.id)).concat(olds)
                     } else {
                         result = items
                     }
@@ -140,6 +141,7 @@ const ChatPage = forwardRef((_, ref) => {
     const encVideoPreviewRef = useRef<IVideoPreviewModal>();
     const fileModalRef = useRef<ChatUIFileModalRef>(null)
     const loadingModalRef = useRef<LoadingModalType>(null)
+    const voicePhoneModalRef = useRef<VoicePhoneModalType>(null)
     const { t } = useTranslation('screens')
 
 
@@ -201,8 +203,6 @@ const ChatPage = forwardRef((_, ref) => {
     const init = useCallback(async (chatItem: ChatDetailItem, friend: IUser) => {
         const chatId = chatItem.id
         chatItemRef.current = chatItem
-        console.log('[[[initinit');
-
         await loadHistoryMessages(chatId, -1);
         if (globalThis.wallet && friend) {
             sharedSecretRef.current = globalThis.wallet.computeSharedSecret(friend.pubKey);
@@ -287,6 +287,9 @@ const ChatPage = forwardRef((_, ref) => {
                 break
             case 'file':
                 await MessageSendService.fileSelection(author).then(addMessage)
+                break
+            case 'voiceChat':
+                voicePhoneModalRef.current?.open(userContext.friend ?? null)
                 break
             default: break
         }
@@ -391,8 +394,8 @@ const ChatPage = forwardRef((_, ref) => {
     }
 
     const onCollectPress = async () => {
-        console.log('onCollectPress',checkedIdList);
-        
+        console.log('onCollectPress', checkedIdList);
+
         if (checkedIdList.length > 0) {
             const msgs = messages.filter(m => {
                 return checkedIdList.includes(m.id)
@@ -454,6 +457,7 @@ const ChatPage = forwardRef((_, ref) => {
         <VideoPlayModal ref={encVideoPreviewRef} />
         <FilePreviewModal ref={fileModalRef} />
         <LoadingModal ref={loadingModalRef} />
+        <VoicePhoneModal ref={voicePhoneModalRef} />
         <LongPressModal ref={longPressModalRef}
             onReply={(_m) => {
                 setReplyMsg(_m)

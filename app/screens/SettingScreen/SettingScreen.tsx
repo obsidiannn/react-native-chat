@@ -102,6 +102,32 @@ export const SettingScreen = ({ navigation }: Props) => {
                         <IconFont name="arrowRight" color={$colors.border} size={14} />
                     </View>
                 },
+                {
+                    icon: <IconFont name="doc" color={$colors.text} size={24} />,
+                    title: "系统反馈",
+                    onPress: () => {
+                        navigate('SystemFeedbackScreen')
+                    },
+                    rightArrow: <View style={{
+                        flexDirection: "row",
+                        alignItems: "center"
+                    }}>
+                        <IconFont name="arrowRight" color={$colors.border} size={14} />
+                    </View>
+                },
+                {
+                    icon: <IconFont name="doc" color={$colors.text} size={24} />,
+                    title: "捐赠",
+                    onPress: () => {
+                        navigate('DonateScreen')
+                    },
+                    rightArrow: <View style={{
+                        flexDirection: "row",
+                        alignItems: "center"
+                    }}>
+                        <IconFont name="arrowRight" color={$colors.border} size={14} />
+                    </View>
+                },
             ]} />
             <CardMenu style={{
                 marginTop: s(20),

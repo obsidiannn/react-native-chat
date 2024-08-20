@@ -19,4 +19,9 @@ export default [
         icon: 'file',
         key: 'file'
     },
+    {
+        title: '语音通话',
+        icon: 'file',
+        key: 'voiceChat'
+    },
 ]

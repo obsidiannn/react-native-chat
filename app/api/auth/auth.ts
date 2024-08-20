@@ -33,9 +33,23 @@ const doComplain = async (
     return rep;
 }
 
+const doFeedback = async (
+    param: {
+        categoryId: number,
+        content: string,
+        imageUrls: string[]
+    }
+): Promise<{ id: number }> => {
+    const rep: {
+        id: number
+    } = await createInstance(true).post('/auth/feedback', param);
+    return rep;
+}
+
 export default {
     signUp,
     destory,
     getInfo,
-    doComplain
+    doComplain,
+    doFeedback
 }
