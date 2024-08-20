@@ -20,8 +20,22 @@ const getInfo = async (): Promise<IUser> => {
     return rep.user as IUser;
 };
 
+const doComplain = async (
+    param: {
+        userId: number,
+        content?: string,
+        imageUrls: string[]
+    }
+): Promise<{ id: number }> => {
+    const rep: {
+        id: number
+    } = await createInstance(true).post('/auth/complain', param);
+    return rep;
+}
+
 export default {
     signUp,
     destory,
-    getInfo
+    getInfo,
+    doComplain
 }

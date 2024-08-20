@@ -3,7 +3,7 @@ import * as ImagePicker from 'expo-image-picker';
 import * as DocumentPicker from 'expo-document-picker';
 import { requestCameraPermission, requestPhotoPermission } from 'app/services/permissions';
 
-import { Video, createVideoThumbnail ,Image} from 'react-native-compressor';
+import { Video, createVideoThumbnail, Image } from 'react-native-compressor';
 
 
 export const pickerDocument = async () => {
@@ -25,7 +25,23 @@ export const pickerImage = async (): Promise<ImagePicker.ImagePickerAsset[]> => 
         base64: true,
         allowsMultipleSelection: true,
         quality: 1,
+    });
+    if (!result.canceled) {
+        return result.assets;
+    }
+    return [];
+};
 
+export const pickerImages = async (max: number): Promise<ImagePicker.ImagePickerAsset[]> => {
+    await requestPhotoPermission();
+    let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: false,
+        exif: false,
+        base64: true,
+        allowsMultipleSelection: true,
+        selectionLimit: max,
+        quality: 1,
     });
     if (!result.canceled) {
         return result.assets;

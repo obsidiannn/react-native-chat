@@ -5,7 +5,6 @@ import { IconFontNameType } from '../IconFont/IconFont'
 
 export namespace MessageType {
   export type Any = Custom | File | Image | Text | Unsupported | Video
-
   export type DerivedMessage =
     | DerivedCustom
     | DerivedFile

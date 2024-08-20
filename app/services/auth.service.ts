@@ -45,4 +45,15 @@ export class AuthService {
         }
         return null
     }
+
+    static doComplain = async (urls: string[], userId: number, content?: string): Promise<number | null> => {
+        const resp = await authApi.doComplain({
+            userId, content, imageUrls: urls
+        })
+        if (resp) {
+            return resp.id
+        }
+        return null
+    }
+
 }

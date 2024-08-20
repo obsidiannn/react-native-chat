@@ -1,4 +1,4 @@
-import { View, TouchableOpacity, TextInput } from "react-native";
+import { View, TouchableOpacity, TextInput, Text } from "react-native";
 import { useRef, useContext, forwardRef, useImperativeHandle, useState } from "react";
 import { ConfirmModal, ConfirmModalType } from "app/components/ConfirmModal";
 import { s } from "app/utils/size";
@@ -15,9 +15,10 @@ import { IModel } from "@repo/enums";
 import { navigate } from "app/navigators";
 import { LocalUserService } from "app/services/LocalUserService";
 import eventUtil from "app/utils/event-util";
+import UserComplainModal from "./UserComplainModal";
 
 export interface UserConfigModalType {
-    open: () => void
+    open: (userId: number) => void
 }
 
 export default forwardRef((props: {
@@ -29,6 +30,7 @@ export default forwardRef((props: {
     const [editing, setEditing] = useState(false)
     const userContext = useContext(UserChatUIContext)
     const [friendAlias, setFriendAlias] = useState('')
+    const userComplainModalRef = useRef<UserConfigModalType>(null)
 
     const isEditable = (): boolean => {
         return editing && props.friend !== null && ((props.friend.isFriend ?? 0) > 0)
@@ -100,29 +102,21 @@ export default forwardRef((props: {
 
     return <BaseModal visible={visible} onClose={onClose} styles={{ flex: 1 }} >
         <View style={{
-            flex: 1,
-            marginTop: s(32),
             backgroundColor: themeColor.background,
             borderTopLeftRadius: s(24),
             borderTopRightRadius: s(24),
             paddingHorizontal: s(16),
-
         }}>
             <View style={{
-                marginTop: s(15),
+                paddingVertical: s(24),
                 display: 'flex',
-                flexDirection: 'row',
-                alignItems: 'center',
+                flexDirection: 'column',
                 justifyContent: 'space-between',
-                borderBottomWidth: s(0.5),
-                borderBottomColor: themeColor.border,
-                paddingVertical: s(12)
             }}>
                 <View style={{
                     display: 'flex',
                     flexDirection: 'row',
                     alignItems: 'center',
-                    paddingBottom: s(12)
                 }}>
                     <IconFont name="pencil" color={themeColor.text} size={24} />
                     <TextInput
@@ -137,15 +131,47 @@ export default forwardRef((props: {
                             setFriendAlias(v)
                         }}
                     />
+                    {
+                        renderCheckButton()
+                    }
                 </View>
 
-                {
-                    renderCheckButton()
-                }
+
+                <TouchableOpacity style={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    paddingVertical: s(12)
+                }}>
+                    <IconFont name="pencil" color={themeColor.text} size={24} />
+                    <Text style={{ color: themeColor.text, }}>分享名片</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                    onPress={() => {
+                        if (props.friend) {
+                            userComplainModalRef.current?.open(props.friend.id)
+                        }
+                    }}
+                    style={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        paddingVertical: s(12)
+                    }}>
+                    <IconFont name="pencil" color={themeColor.text} size={24} />
+                    <Text style={{ color: themeColor.text, }}>投诉</Text>
+                </TouchableOpacity>
+
             </View>
 
+
+
             <View style={{
-                marginTop: s(36),
+                paddingTop: s(36),
+                borderTopWidth: s(0.5),
+                borderTopColor: themeColor.border,
+                paddingVertical: s(12)
             }}>
                 <FormLine title={'加入黑名单'}
                     textStyle={{
@@ -208,5 +234,6 @@ export default forwardRef((props: {
 
         </View>
         <ConfirmModal ref={confirmModalRef} />
+        <UserComplainModal ref={userComplainModalRef} />
     </BaseModal>
 })

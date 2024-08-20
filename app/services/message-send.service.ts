@@ -231,6 +231,8 @@ const sendImage = async (chatId: string, key: string, message: MessageType.Image
 }
 
 
+
+
 const sendVideo = async (chatId: string, key: string, message: MessageType.Video) => {
     const file = message.uri;
     if (!file) {

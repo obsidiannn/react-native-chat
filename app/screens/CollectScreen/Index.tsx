@@ -6,7 +6,7 @@
 import { StackScreenProps } from "@react-navigation/stack";
 import Navbar from "app/components/Navbar";
 import { ColorsState } from "app/stores/system";
-import { StyleSheet, TouchableOpacity } from "react-native";
+import { FlatList, StyleSheet, TouchableOpacity } from "react-native";
 import { View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useRecoilValue } from "recoil";
@@ -14,11 +14,14 @@ import { App } from "types/app";
 import { SearchInput } from "./SearchInput";
 import { s } from "app/utils/size";
 import { Text } from "react-native";
-import { FlashList } from "@shopify/flash-list";
 import { MessageType } from "app/components/chat-ui";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { LocalCollectService } from "app/services/LocalCollectService";
 import collectMapper from "app/utils/collect.mapper";
+import CollectTextMsg from "./components/TextMsg";
+import CollectImageMsg from "./components/ImageMsg";
+import CollectVideoMsg from "./components/VideoMsg";
+import CollectFileMsg from "./components/FileMsg";
 
 export interface CollectItem {
     id: number,
@@ -26,7 +29,7 @@ export interface CollectItem {
     fromAuthor: string,
     chatId: string
     msgId: string
-    type: string
+    type: MessageType.Any['type']
     readCount: number
     title: string
     data: MessageType.PartialAny | null
@@ -43,35 +46,98 @@ export const CollectScreen = (props: Props) => {
 
     const [data, setData] = useState<CollectItem[]>([])
     const [page, setPage] = useState<number>(1)
+    const [chooseIdx, setChooseIdx] = useState<number>(-1)
     const [keyword, setKeyword] = useState<string | null>(null)
-    const loadData = (_page: number) => {
+
+    const loadData = (
+        _page: number,
+        choosed: number,
+        reset: boolean = false,
+        _keyword: string = '') => {
+        // LocalCollectService.removeAll()
+        const searchType: MessageType.Any['type'][] = findSearchType(choosed)
         LocalCollectService.queryPage({
-            page: _page, size: 10, keyword
+            page: _page, size: 10,
+            keyword: _keyword === '' ? keyword : _keyword,
+            desc: true,
+            type: searchType
         }).then(res => {
-            if (res.length > 0) {
+            if (!reset) {
+                if (res.length > 0) {
+                    const collects = res.map(r => collectMapper.convertItem(r))
+                    setData(items => {
+                        const ids = items.map(c => c.id)
+                        return items.concat(collects.filter(c => !ids.includes(c.id)))
+                    })
+                    setPage(_page)
+                }
+            } else {
                 const collects = res.map(r => collectMapper.convertItem(r))
-                setData(items => {
-                    return items.concat(collects)
-                })
+                setData(collects)
+                setPage(_page)
             }
+
         })
     }
 
 
+
     const renderItem = (item: CollectItem) => {
-        return <View key={item.id + '_collect'} style={style.item}>
-            <View style={{
-                display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'
-            }}>
-                <Text>{item.title}</Text>
-            </View>
-            <View style={{
-                display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'
-            }}>
-                <Text>{item.fromAuthor}</Text>
-                <Text>{item.createdAt}</Text>
-            </View>
-        </View>
+        switch (item.type) {
+            case "text":
+                return <CollectTextMsg item={item} themeState={themeState} />
+            case "image":
+                return <CollectImageMsg item={item} themeState={themeState} />
+            case "video":
+                return <CollectVideoMsg item={item} themeState={themeState} />
+            case "file":
+                return <CollectFileMsg item={item} themeState={themeState} />
+        }
+        return <></>
+    }
+
+
+    const findSearchType = (idx: number): MessageType.Any['type'][] => {
+        switch (idx) {
+            case 1:
+                return []
+            case 2:
+                return []
+            case 3:
+                return ['video', 'image']
+            case 4:
+                return []
+            case 5:
+                return ['file']
+        }
+
+        return []
+    }
+
+    const changeType = (idx: number) => {
+        if (chooseIdx === idx) {
+            setChooseIdx(-1)
+            loadData(1, -1, true)
+        } else {
+            setChooseIdx(idx)
+            loadData(1, idx, true)
+        }
+    }
+
+    useEffect(() => {
+        loadData(page, chooseIdx)
+    }, [])
+
+    const choosedStyle = (idx: number) => {
+        if (idx === chooseIdx) {
+            return {
+                backgroundColor: themeState.background,
+                color: themeState.text
+            }
+        }
+        return {
+            color: themeState.text
+        }
     }
 
     return <View style={{
@@ -84,23 +150,39 @@ export const CollectScreen = (props: Props) => {
         <View style={style.container}>
             <SearchInput color={themeState} onSearch={async (v) => {
                 setKeyword(v)
+                loadData(1, chooseIdx, true, v)
             }} />
             <View style={{
                 display: 'flex', flexDirection: 'row', alignItems: 'center',
             }}>
-                <TouchableOpacity style={style.headerButton}>
-                    <Text style={{ color: themeState.primary }}>Recently used</Text>
+                <TouchableOpacity style={style.headerButton} onPress={() => { changeType(1) }}>
+                    <Text style={{
+                        ...style.typeButton,
+                        ...choosedStyle(1)
+                    }}>Recently used</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={style.headerButton}>
+                <TouchableOpacity style={{
+                    ...style.typeButton,
+                    ...choosedStyle(2)
+                }} onPress={() => { changeType(2) }}>
                     <Text style={{ color: themeState.primary }}>Links</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={style.headerButton}>
+                <TouchableOpacity style={{
+                    ...style.typeButton,
+                    ...choosedStyle(3)
+                }} onPress={() => { changeType(3) }}>
                     <Text style={{ color: themeState.primary }}>Media</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={style.headerButton}>
+                <TouchableOpacity style={{
+                    ...style.typeButton,
+                    ...choosedStyle(4)
+                }} onPress={() => { changeType(4) }}>
                     <Text style={{ color: themeState.primary }}>Audio</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={style.headerButton}>
+                <TouchableOpacity style={{
+                    ...style.typeButton,
+                    ...choosedStyle(5)
+                }} onPress={() => { changeType(5) }}>
                     <Text style={{ color: themeState.primary }}>File</Text>
                 </TouchableOpacity>
             </View>
@@ -108,18 +190,16 @@ export const CollectScreen = (props: Props) => {
             <View style={{
                 flex: 1,
             }}>
-                <FlashList
-                    style={{
-                        flex: 1
-                    }}
+                <FlatList
                     data={data}
                     onEndReached={() => {
-                        loadData(page)
+                        console.log('end reached');
+                        loadData(page + 1, chooseIdx)
                     }}
                     showsVerticalScrollIndicator
+                    // estimatedItemSize={300}
                     renderItem={({ item, index }) => renderItem(item)}
-                    estimatedItemSize={s(76)}
-                    keyExtractor={(item) => item.id + '_collect'}
+                    keyExtractor={(item) => item.id + ''}
                 />
 
             </View>
@@ -149,5 +229,10 @@ const styles = (
         display: 'flex',
         flexDirection: 'column',
         padding: s(12)
+    },
+    typeButton: {
+        color: themeState.primary,
+        padding: s(8),
+        borderRadius: s(4),
     }
 })

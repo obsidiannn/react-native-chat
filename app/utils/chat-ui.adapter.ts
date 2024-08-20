@@ -399,20 +399,20 @@ const convertPartialContent = (m: MessageType.PartialAny): string => {
 
 const convertPartialItem = (value: string): MessageType.PartialAny | null => {
     let message: MessageType.PartialAny | null = null
-    const _data = JSON.parse(value) as { t: string, d: string }
-    const t = _data.t;
+    const _data = JSON.parse(value)
+    const t = _data.type;
     switch (t) {
         case 'text':
-            message = JSON.parse(_data.d) as MessageType.PartialText
+            message = _data as MessageType.PartialText
             break
         case 'image':
-            message = JSON.parse(_data.d) as MessageType.PartialImage
+            message = _data as MessageType.PartialImage
             break
         case 'video':
-            message = JSON.parse(_data.d) as MessageType.PartialVideo
+            message = _data as MessageType.PartialVideo
             break
         case 'file':
-            message = JSON.parse(_data.d) as MessageType.PartialFile
+            message = _data as MessageType.PartialFile
             break
         default:
             break

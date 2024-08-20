@@ -5,7 +5,7 @@ import { and, desc, eq, asc, inArray, like, lt, sql } from "drizzle-orm";
 import { ICollect, collects } from "drizzle/schema"
 
 export interface ICollectQueryPage {
-    type?: string,
+    type?: string[],
     desc?: boolean
     keyword: string | null
     page: number
@@ -13,7 +13,10 @@ export interface ICollectQueryPage {
 }
 
 export class LocalCollectService {
-
+    static async removeAll() {
+        const db = GetDB()
+        await db.delete(collects)
+    }
     static async addBatch(entities: ICollect[]) {
         const db = GetDB()
         const msgIds: string[] = entities.map(item => item.msgId ?? '');
@@ -45,9 +48,11 @@ export class LocalCollectService {
     static async queryPage(param: ICollectQueryPage): Promise<ICollect[]> {
         const db = GetDB()
         const offset = pageSkip(param.page, param.size)
+        console.log('offset', offset, param.size);
+
         const data = await db.query.collects.findMany({
             where: (and(
-                (param.type ? eq(collects.type, param.type) : undefined),
+                (param.type && param.type.length > 0 ? inArray(collects.type, param.type) : undefined),
                 (param.keyword ? like(collects.title, '%' + param.keyword + '%') : undefined),
             )),
             orderBy: (
@@ -56,6 +61,9 @@ export class LocalCollectService {
             offset,
             limit: param.size
         })
+        // const data = await db.query.collects.findMany()
+        console.log('local query', param);
+
         return data
     }
 

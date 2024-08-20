@@ -22,12 +22,13 @@ const convertEntity = (message: MessageType.Any): ICollect => {
         data: chatUiAdapter.convertPartialContent(message as MessageType.PartialAny),
         createdAt: 0,
     }
+
     return entity
 }
 
 
 const convertItem = (entity: ICollect): CollectItem => {
-
+    
     const item: CollectItem = {
         id: entity.id,
         fromAuthorId: entity.fromAuthorId ?? 0,
