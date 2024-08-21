@@ -89,19 +89,7 @@ export const SettingScreen = ({ navigation }: Props) => {
                         <IconFont name="arrowRight" color={$colors.border} size={14} />
                     </View>
                 },
-                {
-                    icon: <IconFont name="userRemove" color={$colors.text} size={24} />,
-                    title: "收藏夹",
-                    onPress: () => {
-                        navigate('CollectScreen')
-                    },
-                    rightArrow: <View style={{
-                        flexDirection: "row",
-                        alignItems: "center"
-                    }}>
-                        <IconFont name="arrowRight" color={$colors.border} size={14} />
-                    </View>
-                },
+                
                 {
                     icon: <IconFont name="doc" color={$colors.text} size={24} />,
                     title: "系统反馈",

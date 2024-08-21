@@ -253,12 +253,12 @@ export const Message = React.memo(
           value={checkVal}
           color={colors.palette.primary}
           style={{
+            alignSelf: 'flex-start',
             marginLeft: s(12),
-            borderRadius: s(24)
+            marginTop: s(4),
+            borderRadius: s(24),
           }}
           onValueChange={(v) => {
-            console.log(v);
-
             onChecked && onChecked(message.id, v)
           }}
         /> : null}
@@ -268,9 +268,7 @@ export const Message = React.memo(
               display: 'flex',
               flexDirection: 'row',
             }}>
-
               <View style={messageBody}>
-
                 <View style={messageHeader}>
                   <Text style={[theme.fonts.dateDividerTextStyle, { marginRight: 8 }]}>{formatDate(message.createdAt ?? 0)}</Text>
                   <Text style={theme.fonts.userNameTextStyle}>{message.author.firstName}</Text>
@@ -281,18 +279,27 @@ export const Message = React.memo(
                     onLongPress={(e) => {
                       onMessageLongPress?.(excludeDerivedMessageProps(message), e)
                     }}
-                    onPress={() => onMessagePress?.(excludeDerivedMessageProps(message))}
+                    onPress={() => {
+                      if (enableMultiSelect) {
+                        onChecked && onChecked(message.id, !checked())
+                      } else {
+                        onMessagePress?.(excludeDerivedMessageProps(message))
+                      }
+                    }}
                     style={pressable}
                   >
                     {renderBubbleContainer()}
                   </Pressable>
                   {message?.reply ? <View style={{
                     backgroundColor: colors.palette.gray100,
-                    alignItems: 'center',
+                    alignItems: 'flex-start',
+                    alignSelf: 'flex-end',
                     display: 'flex',
                     flexDirection: 'row',
-                    justifyContent: 'center',
-                    paddingVertical: s(8)
+                    justifyContent: 'flex-start',
+                    padding: s(8),
+                    borderRadius: s(12),
+                    marginTop: s(4)
                   }}>
                     <Text>{message?.reply.author.firstName} : </Text>
                     {renderReply()}
@@ -360,6 +367,20 @@ export const Message = React.memo(
                   >
                     {renderBubbleContainer()}
                   </Pressable>
+                  {message?.reply ? <View style={{
+                    backgroundColor: colors.palette.gray100,
+                    alignItems: 'flex-start',
+                    alignSelf: 'flex-start',
+                    display: 'flex',
+                    flexDirection: 'row',
+                    justifyContent: 'flex-start',
+                    padding: s(8),
+                    borderRadius: s(12),
+                    marginTop: s(4)
+                  }}>
+                    <Text>{message?.reply.author.firstName} : </Text>
+                    {renderReply()}
+                  </View> : null}
                 </View>
               </View>
             )

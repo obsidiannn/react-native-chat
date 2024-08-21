@@ -47,8 +47,6 @@ export default forwardRef((props: {
                 alignItems: 'center',
                 justifyContent: 'space-between',
                 padding: s(8),
-                borderBottomColor: themeColor.border,
-                borderBottomWidth: s(0.2)
             }}>
             <View>
                 <Text style={{
@@ -64,7 +62,7 @@ export default forwardRef((props: {
         </TouchableOpacity>
     }
 
-    return <BaseModal visible={visible} onClose={onClose} styles={{ flex: 1 }}>
+    return <BaseModal visible={visible} title="意见反馈" onClose={onClose} styles={{ flex: 1 }}>
         <View style={_style.container}>
             <FlashList
                 data={props.list}

@@ -22,7 +22,6 @@ export default ({ theme }: { theme: Theme }) =>
       paddingVertical: vs(10),
       backgroundColor: theme.colors.inputValueBackground,
       borderRadius: s(36),
-      margin: s(12)
     },
     input: {
       ...theme.fonts.inputTextStyle,

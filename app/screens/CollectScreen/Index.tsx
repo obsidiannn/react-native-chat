@@ -22,6 +22,7 @@ import CollectTextMsg from "./components/TextMsg";
 import CollectImageMsg from "./components/ImageMsg";
 import CollectVideoMsg from "./components/VideoMsg";
 import CollectFileMsg from "./components/FileMsg";
+import { Search } from "app/components/Search";
 
 export interface CollectItem {
     id: number,
@@ -159,31 +160,31 @@ export const CollectScreen = (props: Props) => {
                     <Text style={{
                         ...style.typeButton,
                         ...choosedStyle(1)
-                    }}>Recently used</Text>
+                    }}>最近使用</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={{
                     ...style.typeButton,
                     ...choosedStyle(2)
                 }} onPress={() => { changeType(2) }}>
-                    <Text style={{ color: themeState.primary }}>Links</Text>
+                    <Text style={{ color: themeState.primary }}>链接</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={{
                     ...style.typeButton,
                     ...choosedStyle(3)
                 }} onPress={() => { changeType(3) }}>
-                    <Text style={{ color: themeState.primary }}>Media</Text>
+                    <Text style={{ color: themeState.primary }}>图片与视频</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={{
                     ...style.typeButton,
                     ...choosedStyle(4)
                 }} onPress={() => { changeType(4) }}>
-                    <Text style={{ color: themeState.primary }}>Audio</Text>
+                    <Text style={{ color: themeState.primary }}>语音</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={{
                     ...style.typeButton,
                     ...choosedStyle(5)
                 }} onPress={() => { changeType(5) }}>
-                    <Text style={{ color: themeState.primary }}>File</Text>
+                    <Text style={{ color: themeState.primary }}>文件</Text>
                 </TouchableOpacity>
             </View>
 

@@ -71,7 +71,7 @@ export const Input = ({
 }: InputProps) => {
   const theme = React.useContext(ThemeContext)
   const user = React.useContext(UserContext)
-const { container, multiContainer, input, marginRight } = styles({ theme })
+  const { container, multiContainer, input, marginRight } = styles({ theme })
   const [typing, setTyping] = React.useState<boolean>(false)
   const typingRef = React.useRef(typing)
   // Use `defaultValue` if provided
@@ -101,12 +101,44 @@ const { container, multiContainer, input, marginRight } = styles({ theme })
     // Track local state in case `onChangeText` is provided and `value` is not
     setText(newText)
     textInputProps?.onChangeText?.(newText)
-    if(!typingRef.current){
+    if (!typingRef.current) {
       handleTyping(true)
-      setTimeout(()=>{
+      setTimeout(() => {
         handleTyping(false)
       }, 3000)
     }
+  }
+
+  const renderReplyContent = () => {
+    if (replyDerived) {
+      return <View style={{
+        backgroundColor: colors.palette.gray100,
+        alignItems: 'center',
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'center',
+        paddingVertical: s(8),
+        marginTop: s(8),
+        borderRadius: s(24)
+      }}>
+        <Text>{replyDerived.author.firstName} : </Text>
+        {renderReply()}
+        <TouchableOpacity
+          style={{
+            padding: s(2),
+            backgroundColor: colors.palette.gray300,
+            borderRadius: s(24),
+            marginLeft: s(8)
+          }}
+          onPress={() => {
+            onCloseReply && onCloseReply(replyDerived.id)
+          }}
+        >
+          <IconFont name='close' color={'white'} size={18} />
+        </TouchableOpacity>
+      </View>
+    }
+    return null
   }
 
   const renderInput = () => {
@@ -164,7 +196,8 @@ const { container, multiContainer, input, marginRight } = styles({ theme })
               onPress={onAttachmentPress}
             />
           )
-        )}</View>
+        )}
+      </View>
     }
   }
 
@@ -194,32 +227,11 @@ const { container, multiContainer, input, marginRight } = styles({ theme })
 
 
   return (
-    <View>
+    <View style={{
+      padding: s(12)
+    }}>
       {renderInput()}
-      {replyDerived ? <View style={{
-        backgroundColor: colors.palette.gray100,
-        alignItems: 'center',
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'center',
-        paddingVertical: s(8)
-      }}>
-        <Text>{replyDerived.author.firstName} : </Text>
-        {renderReply()}
-        <TouchableOpacity
-          style={{
-            padding: s(2),
-            backgroundColor: colors.palette.gray300,
-            borderRadius: s(24),
-            marginLeft: s(8)
-          }}
-          onPress={() => {
-            onCloseReply && onCloseReply(replyDerived.id)
-          }}
-        >
-          <IconFont name='close' color={'white'} size={18} />
-        </TouchableOpacity>
-      </View> : null}
+      {renderReplyContent()}
     </View>
 
 

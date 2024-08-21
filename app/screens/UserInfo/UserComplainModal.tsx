@@ -90,18 +90,33 @@ export default forwardRef((_, ref) => {
 
     }
 
-    return <BaseModal visible={visible} onClose={onClose} renderLeft={renderLeftButton()} styles={{ flex: 1 }}>
+    return <BaseModal visible={visible} onClose={onClose} styles={{
+        flex: 1,
+        backgroundColor: themeColor.secondaryBackground
+    }}>
         <View style={_style.container}>
+
             <View style={{
-                display: 'flex',
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-between'
             }}>
-                <Text style={_style.title}>Image Evidence (Optional)</Text>
+                <TextInput value={complains}
+                    numberOfLines={3}
+                    textAlignVertical="top"
+                    placeholder="投诉原因..."
+                    maxLength={maxWords}
+                    placeholderTextColor={themeColor.secondaryText}
+                    style={{
+                        color: themeColor.text,
+                        backgroundColor: themeColor.background
+                    }}
+                    onChangeText={(v) => {
+                        setComplains(v)
+                    }} />
                 <Text style={{
+                    textAlign: 'right',
                     color: themeColor.secondaryText
-                }}>{images.length} / {maxImage}</Text>
+                }}>
+                    {complains.length} / {maxWords}
+                </Text>
             </View>
             <View style={_style.imageContainer}>
                 {
@@ -119,47 +134,31 @@ export default forwardRef((_, ref) => {
                         })
                     }}
                     style={{
-                        ..._style.imageItem,
                         alignItems: 'center',
                         justifyContent: 'center',
-                        backgroundColor: themeColor.secondaryBackground
+                        backgroundColor: themeColor.secondaryBackground,
+                        width: s(84),
+                        height: s(84),
+                        borderRadius: s(12)
                     }}>
                     <IconFont name="plus" color={themeColor.secondaryText} />
+                    <Text style={{
+                        color: themeColor.secondaryText
+                    }}>照片 ({images.length}/{maxImage})</Text>
                 </TouchableOpacity>
             </View>
-            <View style={{
-                borderTopWidth: s(0.5),
-                borderTopColor: themeColor.border
-            }}>
-                <TextInput value={complains}
-                    numberOfLines={3}
-                    placeholder="Complaints (Optional)"
-                    maxLength={maxWords}
-                    placeholderTextColor={themeColor.secondaryText}
-                    style={{
-                        color: themeColor.text,
-                        backgroundColor: themeColor.background
-                    }}
-                    onChangeText={(v) => {
-                        setComplains(v)
-                    }} />
-                <Text style={{
-                    textAlign: 'right',
-                    color: themeColor.secondaryText
-                }}>
-                    {complains.length} / {maxWords}
-                </Text>
-            </View>
-            <Button label="submit" size="large"
+
+            <Button label="提交" size="large"
                 onPress={doSubmit}
                 textStyle={{
                     color: themeColor.textChoosed
                 }}
                 containerStyle={{
-                    marginTop: s(24),
+                    marginVertical: s(24),
                     backgroundColor: themeColor.primary,
                 }} />
         </View>
+
         <LoadingModal ref={loadingModalRef} />
     </BaseModal>
 })
@@ -173,16 +172,21 @@ const styles = (
         display: 'flex',
         flexDirection: 'column',
         flex: 1,
+        marginTop: s(32),
+        backgroundColor: themeColor.background,
+        borderTopLeftRadius: s(24),
+        borderTopRightRadius: s(24),
     },
     title: {
         color: themeColor.text,
         fontSize: s(16)
     },
     imageContainer: {
+        flex: 1,
         display: 'flex',
         flexDirection: 'row',
         flexWrap: 'wrap',
-        marginVertical: s(12)
+        marginVertical: s(24)
     },
     imageItem: {
         width: s(64), height: s(64),

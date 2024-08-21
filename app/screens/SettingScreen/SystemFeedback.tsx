@@ -82,7 +82,11 @@ export const SystemFeedbackScreen = (props: Props) => {
         <Navbar title="意见反馈" />
         <View style={{
             flex: 1,
-            paddingVertical: s(12)
+            backgroundColor: themeColor.background,
+            marginTop: s(32),
+            padding: s(12),
+            borderTopLeftRadius: s(24),
+            borderTopRightRadius: s(24),
         }}>
             <View style={style.categoryLine}>
                 <Text style={{
@@ -107,16 +111,23 @@ export const SystemFeedbackScreen = (props: Props) => {
                     <IconFont name="arrowRight" color={themeColor.secondaryText} size={16} />
                 </TouchableOpacity>
             </View>
-            <View style={{ marginTop: s(12), backgroundColor: themeColor.background, padding: s(12) }}>
+            <View style={{ marginTop: s(12), backgroundColor: themeColor.background, }}>
                 <TextInput
                     value={content}
-                    placeholder="请输入"
+                    placeholder="请仔细描述你的问题"
                     numberOfLines={3}
                     textAlignVertical="top"
+                    maxLength={200}
                     onChangeText={(v) => {
                         setContent(v)
                     }}
                 />
+                <Text style={{
+                    textAlign: 'right',
+                    color: themeColor.secondaryText
+                }}>
+                    {content.length} / {200}
+                </Text>
             </View>
 
             <View style={style.imageContainer}>
@@ -135,20 +146,23 @@ export const SystemFeedbackScreen = (props: Props) => {
                         })
                     }}
                     style={{
-                        ...style.imageItem,
-                        borderRadius: s(8),
                         alignItems: 'center',
                         justifyContent: 'center',
-                        backgroundColor: themeColor.border,
+                        backgroundColor: themeColor.secondaryBackground,
+                        width: s(84),
+                        height: s(84),
+                        borderRadius: s(12)
                     }}>
                     <IconFont name="plus" color={themeColor.secondaryText} />
+                    <Text style={{
+                        color: themeColor.secondaryText
+                    }}>照片 ({images.length}/{9})</Text>
                 </TouchableOpacity>
             </View>
             <Button label="提交反馈" size="large"
                 onPress={doSubmit}
                 containerStyle={{
-                    backgroundColor: themeColor.primary,
-                    marginHorizontal: s(12), bottom: 0
+                    backgroundColor: themeColor.primary, bottom: 0
                 }} />
         </View>
         <SystemCategoryModal
@@ -174,15 +188,15 @@ const styles = (
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        backgroundColor: themeColor.background,
+        backgroundColor: themeColor.secondaryBackground,
+        borderRadius: s(12),
         padding: s(12)
     },
     imageContainer: {
         display: 'flex',
         flexDirection: 'row',
-        paddingHorizontal: s(12),
         flexWrap: 'wrap',
-        marginVertical: s(12), flex: 1
+        marginVertical: s(24), flex: 1
     },
     imageItem: {
         width: s(64), height: s(64),

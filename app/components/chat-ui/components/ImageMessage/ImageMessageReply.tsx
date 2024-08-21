@@ -2,7 +2,7 @@ import * as React from 'react'
 import { Image, Text, View } from 'react-native'
 
 import { MessageType, Size } from '../../types'
-import { imageReduce } from 'app/utils/size'
+import { imageReduce, s } from 'app/utils/size'
 
 export interface ImageMessageReplyProps {
     message: MessageType.DerivedImage
@@ -23,7 +23,8 @@ export const ImageMessageReply = ({ message }: ImageMessageReplyProps) => {
                 source={{ uri: message.uri }}
                 style={{
                     width: w,
-                    height: h
+                    height: h,
+                    borderRadius: s(8)
                 }}
             />
         )
