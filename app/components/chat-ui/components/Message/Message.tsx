@@ -23,7 +23,6 @@ import { FileMessageReply } from '../FileMessage/FileMessageReply'
 import { VideoMessageReply } from '../VideoMessage/VideoMessageReply'
 import { ImageMessageReply } from '../ImageMessage/ImageMessageReply'
 import { TextMessageReply } from '../TextMessage/TextMessageReply'
-import chatUiAdapter from 'app/utils/chat-ui.adapter'
 
 export interface MessageTopLevelProps extends TextMessageTopLevelProps {
   /** Called when user makes a long press on any message */

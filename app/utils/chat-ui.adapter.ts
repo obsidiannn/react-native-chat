@@ -397,6 +397,20 @@ const convertPartialContent = (m: MessageType.PartialAny): string => {
     return partial === null ? '{}' : JSON.stringify(partial)
 }
 
+
+const convertPartialContentForCollect = (m: MessageType.Any): string => {
+    const r = {
+        ...m,
+        author: {
+            id: m.author.id,
+            imageUrl: m.author.imageUrl,
+            firstName: m.author.firstName,
+            createdAt: m.createdAt
+        }
+    }
+    return JSON.stringify(r)
+}
+
 const convertPartialItem = (value: string): MessageType.PartialAny | null => {
     let message: MessageType.PartialAny | null = null
     const _data = JSON.parse(value)
@@ -442,5 +456,6 @@ export default {
     messageEntityToItems,
     messageEntity2Dto,
     convertPartialContent,
-    convertPartialItem
+    convertPartialItem,
+    convertPartialContentForCollect
 } 

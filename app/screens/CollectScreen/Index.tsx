@@ -15,14 +15,16 @@ import { SearchInput } from "./SearchInput";
 import { s } from "app/utils/size";
 import { Text } from "react-native";
 import { MessageType } from "app/components/chat-ui";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { LocalCollectService } from "app/services/LocalCollectService";
 import collectMapper from "app/utils/collect.mapper";
 import CollectTextMsg from "./components/TextMsg";
 import CollectImageMsg from "./components/ImageMsg";
 import CollectVideoMsg from "./components/VideoMsg";
 import CollectFileMsg from "./components/FileMsg";
-import { Search } from "app/components/Search";
+import CollectRecords from "./components/Records";
+import RecordDetailModal, { RecordDetailModalType } from "./record/RecordDetailModal";
+import { LocalCollectDetailService } from "app/services/LocalCollectDetailService";
 
 export interface CollectItem {
     id: number,
@@ -30,11 +32,15 @@ export interface CollectItem {
     fromAuthor: string,
     chatId: string
     msgId: string
-    type: MessageType.Any['type']
+    type: MessageType.Any['type'] | 'record'
     readCount: number
     title: string
-    data: MessageType.PartialAny | null
+    data: MessageType.PartialAny | CollectRecord[] | null
     createdAt: string
+}
+export interface CollectRecord {
+    name: string
+    title: string
 }
 
 
@@ -49,7 +55,7 @@ export const CollectScreen = (props: Props) => {
     const [page, setPage] = useState<number>(1)
     const [chooseIdx, setChooseIdx] = useState<number>(-1)
     const [keyword, setKeyword] = useState<string | null>(null)
-
+    const recordDetailModalRef = useRef<RecordDetailModalType>(null)
     const loadData = (
         _page: number,
         choosed: number,
@@ -93,6 +99,19 @@ export const CollectScreen = (props: Props) => {
                 return <CollectVideoMsg item={item} themeState={themeState} />
             case "file":
                 return <CollectFileMsg item={item} themeState={themeState} />
+            case "record":
+                return <CollectRecords item={item} themeState={themeState} onPress={() => {
+                    LocalCollectDetailService.findByCollectId(item.id).then(res => {
+                        if (res.length > 0) {
+                            recordDetailModalRef.current?.open(res.map(r => {
+                                const t = JSON.parse(r.data) as MessageType.Any
+                                console.log('t', t);
+                                return t
+
+                            }))
+                        }
+                    })
+                }} />
         }
         return <></>
     }
@@ -205,7 +224,7 @@ export const CollectScreen = (props: Props) => {
 
             </View>
         </View>
-
+        <RecordDetailModal ref={recordDetailModalRef} />
     </View >
 }
 

@@ -34,6 +34,7 @@ import { LocalCollectService } from "app/services/LocalCollectService"
 import collectMapper from "app/utils/collect.mapper"
 import toast from "app/utils/toast"
 import VoicePhoneModal, { VoicePhoneModalType } from "app/components/VoicePhoneModal"
+import { LocalCollectDetailService } from "app/services/LocalCollectDetailService"
 export interface ChatUIPageRef {
     init: (chatItem: ChatDetailItem, friend: IUser) => void
     refreshSequence: (firstSeq: number, lastSeq: number) => void
@@ -393,22 +394,39 @@ const ChatPage = forwardRef((_, ref) => {
         return null
     }
 
+    // 收藏聊天记录
     const onCollectPress = async () => {
-        console.log('onCollectPress', checkedIdList);
-
         if (checkedIdList.length > 0) {
             const msgs = messages.filter(m => {
                 return checkedIdList.includes(m.id)
             })
             if (msgs.length > 0) {
-                const collects = msgs.map(m => collectMapper.convertEntity(m))
-                LocalCollectService.addBatch(collects)
-                    .then(() => {
+                if (msgs.length === 1) {
+                    const collect = collectMapper.convertEntity(msgs[0])
+                    const entity = await LocalCollectService.addSingle(collect)
+                    if (entity) {
                         setCheckedIdList([])
                         setMulti(false)
                         setReplyMsg(null)
                         toast('操作成功')
-                    })
+                    }
+                } else {
+                    const _chatItem = userContext.chatItem
+                    if (_chatItem) {
+                        const collect = collectMapper.convertRecordsEntity(msgs, _chatItem)
+                        const entity = await LocalCollectService.addSingle(collect)
+                        if (entity) {
+                            const details = collectMapper.convertCollectDetailEntity(msgs, entity)
+                            const result = await LocalCollectDetailService.addBatch(details)
+                            if (result.length > 0) {
+                                setCheckedIdList([])
+                                setMulti(false)
+                                setReplyMsg(null)
+                                toast('操作成功')
+                            }
+                        }
+                    }
+                }
             }
         }
     }
@@ -459,6 +477,17 @@ const ChatPage = forwardRef((_, ref) => {
         <LoadingModal ref={loadingModalRef} />
         <VoicePhoneModal ref={voicePhoneModalRef} />
         <LongPressModal ref={longPressModalRef}
+            onCollect={(msg) => {
+                LocalCollectService.addSingle(collectMapper.convertEntity(msg))
+                    .then((entity) => {
+                        if (entity) {
+                            setCheckedIdList([])
+                            setMulti(false)
+                            setReplyMsg(null)
+                            toast('操作成功')
+                        }
+                    })
+            }}
             onReply={(_m) => {
                 setReplyMsg(_m)
             }}

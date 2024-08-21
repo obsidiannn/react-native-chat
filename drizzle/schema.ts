@@ -154,3 +154,17 @@ export const collects = sqliteTable('collects', {
 }))
 
 export type ICollect = typeof collects.$inferSelect
+
+export const collectDetail = sqliteTable('collect_detail', {
+    id: integer('id').primaryKey({ autoIncrement: true }),
+    collectId: integer('collect_id').notNull(),
+    fromAuthorId: integer('from_author_id'),
+    fromAuthor: text('from_author'),
+    chatId: text('chat_id').notNull(),
+    msgId: text('msg_id').notNull(),
+    data: text('data').notNull(),
+}, (entity) => ({
+    collectIdDetailIdx: index('collectIdDetailIdx').on(entity.collectId),
+}))
+
+export type ICollectDetail = typeof collectDetail.$inferInsert

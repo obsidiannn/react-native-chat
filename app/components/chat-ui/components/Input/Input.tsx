@@ -39,7 +39,7 @@ export interface InputTopLevelProps {
   sendButtonVisibilityMode?: 'always' | 'editing'
   textInputProps?: TextInputProps
   // 启用多选
-  enableMultiSelect: boolean
+  enableMultiSelect?: boolean
   replyDerived: MessageType.DerivedAny | null
   // 关闭引用
   onCloseReply?: (id: string) => void

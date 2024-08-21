@@ -17,26 +17,48 @@ export class LocalCollectService {
         const db = GetDB()
         await db.delete(collects)
     }
-    static async addBatch(entities: ICollect[]) {
+
+    // static async addBatch(entities: ICollect[]) {
+    //     const db = GetDB()
+    //     const msgIds: string[] = entities.map(item => item.msgId ?? '');
+    //     const olds = await db.query.collects.findMany({
+    //         where: (collects, { inArray }) => inArray(collects.msgId, msgIds),
+    //         columns: {
+    //             id: true,
+    //             msgId: true
+    //         }
+    //     })
+    //     const inserts = entities.filter(item => !olds.find(old => old.msgId === item.msgId))
+    //     if (inserts.length > 0) {
+    //         await db.insert(collects).values(inserts.map(item => {
+    //             return {
+    //                 ...item,
+    //                 createdAt: dayjs().unix()
+    //             }
+    //         }))
+    //     }
+    //     return entities;
+    // }
+
+    static async addSingle(entity: ICollect): Promise<ICollect | null> {
         const db = GetDB()
-        const msgIds: string[] = entities.map(item => item.msgId ?? '');
         const olds = await db.query.collects.findMany({
-            where: (collects, { inArray }) => inArray(collects.msgId, msgIds),
+            where: (collects, { eq }) => eq(collects.msgId, entity.msgId),
             columns: {
                 id: true,
                 msgId: true
             }
         })
-        const inserts = entities.filter(item => !olds.find(old => old.msgId === item.msgId))
-        if (inserts.length > 0) {
-            await db.insert(collects).values(inserts.map(item => {
-                return {
-                    ...item,
-                    createdAt: dayjs().unix()
-                }
-            }))
+        if (olds.length <= 0) {
+            const e = await db.insert(collects).values([{
+                ...entity,
+                createdAt: dayjs().unix()
+            }]).returning()
+            if (e.length > 0) {
+                return e[0]
+            }
         }
-        return entities;
+        return null;
     }
 
 

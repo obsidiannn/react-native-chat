@@ -19,6 +19,7 @@ interface LongPressProps {
     onMulti?: (msgId: string, multi: boolean) => void
     // 回复回调
     onReply?: (data: MessageType.Any) => void
+    onCollect?: (data: MessageType.Any) => void
 }
 
 export interface LongPressModalType {
@@ -132,6 +133,17 @@ export default forwardRef((props: LongPressProps, ref) => {
                         }}>
                         <IconFont name="trash" color={themeColor.text} size={32} />
                         <Text style={{ color: themeColor.text }}>删除</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.line_button_style} onPress={() => {
+                        if (message) {
+                            setVisible(false)
+                            setLayout([])
+                            setMessage(null)
+                            props.onCollect && props.onCollect(message)
+                        }
+                    }}>
+                        <IconFont name="multipleSelection" color={themeColor.text} size={32} />
+                        <Text style={{ color: themeColor.text }}>收藏</Text>
                     </TouchableOpacity>
                 </View>
 

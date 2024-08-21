@@ -108,6 +108,7 @@ export interface ChatProps extends ChatTopLevelProps {
   checkedIdList?: string[]
   onChecked?: (id: string, v: boolean) => void
   reply: MessageType.Any | null
+  enableInput?: boolean 
 }
 
 /** Entry component, represents the complete chat */
@@ -149,7 +150,8 @@ export const Chat = ({
   onChecked,
   reply,
   onCloseReply,
-  onCollectPress
+  onCollectPress,
+  enableInput = true
 }: ChatProps) => {
   const {
     container,
@@ -500,45 +502,45 @@ export const Chat = ({
               <>{customBottomComponent()}</>
             </>
           ) : (
-
-            <KeyboardAccessoryView
-              {...{
-                renderScrollable,
-                style: keyboardAccessoryView,
-              }}
-            >
-              <Input
+            enableInput ?
+              <KeyboardAccessoryView
                 {...{
-                  ...unwrap(inputProps),
-                  isAttachmentUploading,
-                  onAttachmentPress: renderToolWindow,
-                  onSendPress,
                   renderScrollable,
-                  sendButtonVisibilityMode,
-                  textInputProps,
-                  onTypingChange,
-                  enableMultiSelect,
-                  replyDerived: replyMessage,
-                  onCloseReply,
-                  onCollectPress
+                  style: keyboardAccessoryView,
                 }}
-              />
-              {
-                toolOpen ? (
-                  <View style={{
-                    width: '100%',
-                  }}>
-                    <AccessoryView
-                      tools={tools}
-                      backgroundColor={theme.colors.background}
-                      color={theme.colors.inputCursorColor}
-                      onPress={async (tool) => {
-                        onAttachmentPress && onAttachmentPress(tool.key)
-                      }} />
-                  </View>
-                ) : null
-              }
-            </KeyboardAccessoryView>
+              >
+                <Input
+                  {...{
+                    ...unwrap(inputProps),
+                    isAttachmentUploading,
+                    onAttachmentPress: renderToolWindow,
+                    onSendPress,
+                    renderScrollable,
+                    sendButtonVisibilityMode,
+                    textInputProps,
+                    onTypingChange,
+                    enableMultiSelect,
+                    replyDerived: replyMessage,
+                    onCloseReply,
+                    onCollectPress
+                  }}
+                />
+                {
+                  toolOpen ? (
+                    <View style={{
+                      width: '100%',
+                    }}>
+                      <AccessoryView
+                        tools={tools}
+                        backgroundColor={theme.colors.background}
+                        color={theme.colors.inputCursorColor}
+                        onPress={async (tool) => {
+                          onAttachmentPress && onAttachmentPress(tool.key)
+                        }} />
+                    </View>
+                  ) : null
+                }
+              </KeyboardAccessoryView> : null
           )}
 
 
