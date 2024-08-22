@@ -19,7 +19,7 @@ export const SearchInput = (props: SearchProps) => {
         flexDirection: 'row',
         alignItems: 'center',
         backgroundColor: props.color.background,
-        borderRadius: s(8),
+        borderRadius: s(24),
         paddingHorizontal: s(8)
     }}>
         <TextInput
@@ -31,6 +31,7 @@ export const SearchInput = (props: SearchProps) => {
                 flex: 1,
                 color: props.color.text,
                 backgroundColor: props.color.background,
+                borderRadius: s(24),
                 fontSize: s(12),
                 height: s(42),
             }}

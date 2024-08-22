@@ -124,6 +124,19 @@ const messageTypeConvert = (
                 type: 'file',
             } as MessageType.File
             break
+        case 'userCard':
+            const usserCard: MessageType.PartialUserCard = JSON.parse(_data.d) as MessageType.PartialUserCard
+            message = {
+                id: detail.id,
+                author: author,
+                createdAt: time,
+                sequence: detail.sequence,
+                roomId: detail.chatId,
+                senderId: detail.fromUid,
+                ...usserCard,
+                type: 'userCard',
+            } as MessageType.UserCard
+            break
         default:
             message = {
                 type: 'unsupported',
@@ -165,8 +178,6 @@ const messageDto2Entity = (m: MessageType.Any): IMessage => {
             reply: m.reply
         } : {})
     }
-    console.log('extra===', extra);
-
     const entity: IMessage = {
         id: m.id,
         chatId: m.roomId ?? '',
@@ -261,6 +272,20 @@ const messageEntity2Dto = (entity: IMessage, key: string = '', needDecode: boole
                 ...(initReply && extra.reply ? { reply: string2Dto(extra.reply) } : {})
             } as MessageType.File
             break
+        case 'userCard':
+            const userCard: MessageType.PartialUserCard = data as MessageType.PartialUserCard
+            message = {
+                id: entity.id,
+                author: {},
+                createdAt: time,
+                sequence: entity.sequence,
+                roomId: entity.chatId,
+                senderId: entity.uid,
+                ...userCard,
+                type: 'userCard',
+                ...(initReply && extra.reply ? { reply: string2Dto(extra.reply) } : {})
+            } as MessageType.UserCard
+            break
         default:
             message = {
                 type: 'unsupported',
@@ -310,6 +335,12 @@ const string2Dto = (value: string): MessageType.Any | null => {
                     ...data
                 } as MessageType.File
                 break
+            case 'userCard':
+                // const fileData: MessageType.PartialFile = data as MessageType.PartialFile
+                message = {
+                    ...data
+                } as MessageType.UserCard
+                break
             default:
                 message = {
                     ...data
@@ -319,7 +350,6 @@ const string2Dto = (value: string): MessageType.Any | null => {
         return message
     } catch (error) {
         console.log('errrrrrrrrrrrrr', error);
-
     }
     return null
 }
@@ -342,6 +372,9 @@ const messageTypeCodeConvert = (type: string): number => {
             code = IModel.IChat.IMessageTypeEnum.NORMAL
             break
         case 'file':
+            code = IModel.IChat.IMessageTypeEnum.NORMAL
+            break
+        case 'userCard':
             code = IModel.IChat.IMessageTypeEnum.NORMAL
             break
         default: break
@@ -391,6 +424,14 @@ const convertPartialContent = (m: MessageType.PartialAny): string => {
                 mimeType: m.mimeType
             }
             break
+        case 'userCard':
+            partial = {
+                type: m.type,
+                userId: m.userId,
+                avatar: m.avatar,
+                username: m.username
+            }
+            break
         default:
             break
     }
@@ -427,6 +468,9 @@ const convertPartialItem = (value: string): MessageType.PartialAny | null => {
             break
         case 'file':
             message = _data as MessageType.PartialFile
+            break
+        case 'userCard':
+            message = _data as MessageType.PartialUserCard
             break
         default:
             break

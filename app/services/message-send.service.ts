@@ -142,7 +142,25 @@ export class MessageSendService {
 
         });
     }
+
+    static userCardSelect(author: IUser, friend: IUser): MessageType.UserCard {
+        const message: MessageType.UserCard = {
+            author: chatUiAdapter.userTransfer(author),
+            createdAt: Date.now(),
+            id: generateUtil.generateId(),
+            type: 'userCard',
+            senderId: author?.id ?? 0,
+            sequence: -1,
+            status: 'sending',
+            userId: friend.id + '',
+            avatar: friend.avatar ?? '',
+            username: friend.nickName ?? '',
+        }
+        return message
+    }
 }
+
+
 const _send = async (chatId: string,
     key: string,
     mid: string,
@@ -184,6 +202,8 @@ const send = async (chatId: string, key: string, message: MessageType.Any): Prom
         //     return await sendAudio(chatId, key, message);
         case 'file':
             return await sendFile(chatId, key, message as MessageType.File);
+        case 'userCard':
+            return await sendUserCard(chatId, key, message as MessageType.UserCard);
         default:
             throw new ToastException('不支持的消息類型');
     }
@@ -281,6 +301,17 @@ const sendFile = async (chatId: string, key: string, message: MessageType.File) 
         t: 'file',
         d: chatUiAdapter.convertPartialContent(message)
     }, extra);
+    message.status = 'sent'
+    message.sequence = result.sequence
+    return message
+}
+
+
+const sendUserCard = async (chatId: string, key: string, message: MessageType.UserCard) => {
+    const result = await _send(chatId, key, message.id, IModel.IChat.IMessageTypeEnum.NORMAL, {
+        t: 'userCard',
+        d: chatUiAdapter.convertPartialContent(message)
+    }, {});
     message.status = 'sent'
     message.sequence = result.sequence
     return message

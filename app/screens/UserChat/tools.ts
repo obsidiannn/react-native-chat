@@ -24,4 +24,9 @@ export default [
         icon: 'file',
         key: 'voiceChat'
     },
+    {
+        title: '名片',
+        icon: 'file',
+        key: 'userCard'
+    },
 ]

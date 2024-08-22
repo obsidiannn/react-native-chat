@@ -25,6 +25,7 @@ import CollectFileMsg from "./components/FileMsg";
 import CollectRecords from "./components/Records";
 import RecordDetailModal, { RecordDetailModalType } from "./record/RecordDetailModal";
 import { LocalCollectDetailService } from "app/services/LocalCollectDetailService";
+import { SearchTab } from "./SearchTab";
 
 export interface CollectItem {
     id: number,
@@ -145,20 +146,10 @@ export const CollectScreen = (props: Props) => {
     }
 
     useEffect(() => {
-        loadData(page, chooseIdx)
+        loadData(page, -1)
     }, [])
 
-    const choosedStyle = (idx: number) => {
-        if (idx === chooseIdx) {
-            return {
-                backgroundColor: themeState.background,
-                color: themeState.text
-            }
-        }
-        return {
-            color: themeState.text
-        }
-    }
+
 
     return <View style={{
         flex: 1,
@@ -168,45 +159,14 @@ export const CollectScreen = (props: Props) => {
         <Navbar title="收藏夹" />
 
         <View style={style.container}>
-            <SearchInput color={themeState} onSearch={async (v) => {
-                setKeyword(v)
-                loadData(1, chooseIdx, true, v)
-            }} />
-            <View style={{
-                display: 'flex', flexDirection: 'row', alignItems: 'center',
-            }}>
-                <TouchableOpacity style={style.headerButton} onPress={() => { changeType(1) }}>
-                    <Text style={{
-                        ...style.typeButton,
-                        ...choosedStyle(1)
-                    }}>最近使用</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={{
-                    ...style.typeButton,
-                    ...choosedStyle(2)
-                }} onPress={() => { changeType(2) }}>
-                    <Text style={{ color: themeState.primary }}>链接</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={{
-                    ...style.typeButton,
-                    ...choosedStyle(3)
-                }} onPress={() => { changeType(3) }}>
-                    <Text style={{ color: themeState.primary }}>图片与视频</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={{
-                    ...style.typeButton,
-                    ...choosedStyle(4)
-                }} onPress={() => { changeType(4) }}>
-                    <Text style={{ color: themeState.primary }}>语音</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={{
-                    ...style.typeButton,
-                    ...choosedStyle(5)
-                }} onPress={() => { changeType(5) }}>
-                    <Text style={{ color: themeState.primary }}>文件</Text>
-                </TouchableOpacity>
-            </View>
-
+            <SearchTab chooseIdx={chooseIdx}
+                setChooseIdx={(idx) => {
+                    changeType(idx)
+                }} themeColor={themeState}
+                onSearch={async (v) => {
+                    setKeyword(v)
+                    loadData(1, chooseIdx, true, v)
+                }} />
             <View style={{
                 flex: 1,
             }}>

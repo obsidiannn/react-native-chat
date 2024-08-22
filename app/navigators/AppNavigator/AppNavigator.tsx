@@ -28,6 +28,7 @@ import { SocketContext } from "app/components/socket";
 import { IUser } from "drizzle/schema";
 import { SystemService } from "app/services/system.service";
 import { App } from "types/app";
+import { initNotification } from "app/services/notification.service";
 
 
 const exitRoutes = Config.exitRoutes
@@ -49,10 +50,8 @@ const AppStack = () => {
         try {
           await SystemService.refreshNodes()
           setNetworkState(true)
-
         } catch (e) {
           console.error(e);
-
         }
         AuthService.getInfo().then((v) => {
           setAuthUser(v)
@@ -92,6 +91,7 @@ const AppStack = () => {
     if (now) {
       global.wallet = new Wallet(now);
       setAuthWallet(global.wallet);
+      initNotification()
       navigationRef.current?.reset({
         index: 0,
         routes: [{ name: 'TabStack' }],

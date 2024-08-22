@@ -23,6 +23,8 @@ import { FileMessageReply } from '../FileMessage/FileMessageReply'
 import { VideoMessageReply } from '../VideoMessage/VideoMessageReply'
 import { ImageMessageReply } from '../ImageMessage/ImageMessageReply'
 import { TextMessageReply } from '../TextMessage/TextMessageReply'
+import { UserCardMessage } from '../UserCard/UserCard'
+import { UserCardReply } from '../UserCard/UserCardReply'
 
 export interface MessageTopLevelProps extends TextMessageTopLevelProps {
   /** Called when user makes a long press on any message */
@@ -215,6 +217,8 @@ export const Message = React.memo(
             messageWidth,
             showName
           )
+        case 'userCard':
+          return <UserCardMessage message={message} />
         default:
           return null
       }
@@ -240,6 +244,8 @@ export const Message = React.memo(
           />
         case 'text':
           return <TextMessageReply message={message.reply} />
+        case 'userCard':
+          return <UserCardReply message={message.reply} />
         default:
           return null
       }

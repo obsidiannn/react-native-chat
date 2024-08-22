@@ -35,6 +35,8 @@ import collectMapper from "app/utils/collect.mapper"
 import toast from "app/utils/toast"
 import VoicePhoneModal, { VoicePhoneModalType } from "app/components/VoicePhoneModal"
 import { LocalCollectDetailService } from "app/services/LocalCollectDetailService"
+import SelectMemberModal, { SelectMemberModalType, SelectMemberOption } from "app/components/SelectMemberModal/Index"
+import friendService from "app/services/friend.service"
 export interface ChatUIPageRef {
     init: (chatItem: ChatDetailItem, friend: IUser) => void
     refreshSequence: (firstSeq: number, lastSeq: number) => void
@@ -143,6 +145,7 @@ const ChatPage = forwardRef((_, ref) => {
     const fileModalRef = useRef<ChatUIFileModalRef>(null)
     const loadingModalRef = useRef<LoadingModalType>(null)
     const voicePhoneModalRef = useRef<VoicePhoneModalType>(null)
+    const selectMemberModalRef = useRef<SelectMemberModalType>(null);
     const { t } = useTranslation('screens')
 
 
@@ -291,6 +294,38 @@ const ChatPage = forwardRef((_, ref) => {
                 break
             case 'voiceChat':
                 voicePhoneModalRef.current?.open(userContext.friend ?? null)
+                break
+            case 'userCard':
+                const users = await friendService.getOnlineList();
+                const options: SelectMemberOption[] = users
+                    .filter(u => {
+                        return u.id !== userContext.friend?.id
+                    }).map((item) => {
+                        return {
+                            id: item.id,
+                            icon: item.avatar ?? "",
+                            title: item.nickName ?? "",
+                            name: item.nickName ?? "",
+                            name_index: item.nickNameIdx ?? "",
+                            status: false,
+                            disabled: false,
+                            pubKey: item.pubKey
+                        } as SelectMemberOption
+                    });
+                selectMemberModalRef.current?.open({
+                    title: '選擇好友',
+                    options,
+                    max: 1,
+                    callback: async (ops: SelectMemberOption[]) => {
+                        if (ops.length > 0) {
+                            const f = users.find(u => u.id === ops[0].id)
+                            if (f) {
+                                const userCardMsg = MessageSendService.userCardSelect(author, f)
+                                addMessage(userCardMsg)
+                            }
+                        }
+                    }
+                });
                 break
             default: break
         }
@@ -507,6 +542,7 @@ const ChatPage = forwardRef((_, ref) => {
             onClose={(msgId: string) => {
                 longPressHandle(false, msgId)
             }} />
+        <SelectMemberModal ref={selectMemberModalRef} />
     </>
 })
 

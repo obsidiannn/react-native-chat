@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native'
+import { Platform, StyleSheet } from 'react-native'
 
 import { MessageType, Theme } from '../../types'
 import { s, vs } from 'app/utils/size'
@@ -53,6 +53,17 @@ const styles = ({
       borderRadius: theme.borders.messageBorderRadius,
       overflow: 'hidden',
       alignSelf: currentUserIsAuthor ? 'flex-end' : 'flex-start',
+      ...(message.type === 'userCard' ? Platform.select({
+        ios: {
+          shadowColor: '#000',
+          shadowOffset: { width: 0, height: 2 },
+          shadowOpacity: 0.8,
+          shadowRadius: 10,
+        },
+        android: {
+          elevation: 10,
+        },
+      }) : null)
     },
     dateHeader: {
       alignItems: 'center',

@@ -4,13 +4,14 @@ import { ColorValue, ImageURISource, TextStyle } from 'react-native'
 import { IconFontNameType } from '../IconFont/IconFont'
 
 export namespace MessageType {
-  export type Any = Custom | File | Image | Text | Unsupported | Video
+  export type Any = Custom | File | Image | Text | Unsupported | Video | UserCard
   export type DerivedMessage =
     | DerivedCustom
     | DerivedFile
     | DerivedImage
     | DerivedText
     | DerivedVideo
+    | DerivedUserCard
     | DerivedUnsupported
   export type DerivedAny = DateHeader | DerivedMessage
 
@@ -20,6 +21,7 @@ export namespace MessageType {
     | PartialImage
     | PartialText
     | PartialVideo
+    | PartialUserCard
 
   interface Base {
     author: User
@@ -28,7 +30,7 @@ export namespace MessageType {
     metadata?: Record<string, any>
     roomId?: string
     status?: 'delivered' | 'error' | 'seen' | 'sending' | 'sent'
-    type: 'custom' | 'file' | 'image' | 'text' | 'unsupported' | 'video'
+    type: 'custom' | 'file' | 'image' | 'text' | 'unsupported' | 'video' | 'userCard'
     updatedAt?: number
     sequence: number
     senderId: number
@@ -59,6 +61,9 @@ export namespace MessageType {
     type: Video['type']
   }
 
+  export interface DerivedUserCard extends DerivedMessageProps, UserCard {
+    type: UserCard['type']
+  }
 
   export interface DerivedText extends DerivedMessageProps, Text {
     type: Text['type']
@@ -112,12 +117,25 @@ export namespace MessageType {
     type: 'video'
   }
 
+  export interface PartialUserCard {
+    metadata?: Record<string, any>
+    userId: string
+    avatar: string
+    username: string
+    type: 'userCard'
+  }
+
+
   export interface Image extends Base, PartialImage {
     type: 'image'
   }
 
   export interface Video extends Base, PartialVideo {
     type: 'video'
+  }
+
+  export interface UserCard extends Base, PartialUserCard {
+    type: 'userCard'
   }
 
   export interface PartialText {
