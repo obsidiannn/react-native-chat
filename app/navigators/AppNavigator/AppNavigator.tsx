@@ -8,7 +8,7 @@ import React, { useCallback, useContext, useEffect } from "react"
 import { AppState, Appearance, Linking, StatusBar } from "react-native"
 import * as Screens from "app/screens"
 import Config from "../../config"
-import { navigationRef, useBackButtonHandler } from "./../navigationUtilities"
+import { navigate, navigationRef, useBackButtonHandler } from "./../navigationUtilities"
 import { colors } from "app/theme"
 import { useSetRecoilState } from "recoil";
 import { NetworkState, ThemeState } from "app/stores/system";
@@ -29,6 +29,7 @@ import { IUser } from "drizzle/schema";
 import { SystemService } from "app/services/system.service";
 import { App } from "types/app";
 import { initNotification } from "app/services/notification.service";
+import listenNotification from "app/services/listen-notification";
 
 
 const exitRoutes = Config.exitRoutes
@@ -44,6 +45,13 @@ const AppStack = () => {
 
   const setAuthWallet = useSetRecoilState(AuthWallet)
   const setNetworkState = useSetRecoilState(NetworkState);
+
+
+  const handleDeepLink = (event: { url: string }) => {
+    console.log('[link_screen]', event);
+    navigate('LinkScreen', { from: 'link', url:event.url })
+  };
+
   const loadOnlineData = useCallback(() => {
     NetInfo.fetch().then(async (state) => {
       if (state.isConnected) {
@@ -91,7 +99,16 @@ const AppStack = () => {
     if (now) {
       global.wallet = new Wallet(now);
       setAuthWallet(global.wallet);
-      initNotification()
+
+      Linking.addEventListener('url', handleDeepLink);
+      const initUrl = await Linking.getInitialURL()
+      if (initUrl) {
+        console.log('[initUrl]', initUrl);
+        navigate('LinkScreen', { from: 'link', url: initUrl })
+      }
+
+      await initNotification()
+      await listenNotification()
       navigationRef.current?.reset({
         index: 0,
         routes: [{ name: 'TabStack' }],
@@ -137,7 +154,7 @@ const AppStack = () => {
   return (
     <Stack.Navigator
       //initialRouteName="WelcomeScreen"
-      initialRouteName="SignUpScreen" 
+      initialRouteName="SignUpScreen"
       screenOptions={{ headerShown: false, navigationBarColor: "red" }}
     >
       <Stack.Screen name="TabStack" component={TabStack} />
@@ -163,6 +180,7 @@ const AppStack = () => {
       <Stack.Screen name="CollectScreen" component={Screens.CollectScreen} />
       <Stack.Screen name="SystemFeedbackScreen" component={Screens.SystemFeedbackScreen} />
       <Stack.Screen name="DonateScreen" component={Screens.DonateScreen} />
+      <Stack.Screen name="LinkScreen" component={Screens.LinkScreen} />
     </Stack.Navigator>
   )
 }

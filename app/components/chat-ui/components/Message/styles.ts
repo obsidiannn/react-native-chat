@@ -53,15 +53,18 @@ const styles = ({
       borderRadius: theme.borders.messageBorderRadius,
       overflow: 'hidden',
       alignSelf: currentUserIsAuthor ? 'flex-end' : 'flex-start',
+      // 只针对userCard的处理
       ...(message.type === 'userCard' ? Platform.select({
         ios: {
           shadowColor: '#000',
-          shadowOffset: { width: 0, height: 2 },
-          shadowOpacity: 0.8,
-          shadowRadius: 10,
+          shadowOffset: { width: 2, height: 2 },
+          shadowOpacity: 0.3,
+          shadowRadius: 5,
+          overflow: 'visible',
         },
         android: {
           elevation: 10,
+          overflow: 'visible',
         },
       }) : null)
     },
@@ -80,7 +83,7 @@ const styles = ({
       display: 'flex',
       flexDirection: 'row',
       alignItems: 'center',
-      justifyContent: 'flex-end',
+      justifyContent: currentUserIsAuthor ? 'flex-end' : 'flex-start',
       padding: s(4)
     }
   })

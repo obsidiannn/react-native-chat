@@ -3,6 +3,7 @@ import { Image, Text, View } from 'react-native'
 
 import { MessageType, Size } from '../../types'
 import { imageReduce, s } from 'app/utils/size'
+import fileService from 'app/services/file.service'
 
 export interface ImageMessageReplyProps {
     message: MessageType.DerivedImage
@@ -20,7 +21,7 @@ export const ImageMessageReply = ({ message }: ImageMessageReplyProps) => {
             <Image
                 accessibilityRole='image'
                 resizeMode={'cover'}
-                source={{ uri: message.uri }}
+                source={{ uri: fileService.getFullUrl(message.uri) }}
                 style={{
                     width: w,
                     height: h,

@@ -48,16 +48,7 @@ const styles = ({
       marginRight: theme.insets.messageInsetsHorizontal,
       marginVertical: theme.insets.messageInsetsVertical,
     },
-    verticalImage: {
-      height: messageWidth,
-      maxWidth: messageWidth,
-      width: messageWidth * aspectRatio,
-    },
-    horizontalImage: {
-      height: messageWidth / aspectRatio,
-      maxHeight: messageWidth,
-      width: messageWidth,
-    },
+  
   })
 
 export default styles

@@ -306,7 +306,7 @@ export const Message = React.memo(
                     borderRadius: s(12),
                     marginTop: s(4)
                   }}>
-                    <Text>{message?.reply.author.firstName} : </Text>
+                    <Text>{message?.metadata?.replyAuthorName ?? ""} : </Text>
                     {renderReply()}
                   </View> : null}
                 </View>
@@ -383,7 +383,7 @@ export const Message = React.memo(
                     borderRadius: s(12),
                     marginTop: s(4)
                   }}>
-                    <Text>{message?.reply.author.firstName} : </Text>
+                     <Text>{message?.metadata?.replyAuthorName ?? ""} : </Text>
                     {renderReply()}
                   </View> : null}
                 </View>

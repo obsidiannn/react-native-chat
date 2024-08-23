@@ -119,9 +119,9 @@ const checkAndRefresh = async (chats: ChatDetailItem[]): Promise<{
                 }
             }
         } else {
-            // const newsData = await mineChatList()
-            // news.push(...newsData)
-            // return { olds, news }
+            const newsData = await mineChatList()
+            news.push(...newsData)
+            return { olds, news }
         }
     } catch (e) {
     }

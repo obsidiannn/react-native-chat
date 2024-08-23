@@ -218,6 +218,7 @@ const sendText = async (chatId: string, key: string, message: MessageType.Text) 
     if (message?.metadata?.replyId) {
         console.log('extra>>');
         extra.replyId = message?.metadata?.replyId
+        extra.replyAuthorName = message?.metadata?.replyAuthorName
     }
     console.log('extra...', extra);
 
@@ -239,6 +240,7 @@ const sendImage = async (chatId: string, key: string, message: MessageType.Image
     const extra: MessageExtra = {}
     if (message?.metadata?.replyId) {
         extra.replyId = message?.metadata?.replyId
+        extra.replyAuthorName = message?.metadata?.replyAuthorName
     }
     const result = await _send(chatId, key, message.id, IModel.IChat.IMessageTypeEnum.NORMAL, {
         t: 'image',
@@ -271,6 +273,7 @@ const sendVideo = async (chatId: string, key: string, message: MessageType.Video
     const extra: MessageExtra = {}
     if (message?.metadata?.replyId) {
         extra.replyId = message?.metadata?.replyId
+        extra.replyAuthorName = message?.metadata?.replyAuthorName
     }
     const result = await _send(chatId, key, message.id, IModel.IChat.IMessageTypeEnum.NORMAL, {
         t: 'video',
@@ -295,6 +298,7 @@ const sendFile = async (chatId: string, key: string, message: MessageType.File) 
     const extra: MessageExtra = {}
     if (message?.metadata?.replyId) {
         extra.replyId = message?.metadata?.replyId
+        extra.replyAuthorName = message?.metadata?.replyAuthorName
     }
     console.log('處理完成準備發送', file);
     const result = await _send(chatId, key, message.id, IModel.IChat.IMessageTypeEnum.NORMAL, {
@@ -308,10 +312,15 @@ const sendFile = async (chatId: string, key: string, message: MessageType.File) 
 
 
 const sendUserCard = async (chatId: string, key: string, message: MessageType.UserCard) => {
+    const extra: MessageExtra = {}
+    if (message?.metadata?.replyId) {
+        extra.replyId = message?.metadata?.replyId
+        extra.replyAuthorName = message?.metadata?.replyAuthorName
+    }
     const result = await _send(chatId, key, message.id, IModel.IChat.IMessageTypeEnum.NORMAL, {
         t: 'userCard',
         d: chatUiAdapter.convertPartialContent(message)
-    }, {});
+    }, );
     message.status = 'sent'
     message.sequence = result.sequence
     return message

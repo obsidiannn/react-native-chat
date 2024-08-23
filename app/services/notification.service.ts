@@ -163,23 +163,4 @@ export interface NotificationType {
   params: any
 }
 
-export const handleNofitication = async (param: any): Promise<NotificationType> => {
-  const result: NotificationType = {
-    screen: '',
-    params: {}
-  }
-  if (param !== null && (param.sourceType ?? null) !== null) {
-    if (param.sourceType === 'chat') {
-      if (param.subType === IModel.IChat.IChatTypeEnum.GROUP.toString()) {
-        result.screen = 'GroupChatUI'
-      } else {
-        result.screen = 'UserChatUI'
-      }
-    }
-    const chatItem = await chatService.mineChatList(param.sourceId)
-    result.params = { item: chatItem[0], fromNotify: true }
-  }
-  console.log('[jump param]', result);
 
-  return result
-}

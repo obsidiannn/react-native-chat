@@ -218,7 +218,7 @@ PODS:
     - nanopb/encode (= 2.30910.0)
   - nanopb/decode (2.30910.0)
   - nanopb/encode (2.30910.0)
-  - op-sqlite (7.0.1):
+  - op-sqlite (7.1.0):
     - React
     - React-callinvoker
     - React-Core
@@ -1600,6 +1600,11 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
+  - RNNotifee (7.8.2):
+    - React-Core
+    - RNNotifee/NotifeeCore (= 7.8.2)
+  - RNNotifee/NotifeeCore (7.8.2):
+    - React-Core
   - RNPermissions (4.1.5):
     - React-Core
   - RNReanimated (3.14.0):
@@ -1787,6 +1792,7 @@ DEPENDENCIES:
   - "RNFBMessaging (from `../../../node_modules/@react-native-firebase/messaging`)"
   - "RNFlashList (from `../../../node_modules/@shopify/flash-list`)"
   - RNGestureHandler (from `../../../node_modules/react-native-gesture-handler`)
+  - "RNNotifee (from `../../../node_modules/@notifee/react-native`)"
   - RNPermissions (from `../../../node_modules/react-native-permissions`)
   - RNReanimated (from `../../../node_modules/react-native-reanimated`)
   - RNScreens (from `../../../node_modules/react-native-screens`)
@@ -2017,6 +2023,8 @@ EXTERNAL SOURCES:
     :path: "../../../node_modules/@shopify/flash-list"
   RNGestureHandler:
     :path: "../../../node_modules/react-native-gesture-handler"
+  RNNotifee:
+    :path: "../../../node_modules/@notifee/react-native"
   RNPermissions:
     :path: "../../../node_modules/react-native-permissions"
   RNReanimated:
@@ -2076,7 +2084,7 @@ SPEC CHECKSUMS:
   MMKV: 817ba1eea17421547e01e087285606eb270a8dcb
   MMKVCore: af055b00e27d88cd92fad301c5fecd1ff9b26dd9
   nanopb: 438bc412db1928dac798aa6fd75726007be04262
-  op-sqlite: e4fce0c26cf64f2e96127e86aa9764ea20ad8366
+  op-sqlite: 08424826d655c42293b1404db0b29ac7f2093d30
   OpenSSL-Universal: 57f92a826947ee3183556bf5e22d7dff8d55f834
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
   RCT-Folly: 02617c592a293bd6d418e0a88ff4ee1f88329b47
@@ -2146,6 +2154,7 @@ SPEC CHECKSUMS:
   RNFBMessaging: 62b6c25f58225a73067c7aef25947f41aa6088c5
   RNFlashList: 06ac066ee3c7adcecc5725c6be7cee41b3696347
   RNGestureHandler: 5538c370587d7e757667b9283ca867dd7635f154
+  RNNotifee: 8e2d3df3f0e9ce8f5d1fe4c967431138190b6175
   RNPermissions: 838a609322bb8ca24b53fc2285ae3914813c072e
   RNReanimated: 3e3b6966df01eff326703234385c2e6e0b0cc417
   RNScreens: fd2722bcc59f36a629205af8cc7b48e4bc0d09f5
@@ -2158,9 +2167,9 @@ SPEC CHECKSUMS:
   SocketRocket: abac6f5de4d4d62d24e11868d7a2f427e0ef940d
   SPAlert: 735da1f16a887e294719217572ce1f936d8c8782
   SPIndicator: 93e0a4fb23de51294ac48e874c0f081a5e293e4f
-  Yoga: eed50599a85bd9f6882a9938d118aed6a397db9c
+  Yoga: bd92064a0d558be92786820514d74fc4dddd1233
   ZXingObjC: 8898711ab495761b2dbbdec76d90164a6d7e14c5
 
 PODFILE CHECKSUM: 643724887ae1e6186f6338c2437ad61817f519a3
 
-COCOAPODS: 1.13.0
+COCOAPODS: 1.15.2

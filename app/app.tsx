@@ -8,6 +8,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler"
 import { ViewStyle } from "react-native"
 import { RecoilRoot } from 'recoil';
 import { SocketProvider } from "app/components/socket"
+import 'react-native-url-polyfill/auto'
 
 export const NAVIGATION_PERSISTENCE_KEY = "Login"
 
@@ -25,8 +26,8 @@ const App = (props: AppProps) => {
   useEffect(() => {
     setTimeout(() => {
       hideSplashScreen();
-    },2000)
-  },[])
+    }, 2000)
+  }, [])
 
   if (!isNavigationStateRestored) {
     return null
@@ -35,9 +36,9 @@ const App = (props: AppProps) => {
     <RecoilRoot>
       <SocketProvider>
         <SafeAreaProvider initialMetrics={initialWindowMetrics}>
-            <GestureHandlerRootView style={$container}>
-              <AppNavigator />
-            </GestureHandlerRootView>
+          <GestureHandlerRootView style={$container}>
+            <AppNavigator />
+          </GestureHandlerRootView>
         </SafeAreaProvider>
       </SocketProvider>
     </RecoilRoot>

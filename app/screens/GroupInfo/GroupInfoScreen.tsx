@@ -12,7 +12,6 @@ import Navbar from "app/components/Navbar";
 import { s } from "app/utils/size";
 import { Image } from "expo-image";
 import { Button } from "app/components";
-import chatService from "app/services/chat.service";
 import fileService from "app/services/file.service";
 import { useRecoilValue } from "recoil";
 import { ColorsState } from "app/stores/system";
@@ -26,8 +25,15 @@ export const GroupInfoScreen = ({ navigation, route }: Props) => {
     const themeColor = useRecoilValue(ColorsState)
     const { t } = useTranslation('screens')
     useEffect(() => {
-        const unsubscribe = navigation.addListener('focus', () => {
-            const _group = route.params.group
+        const unsubscribe = navigation.addListener('focus', async () => {
+            let _group = route.params.group
+            if (!_group) {
+                const groupMap = await groupService.queryByIdIn([route.params.id])
+                _group = groupMap.get(route.params.id)
+            }
+            if (!_group) {
+                return
+            }
             setGroup(_group)
             groupService.getMemberPage({ id: _group.id, limit: 5, page: 1 }).then(memberPage => {
                 console.log('member=', memberPage);
@@ -124,13 +130,8 @@ export const GroupInfoScreen = ({ navigation, route }: Props) => {
                             size="large"
                             onPress={() => {
                                 if ((group?.role ?? -1) > 0) {
-                                    chatService.mineChatList([group?.chatId ?? '']).then(res => {
-                                        if (res.length > 0) {
-                                            const chatItem = res[0]
-                                            navigation.navigate('GroupChatScreen', {
-                                                item: chatItem
-                                            })
-                                        }
+                                    navigation.navigate('GroupChatScreen', {
+                                        chatId: group?.chatId ?? ''
                                     })
                                 } else {
                                     applyJoinModalRef.current?.open(group?.id ?? 0);

@@ -81,13 +81,11 @@ const ChatView = () => {
     const itemPress = (item: ChatDetailItem) => {
         if (item.type === IModel.IChat.IChatTypeEnum.NORMAL) {
             navigate('UserChatScreen', {
-                item,
                 chatId: item.id
             })
         } else if (item.type === IModel.IChat.IChatTypeEnum.GROUP) {
             console.log('group item', item);
             navigate('GroupChatScreen', {
-                item,
                 chatId: item.id
             })
         } else if (item.type === IModel.IChat.IChatTypeEnum.OFFICIAL) {

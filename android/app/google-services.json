@@ -1,13 +1,32 @@
 {
   "project_info": {
-    "project_number": "760110300694",
-    "project_id": "bobochat-1c07d",
-    "storage_bucket": "bobochat-1c07d.appspot.com"
+    "project_number": "441981274957",
+    "project_id": "bobo-chat-d0c99",
+    "storage_bucket": "bobo-chat-d0c99.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:760110300694:android:c49e7092939f15005dbf37",
+        "mobilesdk_app_id": "1:441981274957:android:c16cfc2580e2122e60c504",
+        "android_client_info": {
+          "package_name": "com.tdchat"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCj-fJz5EkpTeskS8VQ9dbMfSkt7BeAbo8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:441981274957:android:7a2437b52aa0cfd260c504",
         "android_client_info": {
           "package_name": "ooo.bobobo.chat"
         }
@@ -15,7 +34,26 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyAlLAn-j-M4zRsWVf7bNk5_qZ00Vcp32_M"
+          "current_key": "AIzaSyCj-fJz5EkpTeskS8VQ9dbMfSkt7BeAbo8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:441981274957:android:1765679111c8784460c504",
+        "android_client_info": {
+          "package_name": "ooo.bobochat"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCj-fJz5EkpTeskS8VQ9dbMfSkt7BeAbo8"
         }
       ],
       "services": {

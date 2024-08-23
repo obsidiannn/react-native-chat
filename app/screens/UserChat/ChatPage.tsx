@@ -37,6 +37,7 @@ import VoicePhoneModal, { VoicePhoneModalType } from "app/components/VoicePhoneM
 import { LocalCollectDetailService } from "app/services/LocalCollectDetailService"
 import SelectMemberModal, { SelectMemberModalType, SelectMemberOption } from "app/components/SelectMemberModal/Index"
 import friendService from "app/services/friend.service"
+import { ms } from "app/utils/size"
 export interface ChatUIPageRef {
     init: (chatItem: ChatDetailItem, friend: IUser) => void
     refreshSequence: (firstSeq: number, lastSeq: number) => void
@@ -67,12 +68,9 @@ const ChatPage = forwardRef((_, ref) => {
             const userIds = items.map(i => i.uid)
             const users = await LocalUserService.findByIds(userIds)
             const userHash = userService.initUserHash(users)
+
             const tmps = items.map((e) => {
                 const item = chatUiAdapter.messageEntity2Dto(e)
-                if (item.id === 'b8f91823a840b9ba440dcbbc') {
-                    console.log('itemmmmmm', item);
-
-                }
                 const user = userHash.get(item?.senderId ?? -1)
                 if (user) {
                     return {
@@ -82,18 +80,17 @@ const ChatPage = forwardRef((_, ref) => {
                 }
                 return item
             });
+            const finalMessages: MessageType.Any[] = await loadReply(tmps)
             setMessages(olds => {
                 let result = []
                 if (olds.length > 0) {
                     const existIds = olds.map(o => o.id)
-                    result = olds.concat(tmps.filter(t => {
+                    result = olds.concat(finalMessages.filter(t => {
                         return !existIds.includes(t.id)
                     }))
                 } else {
-                    result = tmps
+                    result = finalMessages
                 }
-                console.log('addddd', result);
-
                 if (init) {
                     lastSeq.current = result[0].sequence
                 }
@@ -102,6 +99,33 @@ const ChatPage = forwardRef((_, ref) => {
             })
         }
     }, [])
+
+    const loadReply = async (list: MessageType.Any[]): Promise<MessageType.Any[]> => {
+        const replyIds: string[] = []
+        list.forEach(i => {
+            if (i.metadata?.replyId) {
+                replyIds.push(i.metadata.replyId)
+            }
+        })
+        if (replyIds.length > 0) {
+            const replys = await LocalMessageService.findByIds(replyIds)
+            const replyMap = new Map<string, MessageType.Any>()
+            replys.forEach(r => {
+                replyMap.set(r.id, chatUiAdapter.messageEntity2Dto(r))
+            })
+            return list.map(i => {
+                if (i.metadata?.replyId) {
+                    const reply = replyMap.get(i.metadata.replyId)
+                    return {
+                        ...i, reply
+                    } as MessageType.Any
+                }
+                return i
+            })
+        }
+        return list
+    }
+
     // 获取最新数据 也是从seq开始获取最近的 20 条
     const loadRemoteMessages = useCallback(async (chatId: string, seq: number) => {
         if (remoteMessageLoading.current) {
@@ -190,7 +214,8 @@ const ChatPage = forwardRef((_, ref) => {
         if (replyMsg) {
             message.metadata = {
                 ...message.metadata,
-                replyId: replyMsg.id
+                replyId: replyMsg.id,
+                replyAuthorName: replyMsg.author.firstName ?? ''
             }
         }
         const { sequence = 0 } = message

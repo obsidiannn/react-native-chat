@@ -6,6 +6,7 @@ import Blob from 'react-native/Libraries/Blob/Blob'
 import { defaultTheme } from '../theme'
 import { MessageType, PreviewImage, Theme, User } from '../types'
 import i18n from 'app/i18n'
+import fileService from 'app/services/file.service'
 
 
 
@@ -287,7 +288,7 @@ export const calculateChatMessages = (
 
     if (message.type === 'image') {
       // gallery = [...gallery, { id: message.id, uri: fileService.getFullUrl(message.uri) }]
-      gallery = [...gallery, { id: message.id, uri: message.uri }]
+      gallery = [...gallery, { id: message.id, uri: fileService.getFullUrl(message.uri) }]
     }
   }
 

@@ -141,7 +141,7 @@ export class CloudMessageService {
                         const rpl = replyMap.get(r.metadata?.replyId)
                         return {
                             ...r, reply: rpl
-                        }
+                        } as MessageType.Any
                     }
                     return r
                 }))

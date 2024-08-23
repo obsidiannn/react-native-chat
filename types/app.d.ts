@@ -11,16 +11,15 @@ declare namespace App {
     UserScreen: undefined;
     UserChatScreen: {
       chatId: string
-      item: ChatDetailItem
       fromNotify?: boolean
     };
     GroupChatScreen: {
       chatId: string
-      item: ChatDetailItem
       fromNotify?: boolean
     };
     GroupInfoScreen: {
-      group: GroupDetailItem
+      id: number
+      group?: GroupDetailItem
       outside?: boolean
     }
     WebViewScreen: {
@@ -65,5 +64,11 @@ declare namespace App {
     CollectScreen: undefined
     SystemFeedbackScreen: undefined
     DonateScreen: undefined
+    LinkScreen: {
+      url: string,
+      from: string
+      isStorage: boolean
+    },
+
   }
 }

@@ -4,6 +4,9 @@ import { Image, Text, View } from 'react-native'
 import { MessageType, Size } from '../../types'
 import { formatBytes, ThemeContext, UserContext } from '../../utils'
 import styles from './styles'
+import fileService from 'app/services/file.service'
+import { NetworkImage } from 'app/components/NetworkImage'
+import { imageReduce } from 'app/utils/size'
 
 export interface ImageMessageProps {
   message: MessageType.DerivedImage
@@ -20,22 +23,18 @@ export const ImageMessage = ({ message, messageWidth }: ImageMessageProps) => {
   const user = React.useContext(UserContext)
   const defaultHeight = message.height ?? 0
   const defaultWidth = message.width ?? 0
-  const [size, setSize] = React.useState<Size>({
-    height: defaultHeight,
-    width: defaultWidth,
-  })
-  console.log('messageWidth=',messageWidth);
   
-  const aspectRatio = size.width / (size.height || 1)
-  const isMinimized = aspectRatio < 0.1 || aspectRatio > 10
+  const size = imageReduce(defaultWidth, defaultHeight, messageWidth)
+  console.log('messageWidth=', size);
+
+  const aspectRatio = size.w / (size.h || 1)
+  const isMinimized = false
+  // const isMinimized = aspectRatio < 0.1 || aspectRatio > 10
   const {
-    horizontalImage,
-    minimizedImage,
     minimizedImageContainer,
     nameText,
     sizeText,
     textContainer,
-    verticalImage,
   } = styles({
     aspectRatio,
     message,
@@ -44,33 +43,24 @@ export const ImageMessage = ({ message, messageWidth }: ImageMessageProps) => {
     user,
   })
 
-  React.useEffect(() => {
-    if (defaultHeight <= 0 || defaultWidth <= 0)
-      Image.getSize(
-        message.uri,
-        (width, height) => {
-          setSize({ height, width })
-        },
-        () => {
-          setSize({ height: 0, width: 0 })
-        }
-      )
-  }, [defaultHeight, defaultWidth, message.uri])
-  
   const renderImage = () => {
-    console.log(isMinimized);
-    
+    console.log('renderImage', isMinimized);
+
     return (
       <Image
+        // uri={fileService.getFullUrl(message.uri)}
         accessibilityRole='image'
         resizeMode={'cover'}
-        source={{ uri: message.uri }}
-        style={
-          isMinimized
-            ? minimizedImage
-            : aspectRatio < 1
-            ? verticalImage
-            : horizontalImage
+        source={{ uri: fileService.getFullUrl(message.uri) }}
+        style={{
+          width: size.w, 
+          height: size.h
+        }
+          // isMinimized
+          //   ? minimizedImage
+          //   : aspectRatio < 1
+          //     ? verticalImage
+          //     : horizontalImage
         }
       />
     )

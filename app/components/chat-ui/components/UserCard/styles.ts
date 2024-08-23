@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native'
+import { Platform, StyleSheet } from 'react-native'
 import { MessageType, Theme, User } from '../../types'
 import { s, vs } from 'app/utils/size'
 
@@ -18,8 +18,19 @@ const styles = ({
             backgroundColor:
                 user?.id === message.author.id
                     ? theme.colors.background
-                    : theme.colors.secondary,
+                    : theme.colors.background,
             borderRadius: s(12),
+            ...Platform.select({
+                // ios: {
+                //     shadowColor: '#000',
+                //     shadowOffset: { width: 0, height: 2 },
+                //     shadowOpacity: 0.7,
+                //     shadowRadius: 10,
+                // },
+                // android: {
+                //     elevation: 10,
+                // },
+            })
         },
 
     })

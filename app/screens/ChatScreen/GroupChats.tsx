@@ -53,15 +53,8 @@ const GroupListView = (props: { groups: GroupDetailItem[] }) => {
                         return <ContractListItem
                             onPress={async () => {
                                 console.log('chatId', item.chatId);
-
-                                const chatDetail = await chatService.mineChatList([String(item.chatId)]);
-                                if (!chatDetail || chatDetail === null || chatDetail.length <= 0) {
-                                    toast("會話不存在")
-                                    return
-                                }
-                                console.log('chatDetail', chatDetail);
                                 navigate('GroupChatScreen', {
-                                    item: chatDetail[0],
+                                    chatId: item.chatId
                                 })
                             }}
                             icon={fileService.getFullUrl(item.avatar)}

@@ -152,7 +152,8 @@ const messageTypeConvert = (
     message.metadata = {
         ...message.metadata,
         'uidType': detail.fromUidType,
-        'replyId': extra.replyId
+        'replyId': extra.replyId,
+        'replyAuthorName': extra.replyAuthorName
     }
     return message;
 }
@@ -302,7 +303,8 @@ const messageEntity2Dto = (entity: IMessage, key: string = '', needDecode: boole
     message.metadata = {
         ...message.metadata,
         'uidType': entity.uidType,
-        'replyId': entity.replyId
+        'replyId': entity.replyId,
+        'replyAuthorName': extra.replyAuthorName
     }
     return message
 }
