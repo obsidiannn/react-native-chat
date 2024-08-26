@@ -121,7 +121,7 @@ const AppStack = () => {
   }, [])
   const setThemeState = useSetRecoilState(ThemeState);
   useEffect(() => {
-    const v = Appearance.getColorScheme()
+    const v = 'dark'//Appearance.getColorScheme()
     setThemeState(v === "dark" ? 'dark' : 'light');
     StatusBar.setBarStyle(v === "dark" ? 'dark-content' : 'light-content');
     const subscription = Appearance.addChangeListener(({ colorScheme }) => setThemeState(colorScheme === "dark" ? 'dark' : 'light'));

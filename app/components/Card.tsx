@@ -1,20 +1,21 @@
 import { ReactNode } from "react";
 import { ColorValue, View, ViewStyle } from "react-native";
-import { ColorsState } from "app/stores/system";
 import { s } from "app/utils/size";
-import { useRecoilValue } from "recoil";
+import { $colors } from "app/Colors";
 
-export const Card = (props: {
-  rounded?: boolean,
-  backgroundColor?: ColorValue,
-  children: ReactNode,
-  style?: ViewStyle
-}) => {
-  const $colors = useRecoilValue(ColorsState);
+export interface CardProps {
+  rounded?: boolean;
+  backgroundColor?: ColorValue;
+  children: ReactNode;
+  style?: ViewStyle;
+  theme?: "light" | "dark";
+}
+export const Card = (props: CardProps) => {
+  const {theme='light'} = props;
   return <View style={[
     $container,
     {
-      backgroundColor: props.backgroundColor ?? $colors.background,
+      backgroundColor: theme == "dark" ? $colors.slate700 : $colors.white,
     },
     props.rounded && {
       borderRadius: s(20)

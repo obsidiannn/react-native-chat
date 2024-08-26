@@ -1,9 +1,8 @@
 import { forwardRef, useImperativeHandle, useState } from "react";
 import { Modal, Text, TextStyle, View, ViewStyle } from "react-native";
-import { ColorsState } from "app/stores/system";
 import { s } from "app/utils/size";
-import { useRecoilValue } from "recoil";
 import { Button, Card } from "app/components";
+import { $colors } from "app/Colors";
 export interface ConfirmModalOption {
   title: string;
   content: string;
@@ -15,9 +14,11 @@ export interface ConfirmModalType {
   open: (option: ConfirmModalOption) => void,
   close: () => void
 }
-export const ConfirmModal = forwardRef((_, ref) => {
+export const ConfirmModal = forwardRef((props: {
+  theme?: 'light'| 'dark';
+}, ref) => {
   const [visible, setVisible] = useState(false);
-  const $colors = useRecoilValue(ColorsState);
+  const { theme = 'light' }= props;
   const [option, setOption] = useState<ConfirmModalOption>({
     title: "",
     content: "",
@@ -34,19 +35,19 @@ export const ConfirmModal = forwardRef((_, ref) => {
   return (
     <Modal transparent={true} style={{ flex: 1 }} visible={visible} animationType="slide" >
       <View style={$container}>
-        <Card rounded>
+        <Card theme={theme} rounded>
           <View style={$titleContainer}>
-            <Text style={[$title,{color: $colors.text}]}>{option.title}</Text>
+            <Text style={[$title,{color: theme == "dark" ? $colors.slate200 : $colors.slate700}]}>{option.title}</Text>
           </View>
-          <Text style={[$content,{color: $colors.secondaryText}]}>{option.content}</Text>
+          <Text style={[$content,{color: theme == "dark" ? $colors.slate400 : $colors.slate400}]}>{option.content}</Text>
           <View>
-            <Button onPress={async () => {
+            <Button theme={theme} onPress={async () => {
               option.onSubmit?.();
               setVisible(false);
             }} containerStyle={{
               marginTop: s(15)
             }} rounded fullRounded size="large" label="确认" />
-            <Button onPress={() => setVisible(false)} containerStyle={{
+            <Button theme={theme} onPress={() => setVisible(false)} containerStyle={{
               marginVertical: s(15)
             }} rounded fullRounded type="secondary" size="large" label="取消" />
           </View>
