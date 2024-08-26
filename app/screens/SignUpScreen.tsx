@@ -74,11 +74,10 @@ export const SignUpScreen = ({ navigation }: Props) => {
       </View>
       <View style={{
         width: "100%",
-        height: s(48),
         paddingHorizontal: s(16),
         marginTop: s(20),
       }}>
-        <Button fullWidth theme={$theme} size="large" loading={loading} onPress={async () => {
+        <Button fullWidth fullRounded theme={$theme} size="large" loading={loading} onPress={async () => {
           if (!password) {
             alert("密码不能为空");
             return;

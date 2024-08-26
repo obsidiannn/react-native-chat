@@ -46,10 +46,10 @@ export const ConfirmModal = forwardRef((props: {
               setVisible(false);
             }} containerStyle={{
               marginTop: s(15)
-            }} rounded fullRounded size="large" label="确认" />
+            }} fullRounded size="large" label="确认" />
             <Button theme={theme} onPress={() => setVisible(false)} containerStyle={{
               marginVertical: s(15)
-            }} rounded fullRounded type="secondary" size="large" label="取消" />
+            }} fullRounded type="secondary" size="large" label="取消" />
           </View>
         </Card>
       </View>

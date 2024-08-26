@@ -42,17 +42,13 @@ export const Button = (props: ButtonProps) => {
   } = props;
   const $container: Record<string, ViewStyle> = {
     "small": {
-      borderRadius: rounded ? (
-        fullRounded ? s(15) : s(7)
-      ) : 0,
+      borderRadius: fullRounded ? s(15) : (rounded ? s(7) : 0),
       paddingHorizontal: s(13),
       height: s(30),
       justifyContent: "center"
     },
     "large": {
-      borderRadius: rounded ? (
-        fullRounded ? s(24) : s(12)
-      ) : 0,
+      borderRadius: fullRounded ? s(24) : (rounded ? s(7) : 12),
       paddingHorizontal: s(13),
       height: s(48),
       justifyContent: "center"

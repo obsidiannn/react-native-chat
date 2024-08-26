@@ -38,7 +38,7 @@ export const WelcomeScreen = ({ navigation }: Props) => {
       }]}>{t('welcome.title')}</Text>
       <Image style={$bg} source={require("assets/images/welcomeBg.webp")} cachePolicy="disk" />
       <View style={[$buttonContainer]}>
-        <Button theme={$theme} rounded fullRounded onPress={() => navigation.navigate("UnlockScreen")} fullWidth size="large" label={t("welcome.signIn")} type="primary" />
+        <Button theme={$theme} fullRounded onPress={() => navigation.navigate("UnlockScreen")} fullWidth size="large" label={t("welcome.signIn")} type="primary" />
         <Button containerStyle={{
           marginTop: s(20)
         }} theme={$theme} onPress={() => {
@@ -51,7 +51,7 @@ export const WelcomeScreen = ({ navigation }: Props) => {
             return;
           }
           navigation.navigate("SignUpScreen")
-        }} fullWidth rounded fullRounded label={t("welcome.signUp")} size="large" type="secondary" />
+        }} fullWidth fullRounded label={t("welcome.signUp")} size="large" type="secondary" />
 
         <View style={$checkboxContainer}>
           <Checkbox onChange={() => setProtocolStatus(!protocolStatus)} checked={protocolStatus} />

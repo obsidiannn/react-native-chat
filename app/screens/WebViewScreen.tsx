@@ -1,36 +1,21 @@
-import { Dimensions, View, ViewStyle } from "react-native";
+import { ViewStyle } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
 import WebView from "react-native-webview";
-import Navbar from "app/components/Navbar";
-import { ColorsState } from "app/stores/system";
+import { ThemeState } from "app/stores/system";
 import { useRecoilValue } from "recoil";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { App } from "types/app";
-const { height } = Dimensions.get('window');
+import { ScreenX } from "app/components/ScreenX";
 type Props = StackScreenProps<App.StackParamList, 'WebViewScreen'>;
 export const WebViewScreen = ({ route }: Props) => {
-    const $colors = useRecoilValue(ColorsState);
-    const insets = useSafeAreaInsets();
+    const $theme = useRecoilValue(ThemeState);
 
     return (
-        <View style={{
-            flex: 1,
-            top: insets.top,
-            backgroundColor: $colors.secondaryBackground
-        }}>
-            <View style={$container}>
-                <Navbar title={route.params.title} />
-                <WebView style={$webViewContainer} source={{ uri: route.params.url }} />
-            </View>
-        </View>
+        <ScreenX theme={$theme} title={route.params.title}>
+            <WebView style={$container} source={{ uri: route.params.url }} />
+        </ScreenX>
     );
 };
-
 const $container: ViewStyle = {
-    height: height,
-    width: "100%"
-}
-const $webViewContainer: ViewStyle = {
     flex: 1,
     width: '100%',
 }
