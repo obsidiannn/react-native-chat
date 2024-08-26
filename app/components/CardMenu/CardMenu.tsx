@@ -1,23 +1,23 @@
-import { ColorsState } from "app/stores/system"
 import { View, ViewStyle } from "react-native"
-import { useRecoilValue } from "recoil"
 import { s } from "app/utils/size"
 import { OptionItem, OptionItemProps } from "./OptionItem"
+import { $colors } from "app/Colors"
 
 export interface CardMenuProps {
     items: OptionItemProps[];
     style?: ViewStyle;
+    theme?: "light" | "dark";
 }
 export const CardMenu = (props: CardMenuProps) => {
-    const $colors = useRecoilValue(ColorsState);
+    const {theme="dark"} = props;
     return <View style={[
         $container,
         {
-            backgroundColor: $colors.secondaryBackground
+            backgroundColor: theme == "dark" ? $colors.slate700 : $colors.gray200,
         },
         props.style
     ]}>
-        {props.items.map((item, index) => <OptionItem key={index} {...item} />)}
+        {props.items.map((item, index) => <OptionItem theme={theme} key={index} {...item} />)}
     </View>
 }
 const $container: ViewStyle = {

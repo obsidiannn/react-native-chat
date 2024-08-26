@@ -1,8 +1,7 @@
 import { s } from "app/utils/size";
-import { Image } from "expo-image";
 import { forwardRef, useImperativeHandle, useState } from "react";
 import { Modal, View, TouchableOpacity, ViewStyle } from "react-native";
-import { MenuItem, IMenuItem } from "./MenuItem";
+import { IMenuItemProps, MenuItem } from "./MenuItem";
 import { Card } from "../Card";
 import { IconFont } from "../IconFont/IconFont";
 import { $colors } from "app/Colors";
@@ -13,18 +12,18 @@ export interface MenuModalProps {
 
 export interface MenuModalRef {
     open: (params: {
-        items: IMenuItem[]
+        items: IMenuItemProps[]
     }) => void
 }
 
 export const MenuModal = forwardRef((props: MenuModalProps, ref) => {
     const { theme = "dark" } = props;
-    const [menus, setMenus] = useState<IMenuItem[]>([])
+    const [menus, setMenus] = useState<IMenuItemProps[]>([])
     const [visible, setVisible] = useState<boolean>(false)
 
     useImperativeHandle(ref, () => ({
         open: (params: {
-            items: IMenuItem[]
+            items: IMenuItemProps[]
         }) => {
             setMenus(params.items)
             setVisible(true)

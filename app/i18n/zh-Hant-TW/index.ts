@@ -32,7 +32,11 @@ export default {
         'import backup file':'导入备份文件',
         'Add friend': '添加好友',
         'Create group chat': '创建群聊',
-        'Select friends':'选择好友'
+        'Select friends':'选择好友',
+        'Edit Profile': '编辑资料',
+        'Favorites': '收藏夹',
+        'Security': '安全',
+        'Settings': '设置',
     }
 
 }

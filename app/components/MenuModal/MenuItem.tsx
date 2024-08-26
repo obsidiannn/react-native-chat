@@ -1,8 +1,5 @@
-import { ColorsState } from "app/stores/system";
 import { s } from "app/utils/size";
 import { Text, TouchableOpacity, ViewStyle } from "react-native";
-import { useRecoilValue } from "recoil";
-import { ImageStyle } from "expo-image";
 import { IconFont, IconFontNameType } from "../IconFont/IconFont";
 import { $colors } from "app/Colors";
 
