@@ -5,13 +5,13 @@ import { s } from 'app/utils/size';
 import { useRecoilValue } from "recoil"
 import { ThemeState } from "app/stores/system"
 import { useTranslation } from 'react-i18next';
-import { Screen } from "app/components";
 import { Button } from "app/components/Button";
 import { StackScreenProps } from "@react-navigation/stack";
 import { Checkbox } from "./Checkbox";
 import { App } from "types/app";
 import { ConfirmModal, ConfirmModalType } from "app/components/ConfirmModal";
 import { $colors } from "app/Colors";
+import { FullScreen } from "app/components/ScreenX";
 
 type Props = StackScreenProps<App.StackParamList, 'WelcomeScreen'>;
 export const WelcomeScreen = ({ navigation }: Props) => {
@@ -32,18 +32,16 @@ export const WelcomeScreen = ({ navigation }: Props) => {
   useEffect(() => {
   }, [])
   return (
-    <Screen theme={$theme} safeAreaEdges={["top"]} preset="scroll">
+    <FullScreen theme={$theme}>
       <Text style={[$titleText, {
         color: $theme == "dark" ? $colors.white : $colors.black
       }]}>{t('welcome.title')}</Text>
       <Image style={$bg} source={require("assets/images/welcomeBg.webp")} cachePolicy="disk" />
-      <View style={[$buttonContainer, {
-        marginTop: s(40)
-      }]}>
+      <View style={[$buttonContainer]}>
         <Button theme={$theme} onPress={() => navigation.navigate("UnlockScreen")} fullWidth size="large" label={t("welcome.signIn")} type="primary" />
-      </View>
-      <View style={$buttonContainer}>
-        <Button theme={$theme} onPress={() => {
+        <Button containerStyle={{
+          marginTop: s(20)
+        }} theme={$theme} onPress={() => {
           if (!protocolStatus) {
             confirmModalRef.current?.open({
               title: t('welcome.confirm_title'),
@@ -54,25 +52,26 @@ export const WelcomeScreen = ({ navigation }: Props) => {
           }
           navigation.navigate("SignUpScreen")
         }} fullWidth label={t("welcome.signUp")} size="large" type="secondary" />
-      </View>
-      <View style={$checkboxContainer}>
-        <Checkbox onChange={() => setProtocolStatus(!protocolStatus)} checked={protocolStatus} />
-        <Pressable onPress={() => setProtocolStatus(!protocolStatus)}>
-          <Text style={[$checkboxText, { color: $theme=="dark" ? $colors.slate200 :$colors.slate400 }]}>{t("welcome.agree")}</Text>
-        </Pressable>
-        {protocols.map((protocol) => {
-          return <Pressable key={protocol.name} onPress={() => {
-            navigation.push("WebViewScreen", {
-              title: t("welcome." + protocol.name),
-              url: protocol.url
-            })
-          }}>
-            <Text style={[$checkboxText, { color:$theme=="dark" ? $colors.slate400 :$colors.slate700 }]}>{t("welcome." + protocol.name)}</Text>
+
+        <View style={$checkboxContainer}>
+          <Checkbox onChange={() => setProtocolStatus(!protocolStatus)} checked={protocolStatus} />
+          <Pressable onPress={() => setProtocolStatus(!protocolStatus)}>
+            <Text style={[$checkboxText, { color: $theme == "dark" ? $colors.slate200 : $colors.slate400 }]}>{t("welcome.agree")}</Text>
           </Pressable>
-        })}
+          {protocols.map((protocol) => {
+            return <Pressable key={protocol.name} onPress={() => {
+              navigation.push("WebViewScreen", {
+                title: t("welcome." + protocol.name),
+                url: protocol.url
+              })
+            }}>
+              <Text style={[$checkboxText, { color: $theme == "dark" ? $colors.slate400 : $colors.slate700 }]}>{t("welcome." + protocol.name)}</Text>
+            </Pressable>
+          })}
+        </View>
       </View>
       <ConfirmModal ref={confirmModalRef} />
-    </Screen>
+    </FullScreen>
   )
 }
 const $titleText: TextStyle = {

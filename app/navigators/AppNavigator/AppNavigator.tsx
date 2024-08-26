@@ -9,10 +9,8 @@ import { AppState, Appearance, Linking, StatusBar } from "react-native"
 import * as Screens from "app/screens"
 import Config from "../../config"
 import { navigate, navigationRef, useBackButtonHandler } from "./../navigationUtilities"
-import { colors } from "app/theme"
 import { useSetRecoilState } from "recoil";
 import { NetworkState, ThemeState } from "app/stores/system";
-
 import { init as KVInit } from "app/utils/kv-tool";
 import { getNow } from "app/utils/account";
 import { Wallet } from "app/utils/wallet";
@@ -23,14 +21,11 @@ import NetInfo from '@react-native-community/netinfo';
 import { LocalUserService } from "app/services/LocalUserService";
 import { AuthService } from "app/services/auth.service";
 import chatService from "app/services/chat.service";
-
 import { SocketContext } from "app/components/socket";
-import { IUser } from "drizzle/schema";
 import { SystemService } from "app/services/system.service";
 import { App } from "types/app";
 import { initNotification } from "app/services/notification.service";
 import listenNotification from "app/services/listen-notification";
-
 
 const exitRoutes = Config.exitRoutes
 
@@ -99,7 +94,6 @@ const AppStack = () => {
     if (now) {
       global.wallet = new Wallet(now);
       setAuthWallet(global.wallet);
-
       Linking.addEventListener('url', handleDeepLink);
       const initUrl = await Linking.getInitialURL()
       if (initUrl) {
@@ -114,27 +108,20 @@ const AppStack = () => {
         routes: [{ name: 'TabStack' }],
       })
       await DBInit(global.wallet.getAddress());
-      // 加载离线chat 
-      console.log('加载离线chat');
       const localChats = await chatService.mineLocalChats()
       if (localChats) {
         setChatsStore(localChats)
       }
-
-      let currentUser: IUser | undefined = undefined
       const user = await LocalUserService.findByAddr(global.wallet.getAddress())
-
-      console.log('本地用户信息', user)
       if (user) {
         setAuthUser(user)
-        currentUser = user
       }
       loadOnlineData();
     }
   }, [])
   const setThemeState = useSetRecoilState(ThemeState);
   useEffect(() => {
-    const v = 'light';//Appearance.getColorScheme()
+    const v = Appearance.getColorScheme()
     setThemeState(v === "dark" ? 'dark' : 'light');
     StatusBar.setBarStyle(v === "dark" ? 'dark-content' : 'light-content');
     const subscription = Appearance.addChangeListener(({ colorScheme }) => setThemeState(colorScheme === "dark" ? 'dark' : 'light'));
@@ -153,9 +140,9 @@ const AppStack = () => {
   }, []);
   return (
     <Stack.Navigator
-      //initialRouteName="WelcomeScreen"
-      initialRouteName="SignUpScreen"
-      screenOptions={{ headerShown: false, navigationBarColor: "red" }}
+      initialRouteName="WelcomeScreen"
+      //initialRouteName="SignUpScreen"
+      screenOptions={{ headerShown: false }}
     >
       <Stack.Screen name="TabStack" component={TabStack} />
       <Stack.Screen name="UserChatScreen" component={Screens.UserChatScreen} />

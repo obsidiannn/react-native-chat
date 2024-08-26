@@ -3,12 +3,16 @@ import { s } from "app/utils/size"
 import { StatusBar, View } from "react-native"
 import { $colors } from "app/Colors"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
-export interface ScreenXProps {
+export interface FullScreenProps {
   theme: "light" | "dark";
-  title: string;
   children?: React.ReactNode;
 }
-export const ScreenX = (props: ScreenXProps) => {
+
+export interface ScreenXProps extends FullScreenProps  {
+  title: string;
+}
+
+export const FullScreen = (props: FullScreenProps) => {
   const insets = useSafeAreaInsets()
   return <View style={{
     flex: 1,
@@ -17,6 +21,11 @@ export const ScreenX = (props: ScreenXProps) => {
     backgroundColor: props.theme == "dark" ? $colors.slate950 : $colors.gray100,
   }}>
     <StatusBar barStyle={props.theme == "dark" ? "light-content" : "dark-content"} />
+    {props.children}
+  </View>
+}
+export const ScreenX = (props: ScreenXProps) => {
+  return <FullScreen {...props}>
     <Navbar theme={props.theme} title={props.title} />
     <View style={{
       marginTop: s(10),
@@ -27,5 +36,5 @@ export const ScreenX = (props: ScreenXProps) => {
     }}>
       {props.children}
     </View>
-  </View>
+  </FullScreen>
 }
