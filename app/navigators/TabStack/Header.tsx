@@ -97,7 +97,7 @@ export const Header = (props: BottomTabHeaderProps) => {
         }} ref={scanModalRef} />
         <MyBusinessCardModal ref={myBusinessCardModalRef} />
         <SettingCenterModal ref={settingCenterModalRef} />
-        <MenuModal ref={menuModalRef} />
+        <MenuModal theme={$theme} ref={menuModalRef} />
         <SelectMemberModal ref={selectMemberModalRef} />
     </View>
 }

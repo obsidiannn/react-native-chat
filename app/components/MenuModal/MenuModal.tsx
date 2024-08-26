@@ -1,11 +1,15 @@
-import { ColorsState } from "app/stores/system";
 import { s } from "app/utils/size";
 import { Image } from "expo-image";
 import { forwardRef, useImperativeHandle, useState } from "react";
-import { Modal, StyleSheet, View, TouchableOpacity } from "react-native";
-import { useRecoilValue } from "recoil";
+import { Modal, View, TouchableOpacity, ViewStyle } from "react-native";
 import { MenuItem, IMenuItem } from "./MenuItem";
+import { Card } from "../Card";
+import { IconFont } from "../IconFont/IconFont";
+import { $colors } from "app/Colors";
 
+export interface MenuModalProps {
+    theme?: "light" | "dark"
+}
 
 export interface MenuModalRef {
     open: (params: {
@@ -13,8 +17,8 @@ export interface MenuModalRef {
     }) => void
 }
 
-export const MenuModal = forwardRef((_, ref) => {
-    const themeColor = useRecoilValue(ColorsState)
+export const MenuModal = forwardRef((props: MenuModalProps, ref) => {
+    const { theme = "dark" } = props;
     const [menus, setMenus] = useState<IMenuItem[]>([])
     const [visible, setVisible] = useState<boolean>(false)
 
@@ -32,40 +36,40 @@ export const MenuModal = forwardRef((_, ref) => {
     }
 
     return <Modal visible={visible} style={{ flex: 1 }} transparent={true} animationType="slide">
-        <View style={styles.container}>
-            <View style={{
-                ...styles.menuArea,
-                backgroundColor: themeColor.background
-            }}>
+        <View style={$container}>
+            <Card rounded theme={theme}>
                 {menus.map((m, i) => <MenuItem
+                    theme={theme}
                     key={m.title + "_" + i}
                     onPress={() => {
                         m.onPress();
                         close();
                     }} title={m.title} iconName={m.iconName} bottomBorder={i !== menus.length - 1} />)}
-            </View>
+            </Card>
             <View style={{ alignItems: 'center', margin: s(32), }}>
-                <TouchableOpacity onPress={close} >
-                    <Image source={require('assets/icons/close-opacity.svg')} style={{ width: s(36), height: s(36) }} />
+                <TouchableOpacity style={[$closeIcon, {
+                    backgroundColor: $colors.slate900,
+                }]} onPress={close}>
+                    <IconFont name="close" size={24} color={$colors.white} />
                 </TouchableOpacity>
             </View>
         </View>
     </Modal>
 })
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        display: 'flex',
-        flexDirection: 'column',
-        alignContent: 'center',
-        paddingHorizontal: s(16),
-        backgroundColor: 'rgba(0,0,0,0.5)'
-    },
-    menuArea: {
-        paddingHorizontal: s(36),
-        paddingVertical: s(14),
-        borderRadius: s(20),
-        marginTop: '40%'
-    },
-})
+const $container: ViewStyle = {
+    flex: 1,
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: s(16),
+    backgroundColor: 'rgba(0,0,0,0.5)'
+}
+const $closeIcon: ViewStyle = {
+    opacity: 0.5,
+    borderRadius: s(20),
+    width: s(36),
+    height: s(36),
+    alignItems: 'center',
+    justifyContent: 'center',
+}
