@@ -30,6 +30,9 @@ export default {
         'After import, existing local data will be overwritten, and the application will restart.':"导入后将覆盖已有的本地数据，导入后应用将重启.",
         'import success!': '导入成功!',
         'import backup file':'导入备份文件',
+        'Add friend': '添加好友',
+        'Create group chat': '创建群聊',
+        'Select friends':'选择好友'
     }
 
 }

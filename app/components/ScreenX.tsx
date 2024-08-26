@@ -18,7 +18,7 @@ export const FullScreen = (props: FullScreenProps) => {
     flex: 1,
     paddingTop: insets.top,
     paddingBottom: insets.bottom,
-    backgroundColor: props.theme == "dark" ? $colors.slate950 : $colors.gray100,
+    backgroundColor: props.theme == "dark" ? $colors.slate950 : $colors.gray200,
   }}>
     <StatusBar barStyle={props.theme == "dark" ? "light-content" : "dark-content"} />
     {props.children}

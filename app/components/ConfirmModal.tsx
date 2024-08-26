@@ -16,10 +16,10 @@ export interface ConfirmModalType {
   close: () => void
 }
 export const ConfirmModal = forwardRef((props: {
-  theme?: 'light'| 'dark';
+  theme?: 'light' | 'dark';
 }, ref) => {
   const [visible, setVisible] = useState(false);
-  const { theme = 'light' }= props;
+  const { theme = 'light' } = props;
   const [option, setOption] = useState<ConfirmModalOption>({
     title: "",
     content: "",
@@ -33,15 +33,15 @@ export const ConfirmModal = forwardRef((props: {
     },
     close: async () => setVisible(false)
   }));
-  const {t} = useTranslation('default');
+  const { t } = useTranslation('default');
   return (
     <Modal transparent={true} style={{ flex: 1 }} visible={visible} animationType="slide" >
       <View style={$container}>
         <Card theme={theme} rounded>
           <View style={$titleContainer}>
-            <Text style={[$title,{color: theme == "dark" ? $colors.slate200 : $colors.slate700}]}>{option.title}</Text>
+            <Text style={[$title, { color: theme == "dark" ? $colors.slate200 : $colors.slate700 }]}>{option.title}</Text>
           </View>
-          <Text style={[$content,{color: theme == "dark" ? $colors.slate400 : $colors.slate400}]}>{option.content}</Text>
+          <Text style={[$content, { color: theme == "dark" ? $colors.slate400 : $colors.slate400 }]}>{option.content}</Text>
           <View>
             <Button theme={theme} onPress={async () => {
               option.onSubmit?.();

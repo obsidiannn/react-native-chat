@@ -1,4 +1,4 @@
-import { TouchableOpacity, View } from 'react-native';
+import { TouchableOpacity, View, ViewStyle } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ColorsState, ThemeState } from 'app/stores/system';
 import { useRecoilValue } from 'recoil';
@@ -15,25 +15,27 @@ import { BottomTabHeaderProps } from '@react-navigation/bottom-tabs';
 import { MenuModalRef, MenuModal } from 'app/components/MenuModal/MenuModal';
 import { IMenuItem } from 'app/components/MenuModal/MenuItem';
 import { IconFont } from 'app/components/IconFont/IconFont';
+import { useTranslation } from 'react-i18next';
+import { $colors } from 'app/Colors';
 export const Header = (props: BottomTabHeaderProps) => {
     const insets = useSafeAreaInsets();
-    const $colors = useRecoilValue(ColorsState);
     const $theme = useRecoilValue(ThemeState);
     const menuModalRef = useRef<MenuModalRef>(null)
     const scanModalRef = useRef<ScanModalType>(null);
     const myBusinessCardModalRef = useRef<MyBusinessCardModalType>(null);
     const settingCenterModalRef = useRef<SettingCenterModalType>(null);
     const selectMemberModalRef = useRef<SelectMemberModalType>(null);
-    const chatMenus:IMenuItem[] = [
+    const { t } = useTranslation('default');
+    const menus: IMenuItem[] = [
         {
-            title: "添加好友",
+            title: t('Add friend'),
             iconName: "userAdd",
             onPress: () => {
                 navigate("AddFriendModal")
             },
         },
         {
-            title: "创建群聊",
+            title: t('Create group chat'),
             iconName: "newChat",
             onPress: async () => {
                 const users = await friendService.getOnlineList();
@@ -50,7 +52,7 @@ export const Header = (props: BottomTabHeaderProps) => {
                     } as SelectMemberOption
                 });
                 selectMemberModalRef.current?.open({
-                    title: '選擇好友',
+                    title: t('Select friends'),
                     options,
                     callback: async (ops: SelectMemberOption[]) => {
                         // 跳轉到羣組創建再返回
@@ -62,59 +64,34 @@ export const Header = (props: BottomTabHeaderProps) => {
             },
         }
     ]
-    return <View style={{
+    return <View style={[$container, {
         marginTop: insets.top,
-        backgroundColor: $colors.background,
-        paddingHorizontal: s(16),
-        paddingVertical: s(16),
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-    }}>
-        <View style={{
-            flex: 1,
-            height: s(45),
-            flexDirection: 'row',
-            justifyContent: "flex-end",
-            alignItems: "center",
-        }}>
+        backgroundColor: $theme == "dark" ? $colors.slate950 : $colors.gray100,
+    }]}>
+        <View style={$buttonContainer}>
             <TouchableOpacity onPress={() => {
-                console.log(chatMenus);
                 menuModalRef.current?.open({
-                    items: chatMenus
+                    items: menus
                 })
             }} style={{
                 marginRight: s(16),
             }}>
-                <IconFont containerStyle={{
-                    width: s(32),
-                    height: s(32),
-                    borderRadius: s(10),
-                }} backgroundColor="#F0F2F5" name='plus' size={20} color="black" />
+                <IconFont containerStyle={$button} backgroundColor={$theme == "dark" ? $colors.slate800 : $colors.white} name='plus' size={20} color={$theme == "dark" ? $colors.white : $colors.slate900} />
             </TouchableOpacity>
             <TouchableOpacity onPress={() => {
-                console.log("qr scan")
                 scanModalRef.current?.open();
             }} style={{
                 marginRight: s(16)
             }}>
-                <IconFont containerStyle={{
-                    width: s(32),
-                    height: s(32),
-                    borderRadius: s(10),
-                }} backgroundColor="#F0F2F5" name='scan' size={20} color="black" />
+                <IconFont containerStyle={$button} backgroundColor={$theme == "dark" ? $colors.slate800 : $colors.white} name='scan' size={20} color={$theme == "dark" ? $colors.white : $colors.slate900} />
             </TouchableOpacity>
             <TouchableOpacity onPress={() => {
                 myBusinessCardModalRef.current?.open();
             }} >
-                <IconFont containerStyle={{
-                    width: s(32),
-                    height: s(32),
-                    borderRadius: s(10),
-                }} backgroundColor="#F0F2F5" name='qrcode' size={20} color="black" />
+                <IconFont containerStyle={$button} backgroundColor={$theme == "dark" ? $colors.slate800 : $colors.white} name='qrcode' size={20} color={$theme == "dark" ? $colors.white : $colors.slate900} />
             </TouchableOpacity>
         </View>
         <ScanModal onChange={(v) => {
-            console.log("scan result", v)
             scanService.scanQrcode(v)
             scanModalRef.current?.close();
         }} ref={scanModalRef} />
@@ -123,4 +100,22 @@ export const Header = (props: BottomTabHeaderProps) => {
         <MenuModal ref={menuModalRef} />
         <SelectMemberModal ref={selectMemberModalRef} />
     </View>
+}
+const $container: ViewStyle = {
+    paddingHorizontal: s(16),
+    paddingVertical: s(16),
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+}
+const $buttonContainer: ViewStyle = {
+    flex: 1,
+    height: s(45),
+    flexDirection: 'row',
+    justifyContent: "flex-end",
+    alignItems: "center",
+}
+const $button: ViewStyle = {
+    width: s(32),
+    height: s(32),
+    borderRadius: s(10),
 }
