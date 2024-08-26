@@ -3,20 +3,19 @@ import { EmptyComponent } from "app/components/EmptyComponent"
 import LoadingComponent from "app/components/Loading"
 import { s } from "app/utils/size"
 import { useState } from "react"
-import { StyleSheet, View } from "react-native"
-import { useRecoilValue } from "recoil"
+import { View, ViewStyle } from "react-native"
 import { navigate } from "app/navigators"
-import { ColorsState } from "app/stores/system"
 import { IUser } from "drizzle/schema"
 import ContractListItem from "app/components/ContractListItem"
-import chatService from "app/services/chat.service"
-import toast from "app/utils/toast"
 import fileService from "app/services/file.service"
 
 
+export interface FriendListViewProps {
+  contacts: IUser[]
+  theme: 'light' | 'dark'
+}
 
-const FriendListView = (props: { contacts: IUser[] }) => {
-  const themeColor = useRecoilValue(ColorsState)
+export const FriendListView = (props: FriendListViewProps) => {
   const [loading, setLoading] = useState<boolean>(false)
   const renderList = () => {
     return <View style={{
@@ -24,7 +23,7 @@ const FriendListView = (props: { contacts: IUser[] }) => {
       width: '100%',
       flexDirection: 'column',
     }}>
-      <ContractListItem onPress={() => {
+      <ContractListItem theme={props.theme} onPress={() => {
         navigate("FriendInviteRecordScreen")
       }} icon={require('assets/icons/friend-add.svg')} bottomLine={props.contacts.length > 1} title="新的好友" />
       <View style={{
@@ -49,7 +48,7 @@ const FriendListView = (props: { contacts: IUser[] }) => {
           estimatedItemSize={s(76)}
           data={props.contacts}
           renderItem={({ item, index }) => {
-            return <ContractListItem onPress={async () => {
+            return <ContractListItem theme={props.theme} onPress={async () => {
               navigate('UserChatScreen', {
                 chatId: item.chatId,
               })
@@ -64,20 +63,16 @@ const FriendListView = (props: { contacts: IUser[] }) => {
   }
 
   return <>
-    <View style={styles.container}>
+    <View style={$container}>
       {renderList()}
     </View>
   </>
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-  }
-})
-
-export default FriendListView
+const $container:ViewStyle = {
+  flex: 1,
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'center',
+}

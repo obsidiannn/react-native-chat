@@ -9,6 +9,7 @@ import { ViewStyle } from "react-native"
 import { RecoilRoot } from 'recoil';
 import { SocketProvider } from "app/components/socket"
 import 'react-native-url-polyfill/auto'
+import { View } from "react-native"
 
 export const NAVIGATION_PERSISTENCE_KEY = "Login"
 

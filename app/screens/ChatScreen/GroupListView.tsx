@@ -3,56 +3,36 @@ import { EmptyComponent } from "app/components/EmptyComponent"
 import LoadingComponent from "app/components/Loading"
 import { s } from "app/utils/size"
 import { useState } from "react"
-import { StyleSheet, Text, View, ActivityIndicator } from "react-native"
-import { useRecoilValue } from "recoil"
+import { View, ViewStyle } from "react-native"
 import { navigate } from "app/navigators"
 import { useTranslation } from "react-i18next"
-import { ColorsState } from "app/stores/system"
 import ContractListItem from "app/components/ContractListItem"
-import chatService from "app/services/chat.service"
-import toast from "app/utils/toast"
 import { GroupDetailItem } from "@repo/types"
 import fileService from "app/services/file.service"
 
 
-
-const GroupListView = (props: { groups: GroupDetailItem[] }) => {
-    const themeColor = useRecoilValue(ColorsState)
+export interface GroupListViewProps {
+    theme: 'light' | 'dark';
+    groups: GroupDetailItem[]
+}
+export const GroupListView = (props: GroupListViewProps) => {
     const [loading, setLoading] = useState<boolean>(false)
-    const { t } = useTranslation('screens')
-    const renderList = () => {
-        return <View style={{
-            flex: 1,
-            flexDirection: 'column',
-        }}>
-            <ContractListItem onPress={() => {
-                navigate("FriendInviteRecordScreen")
-            }} icon={require('assets/icons/group-add.svg')} title="群组等待验证" />
-            <View style={{
-                marginBottom: s(14)
-            }} />
-            {
-                renderState()
-            }
-        </View>
-    }
-
+    const { t } = useTranslation('default')
 
     const renderState = () => {
         if (loading) {
             return <LoadingComponent />
         } else {
-            return (!props.groups || props.groups.length <= 0) ? <EmptyComponent /> : (
+            return (props.groups.length <= 0) ? <EmptyComponent label={t('No group')} /> : (
                 <FlashList
-                    // ref={listRef}
                     showsVerticalScrollIndicator={false}
                     keyExtractor={(item) => "group" + item.id.toString()}
                     estimatedItemSize={s(76)}
                     data={props.groups}
-                    renderItem={({ item, index }) => {
+                    renderItem={({ item }) => {
                         return <ContractListItem
+                            theme={props.theme}
                             onPress={async () => {
-                                console.log('chatId', item.chatId);
                                 navigate('GroupChatScreen', {
                                     chatId: item.chatId
                                 })
@@ -67,20 +47,29 @@ const GroupListView = (props: { groups: GroupDetailItem[] }) => {
     }
 
     return <>
-        <View style={styles.container}>
-            {renderList()}
+        <View style={$container}>
+            <View style={{
+                flex: 1,
+                flexDirection: 'column',
+            }}>
+                <ContractListItem theme={props.theme} onPress={() => {
+                    navigate("FriendInviteRecordScreen")
+                }} icon={require('assets/icons/group-add.svg')} title={t('Group waiting verification')} />
+                <View style={{
+                    marginBottom: s(14)
+                }} />
+                {
+                    renderState()
+                }
+            </View>
         </View>
     </>
 }
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-    }
-})
-
-export default GroupListView
+const $container: ViewStyle = {
+    flex: 1,
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+}

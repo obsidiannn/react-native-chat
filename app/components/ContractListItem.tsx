@@ -1,6 +1,7 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native"
+import { StyleSheet, Text, TextStyle, TouchableOpacity, View, ViewStyle } from "react-native"
 import { Image } from "expo-image";
 import { s } from "app/utils/size";
+import { $colors } from "app/Colors";
 
 interface IContactListItemProps {
     icon: string | null;
@@ -10,9 +11,11 @@ interface IContactListItemProps {
     subTitle?: string | null;
     onPress?: () => void;
     bottomLine?: boolean;
+    theme: 'light' | 'dark';
 }
 export default (props: IContactListItemProps) => {
-    return <TouchableOpacity onPress={props.onPress} style={styles.container}>
+    const { theme } = props
+    return <TouchableOpacity onPress={props.onPress} style={$container}>
         <View style={styles.iconContainer}>
             <Image source={props.icon} style={styles.icon} />
             {
@@ -24,11 +27,16 @@ export default (props: IContactListItemProps) => {
         </View>
         <View style={{
             ...styles.rightContainer,
-            borderBottomColor: props.bottomLine ? '#f4f4f4' : 'white',
+            borderBottomColor: props.bottomLine ? $colors.slate400 : $colors.white,
         }}>
             <View style={styles.titleContainer}>
-                <Text style={styles.title}>{props.title}</Text>
-                <Text>{props.secondTitle }</Text>
+                <Text style={[
+                    $title,
+                    {
+                        color: theme === 'light' ? $colors.slate800 : $colors.white
+                    }
+                ]}>{props.title}</Text>
+                <Text>{props.secondTitle}</Text>
             </View>
             <View style={styles.subTitleContainer}>
                 <Text style={styles.subTitle}>{props.subTitle}</Text>
@@ -36,13 +44,17 @@ export default (props: IContactListItemProps) => {
         </View>
     </TouchableOpacity>
 }
-
+const $container:ViewStyle = {
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'row',
+};
+const $title:TextStyle = {
+    fontWeight: '400',
+    fontSize: 16,
+};
 const styles = StyleSheet.create({
-    container: {
-        width: '100%',
-        display: 'flex',
-        flexDirection: 'row',
-    },
+    
     iconContainer: {
         width: s(57),
         paddingVertical: s(14),
@@ -89,11 +101,7 @@ const styles = StyleSheet.create({
         display: 'flex',
         justifyContent: 'center'
     },
-    title: {
-        fontWeight: '400',
-        fontSize: 16,
-        color: '#000000',
-    },
+    
     subTitleContainer: {
         width: '40%',
         display: 'flex',

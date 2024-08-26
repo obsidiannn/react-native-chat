@@ -5,7 +5,7 @@ import {
 import { createNativeStackNavigator, NativeStackScreenProps } from "@react-navigation/native-stack";
 import messaging from '@react-native-firebase/messaging';
 import React, { useCallback, useContext, useEffect } from "react"
-import { AppState, Appearance, Linking, StatusBar } from "react-native"
+import { AppState, Appearance, Linking, StatusBar, View } from "react-native"
 import * as Screens from "app/screens"
 import Config from "../../config"
 import { navigate, navigationRef, useBackButtonHandler } from "./../navigationUtilities"

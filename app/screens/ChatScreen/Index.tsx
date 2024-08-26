@@ -2,15 +2,12 @@
 import { useEffect, useRef, useState } from "react";
 import PagerView from "react-native-pager-view";
 import { StyleSheet, View } from "react-native";
-import ChatView from "./Chats";
-import FriendView from "./Friends";
-import GroupView from "./GroupChats";
 import { colors } from "../../theme/colors";
 import { Button } from "app/components";
 import { s } from "app/utils/size";
 import { useTranslation } from "react-i18next";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { ColorsState } from "app/stores/system";
+import { ColorsState, ThemeState } from "app/stores/system";
 import { StackScreenProps } from "@react-navigation/stack";
 import chatService from "app/services/chat.service";
 import { App } from "types/app";
@@ -21,6 +18,10 @@ import { ChatChangeEvent, ChatDetailItem, FriendChangeEvent, GroupDetailItem } f
 import groupService from "app/services/group.service";
 import EventManager from 'app/services/event-manager.service'
 import { IModel } from "@repo/enums";
+import { $colors } from "app/Colors";
+import { ChatListView } from "./ChatListView";
+import { GroupListView } from "./GroupListView";
+import { FriendListView } from "./FriendListView";
 
 type Props = StackScreenProps<App.StackParamList, 'ChatScreen'>;
 export const ChatScreen = ({ navigation }: Props) => {
@@ -31,7 +32,7 @@ export const ChatScreen = ({ navigation }: Props) => {
     const [friends, setFriends] = useState<IUser[]>([])
     const [groups, setGroups] = useState<GroupDetailItem[]>([])
     const { t } = useTranslation('screens')
-
+    const $theme = useRecoilValue(ThemeState);
     const changeTab = (idx: number) => {
         pagerViewRef.current?.setPage(idx);
         dataRefresh(idx)
@@ -58,7 +59,6 @@ export const ChatScreen = ({ navigation }: Props) => {
                 return items.filter(i => i.id !== event.friendId)
             })
         } else {
-            // 新增好友的情况
             friendService.getOnlineList([event.friendId]).then(res => {
                 if (res.length > 0) {
                     const friend = res[0]
@@ -196,41 +196,38 @@ export const ChatScreen = ({ navigation }: Props) => {
         }
     }, [navigation])
 
-    return <View style={[styles.container, {
-        backgroundColor: themeColor.background
-    }]}>
-        {/* <BannerComponent label="邀请好友" describe="分享一个链接" onPress={() => {
-
-        }} /> */}
-
-        <View style={styles.topContainer} >
-            <Button label={t('chat.btn_recent')} onPress={() => changeTab(0)} containerStyle={btnStyle(0)}
-                // style={[styles.tabButton]}
-                textStyle={btnTextStyle(0)}
-            />
-            <Button label={t('chat.btn_group')} onPress={() => changeTab(1)} containerStyle={btnStyle(1)}
-                // style={[styles.tabButton, btnStyle(1)]}
-                textStyle={btnTextStyle(1)}
-            />
-            <Button label={t('chat.btn_contract')} onPress={() => changeTab(2)} containerStyle={btnStyle(2)}
-                // style={[styles.tabButton, btnStyle(2)]}
-                textStyle={btnTextStyle(2)}
-            />
+    return <View style={{
+        flex: 1,
+        backgroundColor: $colors.slate950,
+    }}>
+        <View style={[styles.container, {
+             backgroundColor: $theme == "dark" ? $colors.slate800 : $colors.gray100,
+            borderBottomEndRadius: s(20),
+            borderBottomStartRadius: s(20),
+            borderBottomWidth: 1,
+            overflow: 'hidden',
+        }]}>
+            <View style={styles.topContainer} >
+                <Button label={t('chat.btn_recent')} onPress={() => changeTab(0)} containerStyle={btnStyle(0)}
+                    textStyle={btnTextStyle(0)}
+                />
+                <Button label={t('chat.btn_group')} onPress={() => changeTab(1)} containerStyle={btnStyle(1)}
+                    textStyle={btnTextStyle(1)}
+                />
+                <Button label={t('chat.btn_contract')} onPress={() => changeTab(2)} containerStyle={btnStyle(2)}textStyle={btnTextStyle(2)}
+                />
+            </View>
+            <PagerView useNext={false} ref={pagerViewRef}
+                scrollEnabled={false}
+                style={{
+                    flex: 1,
+                    backgroundColor: $theme == 'dark' ? $colors.slate800 : $colors.white,
+                }} onPageSelected={(v) => setPageIndex(v.nativeEvent.position)} initialPage={pageIndex}>
+                <ChatListView theme={$theme} />
+                <GroupListView theme={$theme} groups={groups} />
+                <FriendListView theme={$theme} contacts={friends} />
+            </PagerView>
         </View>
-
-        <PagerView useNext={false} ref={pagerViewRef}
-            scrollEnabled={false}
-            style={{
-                flex: 1,
-                backgroundColor: '#ffffff'
-            }} onPageSelected={(v) => {
-                console.log('change page');
-                setPageIndex(v.nativeEvent.position);
-            }} initialPage={pageIndex}>
-            <ChatView />
-            <GroupView groups={groups} />
-            <FriendView contacts={friends} />
-        </PagerView>
     </View>
 }
 

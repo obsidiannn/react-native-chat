@@ -37,6 +37,9 @@ export default {
         'Favorites': '收藏夹',
         'Security': '安全',
         'Settings': '设置',
+        'No recent conversations':'最近没有会话',
+        'Group waiting verification':'群组等待验证',
+        'No group':'暂无群组'
     }
 
 }

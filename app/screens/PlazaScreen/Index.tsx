@@ -1,7 +1,7 @@
-import { Button, Screen } from "app/components"
-import { ColorsState } from "app/stores/system"
+import { Button } from "app/components"
+import { ColorsState, ThemeState } from "app/stores/system"
 
-import { StyleSheet, Text, View } from "react-native"
+import { StyleSheet, View } from "react-native"
 import { useRecoilValue } from "recoil"
 import { StackScreenProps } from "@react-navigation/stack"
 import { App } from "types/app"
@@ -11,11 +11,12 @@ import { colors } from "app/theme"
 import { useTranslation } from "react-i18next"
 import { s } from "app/utils/size"
 import BannerComponent from "app/components/Banner"
+import { $colors } from "app/Colors"
 type Props = StackScreenProps<App.StackParamList, 'PlazaScreen'>;
 export const PlazaScreen = ({ navigation }: Props) => {
-  const $colors = useRecoilValue(ColorsState);
   const pagerViewRef = useRef<PagerView>(null);
   const themeColor = useRecoilValue(ColorsState)
+  const $theme = useRecoilValue(ThemeState);
   const [pageIndex, setPageIndex] = useState(0);
   const { t } = useTranslation('screens')
 
@@ -67,39 +68,38 @@ export const PlazaScreen = ({ navigation }: Props) => {
   }
 
 
-  return <View style={[styles.container, {
-    backgroundColor: themeColor.background
+  return <View style={[{
+    flex: 1,
+    backgroundColor: $theme == "dark" ? $colors.slate950 : $colors.white,
   }]}>
-    <BannerComponent label="发现" describe="你最喜欢的社区" onPress={() => {
-      console.log('press');
+    <View style={[styles.container, {
+      backgroundColor: $theme == "dark" ? $colors.slate800 : $colors.gray100,
+      borderBottomEndRadius: s(20),
+      borderBottomStartRadius: s(20),
+      borderBottomWidth: 1,
+      overflow: 'hidden',
+    }]}>
 
-      navigation.navigate('DiscoverScreen')
-    }} />
-    <View style={styles.topContainer}>
-      <Button label={t('chat.btn_recent')} onPress={() => changeTab(0)}
-        containerStyle={{...styles.tabButton, ...btnStyle(0)}}
-        textStyle={btnTextStyle(0)}
-      />
-      <Button label={t('chat.btn_group')} onPress={() => changeTab(1)}
-        containerStyle={{...styles.tabButton, ...btnStyle(1)}}
-        textStyle={btnTextStyle(1)}
-      />
-      <Button label={t('chat.btn_contract')} onPress={() => changeTab(2)}
-        containerStyle={{...styles.tabButton, ...btnStyle(2)}}
-        textStyle={btnTextStyle(2)}
-      />
+      <BannerComponent label="发现" describe="你最喜欢的社区" onPress={() => {
+        console.log('press');
+
+        navigation.navigate('DiscoverScreen')
+      }} />
+      <View style={styles.topContainer}>
+        <Button label={t('chat.btn_recent')} onPress={() => changeTab(0)}
+          containerStyle={{ ...styles.tabButton, ...btnStyle(0) }}
+          textStyle={btnTextStyle(0)}
+        />
+        <Button label={t('chat.btn_group')} onPress={() => changeTab(1)}
+          containerStyle={{ ...styles.tabButton, ...btnStyle(1) }}
+          textStyle={btnTextStyle(1)}
+        />
+        <Button label={t('chat.btn_contract')} onPress={() => changeTab(2)}
+          containerStyle={{ ...styles.tabButton, ...btnStyle(2) }}
+          textStyle={btnTextStyle(2)}
+        />
+      </View>
     </View>
-    <PagerView ref={pagerViewRef}
-      scrollEnabled={false}
-      style={{
-        flex: 1,
-        backgroundColor: '#ffffff'
-      }} onPageSelected={(v) => {
-        console.log('change page');
-        setPageIndex(v.nativeEvent.position);
-      }} initialPage={pageIndex}>
-
-    </PagerView>
   </View>
 }
 
