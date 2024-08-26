@@ -50,6 +50,13 @@
       "when": 1724252018768,
       "tag": "0006_powerful_madripoor",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "6",
+      "when": 1724513961801,
+      "tag": "0007_ambitious_vulcan",
+      "breakpoints": true
     }
   ]
 }

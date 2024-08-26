@@ -49,9 +49,6 @@ const decodeInterceptor = async (wallet: Wallet, rep: AxiosResponse<any, any>): 
 
 export const createInstance = (en = true) => {
   const baseURL = SystemService.GetApiUrlByCache();
-  //const baseURL = 'http://192.168.0.102:5001'
-
-  const startTime = new Date().valueOf()
   const instance: AxiosInstance = axios.create({
     baseURL,
     withCredentials: false,
@@ -76,6 +73,8 @@ export const createInstance = (en = true) => {
     return await decodeInterceptor(wallet, rep);
   }, (err) => {
     if (axios.isAxiosError(err)) {
+      console.log('axios error: ',err);
+      
       if (!err.response) {
         // toast('網絡錯誤,請稍後重試!');
       } else {

@@ -1,5 +1,5 @@
 import { GetDB } from "app/utils/database";
-import { and, inArray } from "drizzle-orm";
+import { and, inArray, like } from "drizzle-orm";
 import { IMessage, messages } from "drizzle/schema";
 
 export interface IGetListParamType {
@@ -32,6 +32,21 @@ export class LocalMessageService {
             ),
             orderBy: (messages, { desc }) => desc(messages.sequence),
             limit: limit,
+        })
+        return results.sort((a, b) => (b.sequence ?? 1) - (a.sequence ?? 1))
+    }
+
+    static async queryList(chatId: string, type: string, keyword: string,): Promise<IMessage[]> {
+        const db = GetDB()
+        const results = await db.query.messages.findMany({
+            where: (messages, { eq, and }) => and(
+                eq(messages.chatId, chatId),
+                (type === 'text' ? like(messages.data, '%' + keyword + '%') :
+                    undefined
+                ),
+                eq(messages.dataType, type)
+            ),
+            orderBy: (messages, { desc }) => desc(messages.sequence),
         })
         return results.sort((a, b) => (b.sequence ?? 1) - (a.sequence ?? 1))
     }

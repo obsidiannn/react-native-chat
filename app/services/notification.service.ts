@@ -2,14 +2,17 @@ import messaging, { FirebaseMessagingTypes } from '@react-native-firebase/messag
 import notifee, { EventType, AndroidImportance, AndroidVisibility } from '@notifee/react-native';
 import { requestNotificationPermission } from 'app/utils/permissions'
 import { AppState, Platform } from 'react-native';
-import { IModel } from '@repo/enums';
-import chatService from './chat.service';
 import firebaseTokenApi from 'app/api/notify/firebase-token';
 const channelId = 'com.tdchat.default'
 
 export const initNotification = async () => {
-  await initService()
-  await subscribe()
+  try {
+    await initService()
+    await subscribe()
+  } catch (error) {
+
+  }
+
 }
 
 const initService = async () => {

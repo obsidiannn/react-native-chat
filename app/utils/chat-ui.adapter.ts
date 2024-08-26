@@ -189,6 +189,7 @@ const messageDto2Entity = (m: MessageType.Any): IMessage => {
         uidType: m.metadata?.uidType ?? IModel.IChat.MessageUserType.DEFAULT,
         state: m.status === 'error' ? IModel.IChat.IMessageStatusEnum.DELETED : IModel.IChat.IMessageStatusEnum.NORMAL,
         data: convertPartialContent(m as MessageType.PartialAny),
+        dataType: m.type,
         extra: JSON.stringify(extra),
         replyId: m.metadata?.replyId ?? null
     }
@@ -316,33 +317,14 @@ const string2Dto = (value: string): MessageType.Any | null => {
         const data = JSON.parse(JSON.stringify(value))
         switch (data.type) {
             case 'text':
-                message = {
-                    ...data
-                } as MessageType.Text
-                break
             case 'image':
-                message = {
-                    ...data
-                } as MessageType.Image
-                break
             case 'video':
-                // const videoData: MessageType.PartialVideo = data as MessageType.PartialVideo
-                message = {
-                    ...data
-                } as MessageType.Video
-                break
             case 'file':
-                // const fileData: MessageType.PartialFile = data as MessageType.PartialFile
-                message = {
-                    ...data
-                } as MessageType.File
-                break
             case 'userCard':
-                // const fileData: MessageType.PartialFile = data as MessageType.PartialFile
                 message = {
                     ...data
-                } as MessageType.UserCard
-                break
+                } as MessageType.Any
+              break
             default:
                 message = {
                     ...data
@@ -365,17 +347,9 @@ const messageTypeCodeConvert = (type: string): number => {
     let code = IModel.IChat.IMessageTypeEnum.NORMAL
     switch (type) {
         case 'image':
-            code = IModel.IChat.IMessageTypeEnum.NORMAL
-            break
         case 'text':
-            code = IModel.IChat.IMessageTypeEnum.NORMAL
-            break
         case 'video':
-            code = IModel.IChat.IMessageTypeEnum.NORMAL
-            break
         case 'file':
-            code = IModel.IChat.IMessageTypeEnum.NORMAL
-            break
         case 'userCard':
             code = IModel.IChat.IMessageTypeEnum.NORMAL
             break
@@ -440,7 +414,7 @@ const convertPartialContent = (m: MessageType.PartialAny): string => {
     return partial === null ? '{}' : JSON.stringify(partial)
 }
 
-
+// 转为收藏所需的字符串格式
 const convertPartialContentForCollect = (m: MessageType.Any): string => {
     const r = {
         ...m,
@@ -460,19 +434,11 @@ const convertPartialItem = (value: string): MessageType.PartialAny | null => {
     const t = _data.type;
     switch (t) {
         case 'text':
-            message = _data as MessageType.PartialText
-            break
         case 'image':
-            message = _data as MessageType.PartialImage
-            break
         case 'video':
-            message = _data as MessageType.PartialVideo
-            break
         case 'file':
-            message = _data as MessageType.PartialFile
-            break
         case 'userCard':
-            message = _data as MessageType.PartialUserCard
+            message = _data as MessageType.PartialAny
             break
         default:
             break
