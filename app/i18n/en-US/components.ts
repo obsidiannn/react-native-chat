@@ -6,5 +6,9 @@ export default {
         inputPlaceholder: 'Message',
         sendButtonAccessibilityLabel: 'Send',
         btnDownload: 'Download'
+    },
+    confirmModal: {
+        'confirm': "确认",
+        'cancel': "取消",
     }
 }

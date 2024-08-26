@@ -1,14 +1,4 @@
 export default {
-    welcome: {
-        title: "嗨，歡迎使用",
-        signIn: "登 录",
-        signUp: "注册 bobo 账号",
-        agree: "我已阅读并同意",
-        agreement_privacy: "隐私政策",
-        agreement_user: "可接受条款",
-        confirm_title:'确认阅读并同意相关协议',
-        confirm_content:'确认阅读并同意相关协议',
-    },
     chat: {
         btn_send: "发送",
         btn_bother_ignore: "消息免打扰",
@@ -199,6 +189,6 @@ export default {
         paragraph_username_1: "您的昵称将对与您选择了相同语言的用户可见，您今年还有3次机会修改;C2C 认证商家和钻石商家不能修改昵称",
         paragraph_username_2: "我们会审核您提交的昵称，过程需要一定时间，请耐心等待",
         paragraph_username_3: "创建昵称时，请勿使用不雅用词、欧易官方名称 (即产品名称)和其他交易平台上的名称",
-    }
+    },
 
 }

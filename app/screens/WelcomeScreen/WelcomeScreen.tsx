@@ -18,14 +18,14 @@ export const WelcomeScreen = ({ navigation }: Props) => {
   const $theme = useRecoilValue(ThemeState)
   const [protocolStatus, setProtocolStatus] = useState(false)
   const confirmModalRef = useRef<ConfirmModalType>();
-  const { t } = useTranslation("screens");
+  const { t } = useTranslation('default');
   const protocols = [
     {
-      name: 'agreement_privacy',
+      name: 'Privacy Policy',
       url: 'https://pages.ducloud.buzz/#/user-agreement'
     },
     {
-      name: 'agreement_user',
+      name: 'Acceptable Terms',
       url: 'https://pages.ducloud.buzz/#/privacy-policy'
     },
   ];
@@ -35,37 +35,37 @@ export const WelcomeScreen = ({ navigation }: Props) => {
     <FullScreen theme={$theme}>
       <Text style={[$titleText, {
         color: $theme == "dark" ? $colors.white : $colors.black
-      }]}>{t('welcome.title')}</Text>
+      }]}>{t('Hi, welcome to use')}</Text>
       <Image style={$bg} source={require("assets/images/welcomeBg.webp")} cachePolicy="disk" />
       <View style={[$buttonContainer]}>
-        <Button theme={$theme} fullRounded onPress={() => navigation.navigate("UnlockScreen")} fullWidth size="large" label={t("welcome.signIn")} type="primary" />
+        <Button theme={$theme} fullRounded onPress={() => navigation.navigate("UnlockScreen")} fullWidth size="large" label={t("sign In")} type="primary" />
         <Button containerStyle={{
           marginTop: s(20)
         }} theme={$theme} onPress={() => {
           if (!protocolStatus) {
             confirmModalRef.current?.open({
-              title: t('welcome.confirm_title'),
-              content: t('welcome.confirm_content'),
+              title: t('Confirm that you have read and agreed to the relevant agreements.'),
+              content: t('Confirm that you have read and agreed to the relevant agreements.'),
               onSubmit: () => navigation.navigate("SignUpScreen")
             });
             return;
           }
           navigation.navigate("SignUpScreen")
-        }} fullWidth fullRounded label={t("welcome.signUp")} size="large" type="secondary" />
+        }} fullWidth fullRounded label={t("Register bobo account")} size="large" type="secondary" />
 
         <View style={$checkboxContainer}>
           <Checkbox onChange={() => setProtocolStatus(!protocolStatus)} checked={protocolStatus} />
           <Pressable onPress={() => setProtocolStatus(!protocolStatus)}>
-            <Text style={[$checkboxText, { color: $theme == "dark" ? $colors.slate200 : $colors.slate400 }]}>{t("welcome.agree")}</Text>
+            <Text style={[$checkboxText, { color: $theme == "dark" ? $colors.slate200 : $colors.slate400 }]}>{t("I have read and agreed.")}</Text>
           </Pressable>
           {protocols.map((protocol) => {
             return <Pressable key={protocol.name} onPress={() => {
               navigation.push("WebViewScreen", {
-                title: t("welcome." + protocol.name),
+                title: t(protocol.name),
                 url: protocol.url
               })
             }}>
-              <Text style={[$checkboxText, { color: $theme == "dark" ? $colors.slate400 : $colors.slate700 }]}>{t("welcome." + protocol.name)}</Text>
+              <Text style={[$checkboxText, { color: $theme == "dark" ? $colors.slate400 : $colors.slate700 }]}>{t(protocol.name)}</Text>
             </Pressable>
           })}
         </View>
@@ -86,7 +86,6 @@ const $bg: ImageStyle = {
   height: s(365),
 }
 const $buttonContainer: ViewStyle = {
-  width: s(343),
   marginHorizontal: s(16),
   flex: 1,
   marginTop: s(20),
@@ -98,6 +97,7 @@ const $checkboxContainer: ViewStyle = {
   flexDirection: 'row',
   alignItems: 'center',
   justifyContent: 'center',
+  flexWrap: 'wrap'
 }
 const $checkboxText: TextStyle = {
   fontSize: 14,

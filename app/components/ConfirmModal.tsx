@@ -3,6 +3,7 @@ import { Modal, Text, TextStyle, View, ViewStyle } from "react-native";
 import { s } from "app/utils/size";
 import { Button, Card } from "app/components";
 import { $colors } from "app/Colors";
+import { useTranslation } from "react-i18next";
 export interface ConfirmModalOption {
   title: string;
   content: string;
@@ -32,6 +33,7 @@ export const ConfirmModal = forwardRef((props: {
     },
     close: async () => setVisible(false)
   }));
+  const {t} = useTranslation('default');
   return (
     <Modal transparent={true} style={{ flex: 1 }} visible={visible} animationType="slide" >
       <View style={$container}>
@@ -46,10 +48,10 @@ export const ConfirmModal = forwardRef((props: {
               setVisible(false);
             }} containerStyle={{
               marginTop: s(15)
-            }} fullRounded size="large" label="确认" />
+            }} fullRounded size="large" label={t("Confirm")} />
             <Button theme={theme} onPress={() => setVisible(false)} containerStyle={{
               marginVertical: s(15)
-            }} fullRounded type="secondary" size="large" label="取消" />
+            }} fullRounded type="secondary" size="large" label={t("Cancel")} />
           </View>
         </Card>
       </View>

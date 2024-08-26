@@ -15,6 +15,7 @@ import { App } from "types/app"
 import { $colors } from "app/Colors"
 import { Button } from "app/components"
 import { ScreenX } from "app/components/ScreenX";
+import { useTranslation } from "react-i18next";
 type Props = NativeStackScreenProps<App.StackParamList, 'SignUpScreen'>;
 
 
@@ -26,7 +27,8 @@ export const SignUpScreen = ({ navigation }: Props) => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const setAuthWallet = useSetRecoilState(AuthWallet)
   const setAuthUser = useSetRecoilState(AuthUser)
-  return <ScreenX title="注册" theme={$theme}>
+  const {t} = useTranslation('default')
+  return <ScreenX title={t('Sign up')} theme={$theme}>
     <View style={{
       flex: 1,
     }}>
@@ -39,7 +41,7 @@ export const SignUpScreen = ({ navigation }: Props) => {
           color: $theme == "dark" ? $colors.slate200 : $colors.black,
           fontSize: 16,
           fontWeight: "400"
-        }}>设置安全密码</Text>
+        }}>{t('Set a secure password')}</Text>
       </View>
       <View style={{
         width: s(343),
@@ -48,7 +50,7 @@ export const SignUpScreen = ({ navigation }: Props) => {
         height: s(48),
         marginHorizontal: s(16),
       }}>
-        <PasswordInput theme={$theme} value={password} onChangeText={(v) => setPassword(v)} placeholder="请输入密码" />
+        <PasswordInput theme={$theme} value={password} onChangeText={(v) => setPassword(v)} placeholder={t('Please set a secure password')} />
       </View>
       <View style={{
         width: s(343),
@@ -57,7 +59,7 @@ export const SignUpScreen = ({ navigation }: Props) => {
         height: s(48),
         marginHorizontal: s(16),
       }}>
-        <PasswordInput theme={$theme} value={confirmPassword} onChangeText={v => setConfirmPassword(v)} placeholder="请再次确认密码" />
+        <PasswordInput theme={$theme} value={confirmPassword} onChangeText={v => setConfirmPassword(v)} placeholder={t('Please confirm the secure password again')} />
       </View>
       <View style={{
         width: s(343),
@@ -70,7 +72,7 @@ export const SignUpScreen = ({ navigation }: Props) => {
         <Text style={{
           fontSize: 14,
           color: $theme == "dark" ? $colors.gray400 : $colors.gray400,
-        }}>请设置安全密码，安全密码将用户保护你在本地的私钥</Text>
+        }}>{t('Please set a secure password to protect your private key')}</Text>
       </View>
       <View style={{
         width: "100%",
@@ -79,15 +81,15 @@ export const SignUpScreen = ({ navigation }: Props) => {
       }}>
         <Button fullWidth fullRounded theme={$theme} size="large" loading={loading} onPress={async () => {
           if (!password) {
-            alert("密码不能为空");
+            alert(t('The password cannot be empty'));
             return;
           }
           if (password.length < 8) {
-            alert("密码不能低于8位");
+            alert(t('The password must be at least 8 characters long'));
             return;
           }
           if (password !== confirmPassword) {
-            alert("两次密码不一致");
+            alert(t('The passwords do not match'));
             return;
           }
           setLoading(true);
@@ -112,7 +114,7 @@ export const SignUpScreen = ({ navigation }: Props) => {
             console.log()
             setLoading(false);
           })
-        }} label="创建" type="primary" />
+        }} label={t('Submit')} type="primary" />
       </View>
     </View>
   </ScreenX>

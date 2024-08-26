@@ -6,5 +6,5 @@ export default {
         agree: "我已阅读并同意",
         agreement_privacy: "隐私政策",
         agreement_user: "可接受条款"
-    }
+    },
 }
