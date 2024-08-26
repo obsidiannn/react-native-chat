@@ -1,11 +1,8 @@
-import Navbar from "app/components/Navbar";
-import { ColorsState } from "app/stores/system";
 import { forwardRef, useEffect, useImperativeHandle, useState } from "react"
 import { Modal, View, ViewStyle } from "react-native"
 import { Gesture, GestureDetector, GestureStateChangeEvent, PanGestureHandlerEventPayload, gestureHandlerRootHOC } from "react-native-gesture-handler";
 import { runOnJS } from "react-native-reanimated";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useRecoilValue } from "recoil";
+import { ScreenX } from "./ScreenX";
 export interface ScreenModalType {
     open: () => void;
     close: () => void;
@@ -19,10 +16,9 @@ export const ScreenModal = forwardRef((props: {
     style?: ViewStyle;
     title?: string
     children?: React.ReactNode;
+    theme: "light" | "dark";
 }, ref) => {
     const [visible, setVisible] = useState(false);
-    const insets = useSafeAreaInsets();
-    const $colors = useRecoilValue(ColorsState);
     const onSwipeEnd = (event: GestureStateChangeEvent<PanGestureHandlerEventPayload>) => {
         if (event.translationX > 0) {
             console.log("swipe end");
@@ -40,19 +36,9 @@ export const ScreenModal = forwardRef((props: {
         <Modal transparent={false} style={{ flex: 1 }} visible={visible} animationType="slide">
             <WithHoc>
                 <GestureDetector gesture={gesture}>
-                    <View style={[
-                        {
-                            paddingTop: insets.top,
-                            flex: 1,
-                            backgroundColor: $colors.secondaryBackground,
-                        },
-                        props.style
-                    ]}>
-                        <Navbar onLeftPress={() => setVisible(false)} />
-                        <>
-                            {props.children}
-                        </>
-                    </View>
+                    <ScreenX theme={props.theme} title={props.title ?? ''} onLeftPress={() => setVisible(false)} >
+                        {props.children}
+                    </ScreenX>
                 </GestureDetector>
             </WithHoc>
         </Modal>

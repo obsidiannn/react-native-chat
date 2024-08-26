@@ -18,14 +18,15 @@ export interface UpdateNickNameModalRef {
     ) => void;
 
 }
-export const UpdateNickNameModal = forwardRef((_, ref) => {
+export const UpdateNickNameModal = forwardRef((props:{
+    theme: 'light' | 'dark'
+}, ref) => {
     const maxLength = 150
     const { t } = useTranslation('screens')
     const [loading, setLoading] = useState<boolean>(false)
     const onFinishRef = useRef<(v: string) => void>()
     const screenModalRef = useRef<ScreenModalType>(null);
     const themeColor = useRecoilValue(ColorsState)
-    const $theme = useRecoilValue(ThemeState)
     const [val, setVal] = useState('')
     const onClose = () => {
         setVal('')
@@ -46,7 +47,7 @@ export const UpdateNickNameModal = forwardRef((_, ref) => {
         },
     }));
 
-    return <ScreenModal ref={screenModalRef} title="更新昵称" >
+    return <ScreenModal theme={props.theme} ref={screenModalRef} title="更新昵称" >
         <>
             <View style={{
                 display: 'flex',
@@ -154,13 +155,9 @@ export const UpdateNickNameModal = forwardRef((_, ref) => {
             <Button
                 size="large"
                 label={t('common.btn_submit')}
-                textStyle={styles.nextButtonLabel}
-                containerStyle={{
-                    backgroundColor: themeColor.primary,
-                    borderRadius: s(12),
-                    marginBottom: s(14),
-                    marginHorizontal: s(12),
-                }}
+                theme={props.theme}
+                fullRounded
+                type="primary"
                 onPress={async () => {
                     if (loading) {
                         return;

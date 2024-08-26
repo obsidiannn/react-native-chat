@@ -1,23 +1,22 @@
 import { Text, View, ViewStyle } from "react-native";
-import BlockButton from "../BlockButton";
-import { useRecoilValue } from "recoil";
-import { ColorsState } from "app/stores/system";
 import { s } from "app/utils/size";
+import { Button } from "../Button";
+import { useTranslation } from "react-i18next";
+import { $colors } from "app/Colors";
 export interface CameraPermissionViewProps {
     requestPermission: () => void
+    theme: 'light' | 'dark'
 }
 export const CameraPermissionView = (props: CameraPermissionViewProps) => {
-    const $colors = useRecoilValue(ColorsState);
+    const {t} = useTranslation('default');
     return <View style={$container}>
         <View style={$buttonContainer}>
-            <BlockButton onPress={() => {
+            <Button fullRounded theme={props.theme} onPress={() => {
                 console.log("requestPermission")
                 props.requestPermission()
-            }} type="primary" label="请求相机权限" />
+            }} type="primary" label={t('Request camera permission')} />
         </View>
-        <Text style={[$tipsText, {
-            color: $colors.text
-        }]}>我们需要您打开相机权限</Text>
+        <Text style={[$tipsText]}>{t('We need to open the camera permission')}</Text>
     </View>
 }
 const $container: ViewStyle = {
@@ -32,4 +31,5 @@ const $buttonContainer: ViewStyle = {
 }
 const $tipsText = {
     marginTop: s(20),
+    color: $colors.slate400
 }

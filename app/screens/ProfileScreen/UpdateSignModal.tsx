@@ -2,7 +2,7 @@
 import { Button } from "app/components"; 
 import { ScreenModal, ScreenModalType } from "app/components/ScreenModal";
 import { AuthService } from "app/services/auth.service";
-import { ColorsState, ThemeState } from "app/stores/system"
+import { ColorsState } from "app/stores/system"
 import { s, verticalScale } from "app/utils/size";
 import { forwardRef, useImperativeHandle, useRef, useState } from "react"
 import { useTranslation } from "react-i18next";
@@ -18,14 +18,15 @@ export interface UpdateSignModalRef {
     ) => void;
 }
 
-export const UpdateSignModal = forwardRef((_, ref) => {
+export const UpdateSignModal = forwardRef((props: {
+    theme: 'light' | 'dark'
+}, ref) => {
     const maxLength = 150
     const { t } = useTranslation('screens')
     const [val, setVal] = useState('')
     const [loading, setLoading] = useState<boolean>(false)
     const onFinishRef = useRef<(v: string) => void>()
     const themeColor = useRecoilValue(ColorsState)
-    const $theme = useRecoilValue(ThemeState)
     const screenModalRef = useRef<ScreenModalType>(null);
 
     const onClose = () => {
@@ -45,17 +46,8 @@ export const UpdateSignModal = forwardRef((_, ref) => {
         },
     }));
 
-    return <ScreenModal ref={screenModalRef} title={t('profile.title_sign')}>
-        <View style={{
-            flex: 1,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            padding: s(20),
-            borderTopEndRadius: s(24),
-            borderTopStartRadius: s(24),
-            backgroundColor: themeColor.background
-        }}>
+    return <ScreenModal theme={props.theme} ref={screenModalRef} title={t('profile.title_sign')}>
+
             <View style={{
                 flex: 1,
                 width: '100%',
@@ -67,7 +59,6 @@ export const UpdateSignModal = forwardRef((_, ref) => {
                     numberOfLines={6}
                     textAlignVertical="top"
                     multiline
-
                     cursorColor={themeColor.text}
                     placeholder={t('profile.placeholder_sign')}
                     placeholderTextColor={themeColor.border}
@@ -147,14 +138,12 @@ export const UpdateSignModal = forwardRef((_, ref) => {
 
                 </View>
             </View>
-
             <Button
+                fullRounded
+                fullWidth
                 size="large"
-                containerStyle={{
-                    ...styles.nextButton,
-                    backgroundColor: themeColor.primary,
-                    marginBottom: s(14),
-                }}
+                type="primary"
+                theme={props.theme}
                 onPress={async () => {
                     if (loading) {
                         return;
@@ -173,11 +162,8 @@ export const UpdateSignModal = forwardRef((_, ref) => {
                         })
                 }}
                 label={t('common.btn_submit')}
-                textStyle={styles.nextButtonLabel}
             >
             </Button>
-
-        </View>
     </ScreenModal>
 })
 
@@ -185,16 +171,5 @@ export const UpdateSignModal = forwardRef((_, ref) => {
 const styles = StyleSheet.create({
     paragraph: {
         fontSize: s(14)
-    },
-    nextButton: {
-        height: s(50),
-        width: '100%',
-        marginTop: s(64),
-        borderRadius: s(16),
-    },
-    nextButtonLabel: {
-        color: 'white',
-        fontSize: 16,
-        fontWeight: '700',
     },
 })

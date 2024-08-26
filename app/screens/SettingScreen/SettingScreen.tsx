@@ -2,9 +2,7 @@ import { ColorsState, ThemeState } from "app/stores/system"
 
 import { Text, View } from "react-native"
 import { useRecoilValue } from "recoil"
-import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { s } from "app/utils/size"
-import Navbar from "app/components/Navbar"
 import { CardMenu } from "app/components/CardMenu/CardMenu"
 import { ConfirmModal, ConfirmModalType } from "app/components/ConfirmModal"
 import { useRef } from "react"
@@ -17,32 +15,21 @@ import { UpgradeModal, UpgradeModalType } from "./UpgradeModal"
 import * as Application from 'expo-application';
 import { IconFont } from "app/components/IconFont/IconFont"
 import { colors } from "app/theme"
+import { ScreenX } from "app/components/ScreenX"
 type Props = StackScreenProps<App.StackParamList, 'SettingScreen'>;
 export const SettingScreen = ({ navigation }: Props) => {
-    const insets = useSafeAreaInsets();
     const $colors = useRecoilValue(ColorsState);
     const $theme = useRecoilValue(ThemeState);
     const confirmModalRef = useRef<ConfirmModalType>(null);
     const langModalRef = useRef<LangModalType>(null);
     const upgradeModalRef = useRef<UpgradeModalType>(null);
     const version = Application.nativeApplicationVersion;
-    return <View style={{
-        flex: 1,
-        paddingTop: insets.top,
-        backgroundColor: $colors.secondaryBackground,
-    }}>
-        <Navbar title="设置" />
+    return <ScreenX theme={$theme} title="设置">
         <View style={{
-            flex: 1,
-            marginTop: s(30),
-            backgroundColor: "white",
-            width: s(375),
-            borderTopRightRadius: s(32),
-            borderTopLeftRadius: s(32),
-            paddingHorizontal: s(16),
-            paddingTop: s(30)
+            paddingHorizontal: s(15),
+            paddingTop:s(20)
         }}>
-            <CardMenu items={[
+            <CardMenu theme={$theme} items={[
                 {
                     icon: <IconFont name="about" color={$colors.text} size={24} />,
                     title: "关于我们",
@@ -89,7 +76,7 @@ export const SettingScreen = ({ navigation }: Props) => {
                         <IconFont name="arrowRight" color={$colors.border} size={14} />
                     </View>
                 },
-                
+
                 {
                     icon: <IconFont name="doc" color={$colors.text} size={24} />,
                     title: "系统反馈",
@@ -117,7 +104,7 @@ export const SettingScreen = ({ navigation }: Props) => {
                     </View>
                 },
             ]} />
-            <CardMenu style={{
+            <CardMenu theme={$theme} style={{
                 marginTop: s(20),
             }} items={[
                 {
@@ -125,7 +112,7 @@ export const SettingScreen = ({ navigation }: Props) => {
                     title: "注销账号",
                     onPress: () => {
                         confirmModalRef.current?.open({
-                            desc: "是否注销账号？",
+                            content: "是否注销账号？",
                             title: "注销账号",
                             onCancel: () => { },
                             onSubmit: () => {
@@ -166,8 +153,8 @@ export const SettingScreen = ({ navigation }: Props) => {
                 },
             ]} />
         </View>
-        <ConfirmModal ref={confirmModalRef} />
-        <LangModal ref={langModalRef} />
-        <UpgradeModal ref={upgradeModalRef} />
-    </View>
+        <ConfirmModal theme={$theme} ref={confirmModalRef} />
+        <LangModal theme={$theme} ref={langModalRef} />
+        <UpgradeModal theme={$theme} ref={upgradeModalRef} />
+    </ScreenX>
 }

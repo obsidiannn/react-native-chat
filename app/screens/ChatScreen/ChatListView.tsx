@@ -16,7 +16,7 @@ import { useTranslation } from "react-i18next"
 export interface ChatViewProps {
     theme: 'light' | 'dark'
 }
-export const ChatListView = (_: ChatViewProps) => {
+export const ChatListView = (props: ChatViewProps) => {
     const {t} = useTranslation('default')
     const chats = useRecoilValue(ChatsStore)
 
@@ -62,6 +62,7 @@ export const ChatListView = (_: ChatViewProps) => {
         const unread = item.lastSequence - item.lastReadSequence
         const online = getOnlineStatus(item)
         return <ConversationItem
+            theme={props.theme}
             key={item.id}
             badgeNumber={unread}
             bottomLine={!isLast}

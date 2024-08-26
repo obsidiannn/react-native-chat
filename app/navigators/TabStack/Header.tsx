@@ -1,4 +1,4 @@
-import { TouchableOpacity, View, ViewStyle } from 'react-native';
+import { StatusBar, TouchableOpacity, View, ViewStyle } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ThemeState } from 'app/stores/system';
 import { useRecoilValue } from 'recoil';
@@ -67,6 +67,7 @@ export const Header = (props: BottomTabHeaderProps) => {
         marginTop: insets.top,
         backgroundColor: $theme == "dark" ? $colors.slate800 : $colors.gray100,
     }]}>
+        <StatusBar barStyle={$theme == "dark" ? 'light-content' : 'dark-content'}/>
         <View style={$buttonContainer}>
             <TouchableOpacity onPress={() => {
                 menuModalRef.current?.open({
@@ -90,11 +91,11 @@ export const Header = (props: BottomTabHeaderProps) => {
                 <IconFont containerStyle={$button} backgroundColor={$theme == "dark" ? $colors.slate700 : $colors.white} name='qrcode' size={20} color={$theme == "dark" ? $colors.white : $colors.slate900} />
             </TouchableOpacity>
         </View>
-        <ScanModal onChange={(v) => {
+        <ScanModal theme={$theme} onChange={(v) => {
             scanService.scanQrcode(v)
             scanModalRef.current?.close();
         }} ref={scanModalRef} />
-        <MyBusinessCardModal ref={myBusinessCardModalRef} />
+        <MyBusinessCardModal theme={$theme} ref={myBusinessCardModalRef} />
         <SettingCenterModal ref={settingCenterModalRef} />
         <MenuModal theme={$theme} ref={menuModalRef} />
         <SelectMemberModal ref={selectMemberModalRef} />

@@ -22,11 +22,10 @@ export interface UpdateGenderModalRef {
 
 }
 
-export const UpdateGenderModal = forwardRef((_, ref) => {
+export const UpdateGenderModal = forwardRef((props: {
+    theme: 'light' | 'dark'
+}, ref) => {
     const { t } = useTranslation('screens')
-
-
-    const $theme = useRecoilValue(ThemeState);
 
     const themeColor = useRecoilValue(ColorsState)
     const [val, setVal] = useState<number>(IModel.IUser.Gender.UNKNOWN)
@@ -110,7 +109,7 @@ export const UpdateGenderModal = forwardRef((_, ref) => {
     const genderChoose = (chooseVal: number) => {
         setVal(chooseVal)
     }
-    return <ScreenModal ref={screenModalRef} title={t('profile.title_choose_gender')} >
+    return <ScreenModal theme={props.theme} ref={screenModalRef} title={t('profile.title_choose_gender')} >
         <View
             style={{
                 flex: 1,
@@ -128,12 +127,10 @@ export const UpdateGenderModal = forwardRef((_, ref) => {
                 {renderFemale()}
             </View>
             <Button
+                theme={props.theme}
                 size="large"
-                containerStyle={{
-                    backgroundColor: themeColor.primary,
-                    marginBottom: s(14),
-                    borderRadius: s(12)
-                }}
+                fullRounded
+                type="primary"
                 onPress={async () => {
                     if (loading) {
                         return;
@@ -149,10 +146,6 @@ export const UpdateGenderModal = forwardRef((_, ref) => {
                         })
                 }}
                 label={t('common.btn_submit')}
-                textStyle={{
-                    ...styles.nextButtonLabel,
-                    color: themeColor.textChoosed
-                }}
             >
             </Button>
         </View>

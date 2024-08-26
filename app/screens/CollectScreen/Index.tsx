@@ -1,19 +1,10 @@
-/**
- * 收藏夹
- * @returns 
- */
-
 import { StackScreenProps } from "@react-navigation/stack";
-import Navbar from "app/components/Navbar";
-import { ColorsState } from "app/stores/system";
-import { FlatList, StyleSheet, TouchableOpacity } from "react-native";
+import { ColorsState, ThemeState } from "app/stores/system";
+import { FlatList, StyleSheet } from "react-native";
 import { View } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useRecoilValue } from "recoil";
 import { App } from "types/app";
-import { SearchInput } from "./SearchInput";
 import { s } from "app/utils/size";
-import { Text } from "react-native";
 import { MessageType } from "app/components/chat-ui";
 import { useEffect, useRef, useState } from "react";
 import { LocalCollectService } from "app/services/LocalCollectService";
@@ -26,6 +17,7 @@ import CollectRecords from "./components/Records";
 import RecordDetailModal, { RecordDetailModalType } from "./record/RecordDetailModal";
 import { LocalCollectDetailService } from "app/services/LocalCollectDetailService";
 import { SearchTab } from "./SearchTab";
+import { ScreenX } from "app/components/ScreenX";
 
 export interface CollectItem {
     id: number,
@@ -47,8 +39,6 @@ export interface CollectRecord {
 
 type Props = StackScreenProps<App.StackParamList, 'CollectScreen'>;
 export const CollectScreen = (props: Props) => {
-
-    const insets = useSafeAreaInsets();
     const themeState = useRecoilValue(ColorsState);
     const style = styles({ themeState })
 
@@ -149,14 +139,9 @@ export const CollectScreen = (props: Props) => {
         loadData(page, -1)
     }, [])
 
+    const $theme = useRecoilValue(ThemeState);
 
-
-    return <View style={{
-        flex: 1,
-        paddingTop: insets.top,
-        backgroundColor: themeState.secondaryBackground,
-    }}>
-        <Navbar title="收藏夹" />
+    return <ScreenX theme={$theme} title="收藏夹">
 
         <View style={style.container}>
             <SearchTab chooseIdx={chooseIdx}
@@ -185,7 +170,7 @@ export const CollectScreen = (props: Props) => {
             </View>
         </View>
         <RecordDetailModal ref={recordDetailModalRef} />
-    </View >
+    </ScreenX>
 }
 
 const styles = (

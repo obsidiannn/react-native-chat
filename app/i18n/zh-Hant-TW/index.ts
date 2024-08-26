@@ -39,7 +39,15 @@ export default {
         'Settings': '设置',
         'No recent conversations':'最近没有会话',
         'Group waiting verification':'群组等待验证',
-        'No group':'暂无群组'
+        'No group':'暂无群组',
+        'My Business Card':'个人名片',
+        'Scan to add friend':'扫一扫·加我为好友',
+        'Please allow access to the album':'请先允许访问相册',
+        'Save to album':'保存到相冊成功',
+        'Save':'保存',
+        'Scan':'扫一扫',
+        'Request camera permission':'请求相机权限',
+        'We need to open the camera permission':'我们需要您打开相机权限'
     }
 
 }

@@ -3,6 +3,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native"
 import AvatarComponent from "./Avatar";
 import { colors } from "app/theme";
 import { IconFont } from "./IconFont/IconFont";
+import { $colors } from "app/Colors";
 
 
 export interface IContactListItemProps {
@@ -17,6 +18,7 @@ export interface IContactListItemProps {
     online?: boolean
     // 免打扰
     inhibite?: boolean
+    theme?: 'light' | 'dark'
 }
 export default (props: IContactListItemProps) => {
 
@@ -36,11 +38,15 @@ export default (props: IContactListItemProps) => {
         return null
     }
 
-    return <TouchableOpacity onPress={props.onPress} style={{
-        ...styles.container,
-        borderBottomColor: props.bottomLine ? '#f4f4f4' : 'white',
-        borderBottomWidth: 1,
-    }}>
+    return <TouchableOpacity onPress={props.onPress} style={[
+        styles.container,
+        {
+            borderBottomWidth: 1,
+        },
+        props.bottomLine && {
+            borderBottomColor: props.theme === 'light' ? $colors.slate400 : $colors.slate100,
+        } 
+    ]}>
         <View style={styles.iconContainer}>
             <AvatarComponent url={props.icon ?? ''} online={props.online} />
         </View>

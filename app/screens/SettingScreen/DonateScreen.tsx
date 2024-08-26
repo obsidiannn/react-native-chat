@@ -1,12 +1,11 @@
 import { StackScreenProps } from "@react-navigation/stack";
 import { Button } from "app/components";
-import Navbar from "app/components/Navbar";
-import { ColorsState } from "app/stores/system";
+import { ScreenX } from "app/components/ScreenX";
+import { ColorsState, ThemeState } from "app/stores/system";
 import { s } from "app/utils/size";
 import { useState } from "react";
-import { Text } from "react-native";
+import { ScrollView, Text } from "react-native";
 import { View } from "react-native";
-import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import { useRecoilValue } from "recoil";
 import { App } from "types/app";
 
@@ -27,11 +26,9 @@ export const DonateScreen = (props: Props) => {
         }
 
     }
-    return <ScrollView style={{
-        flex: 1,
-        backgroundColor: themeColor.secondaryBackground
-    }}>
-        <Navbar title="捐赠" />
+    const $theme = useRecoilValue(ThemeState)
+    return <ScreenX title="捐赠" theme={$theme}>
+        <ScrollView style={{flex:1,paddingVertical:s(20)}}>
         <View style={{
             alignItems: 'center',
             display: 'flex',
@@ -248,7 +245,8 @@ export const DonateScreen = (props: Props) => {
             </View>
 
         </View>
+        </ScrollView>
+        
 
-
-    </ScrollView>
+    </ScreenX>
 }

@@ -18,7 +18,9 @@ export interface UpdateUsernameModalRef {
     ) => void;
 
 }
-export const UpdateUserNameModal =  forwardRef((_, ref) => {
+export const UpdateUserNameModal =  forwardRef((props:{
+    theme: 'light' | 'dark'
+}, ref) => {
     const maxLength = 60
     const { t } = useTranslation('screens')
     const [val, setVal] = useState('')
@@ -52,7 +54,7 @@ export const UpdateUserNameModal =  forwardRef((_, ref) => {
         setVal(validText);
     };
 
-    return <ScreenModal ref={screenModalRef} title={t('profile.title_username')}>
+    return <ScreenModal theme={props.theme} ref={screenModalRef} title={t('profile.title_username')}>
         <View style={{
             flex: 1,
             display: 'flex',
@@ -144,12 +146,11 @@ export const UpdateUserNameModal =  forwardRef((_, ref) => {
             </View>
 
             <Button
+                theme={props.theme}
                 size="large"
-                containerStyle={{
-                    ...styles.nextButton,
-                    backgroundColor: themeColor.primary,
-                    marginBottom: s(12)
-                }}
+                fullRounded
+                fullWidth
+                type="primary"
                 onPress={async () => {
                     if (loading) {
                         return;
@@ -168,7 +169,6 @@ export const UpdateUserNameModal =  forwardRef((_, ref) => {
                         })
                 }}
                 label={t('common.btn_submit')}
-                textStyle={styles.nextButtonLabel}
             >
             </Button>
         </View>

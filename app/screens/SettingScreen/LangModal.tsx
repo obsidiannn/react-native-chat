@@ -1,20 +1,19 @@
 import { IconFont } from "app/components/IconFont/IconFont";
 import { ScreenModal, ScreenModalType } from "app/components/ScreenModal";
-import { ColorsState, ThemeState } from "app/stores/system";
+import { ColorsState } from "app/stores/system";
 import { s } from "app/utils/size";
 import { forwardRef, useImperativeHandle, useRef, useState } from "react"
-import { ScrollView, Text, TextStyle, TouchableOpacity, View, ViewStyle } from "react-native"
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { ScrollView, Text, TextStyle, TouchableOpacity, ViewStyle } from "react-native"
 import { useRecoilValue } from "recoil";
 export interface LangModalType {
   open: () => void,
   close: () => void
 }
-export const LangModal = forwardRef((_, ref) => {
+export const LangModal = forwardRef((props: {
+  theme: 'light' | 'dark'
+}, ref) => {
   const screenModalRef = useRef<ScreenModalType>(null);
-  const insets = useSafeAreaInsets();
   const $colors = useRecoilValue(ColorsState);
-  const $theme = useRecoilValue(ThemeState);
   useImperativeHandle(ref, () => ({
     open: async () => screenModalRef.current?.open(),
     close: async () => screenModalRef.current?.close(),
@@ -53,15 +52,8 @@ export const LangModal = forwardRef((_, ref) => {
         value: "es"
       },
     ]
-  return <ScreenModal ref={screenModalRef}>
-    <View style={[
-      {
-        backgroundColor: $colors.background,
-        paddingBottom: insets.bottom,
-      },
-      $container
-    ]}>
-      <ScrollView style={{
+  return <ScreenModal theme={props.theme} title="语言" ref={screenModalRef}>
+    <ScrollView style={{
         flex: 1,
       }}>
         {languages.map(item => {
@@ -74,16 +66,8 @@ export const LangModal = forwardRef((_, ref) => {
           </TouchableOpacity>
         })}
       </ScrollView>
-    </View>
   </ScreenModal>
 })
-const $container: ViewStyle = {
-  marginTop: s(20),
-  flex: 1,
-  borderTopEndRadius: s(20),
-  borderTopStartRadius: s(20),
-  paddingTop: s(10)
-}
 const $langListItemContainer: ViewStyle = {
   width: "100%",
   flexDirection: "row",

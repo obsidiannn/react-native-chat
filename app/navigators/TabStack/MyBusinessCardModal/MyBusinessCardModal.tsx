@@ -1,6 +1,5 @@
 import { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import { Modal, PermissionsAndroid, Platform, Text, View } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useRecoilValue } from "recoil";
 import { ColorsState } from "app/stores/system";
 import QRCode from 'react-native-qrcode-svg';
@@ -11,9 +10,8 @@ import { CameraRoll } from "@react-native-camera-roll/camera-roll";
 import toast from "app/utils/toast";
 import AvatarX from "app/components/AvatarX";
 import { Button } from "app/components";
-import Navbar from "app/components/Navbar";
-import { ScreenModalType } from "app/components/ScreenModal";
-
+import { useTranslation } from "react-i18next";
+import { ScreenX } from "app/components/ScreenX";
 export interface MyBusinessCardModalType {
     open: () => void,
     close: () => void
@@ -57,13 +55,13 @@ const hasAndroidPermission = async () => {
 
     return await getRequestPermissionPromise();
 }
-export default forwardRef((_, ref) => {
+export default forwardRef((props: {
+    theme: 'light' | 'dark',
+}, ref) => {
     const [visible, setVisible] = useState(false);
-    const insets = useSafeAreaInsets();
     const $colors = useRecoilValue(ColorsState);
     const authUser = useRecoilValue(AuthUser);
     const viewRef = useRef<ViewShot>(null);
-    const screenModalRef = useRef<ScreenModalType>(null);
     const onClose = () => {
         setVisible(false)
     }
@@ -71,13 +69,9 @@ export default forwardRef((_, ref) => {
         open: async () => setVisible(true),
         close: async () => setVisible(false)
     }));
+    const {t} = useTranslation('default');
     return <Modal transparent={false} style={{ flex: 1 }} visible={visible} animationType="slide" >
-        <View style={{
-            flex: 1,
-            paddingTop: insets.top,
-            backgroundColor: $colors.secondaryBackground
-        }}>
-            <Navbar title={'个人名片'} onLeftPress={onClose} />
+        <ScreenX theme={props.theme} title={t('My Business Card')} onLeftPress={onClose}>
             <ViewShot ref={viewRef} style={{
                 width: s(343),
                 paddingHorizontal: s(50),
@@ -99,7 +93,7 @@ export default forwardRef((_, ref) => {
                         fontSize: s(26),
                         width: s(204),
                         fontWeight: "700",
-                    }}>{authUser?.nickName}xxx</Text>
+                    }}>{authUser?.nickName}</Text>
                 </View>
                 <View style={{
                     marginTop: s(20)
@@ -123,7 +117,7 @@ export default forwardRef((_, ref) => {
                         color: $colors.text,
                         fontSize: s(14),
                         fontWeight: "500",
-                    }}>扫一扫·加我为好友</Text>
+                    }}>{t('Scan to add friend')}</Text>
                 </View>
             </ViewShot>
             <View style={{
@@ -134,6 +128,8 @@ export default forwardRef((_, ref) => {
             }}>
                 <Button
                     size="large"
+                    fullRounded
+                    theme={props.theme}
                     onPress={async () => {
                         if (viewRef.current == null) {
                             return;
@@ -142,7 +138,7 @@ export default forwardRef((_, ref) => {
                             if (Platform.OS == "android") {
                                 const permission = await hasAndroidPermission();
                                 if (!permission) {
-                                    toast('請先允許訪問相冊');
+                                    toast(t('Please allow access to the album'));
                                     return;
                                 }
                             }
@@ -152,12 +148,12 @@ export default forwardRef((_, ref) => {
                                 handleGLSurfaceViewOnAndroid: true,
                             });
                             await CameraRoll.saveAsset(uri);
-                            toast('保存到相冊成功');
+                            toast(t('Save to album'));
                         } catch (error) {
                             console.log(error);
                         }
-                    }} label="保存图片" />
+                    }} label={t('Save') } />
             </View>
-        </View>
+        </ScreenX>
     </Modal>
 })

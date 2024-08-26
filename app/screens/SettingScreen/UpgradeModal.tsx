@@ -1,5 +1,5 @@
 import { ScreenModal, ScreenModalType } from "app/components/ScreenModal";
-import { ColorsState, ThemeState } from "app/stores/system";
+import { ColorsState } from "app/stores/system";
 import { s } from "app/utils/size";
 import { forwardRef, ReactNode, useCallback, useImperativeHandle, useRef, useState } from "react"
 import { ColorValue, Linking, ScrollView, Text, TextStyle, TouchableOpacity, View, ViewStyle } from "react-native"
@@ -110,7 +110,9 @@ const VersionListItem = (props: {
     </View>
   </Card>
 }
-export const UpgradeModal = forwardRef((_, ref) => {
+export const UpgradeModal = forwardRef((props:{
+  theme: "light" | "dark"
+}, ref) => {
   const screenModalRef = useRef<ScreenModalType>(null);
   const [items, setItems] = useState<IServer.IAppVersion[]>([]);
   const loadData = useCallback(async () => {
@@ -131,7 +133,7 @@ export const UpgradeModal = forwardRef((_, ref) => {
     close: async () => screenModalRef.current?.close()
   }));
   return (
-    <ScreenModal ref={screenModalRef} >
+    <ScreenModal theme={props.theme} title="版本更新" ref={screenModalRef} >
       <View style={{
         flex: 1,
         width: s(375),

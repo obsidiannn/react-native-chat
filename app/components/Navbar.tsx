@@ -1,6 +1,5 @@
 import { Pressable, Text, TextStyle, View, ViewStyle } from "react-native";
 import React from "react";
-import { ImageStyle } from "expo-image";
 import { goBack } from "app/navigators";
 import { s } from "app/utils/size";
 import { IconFont } from "./IconFont/IconFont";
@@ -67,19 +66,6 @@ const Navbar = (props: {
                 {renderRight ? renderRight() : null}
             </View>
         }
-        {/* {
-            renderRight ? renderRight() : <View style={{
-                width: '20%',
-                display: 'flex',
-                alignItems: 'flex-end',
-                justifyContent: 'center',
-                paddingRight: 10,
-            }}>
-                <TouchableOpacity onPress={onRightPress}>
-                    <Icon name="dots-horizontal" size={20} color='#52525b' />
-                </TouchableOpacity>
-            </View>
-        } */}
     </View>
 }
 const $container: ViewStyle = {
@@ -120,9 +106,4 @@ const $rightContainer: ViewStyle = {
     width: '20%',
     alignItems: 'center'
 }
-const $leftIcon: ImageStyle = {
-    width: s(4),
-    height: s(8),
-}
-
 export default Navbar

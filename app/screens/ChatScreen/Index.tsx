@@ -221,7 +221,7 @@ export const ChatScreen = ({ navigation }: Props) => {
                 scrollEnabled={false}
                 style={{
                     flex: 1,
-                    backgroundColor: $theme == 'dark' ? $colors.slate800 : $colors.white,
+                    backgroundColor: $theme == 'dark' ? $colors.slate800 : $colors.slate100,
                 }} onPageSelected={(v) => setPageIndex(v.nativeEvent.position)} initialPage={pageIndex}>
                 <ChatListView theme={$theme} />
                 <GroupListView theme={$theme} groups={groups} />

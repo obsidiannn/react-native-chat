@@ -1,6 +1,6 @@
 import { StackScreenProps } from "@react-navigation/stack";
 import Navbar from "app/components/Navbar";
-import { ColorsState } from "app/stores/system";
+import { ColorsState, ThemeState } from "app/stores/system";
 import { s } from "app/utils/size";
 import { useEffect, useRef, useState } from "react";
 import { StyleSheet } from "react-native";
@@ -21,6 +21,7 @@ import toast from "app/utils/toast";
 import { pickerImages } from "app/utils/media-util";
 import { Image } from "expo-image";
 import { Button } from "app/components";
+import { ScreenX } from "app/components/ScreenX";
 type Props = StackScreenProps<App.StackParamList, 'SystemFeedbackScreen'>;
 export const SystemFeedbackScreen = (props: Props) => {
 
@@ -75,18 +76,12 @@ export const SystemFeedbackScreen = (props: Props) => {
             setCategories(res.list)
         })
     }, [])
-
-    return <View style={{
-        flex: 1, backgroundColor: themeColor.secondaryBackground,
-    }}>
-        <Navbar title="意见反馈" />
+    const $theme = useRecoilValue(ThemeState);
+    return <ScreenX title="意见反馈" theme={$theme}>
         <View style={{
             flex: 1,
-            backgroundColor: themeColor.background,
             marginTop: s(32),
             padding: s(12),
-            borderTopLeftRadius: s(24),
-            borderTopRightRadius: s(24),
         }}>
             <View style={style.categoryLine}>
                 <Text style={{
@@ -170,7 +165,7 @@ export const SystemFeedbackScreen = (props: Props) => {
             onChoose={(item: SysCategoryItem) => { setCategory(item) }}
             list={categories} />
         <LoadingModal ref={loadingModalRef} />
-    </View>
+    </ScreenX>
 }
 
 

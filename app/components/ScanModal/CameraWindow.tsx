@@ -9,9 +9,6 @@ export interface CameraWindowProps {
 export const CameraWindow = (props: CameraWindowProps) => {
     return <View style={{
         flex: 1,
-        borderTopRightRadius: s(32),
-        borderTopLeftRadius: s(32),
-        overflow:"hidden",
     }}>
         <CameraView style={{
         flex: 1,

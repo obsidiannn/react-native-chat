@@ -6,10 +6,12 @@ import { useSafeAreaInsets } from "react-native-safe-area-context"
 export interface FullScreenProps {
   theme: "light" | "dark";
   children?: React.ReactNode;
+
 }
 
 export interface ScreenXProps extends FullScreenProps {
   title: string;
+  onLeftPress?: () => void;
 }
 
 export const FullScreen = (props: FullScreenProps) => {
@@ -26,9 +28,9 @@ export const FullScreen = (props: FullScreenProps) => {
 }
 export const ScreenX = (props: ScreenXProps) => {
   return <FullScreen {...props}>
-    <Navbar theme={props.theme} title={props.title} />
+    <Navbar onLeftPress={props.onLeftPress} theme={props.theme} title={props.title} />
     <View style={{
-      marginTop: s(10),
+      marginTop: s(20),
       flex: 1,
       backgroundColor: props.theme == "dark" ? $colors.slate700 : $colors.white,
       borderTopStartRadius: s(24),
