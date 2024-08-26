@@ -17,6 +17,7 @@ import { IconFont } from "app/components/IconFont/IconFont";
 import UserInfoModal, { UserInfoModalType } from "../UserInfo/UserInfoModal";
 import { AuthUser } from "app/stores/auth";
 import eventUtil from "app/utils/event-util";
+import ChatHistoryModal, { ChatHistoryModalType } from "app/components/ChatHistory/ChatHistoryModal";
 
 export interface UserChatInfoModalRef {
     open: () => void
@@ -26,7 +27,7 @@ export default forwardRef((_, ref) => {
     console.log('start');
     const screenModalRef = useRef<ScreenModalType>(null)
     const userInfoModalRef = useRef<UserInfoModalType>(null)
-
+    const chatHistoryModalRef = useRef<ChatHistoryModalType>(null)
     const author = useRecoilValue(AuthUser)
     const userContext = useContext(UserChatUIContext)
     const { t } = useTranslation('screens')
@@ -39,7 +40,7 @@ export default forwardRef((_, ref) => {
         userContext.reloadChat({
             ...chat, isTop: val
         })
-        
+
     }
 
 
@@ -141,6 +142,11 @@ export default forwardRef((_, ref) => {
                 marginTop: s(15),
             }}>
                 <ActionItem title={'查找聊天内容'}
+                    onPress={() => {
+                        if (chat && chat.id) {
+                            chatHistoryModalRef.current?.open(chat.id)
+                        }
+                    }}
                     leftComponent={
                         <IconFont name="searchDoc" color={themeColor.text} size={26} />
                     }
@@ -173,6 +179,7 @@ export default forwardRef((_, ref) => {
         </View>
         <ConfirmModal ref={confirmModalRef} />
         <UserInfoModal ref={userInfoModalRef} user={userContext.friend ?? undefined} />
+        <ChatHistoryModal ref={chatHistoryModalRef} />
     </ScreenModal>
 })
 

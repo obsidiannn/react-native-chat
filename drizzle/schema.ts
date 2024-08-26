@@ -38,10 +38,12 @@ export const messages = sqliteTable("messages", {
     time: integer('time').notNull(),
     state: integer('state').notNull(),
     data: text('data').notNull(),
+    dataType: text('data_type').notNull(),
     extra: text('extra'),
     replyId: text('reply_id')
 }, (entity) => ({
     chatIdx: index('messages_chat_id_index').on(entity.chatId),
+    dataTypeIdx: index('message_data_type_index').on(entity.dataType),
     sequenceIdx: index('messages_sequence_index').on(entity.sequence),
 }))
 
