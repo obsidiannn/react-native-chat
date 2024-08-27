@@ -3,21 +3,23 @@ import BlockButton from "../../BlockButton";
 import { useRecoilValue } from "recoil";
 import { ColorsState } from "app/stores/system";
 import { s } from "app/utils/size";
+import { useTranslation } from "react-i18next";
 export interface CameraPermissionViewProps {
     requestPermission: () => void
 }
 export const CameraPermissionView = (props: CameraPermissionViewProps) => {
     const $colors = useRecoilValue(ColorsState);
+    const { t } = useTranslation('components')
     return <View style={$container}>
         <View style={$buttonContainer}>
             <BlockButton onPress={() => {
                 console.log("requestPermission")
                 props.requestPermission()
-            }} type="primary" label="请求相机权限" />
+            }} type="primary" label={t('common.btnRequireCameraPermission')} />
         </View>
         <Text style={[$tipsText, {
             color: $colors.text
-        }]}>我们需要您打开相机权限</Text>
+        }]}>{t('common.btnRequireCameraPermissionDesc')}</Text>
     </View>
 }
 const $container: ViewStyle = {

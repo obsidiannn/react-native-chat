@@ -35,7 +35,7 @@ export default forwardRef((props: LongPressProps, ref) => {
     const [height, setHeight] = useState<number>(0)
     const themeColor = useRecoilValue(ColorsState)
     const [message, setMessage] = useState<MessageType.Any | null>(null)
-    const { t } = useTranslation('screens')
+    const { t } = useTranslation('components')
 
     const openModal = () => {
         setVisible(true)
@@ -94,16 +94,16 @@ export default forwardRef((props: LongPressProps, ref) => {
                     <TouchableOpacity style={styles.line_button_style} onPress={() => {
                         if (message && message.type === 'text') {
                             clipboard.setStringAsync(message.text ?? '').then(res => {
-                                toast(t('userInfo.success_copied'));
+                                toast(t('common.labelSuccessCopied'));
                             })
                         }
                     }}>
                         <IconFont name="copy" color={themeColor.text} size={32} />
-                        <Text style={{ color: themeColor.text }}>复制</Text>
+                        <Text style={{ color: themeColor.text }}>{t('longPressModal.btnCopy')}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.line_button_style}>
                         <IconFont name="share" color={themeColor.text} size={32} />
-                        <Text style={{ color: themeColor.text }}>分享</Text>
+                        <Text style={{ color: themeColor.text }}>{t('longPressModal.btnShare')}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.line_button_style} onPress={() => {
                         if (message) {
@@ -114,7 +114,7 @@ export default forwardRef((props: LongPressProps, ref) => {
                         }
                     }}>
                         <IconFont name="quote" color={themeColor.text} size={32} />
-                        <Text style={{ color: themeColor.text }}>引用</Text>
+                        <Text style={{ color: themeColor.text }}>{t('longPressModal.btnReply')}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.line_button_style} onPress={() => {
                         setVisible(false)
@@ -123,7 +123,7 @@ export default forwardRef((props: LongPressProps, ref) => {
                         props.onMulti && props.onMulti(message?.id ?? '', true)
                     }}>
                         <IconFont name="multipleSelection" color={themeColor.text} size={32} />
-                        <Text style={{ color: themeColor.text }}>多选</Text>
+                        <Text style={{ color: themeColor.text }}>{t('longPressModal.btnMultiSelect')}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={[styles.line_button_style, { marginRight: 0 }]}
                         onPress={() => {
@@ -132,7 +132,7 @@ export default forwardRef((props: LongPressProps, ref) => {
                             }
                         }}>
                         <IconFont name="trash" color={themeColor.text} size={32} />
-                        <Text style={{ color: themeColor.text }}>删除</Text>
+                        <Text style={{ color: themeColor.text }}>{t('longPressModal.btnRemove')}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.line_button_style} onPress={() => {
                         if (message) {
@@ -143,7 +143,7 @@ export default forwardRef((props: LongPressProps, ref) => {
                         }
                     }}>
                         <IconFont name="multipleSelection" color={themeColor.text} size={32} />
-                        <Text style={{ color: themeColor.text }}>收藏</Text>
+                        <Text style={{ color: themeColor.text }}>{t('longPressModal.btnCollect')}</Text>
                     </TouchableOpacity>
                 </View>
 

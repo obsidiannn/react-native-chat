@@ -46,7 +46,7 @@ export default (props: {
                 await clipboard.setStringAsync(user.userName ?? '');
                 toast(t('userInfo.success_copied'));
             }}>
-                <Text style={styles.signText}>@{strUtil.truncateMiddle(user.userName, 30)}</Text>
+                <Text style={styles.signText}>@{strUtil.truncateMiddle(user.userName ?? "", 30)}</Text>
                 <IconFont name={"copy"} color={$colors.text} size={16} />
             </TouchableOpacity>
         </View>

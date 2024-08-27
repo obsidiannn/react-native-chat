@@ -33,7 +33,7 @@ export default forwardRef<ApplyJoinModalRef>((_, ref) => {
 
     const { t } = useTranslation('screens')
 
-    return <BaseModal animationType="slide" visible={visible} onClose={onClose} title={t('groupChat.title_apply_join')} styles={{ flex: 1,padding: s(12) }}>
+    return <BaseModal animationType="slide" visible={visible} onClose={onClose} title={t('groupChat.title_apply_join')} styles={{ flex: 1, padding: s(12) }}>
         <View style={styles.contentContainer} >
             <View style={styles.inputContainer}>
                 <TextInput
@@ -50,7 +50,7 @@ export default forwardRef<ApplyJoinModalRef>((_, ref) => {
 
         </View>
         <Button disabled={state}
-            style={{
+            containerStyle={{
                 ...styles.button,
                 backgroundColor: themeColor.primary,
                 marginBottom: s(24)
@@ -74,12 +74,11 @@ export default forwardRef<ApplyJoinModalRef>((_, ref) => {
                 } finally {
                     setState(false);
                 }
-            }}  >
-            <Text style={{
+            }} label={t('groupChat.btn_do_apply')}
+            textStyle={{
                 ...styles.buttonLabel,
                 color: themeColor.textChoosed
-            }}>{t('groupChat.btn_do_apply')}</Text>
-        </Button>
+            }} />
     </BaseModal>
 });
 const styles = StyleSheet.create({

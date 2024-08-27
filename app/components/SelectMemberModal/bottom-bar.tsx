@@ -2,7 +2,6 @@ import { s, verticalScale } from "app/utils/size";
 import { StyleSheet, Text, View } from "react-native";
 import { Button } from "../Button";
 import Checkbox from "expo-checkbox";
-import { colors } from "app/theme";
 
 export default (props: {
     onConfirm: () => void;

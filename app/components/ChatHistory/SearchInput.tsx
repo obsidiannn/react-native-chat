@@ -4,6 +4,7 @@ import { TextInput } from "react-native-gesture-handler"
 import { s } from "app/utils/size"
 import { IconFont } from "app/components/IconFont/IconFont"
 import { MessageType } from "../chat-ui"
+import { useTranslation } from "react-i18next"
 
 
 export interface SearchProps {
@@ -15,7 +16,7 @@ export const SearchInput = (props: SearchProps) => {
     const [label, setLabel] = useState<string>('')
     const [show, setShow] = useState<boolean>(true)
     const textInputRef = useRef<TextInput>(null)
-
+    const {t} = useTranslation('components')
     const renderSearchInput = () => {
         if (label && label !== '') {
             return <TouchableOpacity
@@ -52,7 +53,7 @@ export const SearchInput = (props: SearchProps) => {
                 borderRadius: s(24),
                 marginTop: s(12)
             }}>
-            <Text>图片搜索</Text>
+            <Text>{t('chatHistory.btnImageQuery')}</Text>
         </TouchableOpacity>
     }
     return <View style={{

@@ -48,14 +48,15 @@ const decodeInterceptor = async (wallet: Wallet, rep: AxiosResponse<any, any>): 
 }
 
 export const createInstance = (en = true) => {
-  const baseURL = SystemService.GetApiUrlByCache();
+  const baseURL = "http://192.168.31.201:5001"
   const instance: AxiosInstance = axios.create({
     baseURL,
     withCredentials: false,
     timeout: 3000,
   });
   instance.interceptors.request.use(async (config) => {
-
+    console.log('[request]',config.baseURL);
+    
     const wallet = AuthService.GetWallet();
     if (!wallet) {
       throw new Error('請先登錄');

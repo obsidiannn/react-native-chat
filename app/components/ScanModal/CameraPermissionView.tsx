@@ -14,9 +14,13 @@ export const CameraPermissionView = (props: CameraPermissionViewProps) => {
             <Button fullRounded theme={props.theme} onPress={() => {
                 console.log("requestPermission")
                 props.requestPermission()
-            }} type="primary" label={t('Request camera permission')} />
+            // }} type="primary" label={t('Request camera permission')} />
+            }} type="primary" label={t('common.btnRequireCameraPermission')} />
         </View>
-        <Text style={[$tipsText]}>{t('We need to open the camera permission')}</Text>
+        {/*<Text style={[$tipsText]}>{t('We need to open the camera permission')}</Text>*/}
+        <Text style={[$tipsText, {
+            color: $colors.text
+        }]}>{t('common.btnRequireCameraPermissionDesc')}</Text>
     </View>
 }
 const $container: ViewStyle = {

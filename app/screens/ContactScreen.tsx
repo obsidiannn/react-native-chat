@@ -1,16 +1,17 @@
 import { ColorsState, ThemeState } from "app/stores/system"
-import {useEffect} from "react";
-import { View, Text,StatusBar } from "react-native"
+import { useEffect } from "react";
+import { View, Text, StatusBar } from "react-native"
 import { useRecoilValue } from "recoil"
 import { StackScreenProps } from "@react-navigation/stack"
 import { s } from "app/utils/size"
-import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { App } from "types/app";
+import { useTranslation } from "react-i18next";
 type Props = StackScreenProps<App.StackParamList, 'ContactScreen'>;
 export const ContactScreen = ({ navigation }: Props) => {
   const $colors = useRecoilValue(ColorsState);
   const $theme = useRecoilValue(ThemeState);
-  const insets = useSafeAreaInsets();
+  const { t } = useTranslation('screens')
+
   useEffect(() => {
     if ($theme === 'dark') {
       StatusBar.setBarStyle('light-content');
@@ -18,6 +19,7 @@ export const ContactScreen = ({ navigation }: Props) => {
       StatusBar.setBarStyle('dark-content');
     }
   }, [])
+  
   return <View style={{
     //paddingTop: insets.top,
     flex: 1,
@@ -33,7 +35,7 @@ export const ContactScreen = ({ navigation }: Props) => {
         borderBottomRightRadius: s(12),
       }}>
         <View style={{
-          height: s(45),  
+          height: s(45),
         }}>
           <View style={{
             flex: 1,
@@ -41,13 +43,13 @@ export const ContactScreen = ({ navigation }: Props) => {
             backgroundColor: "red",
             alignItems: "center"
           }}>
-            <Text>头像</Text>
+            <Text>{t('contract.labelAvatar')}</Text>
             <View style={{
               flex: 1,
               flexDirection: 'column',
             }}>
-              <Text>扫码</Text>
-              <Text>二维码</Text>
+              <Text>{t('contract.labelScan')}</Text>
+              <Text>{t('contract.labelQrcode')}</Text>
             </View>
           </View>
         </View>

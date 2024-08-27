@@ -22,6 +22,7 @@ import { pickerImages } from "app/utils/media-util";
 import { Image } from "expo-image";
 import { Button } from "app/components";
 import { ScreenX } from "app/components/ScreenX";
+import { useTranslation } from "react-i18next";
 type Props = StackScreenProps<App.StackParamList, 'SystemFeedbackScreen'>;
 export const SystemFeedbackScreen = (props: Props) => {
 
@@ -33,10 +34,10 @@ export const SystemFeedbackScreen = (props: Props) => {
     const [images, setImages] = useState<string[]>([])
     const loadingModalRef = useRef<LoadingModalType>(null)
     const style = styles({ themeColor })
-
+    const {t} = useTranslation("screens")
     const doSubmit = async () => {
         if (!category) {
-            toast('请选择分类')
+            toast(t('feedback.labelChooseCategory'))
             return
         }
         loadingModalRef.current?.open()

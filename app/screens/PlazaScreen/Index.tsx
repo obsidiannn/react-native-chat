@@ -80,7 +80,7 @@ export const PlazaScreen = ({ navigation }: Props) => {
       overflow: 'hidden',
     }]}>
 
-      <BannerComponent label="发现" describe="你最喜欢的社区" onPress={() => {
+      <BannerComponent label={t('discover.labelDiscover')} describe="你最喜欢的社区" onPress={() => {
         console.log('press');
 
         navigation.navigate('DiscoverScreen')

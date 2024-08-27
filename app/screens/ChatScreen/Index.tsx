@@ -209,12 +209,16 @@ export const ChatScreen = ({ navigation }: Props) => {
         }]}>
             <View style={styles.topContainer} >
                 <Button label={t('chat.btn_recent')} onPress={() => changeTab(0)} containerStyle={btnStyle(0)}
-                    textStyle={btnTextStyle(0)}
+                  // style={[styles.tabButton]}
+                        textStyle={btnTextStyle(0)}
                 />
                 <Button label={t('chat.btn_group')} onPress={() => changeTab(1)} containerStyle={btnStyle(1)}
-                    textStyle={btnTextStyle(1)}
+                  // style={[styles.tabButton, btnStyle(1)]}
+                        textStyle={btnTextStyle(1)}
                 />
-                <Button label={t('chat.btn_contract')} onPress={() => changeTab(2)} containerStyle={btnStyle(2)}textStyle={btnTextStyle(2)}
+                <Button label={t('chat.btn_contract')} onPress={() => changeTab(2)} containerStyle={btnStyle(2)}
+                  // style={[styles.tabButton, btnStyle(2)]}
+                        textStyle={btnTextStyle(2)}
                 />
             </View>
             <PagerView useNext={false} ref={pagerViewRef}

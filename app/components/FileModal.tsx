@@ -25,11 +25,11 @@ export default forwardRef((_, ref) => {
     const [localPath, setLocalPath] = useState('')
     const [loading, setLoading] = useState(false);
     const [downloaded, setDownloaded] = useState(false);
-    const {t} = useTranslation('screens')
+    const { t } = useTranslation('components')
     const downloadFile = useCallback(async (f: MessageType.File) => {
         const uri = f.uri
         const _localPath = await fileService.downloadFile(fileService.getFullUrl(uri));
-        toast('下載成功');
+        toast(t('file.labelDownloadSuccess'));
         setLocalPath(_localPath)
         setDownloaded(true);
     }, []);
@@ -42,11 +42,7 @@ export default forwardRef((_, ref) => {
             //     return;
             // }
         }
-        // const path = await fileService.saveFile(f.uri, f.name);
-        // if (!path) {
-        //     toast('保存失敗1');
-        //     return;
-        // }
+
         if (Platform.OS == 'ios') {
             Sharing.shareAsync(localPath, {
                 mimeType: mime.getType(localPath) ?? 'application/octet-stream',
@@ -81,7 +77,7 @@ export default forwardRef((_, ref) => {
     const onClose = () => {
         setVisible(false)
     }
-    return <BaseModal visible={visible} onClose={onClose} title={t('chat.videoDetail')}>
+    return <BaseModal visible={visible} onClose={onClose} title={t('file.title')}>
         <View style={{
             flex: 1,
             alignItems: 'center',

@@ -2,7 +2,7 @@ import { IUser } from "drizzle/schema";
 import { forwardRef, useImperativeHandle, useState } from "react";
 import { ImageBackground, Modal, Text } from "react-native";
 import Navbar from "./Navbar";
-import { View ,TouchableOpacity} from "react-native";
+import { View, TouchableOpacity } from "react-native";
 import { useRecoilValue } from "recoil";
 import { ColorsState } from "app/stores/system";
 import { colors } from "app/theme";
@@ -10,6 +10,7 @@ import fileService from "app/services/file.service";
 import { s } from "app/utils/size";
 import { IconFont } from "./IconFont/IconFont";
 import AvatarX from "./AvatarX";
+import { useTranslation } from "react-i18next";
 
 export interface VoicePhoneModalType {
     open: (user: IUser) => void
@@ -20,6 +21,8 @@ export default forwardRef((_, ref) => {
 
     const [user, setUser] = useState<IUser | null>(null)
     const themeColor = useRecoilValue(ColorsState)
+
+    const { t } = useTranslation('components ')
     useImperativeHandle(ref, () => ({
         open: (user: IUser) => {
             if (user) {
@@ -33,7 +36,7 @@ export default forwardRef((_, ref) => {
     }));
     const onClose = () => {
         console.log('close');
-        
+
         setVisible(false)
     }
     return <Modal visible={visible} style={{
