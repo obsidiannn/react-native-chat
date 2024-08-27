@@ -4,7 +4,7 @@ import { EmptyComponent } from "app/components/EmptyComponent"
 import { formatDate } from "app/utils/formatDate"
 import { s } from "app/utils/size"
 import { useMemo } from "react"
-import { View, ViewStyle } from "react-native"
+import { View, ViewStyle, Text } from "react-native"
 import dayjs from 'dayjs'
 import { useRecoilValue } from "recoil"
 import { ChatsStore } from "app/stores/auth"
@@ -17,7 +17,7 @@ export interface ChatViewProps {
     theme: 'light' | 'dark'
 }
 export const ChatListView = (props: ChatViewProps) => {
-    const {t} = useTranslation('default')
+    const { t } = useTranslation('default')
     const chats = useRecoilValue(ChatsStore)
 
     const { topChats, normalChats } = useMemo(() => {
@@ -76,15 +76,14 @@ export const ChatListView = (props: ChatViewProps) => {
         />
     }
     return <View style={$container}>
-        {chats.length <= 0 ? <EmptyComponent label={t('No recent conversations')} /> : <View>
+        {chats.length <= 0 ? <EmptyComponent label={t('No recent conversations')} /> :
             <FlashList
                 keyExtractor={(item) => item.id}
                 data={topChats.concat(normalChats)}
                 renderItem={({ item, index }) => renderItem(item, index === chats.length - 1)}
-                estimatedItemSize={s(76)}
+                estimatedItemSize={76}
                 showsVerticalScrollIndicator={false}
-            />
-        </View>}
+            />}
     </View>
 }
 

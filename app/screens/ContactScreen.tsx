@@ -21,7 +21,6 @@ export const ContactScreen = ({ navigation }: Props) => {
   }, [])
   
   return <View style={{
-    //paddingTop: insets.top,
     flex: 1,
   }}>
     <View style={{

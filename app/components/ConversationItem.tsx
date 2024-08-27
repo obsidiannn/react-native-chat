@@ -23,7 +23,6 @@ export interface IContactListItemProps {
 export default (props: IContactListItemProps) => {
 
     const renderPoint = () => {
-
         if (props.inhibite) {
             console.log('inhibite==>', props.inhibite, props.title);
             return <IconFont name="silent" color={colors.palette.gray300} size={20}/>

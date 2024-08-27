@@ -4,15 +4,18 @@ import { StackScreenProps } from "@react-navigation/stack";
 import { useTranslation } from 'react-i18next';
 import { App } from "types/app";
 import friendApplyService from "app/services/friend-apply.service";
-import Navbar from "app/components/Navbar";
 import { Button } from "app/components";
 import toast from "app/utils/toast";
 import { s, verticalScale } from "app/utils/size";
+import { ScreenX } from "app/components/ScreenX";
+import { useRecoilValue } from "recoil";
+import { ThemeState } from "app/stores/system";
 
 type Props = StackScreenProps<App.StackParamList, 'InviteFriendScreen'>;
 export const InviteFriendScreen = ({ navigation, route }: Props) => {
     const [userId, setUserId] = useState<number>();
     const [remark, setRemark] = useState('');
+    const $theme = useRecoilValue(ThemeState)
     const [state, setState] = useState(false)
     const { t } = useTranslation('screens')
     useEffect(() => {
@@ -22,12 +25,7 @@ export const InviteFriendScreen = ({ navigation, route }: Props) => {
         });
         return unsubscribe;
     }, [navigation])
-    return <View style={{
-        ...styles.container,
-    }}>
-        <View>
-            <Navbar title={t('friend.title_invite_info')} />
-        </View>
+    return <ScreenX title={t('friend.title_invite_info')} theme={$theme}>
         <View style={styles.contentContainer} >
             <View style={styles.inputContainer}>
                 <TextInput
@@ -42,23 +40,23 @@ export const InviteFriendScreen = ({ navigation, route }: Props) => {
             </View>
             <View style={styles.buttonContainer}>
                 <Button size="large" fullWidth label={t('friend.btn_send_invite')} onPress={() => {
-                        setState(true);
-                        if (userId) {
-                            friendApplyService.create(userId, remark).then(res => {
-                                toast(
-                                    t('friend.success_send_invite')
-                                );
-                                setTimeout(() => {
-                                    navigation.goBack();
-                                }, 1000);
-                            }).finally(() => {
-                                setState(false)
-                            })
-                        }
-                    }} />
+                    setState(true);
+                    if (userId) {
+                        friendApplyService.create(userId, remark).then(res => {
+                            toast(
+                                t('friend.success_send_invite')
+                            );
+                            setTimeout(() => {
+                                navigation.goBack();
+                            }, 1000);
+                        }).finally(() => {
+                            setState(false)
+                        })
+                    }
+                }} />
             </View>
         </View>
-    </View>
+    </ScreenX>
 }
 const styles = StyleSheet.create({
     container: {

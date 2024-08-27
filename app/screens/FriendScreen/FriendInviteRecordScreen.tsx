@@ -19,11 +19,12 @@ import { IModel } from "@repo/enums";
 import { Button } from "app/components";
 import chatService from "app/services/chat.service";
 import eventUtil from "app/utils/event-util";
+import { ScreenX } from "app/components/ScreenX";
+import { ThemeState } from "app/stores/system";
 
 
 type Props = StackScreenProps<App.StackParamList, 'FriendInviteRecordScreen'>;
 export const FriendInviteRecordScreen = ({ navigation }: Props) => {
-    const insets = useSafeAreaInsets();
     const [items, setItems] = useState<{
         friendApply: IServer.IFriendApply,
         user: IUser | undefined
@@ -31,6 +32,7 @@ export const FriendInviteRecordScreen = ({ navigation }: Props) => {
 
     const currentUser = useRecoilValue(AuthUser)
     const { t } = useTranslation('screens')
+    const $theme = useRecoilValue(ThemeState)
     const [loading, setLoading] = useState<boolean>(true)
     useEffect(() => {
         const unsubscribe = navigation.addListener('focus', async () => {
@@ -79,11 +81,7 @@ export const FriendInviteRecordScreen = ({ navigation }: Props) => {
     }
 
     return (
-        <View style={{
-            ...styles.container,
-            paddingTop: insets.top,
-            paddingBottom: insets.bottom,
-        }}>
+        <ScreenX title={t('friend.title_new_friend')} theme={$theme} >
             <View>
                 <Navbar renderRight={() => renderNavbarRight()} title={t('friend.title_new_friend')} />
             </View>
@@ -134,7 +132,7 @@ export const FriendInviteRecordScreen = ({ navigation }: Props) => {
                 >
                 </FlashList>
             </View>
-        </View>
+        </ScreenX>
     );
 };
 
