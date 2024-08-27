@@ -104,7 +104,7 @@ export const FriendInviteRecordScreen = ({ navigation }: Props) => {
                                     isLast={index === items.length - 1}
                                     renderRight={() => <Button
                                         containerStyle={{ borderRadius: s(24) }}
-                                        label="添加" onPress={async () => {
+                                        label={t('friend.label_add')} onPress={async () => {
                                             try {
                                                 const res = await friendApplyService.agree(item.friendApply.id)
                                                 if (res && res.chatId) {
@@ -123,7 +123,7 @@ export const FriendInviteRecordScreen = ({ navigation }: Props) => {
                                                 }
                                             } catch (e) {
 
-                                            } 
+                                            }
                                         }} />}
                                 />
                             }

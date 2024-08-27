@@ -4,6 +4,7 @@ import Navbar from "app/components/Navbar";
 import { ColorsState } from "app/stores/system";
 import { s } from "app/utils/size";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Text } from "react-native";
 import { View } from "react-native";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
@@ -14,6 +15,7 @@ type Props = StackScreenProps<App.StackParamList, 'DonateScreen'>;
 export const DonateScreen = (props: Props) => {
     const themeColor = useRecoilValue(ColorsState)
     const [chooseIdx, setChooseIdx] = useState(0)
+    const { t } = useTranslation("screens")
     const btnStyle = (idx: number,) => {
         if (idx === chooseIdx) {
             return {
@@ -31,7 +33,7 @@ export const DonateScreen = (props: Props) => {
         flex: 1,
         backgroundColor: themeColor.secondaryBackground
     }}>
-        <Navbar title="捐赠" />
+        <Navbar title={t('donate.title')} />
         <View style={{
             alignItems: 'center',
             display: 'flex',
@@ -49,7 +51,7 @@ export const DonateScreen = (props: Props) => {
                     fontSize: s(16),
 
                 }}>
-                    大家好！我们是BOBO，是一群志愿者，致力于为艺术家和艺术爱好者打造新的社交媒体和作品集平台。
+                    {t('donate.describe')}
                 </Text>
                 <View style={{
                     marginTop: s(46),
@@ -101,7 +103,7 @@ export const DonateScreen = (props: Props) => {
                 </View>
             </View>
 
-            <Button label="支付" size="large" containerStyle={{
+            <Button label={t('donate.btnPayment')} size="large" containerStyle={{
                 backgroundColor: themeColor.primary,
                 marginTop: s(24),
                 width: '100%'
@@ -122,11 +124,14 @@ export const DonateScreen = (props: Props) => {
                 color: themeColor.text,
                 fontSize: s(18),
                 marginVertical: s(12)
-            }}>捐赠加密货币
+            }}>
+                {t('donate.donateCoin')}
             </Text>
             <Text style={{
                 fontSize: s(14)
-            }}>我们接受USDT、USDC、bit coin、eth、sol等加密货币的捐赠</Text>
+            }}>
+                {t('donate.donateCoinDesc')}
+            </Text>
 
             <View style={{
                 width: '100%',

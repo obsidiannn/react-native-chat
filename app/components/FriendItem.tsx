@@ -39,7 +39,7 @@ export default (props: {
                 <Text style={{
                     fontSize: 14,
                     color: colors.palette.gray400
-                }}>{strUtil.truncateMiddle(item.userName, 18)}</Text>
+                }}>{strUtil.truncateMiddle(item.remark ?? '', 18)}</Text>
             </View>
             <View>
                 <IconFont name="arrowRight" color={colors.palette.gray300} size={16} />

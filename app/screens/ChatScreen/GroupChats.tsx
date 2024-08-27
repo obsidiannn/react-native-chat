@@ -9,8 +9,6 @@ import { navigate } from "app/navigators"
 import { useTranslation } from "react-i18next"
 import { ColorsState } from "app/stores/system"
 import ContractListItem from "app/components/ContractListItem"
-import chatService from "app/services/chat.service"
-import toast from "app/utils/toast"
 import { GroupDetailItem } from "@repo/types"
 import fileService from "app/services/file.service"
 

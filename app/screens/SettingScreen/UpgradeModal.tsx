@@ -6,6 +6,7 @@ import { ColorValue, Linking, ScrollView, Text, TextStyle, TouchableOpacity, Vie
 import { useRecoilValue } from "recoil";
 import { IServer } from "@repo/types";
 import AppApi from "app/api/sys/app";
+import { useTranslation } from "react-i18next";
 export interface UpgradeModalType {
   open: () => void,
   close: () => void
@@ -81,6 +82,8 @@ const VersionListItem = (props: {
 }) => {
   const $colors = useRecoilValue(ColorsState);
   const { item } = props;
+  const { t } = useTranslation('screens')
+
   return <Card rounded>
     <View style={{
       flexDirection: "row",
@@ -93,7 +96,7 @@ const VersionListItem = (props: {
         fontWeight: "600",
         color: $colors.text
       }}>{item.versionName}</Text>
-      <Button onPress={() => Linking.openURL(item.downloadUrl)} label="下载" />
+      <Button onPress={() => Linking.openURL(item.downloadUrl)} label={t('common.btn_download')} />
     </View>
     <View style={{
       width: "100%",
@@ -114,11 +117,11 @@ export const UpgradeModal = forwardRef((_, ref) => {
   const screenModalRef = useRef<ScreenModalType>(null);
   const [items, setItems] = useState<IServer.IAppVersion[]>([]);
   const loadData = useCallback(async () => {
-    const rep  = await AppApi.getVersions({
+    const rep = await AppApi.getVersions({
       platform: "android",
       language: "zh-CN",
       offset: 0,
-          limit: 10
+      limit: 10
     });
     setItems(rep.list);
   }, [])

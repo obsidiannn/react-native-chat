@@ -1,5 +1,5 @@
 import { forwardRef, useImperativeHandle, useMemo, useState } from "react";
-import { Modal, Pressable, Text, View, TouchableOpacity } from "react-native";
+import { Modal, Pressable, Text, View, TouchableOpacity, Platform } from "react-native";
 import { MessageType } from "../chat-ui";
 import dateUtil from "app/utils/dateUtil";
 import { StyleSheet } from "react-native";
@@ -10,6 +10,9 @@ import { s } from "app/utils/size";
 import { Image } from "expo-image";
 import fileService from "app/services/file.service";
 import { IconFont } from "../IconFont/IconFont";
+import { hasAndroidPermission } from "app/services/permissions";
+import toast from "app/utils/toast";
+import { CameraRoll } from "@react-native-camera-roll/camera-roll";
 
 export interface ImageRecordModalType {
     open: () => void
@@ -100,7 +103,7 @@ export default forwardRef((props: {
         console.log("[weekGroup]", weekGroup);
 
         return weekGroup
-    }, [props.images])
+    }, [props.images, choosing, choosedIds])
 
 
     const onClose = () => {
@@ -127,21 +130,41 @@ export default forwardRef((props: {
                 alignItems: 'center'
             }}>
                 {item.data.map(d => {
-                    return <Pressable key={d.id + '_image_preview'}>
+                    return <Pressable key={d.id + '_image_preview'} onPress={() => {
+                        if (choosing) {
+                            setChoosedIds(ids => {
+                                const exist = ids.find(id => id === d.id)
+                                if (!exist) {
+                                    return ids.concat(d.id)
+                                }
+                                return ids.filter(id => id !== d.id)
+                            })
+                        }
+                    }}>
                         <Image
                             source={fileService.getFullUrl(d.uri)}
                             style={style.itemImage} />
-                        <View style={{
-                            position: 'absolute',
-                            padding: s(2),
-                            borderWidth: s(1),
-                            borderColor: themeColor.text,
-                            borderRadius: s(24),
-                            right: s(10),
-                            top: s(10)
-                        }}>
-                            <IconFont name="checkMark" color={themeColor.text} size={18} />
-                        </View>
+                        {choosing ? (
+                            <View style={{
+                                position: 'absolute',
+                                padding: s(2),
+                                borderWidth: s(1),
+                                ...(choosedIds.indexOf(d.id) > -1 ?
+                                    {
+                                        borderColor: themeColor.primary,
+                                        backgroundColor: themeColor.primary
+                                    } : {
+                                        borderColor: themeColor.text,
+                                    }),
+                                borderRadius: s(24),
+                                right: s(10),
+                                top: s(10),
+                            }}>
+                                <IconFont name="checkMark" color={themeColor.text} size={18} />
+                            </View>
+                        ) : null}
+
+
                     </Pressable>
                 })}
             </View>
@@ -161,9 +184,33 @@ export default forwardRef((props: {
             backgroundColor: colors.palette.gray600
         }} onPress={() => {
             setChoosing(!choosing)
+            setChoosedIds([])
         }}>
             <IconFont name="checkMark" color={themeColor.text} size={22} />
         </TouchableOpacity>
+    }
+
+    const batchDownload = async () => {
+        if (choosedIds.length <= 0) {
+            return
+        }
+        if (Platform.OS == "android") {
+            const permission = await hasAndroidPermission();
+            if (!permission) {
+                toast('請先允許訪問相冊');
+                return;
+            }
+        }
+        const urls = props.images.filter(i => choosedIds.includes(i.id))
+            .map(i => i.uri)
+        for (let index = 0; index < urls.length; index++) {
+            const url = urls[index];
+            await CameraRoll.saveAsset(fileService.getFullUrl(url), {
+                type: 'photo',
+                album: 'Bobo'
+            })
+        }
+        toast('保存到相冊成功');
     }
 
     return <BaseModal visible={visible} styles={style.container} onClose={onClose} title="图片"
@@ -173,6 +220,36 @@ export default forwardRef((props: {
             <FlashList data={weekGroups} renderItem={({ item, index }) => renderItem(item, index)}
                 estimatedItemSize={30}
             />
+            {
+                choosing ? (<View style={{
+                    backgroundColor: themeColor.primary,
+                    width: '100%',
+                    padding: s(8),
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    opacity: 0.8
+                }}>
+                    <TouchableOpacity>
+                        <IconFont color={themeColor.text} size={26} name="plus" />
+                    </TouchableOpacity>
+                    <TouchableOpacity style={{
+                        marginLeft: s(12)
+                    }}>
+                        <IconFont color={themeColor.text} size={26} name="share" />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        onPress={async () => {
+                            await batchDownload()
+                        }}
+                        style={{
+                            marginLeft: s(12)
+                        }}>
+                        <IconFont color={themeColor.text} size={26} name="download" />
+                    </TouchableOpacity>
+                </View>) : null
+            }
         </View>
     </BaseModal>
 })

@@ -9,8 +9,6 @@ import { navigate } from "app/navigators"
 import { ColorsState } from "app/stores/system"
 import { IUser } from "drizzle/schema"
 import ContractListItem from "app/components/ContractListItem"
-import chatService from "app/services/chat.service"
-import toast from "app/utils/toast"
 import fileService from "app/services/file.service"
 
 

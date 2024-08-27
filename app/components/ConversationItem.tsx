@@ -44,17 +44,6 @@ export default (props: IContactListItemProps) => {
         <View style={styles.iconContainer}>
             <AvatarComponent url={props.icon ?? ''} online={props.online} />
         </View>
-        {/* {
-            props.renderAvatar ? (props.renderAvatar) : (<View style={styles.iconContainer}>
-                <Image source={props.icon} style={styles.icon} />
-                {
-                    props.badgeNumber && props.badgeNumber > 0 ?
-                        <View style={styles.badgeContainer}>
-                            <Text style={styles.badgeText}>{props.badgeNumber > 99 ? 99 : props.badgeNumber}</Text>
-                        </View> : null
-                }
-            </View>)
-        } */}
         <View style={{
             ...styles.rightContainer,
         }}>

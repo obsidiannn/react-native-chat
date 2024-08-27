@@ -12,11 +12,12 @@ import * as FileSystem from 'expo-file-system';
 import toast from "app/utils/toast"
 import { restore } from "app/utils/account"
 import { App } from "types/app"
-import {ConfirmModal, ConfirmModalType } from "app/components/ConfirmModal"
+import { ConfirmModal, ConfirmModalType } from "app/components/ConfirmModal"
 type Props = StackScreenProps<App.StackParamList, 'SignInScreen'>;
 export const SignInScreen = ({ navigation }: Props) => {
   const $colors = useRecoilValue(ColorsState)
   const confirmModalRef = useRef<ConfirmModalType>(null);
+
   return <Screen preset="fixed" safeAreaEdges={["top"]} backgroundColor={$colors.background}>
     <View style={{ flex: 1 }}>
       <Navbar title="登录" />
@@ -58,7 +59,7 @@ export const SignInScreen = ({ navigation }: Props) => {
                 }
               }
             })
-            
+
           }} label="导入备份文件" />
         </View>
       </View>

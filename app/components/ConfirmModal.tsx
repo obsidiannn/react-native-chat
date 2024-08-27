@@ -4,6 +4,7 @@ import { ColorsState } from "app/stores/system";
 import { s } from "app/utils/size";
 import { useRecoilValue } from "recoil";
 import { Button, Card } from "app/components";
+import { useTranslation } from "react-i18next";
 export interface ConfirmModalOption {
   title: string;
   content: string;
@@ -18,6 +19,7 @@ export interface ConfirmModalType {
 export const ConfirmModal = forwardRef((_, ref) => {
   const [visible, setVisible] = useState(false);
   const $colors = useRecoilValue(ColorsState);
+  const { t } = useTranslation('components')
   const [option, setOption] = useState<ConfirmModalOption>({
     title: "",
     content: "",
@@ -36,19 +38,19 @@ export const ConfirmModal = forwardRef((_, ref) => {
       <View style={$container}>
         <Card rounded>
           <View style={$titleContainer}>
-            <Text style={[$title,{color: $colors.text}]}>{option.title}</Text>
+            <Text style={[$title, { color: $colors.text }]}>{option.title}</Text>
           </View>
-          <Text style={[$content,{color: $colors.secondaryText}]}>{option.content}</Text>
+          <Text style={[$content, { color: $colors.secondaryText }]}>{option.content}</Text>
           <View>
             <Button onPress={async () => {
               option.onSubmit?.();
               setVisible(false);
             }} containerStyle={{
               marginTop: s(15)
-            }} rounded fullRounded size="large" label="确认" />
+            }} rounded fullRounded size="large" label={t('confirm.btn_submit')} />
             <Button onPress={() => setVisible(false)} containerStyle={{
               marginVertical: s(15)
-            }} rounded fullRounded type="secondary" size="large" label="取消" />
+            }} rounded fullRounded type="secondary" size="large" label={t('confirm.btn_cancel')} />
           </View>
         </Card>
       </View>

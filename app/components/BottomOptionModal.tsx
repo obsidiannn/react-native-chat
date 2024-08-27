@@ -1,5 +1,6 @@
 import { s, verticalScale } from "app/utils/size";
 import { forwardRef, useImperativeHandle, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Modal, Pressable, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 export interface BottomOptionModalProps {
@@ -16,6 +17,7 @@ export default forwardRef((props: BottomOptionModalProps, ref) => {
     const insets = useSafeAreaInsets();
     const [visible, setVisible] = useState(false);
     const { items, onCancel } = props;
+    const { t } = useTranslation('components')
     useImperativeHandle(ref, () => ({
         open: () => setVisible(true)
     }));
@@ -70,7 +72,7 @@ export default forwardRef((props: BottomOptionModalProps, ref) => {
                             color: '#D90000',
                             fontSize: s(16),
                             fontWeight: '500',
-                        }}>取消</Text>
+                        }}>{t('confirm.btn_cancel')}</Text>
                     </Pressable>
                 </View>
             </View>

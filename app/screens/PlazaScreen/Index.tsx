@@ -70,22 +70,22 @@ export const PlazaScreen = ({ navigation }: Props) => {
   return <View style={[styles.container, {
     backgroundColor: themeColor.background
   }]}>
-    <BannerComponent label="发现" describe="你最喜欢的社区" onPress={() => {
+    <BannerComponent label={t('discover.labelDiscover')} describe={t('discover.labelDiscoverDesc')} onPress={() => {
       console.log('press');
 
       navigation.navigate('DiscoverScreen')
     }} />
     <View style={styles.topContainer}>
       <Button label={t('chat.btn_recent')} onPress={() => changeTab(0)}
-        containerStyle={{...styles.tabButton, ...btnStyle(0)}}
+        containerStyle={{ ...styles.tabButton, ...btnStyle(0) }}
         textStyle={btnTextStyle(0)}
       />
       <Button label={t('chat.btn_group')} onPress={() => changeTab(1)}
-        containerStyle={{...styles.tabButton, ...btnStyle(1)}}
+        containerStyle={{ ...styles.tabButton, ...btnStyle(1) }}
         textStyle={btnTextStyle(1)}
       />
       <Button label={t('chat.btn_contract')} onPress={() => changeTab(2)}
-        containerStyle={{...styles.tabButton, ...btnStyle(2)}}
+        containerStyle={{ ...styles.tabButton, ...btnStyle(2) }}
         textStyle={btnTextStyle(2)}
       />
     </View>

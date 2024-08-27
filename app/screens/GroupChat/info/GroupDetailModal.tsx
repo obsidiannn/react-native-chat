@@ -184,7 +184,7 @@ export default forwardRef((_, ref) => {
                     display: 'flex', flexDirection: 'row', alignItems: 'center',
                 }}>
                     <IconFont name="userGroup" color={themeColor.secondaryText} size={22} />
-                    <Text>当前群成员人数</Text>
+                    <Text>{t('groupChat.labelCurrentMemberCount')}</Text>
                 </View>
                 <Text>
                     {groupContext.members.length}/{groupContext.group.memberLimit}

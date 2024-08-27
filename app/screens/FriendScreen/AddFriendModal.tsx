@@ -8,6 +8,7 @@ import userService from "app/services/user.service";
 import { ColorsState } from "app/stores/system";
 import { s } from "app/utils/size";
 import { useCallback, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { View, StyleSheet, TextInput, Pressable, ScrollView } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useRecoilValue } from "recoil";
@@ -17,7 +18,7 @@ export const AddFriendModal = () => {
     const [keyword, setKeyword] = useState('')
     const [loading, setLoading] = useState(false);
     const [friends, setFriends] = useState<IServer.IFriend[]>([]);
-
+    const { t } = useTranslation('screens')
     const search = useCallback(async (v: string, l: boolean) => {
         if (!v) {
             return;
@@ -63,7 +64,7 @@ export const AddFriendModal = () => {
         flex: 1,
         paddingTop: insets.top
     }}>
-        <Navbar title="添加好友" />
+        <Navbar title={t('friend.add_friend_title')} />
         <View style={{
             ...styles.mainContainer,
             backgroundColor: themeColor.background
@@ -84,7 +85,7 @@ export const AddFriendModal = () => {
                         }
                         search(keyword, true)
                     }}
-                    returnKeyLabel="搜索"
+                    returnKeyLabel={t('friend.label_search')}
                     returnKeyType="search"
                     onChangeText={(v) => {
                         setKeyword(v)

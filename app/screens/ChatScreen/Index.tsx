@@ -199,10 +199,7 @@ export const ChatScreen = ({ navigation }: Props) => {
     return <View style={[styles.container, {
         backgroundColor: themeColor.background
     }]}>
-        {/* <BannerComponent label="邀请好友" describe="分享一个链接" onPress={() => {
-
-        }} /> */}
-
+  
         <View style={styles.topContainer} >
             <Button label={t('chat.btn_recent')} onPress={() => changeTab(0)} containerStyle={btnStyle(0)}
                 // style={[styles.tabButton]}

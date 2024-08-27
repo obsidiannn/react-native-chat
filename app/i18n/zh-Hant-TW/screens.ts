@@ -6,8 +6,16 @@ export default {
         agree: "我已阅读并同意",
         agreement_privacy: "隐私政策",
         agreement_user: "可接受条款",
-        confirm_title:'确认阅读并同意相关协议',
-        confirm_content:'确认阅读并同意相关协议',
+        confirm_title: '确认阅读并同意相关协议',
+        confirm_content: '确认阅读并同意相关协议',
+    },
+    sign: {
+        singIn: "登录",
+        singInLocal: "登录本地账户",
+        importConfirm: "是否导入备份文件？",
+        importConfirmDesc: "导入后将覆盖已有的本地数据，导入后应用将重启。",
+        importSuccess: "导入成功",
+        btnImport: "导入备份文件"
     },
     chat: {
         btn_send: "发送",
@@ -25,7 +33,7 @@ export default {
         ok: "OK!",
         cancel: "Cancel",
         back: "Back",
-        btn_download: 'Download',
+        btn_download: '下载',
         btn_cancel: "",
         loading: "加载中",
         btn_save: "保存",
@@ -34,7 +42,7 @@ export default {
         success_updated: "更新成功",
         failed_updated: "更新失败",
         default_label_none: "無",
-
+        operate_success: "操作成功"
     },
     userInfo: {
         my_qrcode: "我的二维码",
@@ -46,11 +54,21 @@ export default {
         success_copied: "複製成功",
         btn_backup_tips: "備份私钥",
         btn_backup_tips_desc: "請謹慎操作！",
+        btn_share_card: "分享名片",
+        btn_complain: "投诉",
+
+        btn_remove_friend: "删除好友",
+        btn_remove_friend_desc: "确认删除好友，聊天记录将不可恢复",
+
         title_user_info: "用戶信息",
         label_start_chat: "发送消息",
         label_add_friend: "添加好友",
         label_empty: "(空)",
-        label_remark: "備註："
+        label_remark: "備註：",
+
+        label_block: "加入黑名单",
+        label_block_desc: "确认加入黑名单?",
+
     },
     friend: {
         error_username: "请输入正确的用户名！",
@@ -71,7 +89,9 @@ export default {
         title_invite_info: "邀请信息",
         title_apply_info: "验证信息",
         title_new_friend: "新的好友",
-        label_pending: "等待验证"
+        label_pending: "等待验证",
+        label_search: "搜索",
+        label_add: "添加"
     },
 
     groupCreate: {
@@ -142,6 +162,7 @@ export default {
         label_manager_3: "最多可设置3个管理员",
         label_manager_auth: "羣管理員可以擁有以下權利",
         label_current_manager: "現羣管理員",
+        labelCurrentMemberCount: "当前群成员人数",
         placeholder_remark: "請輸入備註",
         option_success: "操作成功",
         option_failed: "操作失敗",
@@ -199,6 +220,26 @@ export default {
         paragraph_username_1: "您的昵称将对与您选择了相同语言的用户可见，您今年还有3次机会修改;C2C 认证商家和钻石商家不能修改昵称",
         paragraph_username_2: "我们会审核您提交的昵称，过程需要一定时间，请耐心等待",
         paragraph_username_3: "创建昵称时，请勿使用不雅用词、欧易官方名称 (即产品名称)和其他交易平台上的名称",
+    },
+    contract: {
+        labelAvatar: "头像",
+        labelScan: "扫码",
+        labelQrcode: "二维码"
+    },
+    discover: {
+        labelDiscover: "发现",
+        labelDiscoverDesc: "你最喜欢的社区",
+
+    },
+    feedback: {
+        labelChooseCategory: "请选择分类",
+    },
+    donate: {
+        title: "捐赠",
+        describe: "大家好！我们是BOBO，是一群志愿者，致力于为艺术家和艺术爱好者打造新的社交媒体和作品集平台。",
+        btnPayment: "支付",
+        donateCoin: "捐赠加密货币",
+        donateCoinDesc: "我们接受USDT、USDC、bit coin、eth、sol等加密货币的捐赠",
     }
 
 }

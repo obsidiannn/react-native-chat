@@ -16,6 +16,7 @@ import { navigate } from "app/navigators";
 import { LocalUserService } from "app/services/LocalUserService";
 import eventUtil from "app/utils/event-util";
 import UserComplainModal from "./UserComplainModal";
+import { useTranslation } from "react-i18next";
 
 export interface UserConfigModalType {
     open: (userId: number) => void
@@ -31,6 +32,8 @@ export default forwardRef((props: {
     const userContext = useContext(UserChatUIContext)
     const [friendAlias, setFriendAlias] = useState('')
     const userComplainModalRef = useRef<UserConfigModalType>(null)
+
+    const { t } = useTranslation('screens')
 
     const isEditable = (): boolean => {
         return editing && props.friend !== null && ((props.friend.isFriend ?? 0) > 0)
@@ -144,7 +147,7 @@ export default forwardRef((props: {
                     paddingVertical: s(12)
                 }}>
                     <IconFont name="pencil" color={themeColor.text} size={24} />
-                    <Text style={{ color: themeColor.text, }}>分享名片</Text>
+                    <Text style={{ color: themeColor.text, }}>{t('userInfo.btn_share_card')}</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
@@ -160,7 +163,7 @@ export default forwardRef((props: {
                         paddingVertical: s(12)
                     }}>
                     <IconFont name="pencil" color={themeColor.text} size={24} />
-                    <Text style={{ color: themeColor.text, }}>投诉</Text>
+                    <Text style={{ color: themeColor.text, }}>{t('userInfo.btn_complain')}</Text>
                 </TouchableOpacity>
 
             </View>
@@ -173,7 +176,7 @@ export default forwardRef((props: {
                 borderTopColor: themeColor.border,
                 paddingVertical: s(12)
             }}>
-                <FormLine title={'加入黑名单'}
+                <FormLine title={t('userInfo.label_block')}
                     textStyle={{
                         color: colors.palette.red500
                     }}
@@ -182,8 +185,8 @@ export default forwardRef((props: {
                     }
                     onPress={() => {
                         confirmModalRef.current?.open({
-                            title: '加入黑名单',
-                            content: '确认加入黑名单',
+                            title: t('userInfo.label_block'),
+                            content: t('userInfo.label_block_desc'),
                             onSubmit: async () => {
                                 console.log(props.friend);
 
@@ -206,7 +209,7 @@ export default forwardRef((props: {
             <View style={{
                 marginTop: s(36),
             }}>
-                <FormLine title={'删除好友'}
+                <FormLine title={t('userInfo.btn_remove_friend')}
                     textStyle={{
                         color: colors.palette.red500
                     }}
@@ -215,8 +218,8 @@ export default forwardRef((props: {
                     }
                     onPress={() => {
                         confirmModalRef.current?.open({
-                            title: '删除好友',
-                            content: '确认删除好友，聊天记录将不可恢复',
+                            title: t('userInfo.btn_remove_friend'),
+                            content: t('userInfo.btn_remove_friend_desc'),
                             onSubmit: () => {
                                 friendService.remove(props.friend?.friendId ?? 0).then((chatId) => {
                                     if (chatId) {
