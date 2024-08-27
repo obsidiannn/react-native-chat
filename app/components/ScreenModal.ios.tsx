@@ -1,5 +1,5 @@
-import { forwardRef,  useImperativeHandle, useState } from "react"
-import {  Modal,ViewStyle } from "react-native"
+import { forwardRef, useImperativeHandle, useState } from "react"
+import { Modal, ViewStyle } from "react-native"
 import { Gesture, GestureDetector, GestureStateChangeEvent, PanGestureHandlerEventPayload } from "react-native-gesture-handler";
 import { runOnJS } from "react-native-reanimated";
 import { ScreenX } from "./ScreenX";
@@ -29,8 +29,8 @@ export const ScreenModal = forwardRef((props: {
         <Modal transparent={false} style={{ flex: 1 }} visible={visible} animationType="slide">
             <GestureDetector gesture={gesture}>
                 <ScreenX theme={props.theme} title={props.title ?? '1'} onLeftPress={() => setVisible(false)} >
-                        {props.children}
-                    </ScreenX>
+                    {props.children}
+                </ScreenX>
             </GestureDetector>
         </Modal>
     )
