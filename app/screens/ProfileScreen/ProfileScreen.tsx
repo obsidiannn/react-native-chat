@@ -22,7 +22,6 @@ import strUtil from "app/utils/str-util";
 import { IconFont } from "app/components/IconFont/IconFont";
 import { ScreenX } from "app/components/ScreenX";
 export const ProfileScreen = () => {
-    ;
     const $colors = useRecoilValue(ColorsState);
     const $theme = useRecoilValue(ThemeState);
     const updateNickNameModalRef = useRef<UpdateNickNameModalRef>(null)
@@ -32,7 +31,7 @@ export const ProfileScreen = () => {
     const [authUser, setAuthUser] = useRecoilState(AuthUser)
     const { t } = useTranslation('screens');
     const authUpdate = (user: IUser) => {
-        void LocalUserService.deleteByIdIn([user?.id ?? 0])
+        void LocalUserService.addBatch([user])
         setAuthUser(user)
     }
 
@@ -55,91 +54,91 @@ export const ProfileScreen = () => {
             }} />
         </View>
         <View style={{
-            paddingHorizontal:s(16)
+            paddingHorizontal: s(16)
         }}>
-        <CardMenu theme={$theme} items={[
-            {
-                icon: <IconFont name="pencil" color={$colors.text} size={24} />,
-                title: t('profile.title_nickname'),
-                onPress: () => {
-                    updateNickNameModalRef.current?.open({
-                        value: authUser?.nickName ?? '',
-                        callback: (val: string) => {
-                            authUpdate({
-                                ...authUser,
-                                nickName: val
-                            })
-                            toast(t('common.success_updated'));
-                        }
-                    })
+            <CardMenu theme={$theme} items={[
+                {
+                    icon: <IconFont name="pencil" color={$colors.text} size={24} />,
+                    title: t('profile.title_nickname'),
+                    onPress: () => {
+                        updateNickNameModalRef.current?.open({
+                            value: authUser?.nickName ?? '',
+                            callback: (val: string) => {
+                                authUpdate({
+                                    ...authUser,
+                                    nickName: val
+                                })
+                                toast(t('common.success_updated'));
+                            }
+                        })
+                    },
+                    rightArrow: <View style={styles.formLine} >
+                        <Text style={{ color: $colors.secondaryText }}>{authUser?.nickName}</Text>
+                        <IconFont name="arrowRight" color={$colors.border} size={16} />
+                    </View>,
                 },
-                rightArrow: <View style={styles.formLine} >
-                    <Text style={{ color: $colors.secondaryText }}>{authUser?.nickName}</Text>
-                    <IconFont name="arrowRight" color={$colors.border} size={16} />
-                </View>,
-            },
-            {
-                icon: <IconFont name="userProfile" color={$colors.text} size={24} />,
-                title: t('profile.title_username'),
-                onPress: () => {
-                    updateUsernameModalRef.current?.open({
-                        value: authUser?.userName ?? '',
-                        callback: (val: string) => {
-                            authUpdate({
-                                ...authUser,
-                                userName: val
-                            })
-                            toast(t('success_updated'));
-                        }
-                    })
-                },
-                rightArrow: <View style={styles.formLine} >
-                    <Text style={{ color: $colors.secondaryText }}>{strUtil.truncateMiddle(authUser?.userName ?? '', 20)}</Text>
-                    <IconFont name="arrowRight" color={$colors.border} size={16} />
-                </View>
+                {
+                    icon: <IconFont name="userProfile" color={$colors.text} size={24} />,
+                    title: t('profile.title_username'),
+                    onPress: () => {
+                        updateUsernameModalRef.current?.open({
+                            value: authUser?.userName ?? '',
+                            callback: (val: string) => {
+                                authUpdate({
+                                    ...authUser,
+                                    userName: val
+                                })
+                                toast(t('success_updated'));
+                            }
+                        })
+                    },
+                    rightArrow: <View style={styles.formLine} >
+                        <Text style={{ color: $colors.secondaryText }}>{strUtil.truncateMiddle(authUser?.userName ?? '', 20)}</Text>
+                        <IconFont name="arrowRight" color={$colors.border} size={16} />
+                    </View>
 
-            },
-            {
-                icon: <IconFont name="women" color={$colors.text} size={24} />,
-                title: t('profile.title_gender'),
-                onPress: () => {
-                    updateGenderModalRef.current?.open({
-                        value: authUser?.gender ?? IModel.IUser.Gender.UNKNOWN,
-                        callback: (val: number) => {
-                            authUpdate({
-                                ...authUser,
-                                gender: val
-                            })
-                            toast(t('common.success_updated'));
-                        }
-                    })
                 },
-                rightArrow: <View style={styles.formLine} >
-                    <Text style={{ color: $colors.secondaryText }}>{profile.genderValue(authUser?.gender)}</Text>
-                    <IconFont name="arrowRight" color={$colors.border} size={16} />
-                </View>
-            },
-            {
-                icon: <IconFont name="doc" color={$colors.text} size={24} />,
-                title: t('profile.title_sign'),
-                onPress: () => {
-                    updateSignModalRef.current?.open({
-                        value: authUser?.sign ?? '',
-                        callback: (val: string) => {
-                            authUpdate({
-                                ...authUser,
-                                sign: val
-                            })
-                            toast(t('common.success_updated'));
-                        }
-                    })
+                {
+                    icon: <IconFont name="women" color={$colors.text} size={24} />,
+                    title: t('profile.title_gender'),
+                    onPress: () => {
+                        updateGenderModalRef.current?.open({
+                            value: authUser?.gender ?? IModel.IUser.Gender.UNKNOWN,
+                            callback: (val: number) => {
+                                authUpdate({
+                                    ...authUser,
+                                    gender: val
+                                })
+                                toast(t('common.success_updated'));
+                            }
+                        })
+                    },
+                    rightArrow: <View style={styles.formLine} >
+                        <Text style={{ color: $colors.secondaryText }}>{profile.genderValue(authUser?.gender)}</Text>
+                        <IconFont name="arrowRight" color={$colors.border} size={16} />
+                    </View>
                 },
-                rightArrow: <View style={styles.formLine} >
-                    <Text style={{ color: $colors.secondaryText }}>{strUtil.truncateMiddle(authUser?.sign ?? '', 20) ?? t('common.default_label_none')}</Text>
-                    <IconFont name="arrowRight" color={$colors.border} size={16} />
-                </View>
-            },
-        ]} />
+                {
+                    icon: <IconFont name="doc" color={$colors.text} size={24} />,
+                    title: t('profile.title_sign'),
+                    onPress: () => {
+                        updateSignModalRef.current?.open({
+                            value: authUser?.sign ?? '',
+                            callback: (val: string) => {
+                                authUpdate({
+                                    ...authUser,
+                                    sign: val
+                                })
+                                toast(t('common.success_updated'));
+                            }
+                        })
+                    },
+                    rightArrow: <View style={styles.formLine} >
+                        <Text style={{ color: $colors.secondaryText }}>{strUtil.truncateMiddle(authUser?.sign ?? '', 20) ?? t('common.default_label_none')}</Text>
+                        <IconFont name="arrowRight" color={$colors.border} size={16} />
+                    </View>
+                },
+            ]} />
         </View>
         <UpdateNickNameModal theme={$theme} ref={updateNickNameModalRef} />
         <UpdateGenderModal theme={$theme} ref={updateGenderModalRef} />

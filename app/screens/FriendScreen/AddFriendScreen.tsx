@@ -1,19 +1,19 @@
 import { IServer } from "@repo/types";
 import FriendItem from "app/components/FriendItem";
 import { IconFont } from "app/components/IconFont/IconFont";
-import Navbar from "app/components/Navbar";
+import { ScreenX } from "app/components/ScreenX";
 import fileService from "app/services/file.service"
 import friendService from "app/services/friend.service";
 import userService from "app/services/user.service";
-import { ColorsState } from "app/stores/system";
+import { ColorsState, ThemeState } from "app/stores/system";
 import { s } from "app/utils/size";
 import { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { View, StyleSheet, TextInput, Pressable, ScrollView } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useRecoilValue } from "recoil";
 
-export const AddFriendModal = () => {
+export const AddFriendScreen = () => {
+    const $theme = useRecoilValue(ThemeState)
     const themeColor = useRecoilValue(ColorsState)
     const [keyword, setKeyword] = useState('')
     const [loading, setLoading] = useState(false);
@@ -59,12 +59,7 @@ export const AddFriendModal = () => {
             setLoading(false)
         }
     }, [])
-    const insets = useSafeAreaInsets();
-    return <View style={{
-        flex: 1,
-        paddingTop: insets.top
-    }}>
-        <Navbar title={t('friend.add_friend_title')} />
+    return <ScreenX title={t('friend.add_friend_title')} theme={$theme} >
         <View style={{
             ...styles.mainContainer,
             backgroundColor: themeColor.background
@@ -107,14 +102,13 @@ export const AddFriendModal = () => {
                 {friends.map((item, i) => <FriendItem isLast={i == (friends.length - 1)} item={item} key={item.id} />)}
             </ScrollView>
         </View>
-    </View>
+    </ScreenX>
 }
 
 const styles = StyleSheet.create({
     mainContainer: {
         flex: 1,
-        padding: s(14),
-        paddingTop: s(24),
+        padding: s(12),
         display: 'flex',
         marginTop: s(24),
         borderTopLeftRadius: s(32),
@@ -126,8 +120,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        borderRadius: s(32),
-        paddingVertical: s(14),
+        borderRadius: s(36),
+        paddingVertical: s(12),
         paddingRight: s(24),
         paddingLeft: s(14),
     },

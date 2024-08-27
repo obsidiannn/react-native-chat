@@ -43,7 +43,8 @@ export const ConfirmModal = forwardRef((props: {
           </View>
           <Text style={[$content, { color: $colors.secondaryText }]}>{option.content}</Text>
           <View>
-            <Button theme={theme} onPress={async () => {
+            <Button theme={theme} 
+            onPress={async () => {
               option.onSubmit?.();
               setVisible(false);
             }} containerStyle={{

@@ -93,33 +93,33 @@ export default forwardRef((_, ref) => {
                     /> : null}
                 </ViewShot>
                 <View>
-                    <Button onPress={() => {
-                        if (viewRef.current == null) {
-                            return;
-                        }
-                        captureRef(viewRef.current, {
-                            format: "jpg",
-                            quality: 0.8,
-                            handleGLSurfaceViewOnAndroid: true,
-                        }).then(uri => {
-                            console.log(uri);
-                            toast(t('groupChat.success_save_album'));
-                        });
-                    }}
-                        style={{
+                    <Button
+                        fullWidth fullRounded
+                        onPress={() => {
+                            if (viewRef.current == null) {
+                                return;
+                            }
+                            captureRef(viewRef.current, {
+                                format: "jpg",
+                                quality: 0.8,
+                                handleGLSurfaceViewOnAndroid: true,
+                            }).then(uri => {
+                                console.log(uri);
+                                toast(t('groupChat.success_save_album'));
+                            });
+                        }}
+                        containerStyle={{
                             height: s(42),
                             marginTop: s(40),
                             borderRadius: s(21),
                             backgroundColor: themeColor.primary
-                        }} >
-                        <Text style={{
+                        }}
+                        textStyle={{
                             fontSize: s(14),
                             fontWeight: '700',
                             color: themeColor.textChoosed
-                        }}>
-                            {t('groupChat.btn_save_image')}
-                        </Text>
-                    </Button>
+                        }} label={t('groupChat.btn_save_image')} />
+
                 </View>
             </View>
         </View>

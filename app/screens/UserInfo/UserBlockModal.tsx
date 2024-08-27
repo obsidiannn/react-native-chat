@@ -50,6 +50,7 @@ export default forwardRef((_, ref) => {
                         paddingHorizontal: s(16),
                     }}>
                         <Button
+                            fullRounded fullWidth
                             size="large"
                             onPress={async () => {
 

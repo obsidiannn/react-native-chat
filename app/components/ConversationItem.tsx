@@ -40,7 +40,7 @@ export default (props: IContactListItemProps) => {
     return <TouchableOpacity onPress={props.onPress} style={[
         styles.container,
         {
-            borderBottomWidth: 1,
+            borderBottomWidth: s(0.5),
         },
         props.bottomLine && {
             borderBottomColor: props.theme === 'light' ? $colors.slate400 : $colors.slate100,

@@ -212,7 +212,7 @@ export default forwardRef((_, ref) => {
                 }
 
             </ScrollView>
-            <Button containerStyle={{
+            <Button fullWidth fullRounded containerStyle={{
                 backgroundColor: themeColor.primary,
                 borderRadius: s(14),
             }}

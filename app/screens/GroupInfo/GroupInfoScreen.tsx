@@ -14,11 +14,12 @@ import { Image } from "expo-image";
 import { Button } from "app/components";
 import fileService from "app/services/file.service";
 import { useRecoilValue } from "recoil";
-import { ColorsState } from "app/stores/system";
+import { ColorsState, ThemeState } from "app/stores/system";
+import { ScreenX } from "app/components/ScreenX";
 type Props = StackScreenProps<App.StackParamList, 'GroupInfoScreen'>;
 
 export const GroupInfoScreen = ({ navigation, route }: Props) => {
-    const insets = useSafeAreaInsets();
+    const $theme = useRecoilValue(ThemeState)
     const [group, setGroup] = useState<GroupDetailItem | null>(null);
     const applyJoinModalRef = useRef<ApplyJoinModalRef>(null);
     const [groupMemberPage, setGroupMemberPage] = useState<GroupMemberResp>()
@@ -58,12 +59,14 @@ export const GroupInfoScreen = ({ navigation, route }: Props) => {
     }, [navigation])
 
     return (
-        <View style={{
-            ...styles.container,
-            paddingTop: insets.top,
-            backgroundColor: '#F4F4F4',
-            paddingBottom: insets.bottom,
-        }}>
+
+        <ScreenX title="羣聊詳情" onLeftPress={() => {
+            if (route.params.outside) {
+                navigation.replace('TabStack')
+            } else {
+                navigation.goBack()
+            }
+        }} theme={$theme}>
             <View>
                 <Navbar title="羣聊詳情" onLeftPress={() => {
                     if (route.params.outside) {
@@ -127,6 +130,7 @@ export const GroupInfoScreen = ({ navigation, route }: Props) => {
 
                         </View>
                         <Button
+                            fullRounded fullWidth
                             size="large"
                             onPress={() => {
                                 if ((group?.role ?? -1) > 0) {
@@ -175,7 +179,7 @@ export const GroupInfoScreen = ({ navigation, route }: Props) => {
                 </View>
             </View>
             <ApplyJoinModal ref={applyJoinModalRef} />
-        </View>
+        </ScreenX>
     );
 };
 

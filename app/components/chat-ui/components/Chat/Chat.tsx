@@ -108,7 +108,7 @@ export interface ChatProps extends ChatTopLevelProps {
   checkedIdList?: string[]
   onChecked?: (id: string, v: boolean) => void
   reply: MessageType.Any | null
-  enableInput?: boolean 
+  enableInput?: boolean
 }
 
 /** Entry component, represents the complete chat */
@@ -309,6 +309,7 @@ export const Chat = ({
 
   const renderImageDownload = ({ imageIndex }: { imageIndex: number }) => {
     return <Button
+      fullWidth fullRounded
       containerStyle={{
         marginBottom: s(16),
         width: '50%',

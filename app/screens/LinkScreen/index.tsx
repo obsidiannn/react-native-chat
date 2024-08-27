@@ -4,7 +4,9 @@ import { globalKV } from "app/utils/kv-tool";
 import { useCallback, useEffect } from "react";
 import { App } from "types/app";
 
-
+/**
+ * 跳转页面
+ */
 type Props = StackScreenProps<App.StackParamList, 'LinkScreen'>;
 export const LinkScreen = ({ navigation, route }: Props) => {
 

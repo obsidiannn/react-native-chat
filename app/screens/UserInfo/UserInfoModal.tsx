@@ -99,6 +99,7 @@ export default forwardRef((props: {
                         {
                             selfId !== user?.id ?
                                 <Button
+                                    fullRounded fullWidth
                                     size="large"
                                     onPress={() => {
                                         if (!user.isFriend) {

@@ -100,34 +100,36 @@ export default forwardRef((_, ref) => {
                 fontWeight: '400',
                 marginTop: s(10),
             }}>文件大小：{bytesToSize(file?.size ?? 0)}</Text>
-            <Button disabled={loading} onPress={() => {
-                if (loading) {
-                    return;
-                }
-                if (!file) {
-                    return;
-                }
-                setLoading(true);
-                if (downloaded) {
-                    saveFile(file).finally(() => {
-                        setLoading(false);
-                    });
-                } else {
-                    downloadFile(file).finally(() => {
-                        setLoading(false);
-                    });
-                }
+            <Button disabled={loading}
+                fullWidth fullRounded
+                onPress={() => {
+                    if (loading) {
+                        return;
+                    }
+                    if (!file) {
+                        return;
+                    }
+                    setLoading(true);
+                    if (downloaded) {
+                        saveFile(file).finally(() => {
+                            setLoading(false);
+                        });
+                    } else {
+                        downloadFile(file).finally(() => {
+                            setLoading(false);
+                        });
+                    }
 
-            }} style={{
-                marginTop: s(239),
-                height: s(50),
-                borderRadius: s(16),
-                display: 'flex',
-                width: '100%',
-                backgroundColor: colors.palette.primary
-            }} text={
-                downloaded ? (loading ? '解密中' : '分享') : (loading ? '下載中' : '保存到本地')
-            }>
+                }} style={{
+                    marginTop: s(239),
+                    height: s(50),
+                    borderRadius: s(16),
+                    display: 'flex',
+                    width: '100%',
+                    backgroundColor: colors.palette.primary
+                }} text={
+                    downloaded ? (loading ? '解密中' : '分享') : (loading ? '下載中' : '保存到本地')
+                }>
                 {loading ? <ActivityIndicator color="white" style={{
                     marginRight: s(5),
                 }} animating={loading} /> : null}

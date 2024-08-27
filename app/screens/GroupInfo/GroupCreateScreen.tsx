@@ -17,11 +17,11 @@ import { App } from "types/app";
 import quickCrypto from "app/utils/quick-crypto";
 import { Button } from "app/components";
 import { useRecoilValue } from "recoil";
-import { ColorsState } from "app/stores/system";
-import { Image } from "expo-image";
+import { ColorsState, ThemeState } from "app/stores/system";
 import { UploadArea } from "app/components/UploadArea";
 import { ScrollView } from "react-native-gesture-handler";
 import { IconFont } from "app/components/IconFont/IconFont";
+import { ScreenX } from "app/components/ScreenX";
 
 type Props = StackScreenProps<App.StackParamList, 'GroupCreateScreen'>;
 interface GroupCreateType {
@@ -33,7 +33,7 @@ interface GroupCreateType {
     cover: string
 }
 export const GroupCreateScreen = ({ route, navigation }: Props) => {
-    const insets = useSafeAreaInsets();
+    const $theme = useRecoilValue(ThemeState)
     const loadingModalRef = useRef<LoadingModalType>();
     const themeColor = useRecoilValue(ColorsState)
     const { t } = useTranslation('screens')
@@ -46,7 +46,7 @@ export const GroupCreateScreen = ({ route, navigation }: Props) => {
         cover: ''
     })
     useEffect(() => {
-        const focus= navigation.addListener('focus', () => {
+        const focus = navigation.addListener('focus', () => {
             const avatar = "https://api.dicebear.com/8.x/fun-emoji/svg?seed=" + Math.random().toString(36).substring(2, 7);
             setCreateState((old) => {
                 return {
@@ -58,7 +58,7 @@ export const GroupCreateScreen = ({ route, navigation }: Props) => {
         return () => {
             focus()
         }
-    },[])
+    }, [])
     const doGroupCreate = async () => {
         if (!createState.name) {
             toast(t('groupCreate.require_name'))
@@ -114,15 +114,11 @@ export const GroupCreateScreen = ({ route, navigation }: Props) => {
         }
     }
     return (
-        <View style={{
-            ...styles.container,
-            paddingTop: insets.top,
-            paddingBottom: insets.bottom,
-        }}>
-            <Navbar title={t('groupCreate.title_group_create')} />
+        <ScreenX title={t('groupCreate.title_group_create')} theme={$theme} >
             <ScrollView
                 scrollEnabled
                 contentContainerStyle={{
+                    flex: 1,
                     display: 'flex',
                     paddingHorizontal: s(15),
                     paddingTop: s(20),
@@ -230,7 +226,7 @@ export const GroupCreateScreen = ({ route, navigation }: Props) => {
                         }} />
                 </View>
 
-                <View style={{ ...styles.switchLine }}>
+                <View style={{ ...styles.switchLine ,flex: 1,}}>
                     <View style={{
                         display: 'flex',
                         flexDirection: 'row',
@@ -256,22 +252,23 @@ export const GroupCreateScreen = ({ route, navigation }: Props) => {
                         }} />
 
                 </View>
-                <Button onPress={doGroupCreate} size="large" label={t('groupCreate.title_group_create')} containerStyle={{
-                    marginVertical: s(24),
-                }} />
+                <Button onPress={doGroupCreate}
+                    size="large" label={t('groupCreate.title_group_create')}
+                    fullWidth fullRounded
+                    containerStyle={{
+                        marginVertical: s(24),
+                    }} />
             </ScrollView>
+
             <LoadingModal ref={loadingModalRef} />
-        </View>
+        </ScreenX>
     );
 };
 
 export default GroupCreateScreen;
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: 'white',
-    },
+
     sub_area: {
 
 

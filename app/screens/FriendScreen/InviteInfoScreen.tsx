@@ -85,7 +85,7 @@ export const InviteInfoScreen = ({ navigation, route }: Props) => {
 
                 <View style={styles.actionContainer}>
                     {info?.friendApply.status === IModel.IFriendApply.Status.PENDING && !info.isSelf ? <>
-                        <Button fullWidth size="large" onPress={async () => {
+                        <Button fullWidth fullRounded size="large" onPress={async () => {
                             if (loading) {
                                 return
                             };
@@ -116,7 +116,7 @@ export const InviteInfoScreen = ({ navigation, route }: Props) => {
 
                         <Button type="secondary" containerStyle={{
                             marginTop: s(10)
-                        }} fullWidth size="large" onPress={async () => {
+                        }} fullWidth fullRounded size="large" onPress={async () => {
                             if (loading) {
                                 return
                             };
@@ -131,7 +131,7 @@ export const InviteInfoScreen = ({ navigation, route }: Props) => {
                     </> : null}
 
                     {info?.friendApply.status === IModel.IFriendApply.Status.PENDING && info.isSelf ?
-                        <Button label={t('friend.label_pending')} disabled size="large"
+                        <Button label={t('friend.label_pending')} fullWidth fullRounded disabled size="large"
                         // icon={<IconFont name="restart"}
                         /> : null}
                 </View>

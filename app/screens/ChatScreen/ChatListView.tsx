@@ -75,15 +75,18 @@ export const ChatListView = (props: ChatViewProps) => {
             onPress={() => itemPress(item)}
         />
     }
+
     return <View style={$container}>
         {chats.length <= 0 ? <EmptyComponent label={t('No recent conversations')} /> :
-            <FlashList
-                keyExtractor={(item) => item.id}
-                data={topChats.concat(normalChats)}
-                renderItem={({ item, index }) => renderItem(item, index === chats.length - 1)}
-                estimatedItemSize={76}
-                showsVerticalScrollIndicator={false}
-            />}
+            <View style={{ flex: 1, width: '100%' }}>
+                <FlashList
+                    keyExtractor={(item) => item.id}
+                    data={topChats.concat(normalChats)}
+                    renderItem={({ item, index }) => renderItem(item, index === chats.length - 1)}
+                    estimatedItemSize={s(76)}
+                    showsVerticalScrollIndicator={false}
+                />
+            </View>}
     </View>
 }
 

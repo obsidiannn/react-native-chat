@@ -11,27 +11,25 @@ import { StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { App } from "types/app";
 import UserBlockModal, { UserBlockModalType } from "./UserBlockModal";
+import { ScreenX } from "app/components/ScreenX";
+import { useRecoilValue } from "recoil";
+import { ThemeState } from "app/stores/system";
 
 type Props = StackScreenProps<App.StackParamList, 'UserBlockScreen'>;
 
 export const UserBlockScreen = (props: Props) => {
-    const insets = useSafeAreaInsets();
+    const $theme = useRecoilValue(ThemeState)
 
     const [users, setUsers] = useState<IUser[]>([])
     const userBlockModalRef = useRef<UserBlockModalType>(null)
     const loadData = useCallback(async () => {
         const list = await friendService.getBlockedList()
-        console.log('block users ',list);
-        
+        console.log('block users ', list);
+
         setUsers(list)
     }, [])
 
-    return <View style={{
-        ...styles.container,
-        paddingTop: insets.top,
-        paddingBottom: insets.bottom,
-    }}>
-        <Navbar title={'黑名单'} />
+    return <ScreenX title="黑名单" theme={$theme} >
         <FlashList
             // ref={listRef}
             onEndReached={loadData}
@@ -54,13 +52,13 @@ export const UserBlockScreen = (props: Props) => {
             }}
         />
         <UserBlockModal ref={userBlockModalRef} />
-    </View>
+    </ScreenX>
 }
 
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: 'white',
-    },
-});
+// const styles = StyleSheet.create({
+//     container: {
+//         flex: 1,
+//         backgroundColor: 'white',
+//     },
+// });

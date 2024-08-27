@@ -146,8 +146,7 @@ export const UpdateGenderModal = forwardRef((props: {
                         })
                 }}
                 label={t('common.btn_submit')}
-            >
-            </Button>
+            />
         </View>
 
     </ScreenModal>

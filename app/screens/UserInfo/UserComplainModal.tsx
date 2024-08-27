@@ -148,7 +148,7 @@ export default forwardRef((_, ref) => {
                 </TouchableOpacity>
             </View>
 
-            <Button label="提交" size="large"
+            <Button fullRounded fullWidth label="提交" size="large"
                 onPress={doSubmit}
                 textStyle={{
                     color: themeColor.textChoosed

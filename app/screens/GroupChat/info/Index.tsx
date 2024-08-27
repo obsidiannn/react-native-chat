@@ -282,10 +282,7 @@ export default forwardRef((_, ref) => {
                         borderRadius: s(12)
                     }}
                         label={t('groupChat.title_drop_group')}
-                    >
-                    </Button>
-
-                    : null
+                    /> : null
             }
 
         </ScrollView>

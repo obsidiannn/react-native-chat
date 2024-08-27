@@ -1,5 +1,4 @@
 import { StackScreenProps } from "@react-navigation/stack";
-import Navbar from "app/components/Navbar";
 import { ColorsState, ThemeState } from "app/stores/system";
 import { s } from "app/utils/size";
 import { useEffect, useRef, useState } from "react";
@@ -157,6 +156,7 @@ export const SystemFeedbackScreen = (props: Props) => {
             </View>
             <Button label="提交反馈" size="large"
                 onPress={doSubmit}
+                fullRounded fullWidth
                 containerStyle={{
                     backgroundColor: themeColor.primary, bottom: 0
                 }} />

@@ -39,7 +39,7 @@ export const InviteFriendScreen = ({ navigation, route }: Props) => {
                 />
             </View>
             <View style={styles.buttonContainer}>
-                <Button size="large" fullWidth label={t('friend.btn_send_invite')} onPress={() => {
+                <Button size="large" fullWidth fullRounded label={t('friend.btn_send_invite')} onPress={() => {
                     setState(true);
                     if (userId) {
                         friendApplyService.create(userId, remark).then(res => {

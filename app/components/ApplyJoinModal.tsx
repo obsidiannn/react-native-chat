@@ -50,6 +50,7 @@ export default forwardRef<ApplyJoinModalRef>((_, ref) => {
 
         </View>
         <Button disabled={state}
+            fullWidth fullRounded
             containerStyle={{
                 ...styles.button,
                 backgroundColor: themeColor.primary,

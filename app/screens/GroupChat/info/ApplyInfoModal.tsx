@@ -75,7 +75,7 @@ export default forwardRef((props: {
                         }}>
                             <Text style={{ fontSize: 14, color: '#999', fontWeight: '400' }}>{item?.address}</Text>
                             <IconFont name="copy" color={colors.text} size={20} />
-                            
+
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -99,12 +99,13 @@ export default forwardRef((props: {
                 paddingHorizontal: s(23),
             }}>
                 {item?.status === IModel.IGroup.IGroupMemberStatus.PENDING ? <>
-                    <Button style={{
-                        width: '100%',
+                    <Button containerStyle={{
+
                         height: verticalScale(50),
                         borderRadius: verticalScale(16),
                         marginTop: verticalScale(30),
                     }}
+                        fullWidth fullRounded
                         onPress={async () => {
                             if (loading) {
                                 return
@@ -149,54 +150,39 @@ export default forwardRef((props: {
                                 props.onCheck(item)
                                 onClose()
                             }
-
-
-
-
-                            // .finally(()=>{
-                            //     setLoading(false);
-                            //
-                            // })
-
-                        }} >
-                        <Text style={{
+                        }} textStyle={{
                             fontSize: 16,
                             fontWeight: '700',
-                        }}>
-                            {t('btn_allow')}
-                        </Text>
+                        }}
+                        label={t('btn_allow')} />
 
-                    </Button>
-                    <Button style={{
-                        width: '100%',
+                    <Button containerStyle={{
                         height: verticalScale(50),
                         borderRadius: verticalScale(16),
                         marginTop: verticalScale(16),
-                    }} onPress={() => {
-                        if (loading) {
-                            return
-                        };
-                        setLoading(true);
-                        groupService.rejectJoin(item?.gid, [item?.uid]).then(res => {
-                            toast(t('label_rejected'));
-                            setTimeout(() => {
-                                setVisible(false);
-                            }, 500)
-                        }).finally(() => {
-                            setLoading(false);
-                            props.onCheck(item)
-                        })
-                    }}  >
-                        <Text style={{
+                    }}
+                        fullRounded fullWidth
+                        onPress={() => {
+                            if (loading) {
+                                return
+                            };
+                            setLoading(true);
+                            groupService.rejectJoin(item?.gid, [item?.uid]).then(res => {
+                                toast(t('label_rejected'));
+                                setTimeout(() => {
+                                    setVisible(false);
+                                }, 500)
+                            }).finally(() => {
+                                setLoading(false);
+                                props.onCheck(item)
+                            })
+                        }} textStyle={{
                             fontSize: 16,
                             fontWeight: '700',
-                        }}>
-                            {t('btn_reject')}
-                        </Text>
-                    </Button>
+                        }} label={t('btn_reject')} />
                 </> : null}
             </View>
         </View>
 
-    </BaseModal>
+    </BaseModal >
 });
