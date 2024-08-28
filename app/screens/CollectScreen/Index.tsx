@@ -18,6 +18,8 @@ import RecordDetailModal, { RecordDetailModalType } from "./record/RecordDetailM
 import { LocalCollectDetailService } from "app/services/LocalCollectDetailService";
 import { SearchTab } from "./SearchTab";
 import { ScreenX } from "app/components/ScreenX";
+import { useTranslation } from "react-i18next";
+import { ViewStyle } from "react-native";
 
 export interface CollectItem {
     id: number,
@@ -140,10 +142,9 @@ export const CollectScreen = (props: Props) => {
     }, [])
 
     const $theme = useRecoilValue(ThemeState);
-
-    return <ScreenX theme={$theme} title="收藏夹">
-
-        <View style={style.container}>
+    const {t} =useTranslation('default')
+    return <ScreenX theme={$theme} title={t('Favorites')}>
+        <View style={$container}>
             <SearchTab chooseIdx={chooseIdx}
                 setChooseIdx={(idx) => {
                     changeType(idx)
@@ -162,29 +163,27 @@ export const CollectScreen = (props: Props) => {
                         loadData(page + 1, chooseIdx)
                     }}
                     showsVerticalScrollIndicator
-                    // estimatedItemSize={300}
                     renderItem={({ item, index }) => renderItem(item)}
                     keyExtractor={(item) => item.id + ''}
                 />
 
             </View>
         </View>
-        <RecordDetailModal ref={recordDetailModalRef} />
+        <RecordDetailModal theme={$theme} ref={recordDetailModalRef} />
     </ScreenX>
 }
 
+const $container:ViewStyle = {
+    padding: s(8),
+    display: 'flex',
+    flexDirection: 'column',
+    flex: 1
+}
 const styles = (
     { themeState }: { themeState: IColors }
 ) => StyleSheet.create({
-    container: {
-        padding: s(8),
-        display: 'flex',
-        flexDirection: 'column',
-        flex: 1
-    },
     headerButton: {
         padding: s(12),
-
     },
     item: {
         backgroundColor: themeState.background,

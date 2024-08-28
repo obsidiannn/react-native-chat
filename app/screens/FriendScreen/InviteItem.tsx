@@ -10,6 +10,7 @@ import { navigate } from "app/navigators";
 import { IServer } from "@repo/types";
 import { s } from "app/utils/size";
 import fileService from "app/services/file.service";
+import { $colors } from "app/Colors";
 dayjs.extend(relativeTime)
 export default (props: {
     item: IServer.IFriendApply,
@@ -19,6 +20,7 @@ export default (props: {
 }) => {
     const { item, isLast, user, renderRight } = props;
     const { t } = useTranslation('screens')
+
     return <TouchableOpacity onPress={() => {
         if (item.status === IModel.IFriendApply.Status.PENDING) {
             navigate('InviteInfoScreen', {
@@ -36,7 +38,7 @@ export default (props: {
         </View>
         <View style={{
             ...styles.rightContainer,
-            borderBottomColor: isLast ? 'white' : '#F4F4F4',
+            borderBottomColor: isLast ? $colors.white : '#F4F4F4',
         }}>
             <View style={styles.nameContainer}>
                 <Text style={styles.nameText}>{user.nickName}</Text>

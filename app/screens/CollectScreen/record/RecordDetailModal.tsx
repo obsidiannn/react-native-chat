@@ -1,8 +1,7 @@
-import BaseModal from "app/components/base-modal";
-import { Chat, MessageType, darkTheme, lightTheme } from "app/components/chat-ui";
-import { ColorsState, ThemeState } from "app/stores/system";
+import { MessageType } from "app/components/chat-ui";
+import { ColorsState } from "app/stores/system";
 import { StyleSheet, Text, View } from 'react-native'
-import { forwardRef, useImperativeHandle, useState } from "react";
+import { forwardRef, useImperativeHandle, useRef, useState } from "react";
 
 import { useRecoilValue } from "recoil";
 import { FlashList } from "@shopify/flash-list";
@@ -13,36 +12,28 @@ import RecordFileMsg from "./FileMsg";
 import { Image } from "expo-image";
 import { s } from "app/utils/size";
 import dateUtil from "app/utils/dateUtil";
+import { ScreenModal, ScreenModalType } from "app/components/ScreenModal";
 
 export interface RecordDetailModalType {
     open: (list: MessageType.Any[]) => void
 }
 
-export default forwardRef((_, ref) => {
-    const [visible, setVisible] = useState<boolean>(false)
+export default forwardRef((props: {
+    theme: "light" | "dark";
+}, ref) => {
     const themeColor = useRecoilValue(ColorsState)
-    const $theme = useRecoilValue(ThemeState)
     const [data, setData] = useState<MessageType.Any[]>([])
     const style = styles({ themeColor })
-    const onClose = () => {
-        setVisible(false)
-        setData([])
-    }
-
+    const screenModalRef = useRef<ScreenModalType>(null)
     useImperativeHandle(ref, () => ({
         open: (list: MessageType.Any[]) => {
-            console.log('list', list);
-
             setData(list)
-            setVisible(true)
+            screenModalRef.current?.open()
         }
-
     }));
 
 
     const renderItem = (item: MessageType.Any) => {
-        console.log('render', item.id);
-
         return <View style={style.recordItem}>
             <Image source={item.author.imageUrl} style={{
                 width: s(36), height: s(36),
@@ -80,19 +71,16 @@ export default forwardRef((_, ref) => {
         return <></>
     }
 
-    return <BaseModal visible={visible} onClose={onClose} styles={{
-        backgroundColor: themeColor.secondaryBackground,
-        flex: 1,
-    }} >
+    return <ScreenModal theme={props.theme} ref={screenModalRef}>
         <View style={{ flex: 1 }}>
             <FlashList data={data}
                 estimatedItemSize={100}
                 showsVerticalScrollIndicator
                 keyExtractor={item => item.id + "_record"}
-                renderItem={({ item, index }) => renderItem(item)}
+                renderItem={({ item }) => renderItem(item)}
             />
         </View>
-    </BaseModal>
+    </ScreenModal>
 })
 
 

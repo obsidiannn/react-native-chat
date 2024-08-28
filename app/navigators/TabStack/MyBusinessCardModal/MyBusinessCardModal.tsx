@@ -1,5 +1,5 @@
-import { forwardRef, useImperativeHandle, useRef, useState } from "react";
-import { Modal, PermissionsAndroid, Platform, Text, View } from "react-native";
+import { forwardRef, useImperativeHandle, useRef } from "react";
+import { PermissionsAndroid, Platform, Text, View } from "react-native";
 import { useRecoilValue } from "recoil";
 import { ColorsState } from "app/stores/system";
 import QRCode from 'react-native-qrcode-svg';
@@ -11,7 +11,7 @@ import toast from "app/utils/toast";
 import AvatarX from "app/components/AvatarX";
 import { Button } from "app/components";
 import { useTranslation } from "react-i18next";
-import { ScreenX } from "app/components/ScreenX";
+import { ScreenModal, ScreenModalType } from "app/components/ScreenModal";
 export interface MyBusinessCardModalType {
     open: () => void,
     close: () => void
@@ -58,20 +58,17 @@ const hasAndroidPermission = async () => {
 export default forwardRef((props: {
     theme: 'light' | 'dark',
 }, ref) => {
-    const [visible, setVisible] = useState(false);
     const $colors = useRecoilValue(ColorsState);
     const authUser = useRecoilValue(AuthUser);
     const viewRef = useRef<ViewShot>(null);
-    const onClose = () => {
-        setVisible(false)
-    }
+
     useImperativeHandle(ref, () => ({
-        open: async () => setVisible(true),
-        close: async () => setVisible(false)
+        open: async () => screenModalRef.current?.open(),
+        close: async () => screenModalRef.current?.close()
     }));
     const {t} = useTranslation('default');
-    return <Modal transparent={false} style={{ flex: 1 }} visible={visible} animationType="slide" >
-        <ScreenX theme={props.theme} title={t('My Business Card')} onLeftPress={onClose}>
+    const screenModalRef = useRef<ScreenModalType>(null);
+    return <ScreenModal ref={screenModalRef} theme={props.theme} title={t('My Business Card')}>
             <ViewShot ref={viewRef} style={{
                 width: s(343),
                 paddingHorizontal: s(50),
@@ -154,6 +151,5 @@ export default forwardRef((props: {
                         }
                     }} label={t('Save') } />
             </View>
-        </ScreenX>
-    </Modal>
+    </ScreenModal>
 })

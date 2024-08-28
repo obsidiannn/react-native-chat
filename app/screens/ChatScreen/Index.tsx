@@ -22,6 +22,7 @@ import { $colors } from "app/Colors";
 import { ChatListView } from "./ChatListView";
 import { GroupListView } from "./GroupListView";
 import { FriendListView } from "./FriendListView";
+import BannerComponent from "app/components/Banner";
 
 type Props = StackScreenProps<App.StackParamList, 'ChatScreen'>;
 export const ChatScreen = ({ navigation }: Props) => {
@@ -201,24 +202,29 @@ export const ChatScreen = ({ navigation }: Props) => {
         backgroundColor: $colors.slate950,
     }}>
         <View style={[styles.container, {
-             backgroundColor: $theme == "dark" ? $colors.slate800 : $colors.gray100,
+            backgroundColor: $theme == "dark" ? $colors.slate800 : $colors.gray100,
             borderBottomEndRadius: s(20),
             borderBottomStartRadius: s(20),
             borderBottomWidth: 1,
+            paddingTop:s(16),
             overflow: 'hidden',
         }]}>
+            <BannerComponent label={t('discover.labelDiscover')} describe="你最喜欢的社区" onPress={() => {
+                console.log('press');
+                navigation.navigate('DiscoverScreen')
+            }} />
             <View style={styles.topContainer} >
                 <Button label={t('chat.btn_recent')} onPress={() => changeTab(0)} containerStyle={btnStyle(0)}
-                  // style={[styles.tabButton]}
-                        textStyle={btnTextStyle(0)}
+                    // style={[styles.tabButton]}
+                    textStyle={btnTextStyle(0)}
                 />
                 <Button label={t('chat.btn_group')} onPress={() => changeTab(1)} containerStyle={btnStyle(1)}
-                  // style={[styles.tabButton, btnStyle(1)]}
-                        textStyle={btnTextStyle(1)}
+                    // style={[styles.tabButton, btnStyle(1)]}
+                    textStyle={btnTextStyle(1)}
                 />
                 <Button label={t('chat.btn_contract')} onPress={() => changeTab(2)} containerStyle={btnStyle(2)}
-                  // style={[styles.tabButton, btnStyle(2)]}
-                        textStyle={btnTextStyle(2)}
+                    // style={[styles.tabButton, btnStyle(2)]}
+                    textStyle={btnTextStyle(2)}
                 />
             </View>
             <PagerView useNext={false} ref={pagerViewRef}

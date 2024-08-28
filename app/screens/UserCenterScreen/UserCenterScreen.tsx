@@ -23,62 +23,63 @@ export const UserCenterScreen = () => {
             },
             $lightContainer
         ]}>
-        <View style={[
-            $contentContainer,
-            {
-                backgroundColor: $theme == "dark" ? $colors.slate800 : $colors.gray100,
-            },
-        ]}>
-            <View style={$avatarContainer}>
-                <AvatarComponent enableAvatarBorder width={74} height={74} url={fileService.getFullUrl(authUser?.avatar ?? '')} online={true} style={{
-                    marginTop: s(-42)
-                }} />
-            </View>
-            <View style={{
-                height: s(74),
-                justifyContent: 'center'
-            }}>
-                <Text style={{
-                    color: $theme == "dark" ? $colors.white : $colors.slate700,
-                    fontSize: s(28),
-                    fontWeight: "600"
-                }}>{authUser?.nickName}</Text>
-            </View>
-            <CardMenu theme={$theme} items={[
+            <View style={[
+                $contentContainer,
                 {
-                    icon: <IconFont name="pencil" color={$theme == "dark" ? $colors.white : $colors.slate700} size={24} />,
-                    title: t('Edit Profile'),
-                    onPress: () => {
-                        navigate("ProfileScreen")
+                    backgroundColor: $theme == "dark" ? $colors.slate800 : $colors.gray100,
+                },
+            ]}>
+                <View style={{
+                    backgroundColor: $theme == "dark" ? $colors.slate700 : $colors.gray200,
+                    borderRadius: s(8),
+                    flexDirection: "row",
+                    alignItems:"center",
+                    paddingHorizontal: s(16),
+                    paddingVertical: s(8),
+                    marginBottom:s(10)
+                }}>
+                    <AvatarComponent border size={50} url={fileService.getFullUrl(authUser?.avatar ?? '')} online={true} />
+                    <Text style={{
+                        color: $theme == "dark" ? $colors.white : $colors.slate700,
+                        fontSize: 20,
+                        fontWeight: "600"
+                    }}>{authUser?.nickName}</Text>
+                </View>
+                <CardMenu theme={$theme} items={[
+                    {
+                        icon: <IconFont name="pencil" color={$theme == "dark" ? $colors.white : $colors.slate700} size={24} />,
+                        title: t('Edit Profile'),
+                        onPress: () => {
+                            navigate("ProfileScreen")
+                        },
                     },
-                },
-                {
-                    icon: <IconFont name="userRemove" color={$theme == "dark" ? $colors.white : $colors.slate700} size={24} />,
-                    title: t('Favorites'),
-                    onPress: () => {
-                        navigate('CollectScreen')
+                    {
+                        icon: <IconFont name="userRemove" color={$theme == "dark" ? $colors.white : $colors.slate700} size={24} />,
+                        title: t('Favorites'),
+                        onPress: () => {
+                            navigate('CollectScreen')
+                        },
                     },
-                },
-                {
-                    icon: <IconFont name="safety" color={$theme == "dark" ? $colors.white : $colors.slate700} size={24} />,
-                    title: t('Security'),
-                    onPress: () => navigate("SafetyScreen"),
-                },
-                {
-                    icon: <IconFont name="setting" color={$theme == "dark" ? $colors.white : $colors.slate700} size={24} />,
-                    title: t('Settings'),
-                    onPress: () => navigate("SettingScreen"),
-                },
-            ]} />
+                    {
+                        icon: <IconFont name="safety" color={$theme == "dark" ? $colors.white : $colors.slate700} size={24} />,
+                        title: t('Security'),
+                        onPress: () => navigate("SafetyScreen"),
+                    },
+                    {
+                        icon: <IconFont name="setting" color={$theme == "dark" ? $colors.white : $colors.slate700} size={24} />,
+                        title: t('Settings'),
+                        onPress: () => navigate("SettingScreen"),
+                    },
+                ]} />
+            </View>
         </View>
-    </View>
     </View >
 }
-const $container:ViewStyle = {
+const $container: ViewStyle = {
     flex: 1,
     backgroundColor: $colors.slate950,
 }
-const $lightContainer:ViewStyle = {
+const $lightContainer: ViewStyle = {
     borderBottomEndRadius: s(20),
     borderBottomStartRadius: s(20),
     borderBottomWidth: 1,
@@ -89,12 +90,4 @@ const $contentContainer: ViewStyle = {
     borderTopRightRadius: s(32),
     borderTopLeftRadius: s(32),
     padding: s(16),
-    marginTop: s(42)
-}
-const $avatarContainer: ViewStyle = {
-    position: "relative",
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
 }

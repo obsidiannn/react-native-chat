@@ -1,4 +1,4 @@
-import { ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useEffect, useState } from "react";
@@ -34,7 +34,6 @@ export const InviteInfoScreen = ({ navigation, route }: Props) => {
         const unsubscribe = navigation.addListener('focus', () => {
             if (currentUser) {
                 const { friendApply, user } = route.params;
-                console.log("currentUser.id === friendApply.userId", currentUser.id === friendApply.userId)
                 setInfo({
                     friendApply,
                     user,

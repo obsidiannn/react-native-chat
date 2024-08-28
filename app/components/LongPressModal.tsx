@@ -1,8 +1,8 @@
 
 import { Pressable, TouchableOpacity, StyleSheet, Text, View, GestureResponderEvent, Platform } from "react-native"
-import { forwardRef, useImperativeHandle, useState, useTransition } from "react";
+import { forwardRef, useImperativeHandle, useState } from "react";
 import { MessageType } from "./chat-ui";
-import { ms, s } from "app/utils/size";
+import { s } from "app/utils/size";
 import * as clipboard from 'expo-clipboard';
 import { IconFont } from "./IconFont/IconFont";
 import { useRecoilValue } from "recoil";

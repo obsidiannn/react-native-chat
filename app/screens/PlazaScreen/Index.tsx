@@ -77,9 +77,9 @@ export const PlazaScreen = ({ navigation }: Props) => {
       borderBottomEndRadius: s(20),
       borderBottomStartRadius: s(20),
       borderBottomWidth: 1,
+      paddingTop:s(16),
       overflow: 'hidden',
     }]}>
-
       <BannerComponent label={t('discover.labelDiscover')} describe="你最喜欢的社区" onPress={() => {
         console.log('press');
 
@@ -111,7 +111,6 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'column',
     paddingHorizontal: s(18),
-    paddingTop: s(14)
   },
   topContainer: {
     display: 'flex',

@@ -13,6 +13,7 @@ import { CameraRoll } from "@react-native-camera-roll/camera-roll";
 import BlockButton from "../../BlockButton";
 import toast from "app/utils/toast";
 import { useTranslation } from "react-i18next";
+import { ScreenModal } from "app/components/ScreenModal";
 
 export interface MyBusinessCardModalType {
     open: () => void,
@@ -57,7 +58,9 @@ const hasAndroidPermission = async () => {
 
     return await getRequestPermissionPromise();
 }
-export default forwardRef((_, ref) => {
+export default forwardRef((props:{
+    theme: 'light' | 'dark'
+}, ref) => {
     const [visible, setVisible] = useState(false);
     const insets = useSafeAreaInsets();
     const $colors = useRecoilValue(ColorsState);
@@ -71,13 +74,13 @@ export default forwardRef((_, ref) => {
         open: async () => setVisible(true),
         close: async () => setVisible(false)
     }));
-    return <Modal transparent={false} style={{ flex: 1 }} visible={visible} animationType="slide" >
+    return <ScreenModal theme={props.theme} title={t('user.labelUserCard')} >
         <View style={{
             flex: 1,
             paddingTop: insets.top,
             backgroundColor: $colors.secondaryBackground
         }}>
-            <Navbar title={t('user.labelUserCard')} onLeftPress={onClose} />
+            <Navbar title={} onLeftPress={onClose} />
             <ViewShot ref={viewRef} style={{
                 width: s(343),
                 paddingHorizontal: s(50),

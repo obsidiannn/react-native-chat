@@ -1,4 +1,4 @@
-import { ActivityIndicator, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, Text, TouchableOpacity, View } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
 import { useEffect, useState } from "react";
 import { FlashList } from "@shopify/flash-list";
@@ -19,6 +19,7 @@ import chatService from "app/services/chat.service";
 import eventUtil from "app/utils/event-util";
 import { ScreenX } from "app/components/ScreenX";
 import { ThemeState } from "app/stores/system";
+import { StyleSheet } from "react-native";
 
 
 type Props = StackScreenProps<App.StackParamList, 'FriendInviteRecordScreen'>;
@@ -37,31 +38,23 @@ export const FriendInviteRecordScreen = ({ navigation }: Props) => {
             if (currentUser) {
                 setLoading(true)
                 const friendApplys = await friendApplyService.getList()
-                try {
-                    console.log("friendApplys:", friendApplys);
-                    const userIds = friendApplys.map(f => {
-                        return f.userId == currentUser.id ? f.friendId : f.userId
-                    });
-                    const tmps = await userService.findByIds(userIds);
-                    setItems(friendApplys.map(f => {
-                        let user: IUser | undefined;
-                        if (currentUser.id == f.userId) {
-                            user = tmps.find(u => u.id == f.friendId)
-                        } else {
-                            user = tmps.find(u => u.id == f.userId)
-                        }
-                        return {
-                            friendApply: f,
-                            user
-                        }
-                    }));
-                } catch (error) {
-
-                } finally {
-                    console.log('set loading');
-
-                    setLoading(false)
-                }
+                const userIds = friendApplys.map(f => {
+                    return f.userId == currentUser.id ? f.friendId : f.userId
+                });
+                const tmps = await userService.findByIds(userIds);
+                setItems(friendApplys.map(f => {
+                    let user: IUser | undefined;
+                    if (currentUser.id == f.userId) {
+                        user = tmps.find(u => u.id == f.friendId)
+                    } else {
+                        user = tmps.find(u => u.id == f.userId)
+                    }
+                    return {
+                        friendApply: f,
+                        user
+                    }
+                }));
+                setLoading(false)
             }
         });
         return unsubscribe;
@@ -85,9 +78,8 @@ export const FriendInviteRecordScreen = ({ navigation }: Props) => {
             </TouchableOpacity>
         </View>
     }
-
     return (
-        <ScreenX title={t('friend.title_new_friend')} theme={$theme} renderRight={renderNavbarRight()} >
+        <ScreenX theme={$theme} title={t('friend.title_new_friend')} renderRight={() => renderNavbarRight()}>
             <View style={styles.listContainer}>
                 <FlashList
                     data={items}
