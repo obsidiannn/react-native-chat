@@ -24,6 +24,7 @@ import GroupDetailModal, { GroupDetailModalType } from "./GroupDetailModal";
 import chatApi from "app/api/chat/chat";
 import { IconFont } from "app/components/IconFont/IconFont";
 import eventUtil from "app/utils/event-util";
+import ChatHistoryModal, { ChatHistoryModalType } from "app/components/ChatHistory/ChatHistoryModal";
 
 export interface GroupInfoModalType {
     open: () => void
@@ -42,6 +43,8 @@ export default forwardRef((_, ref) => {
     const groupDetailModalRef = useRef<GroupDetailModalType>(null)
     // const groupCategoryModalRef = useRef<GroupCategoryModalRef>(null)
     const groupManagerModalRef = useRef<GroupManagerModalRef>(null)
+    const chatHistoryModalRef = useRef<ChatHistoryModalType>(null)
+
     const { t } = useTranslation('screens')
 
     const switchState = useMemo(() => {
@@ -188,6 +191,17 @@ export default forwardRef((_, ref) => {
                         changeMute(res.isMute)
                     }} />} />
 
+            <MenuItem label={'查找聊天内容'}
+                      onPress={()=>{
+                          if (groupContext.chatItem && groupContext.chatItem.id) {
+                              chatHistoryModalRef.current?.open(groupContext.chatItem.id)
+                          }
+                      }}
+                      leftIcon={
+                          <IconFont name="searchDoc" color={themeColor.text} size={26} />
+                      } />
+
+
             <View style={{
                 ...styles.bottomLine,
                 borderBottomColor: themeColor.border
@@ -302,7 +316,7 @@ export default forwardRef((_, ref) => {
             console.log("打開羣管理");
         }} />
         <GroupDetailModal ref={groupDetailModalRef} />
-
+        <ChatHistoryModal ref={chatHistoryModalRef} />
         <SelectMemberModal ref={selectMemberModalRef} />
     </BaseModal>
 })
