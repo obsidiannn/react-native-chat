@@ -22,6 +22,7 @@ import groupService from "app/services/group.service";
 import friendService from "app/services/friend.service";
 import AvatarUpload from "app/components/AvatarUpload";
 import fileService from "app/services/file.service";
+import strUtil from "app/utils/str-util";
 
 export interface GroupDetailModalType {
     open: () => void
@@ -48,7 +49,7 @@ export default forwardRef((_, ref) => {
     const changeName = async () => {
         if (editing) {
             groupApi.changeName({ id: groupContext.group.id, name: groupName }).then(res => {
-                groupContext.reloadGroup()
+                groupContext.reloadGroup(groupContext.group.id)
                 setEditing(false)
             })
         } else {
@@ -134,7 +135,7 @@ export default forwardRef((_, ref) => {
                                         id: groupContext.group.id,
                                         avatar: url
                                     }).then(() => {
-                                        groupContext.reloadGroup()
+                                        groupContext.reloadGroup(groupContext.group.id)
                                     })
                                 }
 
@@ -191,14 +192,16 @@ export default forwardRef((_, ref) => {
                 </Text>
             </View>
 
-            <ScrollView>
+            <ScrollView style={{
+                flex: 1
+            }}>
                 {
                     groupContext.members.map(item => {
                         return <View style={styles.memberItem} key={"member_" + item.id}>
                             <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                                 <AvatarX uri={item.avatar} online={isOnline(1)} border />
                                 <View>
-                                    <Text style={{ color: themeColor.title, fontSize: s(16), fontWeight: '500' }}>{item.a}</Text>
+                                    <Text style={{ color: themeColor.title, fontSize: s(16), fontWeight: '500' }}>{strUtil.defaultLabel(item.groupAlias, item.name)}</Text>
                                     <Text style={{ color: colors.palette.gray400 }}>{item.sign}</Text>
                                 </View>
                             </View>

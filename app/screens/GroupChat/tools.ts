@@ -19,4 +19,9 @@ export default [
         icon: 'file',
         key: 'file'
     },
+    {
+        title: '名片',
+        icon: 'file',
+        key: 'userCard'
+    },
 ]

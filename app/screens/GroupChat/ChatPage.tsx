@@ -21,7 +21,7 @@ import { IModel } from "@repo/enums";
 import { AuthUser } from "app/stores/auth";
 import quickCrypto from "app/utils/quick-crypto";
 import generateUtil from "app/utils/generateUtil";
-import { GestureResponderEvent } from "react-native";
+import { GestureResponderEvent, Platform, TouchableOpacity } from "react-native"
 import { ThemeState } from "app/stores/system";
 import chatService from "app/services/chat.service";
 import eventUtil from "app/utils/event-util";
@@ -31,6 +31,14 @@ import NetInfo from "@react-native-community/netinfo";
 import { LocalChatService } from "app/services/LocalChatService";
 import { LocalUserService } from "app/services/LocalUserService";
 import userService from "app/services/user.service";
+import SelectMemberModal, { SelectMemberModalType, SelectMemberOption } from "app/components/SelectMemberModal/Index"
+import friendService from "app/services/friend.service"
+import Navbar from "app/components/Navbar"
+import { colors } from "app/theme"
+import collectMapper from "app/utils/collect.mapper"
+import { LocalCollectService } from "app/services/LocalCollectService"
+import toast from "app/utils/toast"
+import { LocalCollectDetailService } from "app/services/LocalCollectDetailService"
 
 export interface GroupChatPageRef {
     init: (
@@ -50,15 +58,28 @@ export default forwardRef((_, ref) => {
     const remoteMessageLoading = useRef<boolean>(false)
     const remoteLastSeq = useRef<number>(0)
 
+    const [multi, setMulti] = useState<boolean>(false)
+    const [replyMsg, setReplyMsg] = useState<MessageType.Any | null>(null)
+    const [checkedIdList, setCheckedIdList] = useState<string[]>([])
+
     const encVideoPreviewRef = useRef<IVideoPreviewModal>();
     const longPressModalRef = useRef<LongPressModalType>();
     const loadingModalRef = useRef<LoadingModalType>(null)
     const fileModalRef = useRef<ChatUIFileModalRef>()
+    const selectMemberModalRef = useRef<SelectMemberModalType>(null);
+
     const theme = useRecoilValue(ThemeState)
     const { t } = useTranslation('screen-group-chat')
 
 
     const addMessage = (message: MessageType.Any) => {
+        if (replyMsg) {
+            message.metadata = {
+                ...message.metadata,
+                replyId: replyMsg.id,
+                replyAuthorName: replyMsg.author.firstName ?? ''
+            }
+        }
         const { sequence = 0 } = message
         if (sequence > lastSeq.current) {
             lastSeq.current = sequence
@@ -66,12 +87,36 @@ export default forwardRef((_, ref) => {
         console.log('------add message', sequence);
         setMessages([message, ...messages])
         messageSendService.send(chatItemRef.current?.id ?? '', sharedSecretRef.current, message)
-            .then(updateMessage)
+            .then((res) => {
+                updateMessage(res)
+                setReplyMsg(null)
+            })
     }
 
     const updateMessage = async (message: MessageType.Any) => {
         if (message.sequence > lastSeq.current) {
             lastSeq.current = message.sequence
+        }
+
+        if (chatItemRef.current) {
+            if (!message.roomId) {
+                message.roomId = chatItemRef.current.id
+            }
+            if (message.metadata?.uidType) {
+                message.metadata.uidType = 1
+            }
+            if (message.senderId) {
+                message.senderId = author?.id ?? 0;
+            }
+            // 如果是自己发出的消息，如果有引用，肯定已经加载到message list里面了
+            if (message.metadata?.replyId) {
+                const replyMsg = messages.find(m => m.id === message.metadata?.replyId)
+                if (replyMsg) {
+                    message.reply = replyMsg
+                }
+            }
+            await LocalMessageService.addBatch(chatUiAdapter.messageEntityConverts([message]))
+            LocalChatService.updateSequence(chatItemRef.current?.id, message.sequence)
         }
         setMessages(items => {
             for (let index = items.length - 1; index >= 0; index--) {
@@ -83,19 +128,6 @@ export default forwardRef((_, ref) => {
             }
             return items;
         })
-        if (chatItemRef.current) {
-            if (!message.roomId) {
-                message.roomId = chatItemRef.current.id
-            }
-            if (message.metadata?.uidType) {
-                message.metadata.uidType = 1
-            }
-            if (message.senderId) {
-                message.senderId = author?.id ?? 0;
-            }
-            await LocalMessageService.addBatch(chatUiAdapter.messageEntityConverts([message]))
-            LocalChatService.updateSequence(chatItemRef.current?.id, message.sequence)
-        }
     }
 
     // 加载历史数据 历史数据只会出现在本地
@@ -123,15 +155,16 @@ export default forwardRef((_, ref) => {
                 }
                 return item
             });
+            const finalMessages: MessageType.Any[] = await loadReply(tmps)
             setMessages(olds => {
                 let result = []
                 if (olds.length > 0) {
-                   const existIds = olds.map(o=>o.id)
-                   result = olds.concat(tmps.filter(t=>{
+                    const existIds = olds.map(o => o.id)
+                    result = olds.concat(finalMessages.filter(t => {
                         return !existIds.includes(t.id)
-                   }))
+                    }))
                 } else {
-                    result = tmps
+                    result = finalMessages
                 }
                 if (init) {
                     lastSeq.current = result[0].sequence
@@ -141,6 +174,33 @@ export default forwardRef((_, ref) => {
             })
         }
     }, [])
+
+    const loadReply = async (list: MessageType.Any[]): Promise<MessageType.Any[]> => {
+        const replyIds: string[] = []
+        list.forEach(i => {
+            if (i.metadata?.replyId) {
+                replyIds.push(i.metadata.replyId)
+            }
+        })
+        if (replyIds.length > 0) {
+            const replys = await LocalMessageService.findByIds(replyIds)
+            const replyMap = new Map<string, MessageType.Any>()
+            replys.forEach(r => {
+                replyMap.set(r.id, chatUiAdapter.messageEntity2Dto(r))
+            })
+            return list.map(i => {
+                if (i.metadata?.replyId) {
+                    const reply = replyMap.get(i.metadata.replyId)
+                    return {
+                        ...i, reply
+                    } as MessageType.Any
+                }
+                return i
+            })
+        }
+        return list
+    }
+
     // 获取最新数据 也是从seq开始获取最近的 20 条
     const loadRemoteMessages = useCallback(async (chatId: string, seq: number) => {
         if (remoteMessageLoading.current) {
@@ -153,10 +213,8 @@ export default forwardRef((_, ref) => {
                 setMessages(olds => {
                     let result = []
                     if (olds.length > 0) {
-                        const oldMin = olds[olds.length - 1].sequence
-                        result = items.filter(t => {
-                            return t.sequence < oldMin
-                        }).concat(olds)
+                        const exsitIds = olds.map(o => o.id)
+                        result = items.filter(t => !exsitIds.includes(t.id)).concat(olds)
                     } else {
                         result = items
                     }
@@ -251,10 +309,16 @@ export default forwardRef((_, ref) => {
 
     const handleEvent = (e: any) => {
         const { type } = e
+        console.log(author?.nickName, '收到消息', e);
+        console.log('[lastSeq]',lastSeq.current,remoteLastSeq.current);
+        
+
         if (type === IModel.IClient.SocketTypeEnum.MESSAGE) {
             const _eventItem = e as SocketMessageEvent
             if (lastSeq.current < _eventItem.sequence && author?.id !== _eventItem.senderId && remoteLastSeq.current < _eventItem.sequence) {
-                remoteLastSeq.current = _eventItem.sequence
+                console.log("socket 监听到新的消息了", Platform.OS)
+                remoteLastSeq.current = _eventItem.sequence;
+                console.log(remoteMessageLoading.current, "当前远程请求状态")
                 if (!remoteMessageLoading.current) {
                     loadRemoteMessages(chatItemRef.current?.id ?? '', lastSeq.current)
                 }
@@ -275,7 +339,7 @@ export default forwardRef((_, ref) => {
 
     /**
      * 发送消息
-     * @param key 
+     * @param key
      */
     const handleAttachmentPress = async (key: string) => {
         if (!author) return
@@ -295,6 +359,36 @@ export default forwardRef((_, ref) => {
                 break
             case 'file':
                 MessageSendService.fileSelection(author).then(addMessage)
+                break
+            case 'userCard':
+                const users = await friendService.getOnlineList();
+                const options: SelectMemberOption[] = users
+                    .map((item) => {
+                        return {
+                            id: item.id,
+                            icon: item.avatar ?? "",
+                            title: item.nickName ?? "",
+                            name: item.nickName ?? "",
+                            name_index: item.nickNameIdx ?? "",
+                            status: false,
+                            disabled: false,
+                            pubKey: item.pubKey
+                        } as SelectMemberOption
+                    });
+                selectMemberModalRef.current?.open({
+                    title: '選擇好友',
+                    options,
+                    max: 1,
+                    callback: async (ops: SelectMemberOption[]) => {
+                        if (ops.length > 0) {
+                            const f = users.find(u => u.id === ops[0].id)
+                            if (f) {
+                                const userCardMsg = MessageSendService.userCardSelect(author, f)
+                                addMessage(userCardMsg)
+                            }
+                        }
+                    }
+                });
                 break
             default: break
         }
@@ -345,8 +439,32 @@ export default forwardRef((_, ref) => {
         addMessage(textMessage)
     }
 
+    const messageDelete = (msgId: string) => {
+        if (chatItemRef.current) {
+            messageSendService.deleteMessage(chatItemRef.current.id, [msgId])
+                .then(() => {
+                    setMessages((items) => {
+                        return items.filter(i => i.id !== msgId)
+                    })
+                })
+        }
+    }
+
     /**
-   * todo 
+     * 长按效果处理 打开悬浮窗
+     * @param pressed true 开启，false 关闭
+     * @param msgId
+     */
+    const longPressHandle = (pressed: boolean, msgId: string) => {
+        if (pressed) {
+            setCheckedIdList([msgId])
+        } else {
+            setCheckedIdList([])
+        }
+    }
+
+    /**
+   * todo
    * @param m 长按消息
    */
     const handleLongPress = (m: MessageType.Any, e: GestureResponderEvent) => {
@@ -356,9 +474,68 @@ export default forwardRef((_, ref) => {
         })
     }
 
+    const renderMultiNavbar = () => {
+        if (multi) {
+            return <Navbar style={{
+                position: 'absolute',
+            }} renderLeft={() => <TouchableOpacity
+                onPress={() => {
+                    setMulti(false)
+                    setCheckedIdList([])
+                }}
+            >
+                <Text style={{
+                    color: colors.palette.primary
+                }}>取消</Text>
+            </TouchableOpacity>
+            } />
+        }
+        return null
+    }
+
+
+    // 收藏聊天记录
+    const onCollectPress = async () => {
+        if (checkedIdList.length > 0) {
+            const msgs = messages.filter(m => {
+                return checkedIdList.includes(m.id)
+            })
+            if (msgs.length > 0) {
+                if (msgs.length === 1) {
+                    const collect = collectMapper.convertEntity(msgs[0])
+                    const entity = await LocalCollectService.addSingle(collect)
+                    if (entity) {
+                        setCheckedIdList([])
+                        setMulti(false)
+                        setReplyMsg(null)
+                        toast('操作成功')
+                    }
+                } else {
+                    const _chatItem = chatItemRef.current
+                    if (_chatItem) {
+                        const collect = collectMapper.convertRecordsEntity(msgs, _chatItem)
+                        const entity = await LocalCollectService.addSingle(collect)
+                        if (entity) {
+                            const details = collectMapper.convertCollectDetailEntity(msgs, entity)
+                            const result = await LocalCollectDetailService.addBatch(details)
+                            if (result.length > 0) {
+                                setCheckedIdList([])
+                                setMulti(false)
+                                setReplyMsg(null)
+                                toast('操作成功')
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     return (
         <>
+            {renderMultiNavbar()}
             <Chat
+                enableMultiSelect={multi}
                 tools={tools}
                 messages={messages}
                 onEndReached={async () => {
@@ -373,11 +550,61 @@ export default forwardRef((_, ref) => {
                 onPreviewDataFetched={handlePreviewDataFetched}
                 onSendPress={handleSendPress}
                 user={chatUiAdapter.userTransfer(author)}
+                checkedIdList={checkedIdList}
+                onChecked={(id, v) => {
+                    if (v) {
+                        setCheckedIdList(ids => {
+                            return ids.filter(i => i !== id).concat(id)
+                        })
+                    } else {
+                        setCheckedIdList(ids => {
+                            return ids.filter(i => i !== id)
+                        })
+                    }
+                }}
+                reply={replyMsg}
+                onCloseReply={() => {
+                    setReplyMsg(null)
+                }}
+                onCollectPress={onCollectPress}
             />
-            <LongPressModal ref={longPressModalRef} />
             <VideoPlayModal ref={encVideoPreviewRef} />
             <FilePreviewModal ref={fileModalRef} />
             <LoadingModal ref={loadingModalRef} />
+            <LongPressModal ref={longPressModalRef}
+                onCollect={(msg) => {
+                    LocalCollectService.addSingle(collectMapper.convertEntity(msg))
+                        .then((entity) => {
+                            if (entity) {
+                                setCheckedIdList([])
+                                setMulti(false)
+                                setReplyMsg(null)
+                                toast('操作成功')
+                            }
+                        })
+                }}
+                onReply={(_m) => {
+                    setReplyMsg(_m)
+                }}
+                onMulti={(id, val) => {
+                    if (val) {
+                        if (id !== '') {
+                            setCheckedIdList([id])
+                            setReplyMsg(null)
+                        }
+                    } else {
+                        setCheckedIdList([])
+                        setReplyMsg(null)
+                    }
+                    setMulti(val)
+                }}
+                onDelete={messageDelete}
+                onClose={(msgId: string) => {
+                    longPressHandle(false, msgId)
+                }} />
+
+            <SelectMemberModal ref={selectMemberModalRef} />
+
         </>
     )
 });

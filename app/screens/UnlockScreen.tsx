@@ -28,7 +28,7 @@ export const UnlockScreen = ({ navigation }: Props) => {
   const setAuthWallet = useSetRecoilState(AuthWallet)
   const setAuthUser = useSetRecoilState(AuthUser)
   const confirmModalRef = useRef<ConfirmModalType>(null);
-  const {t} = useTranslation('default')
+  const { t } = useTranslation('default')
   return <ScreenX theme={$theme} title={t('Unlock account')}>
     <View style={{
       paddingHorizontal: s(16),
@@ -85,15 +85,18 @@ export const UnlockScreen = ({ navigation }: Props) => {
         setAuthWallet(global.wallet);
         navigation.replace('TabStack');
       }} label={t('Unlock account')} type="primary" />
-      <Button theme={$theme} containerStyle={{ marginTop: s(20)}} fullRounded type="secondary" size="large" fullWidth onPress={async () => {
+      <Button theme={$theme} containerStyle={{ marginTop: s(20) }} fullRounded type="secondary" size="large" fullWidth onPress={async () => {
         confirmModalRef.current?.open({
           title: t('import backup file?'),
           content: t('After import, existing local data will be overwritten, and the application will restart.'),
           onCancel: () => { },
           onSubmit: async () => {
+            console.log('di');
             const result = await DocumentPicker.getDocumentAsync({
               copyToCacheDirectory: true
             })
+            console.log('document result', result);
+
             if (result.assets) {
               const content = await FileSystem.readAsStringAsync(result.assets[0].uri, {
                 encoding: FileSystem.EncodingType.UTF8
@@ -107,7 +110,6 @@ export const UnlockScreen = ({ navigation }: Props) => {
             }
           }
         })
-
       }} label={t('import backup file')} />
     </View>
     <ConfirmModal theme={$theme} ref={confirmModalRef} />

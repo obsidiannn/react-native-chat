@@ -52,25 +52,23 @@ export default forwardRef((_, ref) => {
         setKeyword(v)
         if (chatId) {
             const entities = await LocalMessageService.queryList(chatId, type, v)
-            if (entities.length > 0) {
-                const userIdSet = new Set<number>(entities.map(i => i.uid))
-                const users = await LocalUserService.findByIds(Array.from(userIdSet.keys()))
-                const userHash = userService.initUserHash(users)
-                const tmps = entities.map((e) => {
-                    const item = chatUiAdapter.messageEntity2Dto(e)
-                    const user = userHash.get(item?.senderId ?? -1)
-                    if (user) {
-                        return {
-                            ...item,
-                            author: chatUiAdapter.userTransfer(user)
-                        }
+            const userIdSet = new Set<number>(entities.map(i => i.uid))
+            const users = await LocalUserService.findByIds(Array.from(userIdSet.keys()))
+            const userHash = userService.initUserHash(users)
+            const tmps = entities.map((e) => {
+                const item = chatUiAdapter.messageEntity2Dto(e)
+                const user = userHash.get(item?.senderId ?? -1)
+                if (user) {
+                    return {
+                        ...item,
+                        author: chatUiAdapter.userTransfer(user)
                     }
-                    return item
-                });
-                setMsgs(tmps)
-                if(type === 'image'){
-                    imageRecordModalRef.current?.open()
                 }
+                return item
+            });
+            setMsgs(tmps)
+            if (type === 'image') {
+                imageRecordModalRef.current?.open()
             }
         }
     }

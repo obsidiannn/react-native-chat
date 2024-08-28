@@ -7,8 +7,12 @@ import { IGroup, groups } from "drizzle/schema"
 export class LocalGroupService {
 
 
-    static queryPage() {
-
+    static async removeAll() {
+        const db = GetDB()
+        if (!db) {
+            return 0
+        }
+        await db.delete(groups)
     }
 
     /**

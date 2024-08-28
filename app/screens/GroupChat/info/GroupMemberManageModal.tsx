@@ -16,6 +16,7 @@ import { GroupChatUiContext } from "../context";
 import groupService from "app/services/group.service";
 import { IconFont } from "app/components/IconFont/IconFont";
 import { colors } from "app/theme";
+import strUtil from "app/utils/str-util";
 
 
 export interface GroupMemberManageModalType {
@@ -48,7 +49,7 @@ export default forwardRef((_, ref) => {
         }
     }));
 
-    return <BaseModal visible={visible} onClose={onClose} title="群设置" styles={{
+    return <BaseModal visible={visible} onClose={onClose} title={t('groupChat.title_group_config')} styles={{
         backgroundColor: themeColor.secondaryBackground,
         paddingTop: s(24),
         flex: 1
@@ -83,14 +84,14 @@ export default forwardRef((_, ref) => {
                             confirmInputModalRef.current?.open({
                                 title: t('groupChat.btn_change_alias'),
                                 desc: '',
-                                defaultVal: member?.a,
+                                defaultVal: strUtil.defaultLabel(member?.groupAlias??'',member?.name??''),
                                 onSubmit: (val: string) => {
                                     if (self?.uid === member?.uid) {
-                                        groupApi.changeAlias({ id: member?.groupId, alias: val }).then(res => {
+                                        groupApi.changeAlias({ id: member?.groupId ??0, alias: val }).then(res => {
                                             const temp = {
                                                 ...member,
-                                                a: val
-                                            }
+                                                groupAlias: val
+                                            } as GroupMemberItemVO
                                             setMember(temp)
                                             groupContext.reloadMemberByUids([member?.uid ?? 0])
                                         })
@@ -98,8 +99,8 @@ export default forwardRef((_, ref) => {
                                         groupApi.changeAliasByManager({ id: member?.groupId ?? 0, uid: member?.uid ?? 0, alias: val }).then(res => {
                                             const temp = {
                                                 ...member,
-                                                a: val
-                                            }
+                                                groupAlias: val
+                                            } as GroupMemberItemVO
                                             setMember(temp)
                                             groupContext.reloadMemberByUids([member?.uid ?? 0])
                                         })
@@ -109,9 +110,6 @@ export default forwardRef((_, ref) => {
                         }}
                     /> : null
             }
-
-
-
 
             {
                 ((self?.role ?? IModel.IGroup.IGroupMemberRoleEnum.MEMBER) < IModel.IGroup.IGroupMemberRoleEnum.MEMBER) && self?.uid !== member?.uid ?
@@ -125,7 +123,7 @@ export default forwardRef((_, ref) => {
                                 confirmModalRef.current?.open({
                                     title: t('groupChat.btn_kick_out'),
                                     content: t('groupChat.title_drop_message_desc'),
-                                    onSubmit: () => {
+                                    onSubmit: async () => {
                                         groupService.kickOut({
                                             id: member?.groupId ?? 0,
                                             uids: [member?.uid ?? 0]
@@ -142,7 +140,7 @@ export default forwardRef((_, ref) => {
                                 confirmModalRef.current?.open({
                                     title: t('groupChat.btn_block_user'),
                                     content: t('groupChat.title_drop_message_desc'),
-                                    onSubmit: () => {
+                                    onSubmit: async () => {
 
                                     }
                                 });

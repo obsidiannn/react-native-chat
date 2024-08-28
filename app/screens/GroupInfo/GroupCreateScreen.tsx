@@ -118,139 +118,139 @@ export const GroupCreateScreen = ({ route, navigation }: Props) => {
             <ScrollView
                 scrollEnabled
                 contentContainerStyle={{
-                    flex: 1,
                     display: 'flex',
                     paddingHorizontal: s(15),
                     paddingTop: s(20),
                     backgroundColor: themeColor.background
                 }}
             >
-
-                <AvatarUpload
-                    avatar={createState.avatar}
-                    onChange={(uri) => {
-                        setCreateState({
-                            ...createState,
-                            avatar: uri,
-                        })
-                    }} />
-                <TextInput
-                    placeholder={t('groupCreate.placeholder_name')}
-                    placeholderTextColor={colors.palette.gray300}
-                    maxLength={128}
-                    style={{
-                        ...styles.input
-                    }}
-                    value={createState?.name}
-                    cursorColor={themeColor.text}
-                    onChangeText={text => {
-                        setCreateState({
-                            ...createState,
-                            name: text
-                        })
-                    }}
-                />
-                <UploadArea
-                    // url={""}
-                    url={createState.cover}
-                    style={{
-                        backgroundColor: themeColor.secondaryBackground,
-                        borderColor: themeColor.border,
-                    }} onChange={(v: string) => {
-                        setCreateState({
-                            ...createState,
-                            cover: v
-                        })
-                    }}>
-                    <View style={{
-                        padding: s(14)
-                    }}>
-                        <View style={{
-                            borderRadius: s(24),
+                <View style={{ flex: 1 }}>
+                    <AvatarUpload
+                        avatar={createState.avatar}
+                        onChange={(uri) => {
+                            setCreateState({
+                                ...createState,
+                                avatar: uri,
+                            })
+                        }} />
+                    <TextInput
+                        placeholder={t('groupCreate.placeholder_name')}
+                        placeholderTextColor={colors.palette.gray300}
+                        maxLength={128}
+                        style={{
+                            ...styles.input
+                        }}
+                        value={createState?.name}
+                        cursorColor={themeColor.text}
+                        onChangeText={text => {
+                            setCreateState({
+                                ...createState,
+                                name: text
+                            })
+                        }}
+                    />
+                    <UploadArea
+                        // url={""}
+                        url={createState.cover}
+                        style={{
+                            backgroundColor: themeColor.secondaryBackground,
                             borderColor: themeColor.border,
-                            borderWidth: 1,
-                            borderStyle: 'dashed',
-                            margin: s(12),
+                        }} onChange={(v: string) => {
+                            setCreateState({
+                                ...createState,
+                                cover: v
+                            })
                         }}>
-                            <IconFont name="plus" color={themeColor.border} />
+                        <View style={{
+                            padding: s(14)
+                        }}>
+                            <View style={{
+                                borderRadius: s(24),
+                                borderColor: themeColor.border,
+                                borderWidth: 1,
+                                borderStyle: 'dashed',
+                                margin: s(12),
+                            }}>
+                                <IconFont name="plus" color={themeColor.border} />
+                            </View>
+                            <Text style={{ color: themeColor.primary }}>上传封面</Text>
                         </View>
-                        <Text style={{ color: themeColor.primary }}>上传封面</Text>
-                    </View>
-                </UploadArea>
+                    </UploadArea>
 
-                <TextInput
-                    placeholder={t('groupCreate.placeholder_describe')}
-                    placeholderTextColor={colors.palette.gray300}
-                    maxLength={128}
-                    multiline
-                    numberOfLines={3}
+                    <TextInput
+                        placeholder={t('groupCreate.placeholder_describe')}
+                        placeholderTextColor={colors.palette.gray300}
+                        maxLength={128}
+                        multiline
+                        numberOfLines={3}
 
-                    style={{
-                        ...styles.input,
-                        textAlignVertical: 'top',
-                        padding: s(15),
-                        backgroundColor: themeColor.secondaryBackground,
-                        fontSize: s(16),
-                        color: themeColor.text
-                    }}
-                    value={createState?.describe}
-                    cursorColor={themeColor.text}
-                    onChangeText={text => {
-                        setCreateState({
-                            ...createState,
-                            describe: text
-                        })
-                    }}
-                />
-
-                <View style={{ ...styles.switchLine }}>
-                    <View style={{
-                        display: 'flex',
-                        flexDirection: 'row',
-                        alignItems: 'center'
-                    }}>
-                        <IconFont name="unlock" color={themeColor.text} size={24} />
-                        <Text style={{ fontSize: s(16) }}>公开</Text>
-                    </View>
-                    <Switch value={createState.searchType === '1'}
-                        thumbColor={'#ffffff'}
-                        trackColor={{
-                            false: colors.palette.gray400,
-                            true: themeColor.primary
+                        style={{
+                            ...styles.input,
+                            textAlignVertical: 'top',
+                            padding: s(15),
+                            backgroundColor: themeColor.secondaryBackground,
+                            fontSize: s(16),
+                            color: themeColor.text
                         }}
-                        onValueChange={(e) => {
+                        value={createState?.describe}
+                        cursorColor={themeColor.text}
+                        onChangeText={text => {
                             setCreateState({
                                 ...createState,
-                                searchType: e ? "1" : "0"
+                                describe: text
                             })
-                        }} />
-                </View>
-
-                <View style={{ ...styles.switchLine ,flex: 1,}}>
-                    <View style={{
-                        display: 'flex',
-                        flexDirection: 'row',
-                        alignItems: 'flex-start'
-                    }}>
-                        <IconFont name="lock" color={themeColor.text} size={24} />
-                        <View>
-                            <Text style={{ fontSize: s(16), marginBottom: s(4) }}>加密（不可更改）</Text>
-                            <Text style={{ fontSize: s(14), color: themeColor.secondaryText }}>不加密，用户将直接可以加入群聊</Text>
-                        </View>
-                    </View>
-                    <Switch value={createState.isEnc}
-                        thumbColor={'#ffffff'}
-                        trackColor={{
-                            false: colors.palette.gray400,
-                            true: themeColor.primary
                         }}
-                        onValueChange={(e) => {
-                            setCreateState({
-                                ...createState,
-                                isEnc: e
-                            })
-                        }} />
+                    />
 
+                    <View style={{ ...styles.switchLine }}>
+                        <View style={{
+                            display: 'flex',
+                            flexDirection: 'row',
+                            alignItems: 'center'
+                        }}>
+                            <IconFont name="unlock" color={themeColor.text} size={24} />
+                            <Text style={{ fontSize: s(16) }}>公开</Text>
+                        </View>
+                        <Switch value={createState.searchType === '1'}
+                            thumbColor={'#ffffff'}
+                            trackColor={{
+                                false: colors.palette.gray400,
+                                true: themeColor.primary
+                            }}
+                            onValueChange={(e) => {
+                                setCreateState({
+                                    ...createState,
+                                    searchType: e ? "1" : "0"
+                                })
+                            }} />
+                    </View>
+
+                    <View style={{ ...styles.switchLine, }}>
+                        <View style={{
+                            display: 'flex',
+                            flexDirection: 'row',
+                            alignItems: 'flex-start'
+                        }}>
+                            <IconFont name="lock" color={themeColor.text} size={24} />
+                            <View>
+                                <Text style={{ fontSize: s(16), marginBottom: s(4) }}>加密（不可更改）</Text>
+                                <Text style={{ fontSize: s(14), color: themeColor.secondaryText }}>不加密，用户将直接可以加入群聊</Text>
+                            </View>
+                        </View>
+                        <Switch value={createState.isEnc}
+                            thumbColor={'#ffffff'}
+                            trackColor={{
+                                false: colors.palette.gray400,
+                                true: themeColor.primary
+                            }}
+                            onValueChange={(e) => {
+                                setCreateState({
+                                    ...createState,
+                                    isEnc: e
+                                })
+                            }} />
+
+                    </View>
                 </View>
                 <Button onPress={doGroupCreate}
                     size="large" label={t('groupCreate.title_group_create')}
@@ -268,11 +268,6 @@ export const GroupCreateScreen = ({ route, navigation }: Props) => {
 export default GroupCreateScreen;
 
 const styles = StyleSheet.create({
-
-    sub_area: {
-
-
-    },
     input: {
         fontSize: s(32),
         fontWeight: '500',
