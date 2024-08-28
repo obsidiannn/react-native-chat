@@ -9,6 +9,7 @@ import Navbar from "../Navbar";
 import { s } from "app/utils/size";
 import { useRecoilValue } from "recoil";
 import { ColorsState } from "app/stores/system";
+import { param } from "drizzle-orm";
 
 export interface SelectMemberOption {
     id: number;
@@ -43,18 +44,20 @@ export default forwardRef((props: SelectMemberModalProps, ref) => {
     const flashListRef = useRef<FlashList<(SelectMemberOption)>>(null);
     const callbackRef = useRef<(options: SelectMemberOption[]) => void>();
     const [title, setTitle] = useState('')
-
+    const [max, setMax] = useState<number>(0)
     const themeColor = useRecoilValue(ColorsState)
 
     useImperativeHandle(ref, () => ({
-        open: (parmas: {
+        open: (params: {
             title: string;
             options: SelectMemberOption[],
+            max: number
             callback: (users: SelectMemberOption[]) => void
         }) => {
             setTitle(title);
-            callbackRef.current = parmas.callback;
-            setOptions(parmas.options)
+            setMax(params.max)
+            callbackRef.current = params.callback;
+            setOptions(params.options)
             setVisible(true);
         }
     }));
@@ -83,7 +86,7 @@ export default forwardRef((props: SelectMemberModalProps, ref) => {
                     <FlashList
                         data={options}
                         ref={flashListRef}
-                        keyExtractor={(item, i) => { return item.id }}
+                        keyExtractor={(item, i) => { return item.id + '' }}
                         estimatedItemSize={s(60)}
                         renderItem={({ item, index }) => {
                             let isLast = index === options.length - 1;
@@ -94,9 +97,30 @@ export default forwardRef((props: SelectMemberModalProps, ref) => {
                                 index={index}
                                 isLast={isLast}
                                 onChange={(value) => {
-                                    const tmp = [...options];
-                                    (tmp[index] as SelectMemberOption).status = value;
-                                    setOptions(tmp);
+                                    setOptions(items => {
+                                        if (value) {
+                                            const length = items.filter(i => i.status).length
+                                            if (max > 0 && length >= max) {
+                                                return items
+                                            } else {
+                                                return items.map((i, idx) => {
+                                                    if (idx === index) {
+                                                        return { ...i, status: value }
+                                                    } else {
+                                                        return i
+                                                    }
+                                                })
+                                            }
+                                        } else {
+                                            return items.map((i, idx) => {
+                                                if (idx === index) {
+                                                    return { ...i, status: value }
+                                                } else {
+                                                    return i
+                                                }
+                                            })
+                                        }
+                                    });
                                 }} />
                         }}
                     />

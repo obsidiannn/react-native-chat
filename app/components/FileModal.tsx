@@ -1,5 +1,5 @@
 import { forwardRef, useCallback, useImperativeHandle, useState } from "react";
-import { ActivityIndicator, View, Platform, StatusBar, Text } from "react-native";
+import { View, Platform, Text } from "react-native";
 import mime from 'mime/dist/src/index_lite';
 import * as Sharing from 'expo-sharing';
 import BaseModal from "./base-modal";
@@ -55,21 +55,20 @@ export default forwardRef((_, ref) => {
         }
     }, [])
     useImperativeHandle(ref, () => ({
-        open: (params: {
+        open: async (params: {
             encKey: string
             file: MessageType.File;
         }) => {
-            (async () => {
-                console.log('file is ', params.file);
-                if (await fileService.checkDownloadFileExists(fileService.getFullUrl(params.file.uri))) {
-                    const tempPath = fileService.urlToPath(fileService.getFullUrl(params.file.uri))
-                    setDownloaded(true)
-                    setLocalPath(tempPath)
-                }
-                setEncKey(params.encKey);
-                setFile(params.file);
-                setVisible(true);
-            })()
+            if (await fileService.checkDownloadFileExists(fileService.getFullUrl(params.file.uri))) {
+                const tempPath = fileService.urlToPath(fileService.getFullUrl(params.file.uri))
+                setDownloaded(true)
+                setLocalPath(tempPath)
+            }
+            console.log('file is ', params.file);
+            console.log('name= ', params.file.name);
+            setEncKey(params.encKey);
+            setFile(params.file);
+            setVisible(true);
 
         }
     }));
@@ -77,31 +76,40 @@ export default forwardRef((_, ref) => {
     const onClose = () => {
         setVisible(false)
     }
-    return <BaseModal visible={visible} onClose={onClose} title={t('file.title')}>
+    return <BaseModal visible={visible} onClose={onClose} title={t('file.title')} styles={{ flex: 1 }}>
         <View style={{
             flex: 1,
             alignItems: 'center',
-            paddingHorizontal: s(25),
+            paddingHorizontal: s(24),
         }}>
-            <Image source={require('assets/icons/file-unknown.svg')} style={{
-                width: s(60),
-                height: s(60),
-                marginTop: s(72),
-            }} />
-            <Text style={{
-                fontSize: s(16),
-                color: '#333',
-                fontWeight: '600',
-                marginTop: s(8),
-            }}>{file?.name}</Text>
-            <Text style={{
-                fontSize: s(14),
-                color: '#999',
-                fontWeight: '400',
-                marginTop: s(10),
-            }}>文件大小：{bytesToSize(file?.size ?? 0)}</Text>
+            <View style={{
+                flex: 1,
+                alignItems: 'center',
+                display: 'flex',
+                flexDirection: 'column',
+            }}>
+                <Image source={require('assets/icons/file-unknown.svg')} style={{
+                    width: s(60),
+                    height: s(60),
+                    marginTop: s(72),
+                }} />
+                <Text style={{
+                    fontSize: s(16),
+                    color: 'black',
+                    fontWeight: '600',
+                    marginTop: s(24)
+                }}>{file?.name}</Text>
+                <Text style={{
+                    fontSize: s(14),
+                    color: '#999',
+                    fontWeight: '400',
+                    marginTop: s(10),
+                }}>文件大小：{bytesToSize(file?.size ?? 0)}</Text>
+
+            </View>
             <Button disabled={loading}
                 fullWidth fullRounded
+                size="large"
                 onPress={() => {
                     if (loading) {
                         return;
@@ -120,19 +128,14 @@ export default forwardRef((_, ref) => {
                         });
                     }
 
-                }} style={{
-                    marginTop: s(239),
-                    height: s(50),
-                    borderRadius: s(16),
+                }} containerStyle={{
                     display: 'flex',
-                    width: '100%',
-                    backgroundColor: colors.palette.primary
-                }} text={
+                    backgroundColor: colors.palette.primary,
+                    marginBottom: s(24)
+                }} label={
                     downloaded ? (loading ? '解密中' : '分享') : (loading ? '下載中' : '保存到本地')
-                }>
-                {loading ? <ActivityIndicator color="white" style={{
-                    marginRight: s(5),
-                }} animating={loading} /> : null}
+                } loading={loading}>
+
             </Button>
         </View>
     </BaseModal>

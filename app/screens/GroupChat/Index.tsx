@@ -21,6 +21,10 @@ import chatService from "app/services/chat.service";
 import { IconFont } from "app/components/IconFont/IconFont";
 import { LocalChatService } from "app/services/LocalChatService";
 import chatMapper from "app/utils/chat.mapper";
+import { LocalGroupService } from "app/services/LocalGroupService";
+import { LocalUserService } from "app/services/LocalUserService";
+import userService from "app/services/user.service";
+import user from "app/api/auth/user";
 
 type Props = StackScreenProps<App.StackParamList, 'GroupChatScreen'>;
 
@@ -65,10 +69,23 @@ export const GroupChatScreen = ({ navigation, route }: Props) => {
 
     const loadLocalMembers = useCallback(async (groupId: number) => {
         const localMembers = await groupService.getLocalMemberList(groupId)
-        const self = localMembers.find(m => m.uid === authUser?.id ?? -1)
-        setMembers(localMembers)
-        console.log('-----', self, localMembers);
-        setSelfMember(self)
+        if (localMembers.length > 0) {
+            const ids = localMembers.map(l => l.uid)
+            const users = await LocalUserService.findByIds(ids)
+            const memberHash = userService.initUserHash(users)
+            const finalMembers = localMembers.map(l => {
+                const member = memberHash.get(l.uid)
+                if (member) {
+                    return { ...l, name: member.nickName ?? '', pubKey: member.pubKey, nameIndex: member.nickNameIdx ?? '' }
+                }
+                return l
+            })
+            const self = finalMembers.find(m => m.uid === authUser?.id ?? -1)
+            setMembers(finalMembers)
+            console.log('-----', self, finalMembers);
+            setSelfMember(self)
+        }
+
         return localMembers.length > 0
     }, [])
 
@@ -83,6 +100,7 @@ export const GroupChatScreen = ({ navigation, route }: Props) => {
     }, []);
 
     const loadLocalGroup = useCallback(async (groupId: number) => {
+        // await LocalGroupService.removeAll()
         const localGroup = await groupService.queryLocalByIdIn([groupId])
         if (localGroup.has(groupId)) {
             const v = localGroup.get(groupId)

@@ -1,6 +1,6 @@
 import { forwardRef, useCallback, useImperativeHandle, useRef, useState } from "react";
 import { StyleSheet } from "react-native";
-import { Video } from 'expo-av'
+import { ResizeMode, Video } from 'expo-av'
 import { MessageType } from "./chat-ui";
 import BaseModal from "./base-modal";
 import fileService from "app/services/file.service";
@@ -26,13 +26,13 @@ export default forwardRef((_, ref) => {
             toast('數據異常')
             return
         }
-        if (original && original.startsWith('file://')) {
-            if (await fileService.checkExist(original)) {
-                console.log('使用原始文件', original);
-                setData(original)
-                return
-            }
-        }
+        // if (original && original.startsWith('file://')) {
+        //     if (await fileService.checkExist(original)) {
+        //         console.log('使用原始文件', original);
+        //         setData(original)
+        //         return
+        //     }
+        // }
         console.log('視頻預覽', uri);
         setData(fileService.getFullUrl(uri))
     }, [])
@@ -68,10 +68,10 @@ export default forwardRef((_, ref) => {
     }
 
 
-    return <BaseModal visible={visible} onClose={close} title={'todo'}>
+    return <BaseModal visible={visible} onClose={close} title={'视频预览'} styles={{flex: 1}}>
         <Video
             ref={videoRef}
-            resizeMode={'cover'}
+            resizeMode={ResizeMode.COVER}
             style={styles.videoStyle}
             source={{ uri: data, type: 'mp4' }}
             useNativeControls
@@ -92,6 +92,6 @@ var styles = StyleSheet.create({
     videoStyle: {
         margin: 0,
         padding: 0,
-        flex: 1
+        flex: 1,
     },
 });

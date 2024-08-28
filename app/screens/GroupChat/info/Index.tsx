@@ -1,4 +1,4 @@
-import { StyleSheet, Switch, Text, View } from "react-native"
+import { StyleSheet, Switch, View } from "react-native"
 import { Button } from "app/components/Button"
 import MenuItem from "./components/MenuItem";
 import QRcodeModal, { QRcodeModalRef } from "./QrcodeModal";
@@ -57,11 +57,7 @@ export default forwardRef((_, ref) => {
         groupContext.chatItem
     ])
 
-    console.log('loadload');
-
-
     const changeTop = (val: number) => {
-
         groupContext.reloadChat({
             ...groupContext.chatItem,
             isTop: val
@@ -130,7 +126,6 @@ export default forwardRef((_, ref) => {
                             if (!groupContext.group) {
                                 return;
                             }
-                            console.log("管理進入");
                             groupManagerModalRef.current?.open(groupContext.group?.id);
                         }}
                         leftIcon={
@@ -159,8 +154,6 @@ export default forwardRef((_, ref) => {
                             true: themeColor.primary
                         }}
                         onChange={async (e) => {
-
-                            // console.log('changed');
                             e.stopPropagation()
                             e.persist()
                             const res = await chatApi.raiseTop({
@@ -168,7 +161,6 @@ export default forwardRef((_, ref) => {
                                 top: e.nativeEvent.value
                             })
                             changeTop(res.isTop ? 1 : 0)
-
                         }} />} />
 
             <MenuItem label={t('groupChat.title_inhibite')}
@@ -191,15 +183,16 @@ export default forwardRef((_, ref) => {
                         changeMute(res.isMute)
                     }} />} />
 
-            <MenuItem label={'查找聊天内容'}
-                      onPress={()=>{
-                          if (groupContext.chatItem && groupContext.chatItem.id) {
-                              chatHistoryModalRef.current?.open(groupContext.chatItem.id)
-                          }
-                      }}
-                      leftIcon={
-                          <IconFont name="searchDoc" color={themeColor.text} size={26} />
-                      } />
+            <MenuItem label={t('groupChat.title_chat_history')}
+                onPress={() => {
+                    if (groupContext.chatItem && groupContext.chatItem.id) {
+                        console.log('group',groupContext.chatItem);
+                        chatHistoryModalRef.current?.open(groupContext.chatItem.id)
+                    }
+                }}
+                leftIcon={
+                    <IconFont name="searchDoc" color={themeColor.text} size={26} />
+                } />
 
 
             <View style={{
@@ -245,7 +238,7 @@ export default forwardRef((_, ref) => {
                 onPress={() => {
                     confirmModalRef.current?.open({
                         title: t('groupChat.title_clear_message'),
-                        desc: t('groupChat.title_drop_message_desc'),
+                        content: t('groupChat.title_drop_message_desc'),
                         onSubmit: () => {
                             groupService.clearGroupMessages([groupContext.group.id], [groupContext.group?.chatId]).then(() => {
 

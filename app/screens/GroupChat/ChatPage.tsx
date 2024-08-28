@@ -21,7 +21,7 @@ import { IModel } from "@repo/enums";
 import { AuthUser } from "app/stores/auth";
 import quickCrypto from "app/utils/quick-crypto";
 import generateUtil from "app/utils/generateUtil";
-import { GestureResponderEvent, TouchableOpacity } from "react-native"
+import { GestureResponderEvent, Platform, TouchableOpacity } from "react-native"
 import { ThemeState } from "app/stores/system";
 import chatService from "app/services/chat.service";
 import eventUtil from "app/utils/event-util";
@@ -31,7 +31,7 @@ import NetInfo from "@react-native-community/netinfo";
 import { LocalChatService } from "app/services/LocalChatService";
 import { LocalUserService } from "app/services/LocalUserService";
 import userService from "app/services/user.service";
-import SelectMemberModal, { SelectMemberModalType, SelectMemberOption } from "app/components/SelectMemberModal"
+import SelectMemberModal, { SelectMemberModalType, SelectMemberOption } from "app/components/SelectMemberModal/Index"
 import friendService from "app/services/friend.service"
 import Navbar from "app/components/Navbar"
 import { colors } from "app/theme"
@@ -87,7 +87,7 @@ export default forwardRef((_, ref) => {
         console.log('------add message', sequence);
         setMessages([message, ...messages])
         messageSendService.send(chatItemRef.current?.id ?? '', sharedSecretRef.current, message)
-            .then((res)=>{
+            .then((res) => {
                 updateMessage(res)
                 setReplyMsg(null)
             })
@@ -159,7 +159,7 @@ export default forwardRef((_, ref) => {
             setMessages(olds => {
                 let result = []
                 if (olds.length > 0) {
-                   const existIds = olds.map(o=>o.id)
+                    const existIds = olds.map(o => o.id)
                     result = olds.concat(finalMessages.filter(t => {
                         return !existIds.includes(t.id)
                     }))
@@ -213,10 +213,8 @@ export default forwardRef((_, ref) => {
                 setMessages(olds => {
                     let result = []
                     if (olds.length > 0) {
-                        const oldMin = olds[olds.length - 1].sequence
-                        result = items.filter(t => {
-                            return t.sequence < oldMin
-                        }).concat(olds)
+                        const exsitIds = olds.map(o => o.id)
+                        result = items.filter(t => !exsitIds.includes(t.id)).concat(olds)
                     } else {
                         result = items
                     }
@@ -311,10 +309,16 @@ export default forwardRef((_, ref) => {
 
     const handleEvent = (e: any) => {
         const { type } = e
+        console.log(author?.nickName, '收到消息', e);
+        console.log('[lastSeq]',lastSeq.current,remoteLastSeq.current);
+        
+
         if (type === IModel.IClient.SocketTypeEnum.MESSAGE) {
             const _eventItem = e as SocketMessageEvent
             if (lastSeq.current < _eventItem.sequence && author?.id !== _eventItem.senderId && remoteLastSeq.current < _eventItem.sequence) {
-                remoteLastSeq.current = _eventItem.sequence
+                console.log("socket 监听到新的消息了", Platform.OS)
+                remoteLastSeq.current = _eventItem.sequence;
+                console.log(remoteMessageLoading.current, "当前远程请求状态")
                 if (!remoteMessageLoading.current) {
                     loadRemoteMessages(chatItemRef.current?.id ?? '', lastSeq.current)
                 }
@@ -359,18 +363,18 @@ export default forwardRef((_, ref) => {
             case 'userCard':
                 const users = await friendService.getOnlineList();
                 const options: SelectMemberOption[] = users
-                  .map((item) => {
-                      return {
-                          id: item.id,
-                          icon: item.avatar ?? "",
-                          title: item.nickName ?? "",
-                          name: item.nickName ?? "",
-                          name_index: item.nickNameIdx ?? "",
-                          status: false,
-                          disabled: false,
-                          pubKey: item.pubKey
-                      } as SelectMemberOption
-                  });
+                    .map((item) => {
+                        return {
+                            id: item.id,
+                            icon: item.avatar ?? "",
+                            title: item.nickName ?? "",
+                            name: item.nickName ?? "",
+                            name_index: item.nickNameIdx ?? "",
+                            status: false,
+                            disabled: false,
+                            pubKey: item.pubKey
+                        } as SelectMemberOption
+                    });
                 selectMemberModalRef.current?.open({
                     title: '選擇好友',
                     options,
@@ -438,11 +442,11 @@ export default forwardRef((_, ref) => {
     const messageDelete = (msgId: string) => {
         if (chatItemRef.current) {
             messageSendService.deleteMessage(chatItemRef.current.id, [msgId])
-              .then(() => {
-                  setMessages((items) => {
-                      return items.filter(i => i.id !== msgId)
-                  })
-              })
+                .then(() => {
+                    setMessages((items) => {
+                        return items.filter(i => i.id !== msgId)
+                    })
+                })
         }
     }
 
@@ -475,10 +479,10 @@ export default forwardRef((_, ref) => {
             return <Navbar style={{
                 position: 'absolute',
             }} renderLeft={() => <TouchableOpacity
-              onPress={() => {
-                  setMulti(false)
-                  setCheckedIdList([])
-              }}
+                onPress={() => {
+                    setMulti(false)
+                    setCheckedIdList([])
+                }}
             >
                 <Text style={{
                     color: colors.palette.primary
@@ -531,7 +535,7 @@ export default forwardRef((_, ref) => {
         <>
             {renderMultiNavbar()}
             <Chat
-              enableMultiSelect={multi}
+                enableMultiSelect={multi}
                 tools={tools}
                 messages={messages}
                 onEndReached={async () => {
@@ -548,56 +552,56 @@ export default forwardRef((_, ref) => {
                 user={chatUiAdapter.userTransfer(author)}
                 checkedIdList={checkedIdList}
                 onChecked={(id, v) => {
-                  if (v) {
-                      setCheckedIdList(ids => {
-                          return ids.filter(i => i !== id).concat(id)
-                      })
-                  } else {
-                      setCheckedIdList(ids => {
-                          return ids.filter(i => i !== id)
-                      })
-                  }
-              }}
-              reply={replyMsg}
-              onCloseReply={() => {
-                  setReplyMsg(null)
-              }}
-              onCollectPress={onCollectPress}
+                    if (v) {
+                        setCheckedIdList(ids => {
+                            return ids.filter(i => i !== id).concat(id)
+                        })
+                    } else {
+                        setCheckedIdList(ids => {
+                            return ids.filter(i => i !== id)
+                        })
+                    }
+                }}
+                reply={replyMsg}
+                onCloseReply={() => {
+                    setReplyMsg(null)
+                }}
+                onCollectPress={onCollectPress}
             />
             <VideoPlayModal ref={encVideoPreviewRef} />
             <FilePreviewModal ref={fileModalRef} />
             <LoadingModal ref={loadingModalRef} />
             <LongPressModal ref={longPressModalRef}
-                            onCollect={(msg) => {
-                                LocalCollectService.addSingle(collectMapper.convertEntity(msg))
-                                  .then((entity) => {
-                                      if (entity) {
-                                          setCheckedIdList([])
-                                          setMulti(false)
-                                          setReplyMsg(null)
-                                          toast('操作成功')
-                                      }
-                                  })
-                            }}
-                            onReply={(_m) => {
-                                setReplyMsg(_m)
-                            }}
-                            onMulti={(id, val) => {
-                                if (val) {
-                                    if (id !== '') {
-                                        setCheckedIdList([id])
-                                        setReplyMsg(null)
-                                    }
-                                } else {
-                                    setCheckedIdList([])
-                                    setReplyMsg(null)
-                                }
-                                setMulti(val)
-                            }}
-                            onDelete={messageDelete}
-                            onClose={(msgId: string) => {
-                                longPressHandle(false, msgId)
-                            }}/>
+                onCollect={(msg) => {
+                    LocalCollectService.addSingle(collectMapper.convertEntity(msg))
+                        .then((entity) => {
+                            if (entity) {
+                                setCheckedIdList([])
+                                setMulti(false)
+                                setReplyMsg(null)
+                                toast('操作成功')
+                            }
+                        })
+                }}
+                onReply={(_m) => {
+                    setReplyMsg(_m)
+                }}
+                onMulti={(id, val) => {
+                    if (val) {
+                        if (id !== '') {
+                            setCheckedIdList([id])
+                            setReplyMsg(null)
+                        }
+                    } else {
+                        setCheckedIdList([])
+                        setReplyMsg(null)
+                    }
+                    setMulti(val)
+                }}
+                onDelete={messageDelete}
+                onClose={(msgId: string) => {
+                    longPressHandle(false, msgId)
+                }} />
 
             <SelectMemberModal ref={selectMemberModalRef} />
 

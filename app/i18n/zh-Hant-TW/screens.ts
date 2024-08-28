@@ -132,6 +132,8 @@ export default {
         title_apply_info: "驗證信息",
         title_category_label: "設置分類，精準定位",
         title_apply_join: "申請加入",
+        title_chat_history: "查找聊天内容",
+        title_group_config: "群设置",
         choose_label: "已選",
         btn_reset: "重置",
         btn_submit: "確定",

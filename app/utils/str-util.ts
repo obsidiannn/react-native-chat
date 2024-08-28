@@ -22,6 +22,14 @@ const truncateMiddle = (str: string, maxLength: number, ellipsis = '...'): strin
     return truncatedString;
 }
 
+const defaultLabel = (val: string, defaultVal: string) => {
+    if (val && val !== '') {
+        return val
+    }
+    return defaultVal
+}
+
 export default {
-    truncateMiddle
+    truncateMiddle,
+    defaultLabel
 }

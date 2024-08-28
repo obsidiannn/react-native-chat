@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
 export interface ConfirmModalOption {
   title: string;
   content: string;
-  onSubmit?: () => void;
+  onSubmit?: () => Promise<void>;
   onCancel?: () => void;
 }
 
@@ -23,8 +23,6 @@ export const ConfirmModal = forwardRef((props: {
   const [option, setOption] = useState<ConfirmModalOption>({
     title: "",
     content: "",
-    onSubmit: () => { },
-    onCancel: () => { }
   })
   useImperativeHandle(ref, () => ({
     open: (option: ConfirmModalOption) => {
@@ -43,13 +41,15 @@ export const ConfirmModal = forwardRef((props: {
           </View>
           <Text style={[$content, { color: $colors.secondaryText }]}>{option.content}</Text>
           <View>
-            <Button theme={theme} 
-            onPress={async () => {
-              option.onSubmit?.();
-              setVisible(false);
-            }} containerStyle={{
-              marginTop: s(15)
-            }} fullRounded size="large" label={t("Confirm")} />
+            <Button theme={theme}
+              onPress={async () => {
+                if (option.onSubmit) {
+                  await option.onSubmit()
+                }
+                setVisible(false)
+              }} containerStyle={{
+                marginTop: s(15)
+              }} fullRounded size="large" label={t("Confirm")} />
             <Button theme={theme} onPress={() => setVisible(false)} containerStyle={{
               marginVertical: s(15)
             }} fullRounded type="secondary" size="large" label={t("Cancel")} />
