@@ -87,7 +87,7 @@ export default forwardRef((props: {
                 marginTop: i === 0 ? 0 : s(14)
               }} key={e.id + "member"}>
                 <View style={{ flexDirection: "row", alignItems: "center" }}>
-                  <AvatarComponent url={e.avatar} enableAvatarBorder />
+                  <AvatarComponent url={e.avatar} border size={48}/>
                   <Text style={{ ...styles.memberText, marginLeft: s(10), color: themeColor.text }}>{e.name}</Text>
                 </View>
 

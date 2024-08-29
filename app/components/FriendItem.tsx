@@ -26,7 +26,7 @@ export default (props: {
     }} style={{
         ...styles.container,
     }}>
-        <AvatarComponent url={props.item.avatar} online={false} />
+        <AvatarComponent url={props.item.avatar} online={false} size={48}/>
         <View style={{
             ...styles.rightContainer,
             borderBottomColor: isLast ? 'white' : '#F4F4F4',

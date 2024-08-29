@@ -47,7 +47,7 @@ export default (props: IContactListItemProps) => {
         } 
     ]}>
         <View style={styles.iconContainer}>
-            <AvatarComponent url={props.icon ?? ''} online={props.online} />
+            <AvatarComponent url={props.icon ?? ''} online={props.online} size={48} />
         </View>
         <View style={{
             ...styles.rightContainer,

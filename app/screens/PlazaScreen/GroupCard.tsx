@@ -39,9 +39,8 @@ export const GroupCard = (props: GroupCardProps) => {
             }}>
                 <AvatarComponent
                     url={fileService.getFullUrl(authUser?.avatar ?? '')}
-                    enableAvatarBorder style={{ marginTop: s(-32) }}
-                    width={64}
-                    height={64}
+                    border style={{ marginTop: s(-32) }}
+                    size={64}
                 />
                 <View style={{}}>
                     <Text style={{ ...styles.title, color: themeColor.title }}>{group?.name ?? ''}</Text>
