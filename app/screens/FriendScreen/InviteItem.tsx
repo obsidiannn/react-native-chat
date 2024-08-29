@@ -13,14 +13,14 @@ import fileService from "app/services/file.service";
 import { $colors } from "app/Colors";
 dayjs.extend(relativeTime)
 export default (props: {
-    item: IServer.IFriendApply,
-    user: IUser,
-    isLast: boolean,
-    renderRight?: () => React.ReactNode
+    item: IServer.IFriendApply;
+    user: IUser;
+    isLast: boolean;
+    theme?: "light" | "dark";
+    renderRight?: () => React.ReactNode;
 }) => {
-    const { item, isLast, user, renderRight } = props;
+    const { item, isLast, user, renderRight,theme="dark" } = props;
     const { t } = useTranslation('screens')
-
     return <TouchableOpacity onPress={() => {
         if (item.status === IModel.IFriendApply.Status.PENDING) {
             navigate('InviteInfoScreen', {
@@ -41,7 +41,12 @@ export default (props: {
             borderBottomColor: isLast ? $colors.white : '#F4F4F4',
         }}>
             <View style={styles.nameContainer}>
-                <Text style={styles.nameText}>{user.nickName}</Text>
+                <Text style={[
+                    styles.nameText,
+                    {
+                        color: theme === 'dark'? $colors.white : $colors.black
+                    }
+                ]}>{user.nickName}</Text>
             </View>
             <View style={styles.statusContainer}>
                 {renderRight ? renderRight() :
@@ -95,7 +100,6 @@ const styles = StyleSheet.create({
     nameText: {
         fontWeight: '400',
         fontSize: 16,
-        color: '#000000',
     },
     statusContainer: {
         width: '30%',

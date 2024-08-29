@@ -9,28 +9,24 @@ import ChatPage, { GroupChatPageRef } from './ChatPage';
 import { GroupChatUiContext } from "./context";
 import { useRecoilValue } from "recoil";
 import { IUser } from "drizzle/schema";
-import { useTranslation } from 'react-i18next';
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { App } from "types/app";
 import { AuthUser } from "app/stores/auth";
 import NetInfo from '@react-native-community/netinfo'
 import { s } from "app/utils/size";
 import GroupInfoModal, { GroupInfoModalType } from './info/Index'
-import { ColorsState } from "app/stores/system";
+import { ColorsState, ThemeState } from "app/stores/system";
 import chatService from "app/services/chat.service";
 import { IconFont } from "app/components/IconFont/IconFont";
 import { LocalChatService } from "app/services/LocalChatService";
 import chatMapper from "app/utils/chat.mapper";
-import { LocalGroupService } from "app/services/LocalGroupService";
 import { LocalUserService } from "app/services/LocalUserService";
 import userService from "app/services/user.service";
-import user from "app/api/auth/user";
+import { FullScreen } from "app/components/ScreenX";
 
 type Props = StackScreenProps<App.StackParamList, 'GroupChatScreen'>;
 
 
 export const GroupChatScreen = ({ navigation, route }: Props) => {
-    const insets = useSafeAreaInsets();
     const [chatItem, setChatItem] = useState<ChatDetailItem | null>()
     const [members, setMembers] = useState<GroupMemberItemVO[]>([]);
     const [group, setGroup] = useState<GroupDetailItem | null>()
@@ -41,7 +37,6 @@ export const GroupChatScreen = ({ navigation, route }: Props) => {
     const [selfMember, setSelfMember] = useState<GroupMemberItemVO>()
 
     const themeColor = useRecoilValue(ColorsState)
-    const { t } = useTranslation('screens')
 
     // TODO: 這裏是根據uid變化而部分請求接口的函數
     const refreshMember = useCallback(async (uids: number[]) => {
@@ -188,21 +183,15 @@ export const GroupChatScreen = ({ navigation, route }: Props) => {
             blurEvent();
         }
     }, [navigation])
-
+    const $theme = useRecoilValue(ThemeState)
 
     return (
-        <View
-            style={{
-                flex: 1,
-                backgroundColor: 'white',
-                paddingTop: insets.top
-            }}>
-
+        <FullScreen theme={$theme}>
             <View style={{
                 width: '100%',
                 backgroundColor: 'white',
             }}>
-                <Navbar title={group?.name ?? ''}
+                <Navbar theme={$theme} title={group?.name ?? ''}
                     onLeftPress={() => {
                         if (route.params.fromNotify) {
                             navigation.replace('TabStack')
@@ -246,7 +235,6 @@ export const GroupChatScreen = ({ navigation, route }: Props) => {
                 <ChatPage ref={chatPageRef} />
                 <GroupInfoModal ref={groupInfoModalRef} />
             </GroupChatUiContext.Provider>
-        </View>
-
+        </FullScreen>
     )
 }

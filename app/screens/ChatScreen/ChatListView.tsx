@@ -3,8 +3,8 @@ import ConversationItem from "app/components/ConversationItem"
 import { EmptyComponent } from "app/components/EmptyComponent"
 import { formatDate } from "app/utils/formatDate"
 import { s } from "app/utils/size"
-import { useMemo } from "react"
-import { View, ViewStyle, Text } from "react-native"
+import { useEffect, useMemo } from "react"
+import { View, ViewStyle } from "react-native"
 import dayjs from 'dayjs'
 import { useRecoilValue } from "recoil"
 import { ChatsStore } from "app/stores/auth"
@@ -19,7 +19,9 @@ export interface ChatViewProps {
 export const ChatListView = (props: ChatViewProps) => {
     const { t } = useTranslation('default')
     const chats = useRecoilValue(ChatsStore)
-
+    useEffect(()=>{
+        console.log('chats', chats)
+    },[])
     const { topChats, normalChats } = useMemo(() => {
         const topChats: ChatDetailItem[] = []
         const normalChats: ChatDetailItem[] = []

@@ -31,7 +31,6 @@ export default (props: IContactListItemProps) => {
             return <View style={{
                 padding: s(3),backgroundColor: colors.palette.red500,borderRadius: s(8)
             }}>
-
             </View>
         }
         return null
@@ -47,13 +46,18 @@ export default (props: IContactListItemProps) => {
         } 
     ]}>
         <View style={styles.iconContainer}>
-            <AvatarComponent url={props.icon ?? ''} online={props.online} />
+            <AvatarComponent size={50} url={props.icon ?? ''} online={props.online} />
         </View>
         <View style={{
             ...styles.rightContainer,
         }}>
             <View style={styles.titleContainer}>
-                <Text style={styles.title}>{props.title}</Text>
+                <Text style={[
+                    styles.title,
+                    {
+                        color: props.theme === 'light'? $colors.slate600 : $colors.slate100
+                    }
+                ]}>{props.title}</Text>
                 <Text style={styles.describe}>{props.describe}</Text>
             </View>
             <View style={styles.subTitleContainer}>

@@ -1,28 +1,25 @@
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useEffect, useState } from "react";
 import friendApplyService from "app/services/friend-apply.service";
 import { IUser } from "drizzle/schema";
 import { useRecoilValue } from "recoil";
 import { useTranslation } from 'react-i18next';
 import { s, verticalScale } from "app/utils/size";
-import Navbar from "app/components/Navbar";
 import { Button } from "app/components";
 import { AuthUser } from "app/stores/auth";
-import { ColorsState } from "app/stores/system";
+import { ThemeState } from "app/stores/system";
 import { IServer } from "@repo/types";
 import { App } from "types/app";
 import { IModel } from "@repo/enums";
 import InfoCard from "../UserInfo/components/info-card";
 import chatService from "app/services/chat.service";
 import eventUtil from "app/utils/event-util";
+import { ScreenX } from "app/components/ScreenX";
 
 type Props = StackScreenProps<App.StackParamList, 'InviteInfoScreen'>;
 export const InviteInfoScreen = ({ navigation, route }: Props) => {
-    const insets = useSafeAreaInsets();
     const [loading, setLoading] = useState(false);
-    const themeColor = useRecoilValue(ColorsState)
     const currentUser = useRecoilValue(AuthUser)
     const { t } = useTranslation('screens')
     const [info, setInfo] = useState<{
@@ -44,21 +41,14 @@ export const InviteInfoScreen = ({ navigation, route }: Props) => {
         });
         return unsubscribe;
     }, [navigation])
+    const $theme = useRecoilValue(ThemeState);
     return (
-        <View style={{
-            ...styles.container,
-            paddingTop: insets.top,
-            paddingBottom: insets.bottom,
-        }}>
-            <View>
-                <Navbar title={t('friend.title_apply_info')} />
-            </View>
+        <ScreenX theme={$theme} title={t('friend.title_apply_info')}>
             <ScrollView keyboardDismissMode="interactive">
                 <View style={{
                     paddingTop: verticalScale(32),
-                    backgroundColor: themeColor.secondaryBackground
                 }}>
-                    {info?.user && <InfoCard user={info.user} />}
+                    {info?.user && <InfoCard theme={$theme} user={info.user} />}
                 </View>
                 {
                     info?.friendApply.remark ? (
@@ -84,7 +74,7 @@ export const InviteInfoScreen = ({ navigation, route }: Props) => {
 
                 <View style={styles.actionContainer}>
                     {info?.friendApply.status === IModel.IFriendApply.Status.PENDING && !info.isSelf ? <>
-                        <Button fullWidth fullRounded size="large" onPress={async () => {
+                        <Button fullWidth fullRounded theme={$theme} size="large" onPress={async () => {
                             if (loading) {
                                 return
                             };
@@ -135,7 +125,7 @@ export const InviteInfoScreen = ({ navigation, route }: Props) => {
                         /> : null}
                 </View>
             </ScrollView>
-        </View>
+        </ScreenX>
     );
 };
 

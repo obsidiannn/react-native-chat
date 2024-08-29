@@ -1,8 +1,6 @@
 import { StyleSheet, Text, TextInput } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useEffect, useRef, useState } from "react";
-import Navbar from "app/components/Navbar";
 import { View, Switch } from "react-native";
 
 import groupService from "app/services/group.service";
@@ -68,7 +66,7 @@ export const GroupCreateScreen = ({ route, navigation }: Props) => {
         let imgUrl = createState.avatar
         let coverUrl = createState.cover
         try {
-            if (imgUrl && imgUrl !== '') {
+            if (imgUrl && imgUrl !== '' && !imgUrl.startsWith('http')) {
                 const url = await fileService.uploadImage(imgUrl)
                 if (!url || url === null || url === '') {
                     toast(t('groupCreate.error_upload'))
@@ -76,7 +74,7 @@ export const GroupCreateScreen = ({ route, navigation }: Props) => {
                 }
                 imgUrl = url
             }
-            if (coverUrl && coverUrl !== '') {
+            if (coverUrl && coverUrl !== '' && !imgUrl.startsWith('http')) {
                 const url = await fileService.uploadImage(coverUrl)
                 if (!url || url === null || url === '') {
                     toast(t('groupCreate.error_upload'))

@@ -15,7 +15,7 @@ import chatService from "app/services/chat.service";
 import UserChatInfoModal, { UserChatInfoModalRef } from "./UserChatInfoModal";
 import { useRecoilValue } from "recoil";
 import { IconFont } from "app/components/IconFont/IconFont";
-import { ColorsState } from "app/stores/system";
+import { ColorsState, ThemeState } from "app/stores/system";
 import userService from "app/services/user.service";
 import { LocalUserService } from "app/services/LocalUserService";
 import { LocalChatService } from "app/services/LocalChatService";
@@ -26,6 +26,7 @@ import EventManaer from 'app/services/event-manager.service'
 import { IModel } from "@repo/enums";
 import { AuthUser } from "app/stores/auth";
 import { Text } from "react-native";
+import { FullScreen } from "app/components/ScreenX";
 type Props = StackScreenProps<App.StackParamList, 'UserChatScreen'>;
 
 export const UserChatScreen = ({ navigation, route }: Props) => {
@@ -160,10 +161,8 @@ export const UserChatScreen = ({ navigation, route }: Props) => {
             <Text style={{ fontSize: s(8) }}>{typing ? "typing..." : null}</Text>
         </>
     }
-
-    return <View style={[styles.container, $topContainerInsets, {
-        backgroundColor: '#ffffff'
-    }]}>
+    const $theme = useRecoilValue(ThemeState)
+    return <FullScreen theme={$theme}>
         <UserChatUIContext.Provider value={{
             friend: user,
             chatItem: chatItem,
@@ -171,6 +170,7 @@ export const UserChatScreen = ({ navigation, route }: Props) => {
             reloadChat
         }}>
             <Navbar
+                theme={$theme}
                 renderCenter={renderTitle}
                 onLeftPress={() => {
                     void chatPageRef.current?.close()
@@ -201,7 +201,7 @@ export const UserChatScreen = ({ navigation, route }: Props) => {
             <ChatPage ref={chatPageRef} />
             <UserChatInfoModal ref={userChatInfoModalRef} />
         </UserChatUIContext.Provider>
-    </View >
+    </FullScreen>
 }
 
 const styles = StyleSheet.create({

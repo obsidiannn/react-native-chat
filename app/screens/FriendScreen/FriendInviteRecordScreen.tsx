@@ -92,6 +92,7 @@ export const FriendInviteRecordScreen = ({ navigation }: Props) => {
                         if (item.friendApply.status === IModel.IFriendApply.Status.PENDING) {
                             if (item.friendApply.friendId === currentUser?.id) {
                                 return <InviteItem
+                                theme={$theme}
                                     user={item.user}
                                     item={item.friendApply}
                                     isLast={index === items.length - 1}

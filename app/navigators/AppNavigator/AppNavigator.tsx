@@ -5,7 +5,7 @@ import {
 import { createNativeStackNavigator, NativeStackScreenProps } from "@react-navigation/native-stack";
 import messaging from '@react-native-firebase/messaging';
 import React, { useCallback, useContext, useEffect } from "react"
-import { AppState, Appearance, Linking, StatusBar, View } from "react-native"
+import { AppState, Appearance, Linking, StatusBar } from "react-native"
 import * as Screens from "app/screens"
 import Config from "../../config"
 import { navigate, navigationRef, useBackButtonHandler } from "./../navigationUtilities"
@@ -44,7 +44,7 @@ const AppStack = () => {
 
   const handleDeepLink = (event: { url: string }) => {
     console.log('[link_screen]', event);
-    navigate('LinkScreen', { from: 'link', url: event.url })
+    //navigate('LinkScreen', { from: 'link', url: event.url })
   };
 
   const loadOnlineData = useCallback(() => {
@@ -56,6 +56,8 @@ const AppStack = () => {
         } catch (e) {
           console.error(e);
         }
+        await initNotification()
+        await listenNotification()
         AuthService.getInfo().then((v) => {
           setAuthUser(v)
           AppState.addEventListener('change', nextAppState => {
@@ -78,6 +80,7 @@ const AppStack = () => {
         chatService.mineChatList().then((res) => {
           if (res !== null && res.length > 0) {
             console.log('change chat detail');
+            console.log(res);
             setChatsStore(res)
           }
         })
@@ -101,8 +104,6 @@ const AppStack = () => {
         navigate('LinkScreen', { from: 'link', url: initUrl })
       }
 
-      await initNotification()
-      await listenNotification()
       navigationRef.current?.reset({
         index: 0,
         routes: [{ name: 'TabStack' }],

@@ -6,22 +6,19 @@ import toast from "app/utils/toast";
 import { s, verticalScale } from "app/utils/size";
 import { isOnline } from "app/utils/account";
 import { IModel } from "@repo/enums";
-import { colors } from "app/theme";
-import { useRecoilValue } from "recoil";
-import { ColorsState } from "app/stores/system";
 import strUtil from "app/utils/str-util";
 import { IconFont } from "app/components/IconFont/IconFont";
 import fileService from "app/services/file.service";
 import AvatarX from "app/components/AvatarX";
+import { $colors } from "app/Colors";
 export default (props: {
-    user: IUser
+    user: IUser;
+    theme: 'dark' | 'light';
 }) => {
     const { user } = props;
     const { t } = useTranslation('screens')
-    const $colors = useRecoilValue(ColorsState)
     return <View style={{
         ...styles.container,
-        backgroundColor: $colors.background
     }}>
         <View style={styles.infoBox}>
             <View style={{
@@ -32,7 +29,7 @@ export default (props: {
                     uri={fileService.getFullUrl(user.avatar ?? '')} />
             </View>
             <View style={styles.rightContainer}>
-                <Text style={styles.nameText}>{user.friendAlias ?? user.nickName}</Text>
+                <Text style={[styles.nameText, { color: props.theme == 'dark' ? $colors.white : $colors.black }]}>{user.friendAlias ?? user.nickName}</Text>
                 {
                     user.gender !== IModel.IUser.Gender.UNKNOWN ?
                         (
@@ -46,14 +43,24 @@ export default (props: {
                 await clipboard.setStringAsync(user.userName ?? '');
                 toast(t('userInfo.success_copied'));
             }}>
-                <Text style={styles.signText}>@{strUtil.truncateMiddle(user.userName ?? "", 30)}</Text>
-                <IconFont name={"copy"} color={$colors.text} size={16} />
+                <Text style={[
+                    styles.signText,
+                    {
+                        color: props.theme == 'dark'? $colors.gray400 : $colors.gray500,
+                    }
+                ]}>@{strUtil.truncateMiddle(user.userName ?? "", 30)}</Text>
+                <IconFont name={"copy"} color={props.theme == 'dark' ? $colors.white : $colors.gray400} size={16} />
             </TouchableOpacity>
         </View>
-        <View style={styles.signContainer}>
+        <View style={[
+            styles.signContainer,
+            {
+                backgroundColor: props.theme == 'dark'? $colors.slate800 : $colors.gray100
+            }
+        ]}>
             <Text style={{
                 ...styles.signText,
-                color: colors.palette.gray500,
+                color: $colors.gray500,
                 paddingVertical: s(12)
             }}>{!user.sign ? t('userInfo.label_empty') : user.sign}</Text>
         </View>
@@ -104,7 +111,6 @@ const styles = StyleSheet.create({
     signContainer: {
         padding: s(12),
         minHeight: s(64),
-        backgroundColor: colors.palette.gray100,
         marginTop: s(24),
         borderRadius: s(14)
 

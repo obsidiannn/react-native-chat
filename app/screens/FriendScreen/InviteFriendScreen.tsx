@@ -10,6 +10,7 @@ import { s, verticalScale } from "app/utils/size";
 import { ScreenX } from "app/components/ScreenX";
 import { useRecoilValue } from "recoil";
 import { ThemeState } from "app/stores/system";
+import { $colors } from "app/Colors";
 
 type Props = StackScreenProps<App.StackParamList, 'InviteFriendScreen'>;
 export const InviteFriendScreen = ({ navigation, route }: Props) => {
@@ -26,10 +27,18 @@ export const InviteFriendScreen = ({ navigation, route }: Props) => {
         return unsubscribe;
     }, [navigation])
     return <ScreenX title={t('friend.title_invite_info')} theme={$theme}>
-        <View style={styles.contentContainer} >
-            <View style={styles.inputContainer}>
+        <View>
+            <View style={[
+                styles.inputContainer,
+                { backgroundColor: $theme === 'light'? $colors.slate100 : $colors.slate600  }
+            ]}>
                 <TextInput
-                    style={styles.input}
+                    style={[
+                        styles.input,
+                        {
+                            color: $theme === 'light'? $colors.slate700 : $colors.slate200,
+                        }
+                    ]}
                     placeholder={t('friend.placeholder_remark')}
                     onChangeText={text => setRemark(text)}
                     defaultValue={remark}
@@ -39,7 +48,7 @@ export const InviteFriendScreen = ({ navigation, route }: Props) => {
                 />
             </View>
             <View style={styles.buttonContainer}>
-                <Button size="large" fullWidth fullRounded label={t('friend.btn_send_invite')} onPress={() => {
+                <Button theme={$theme} size="large" fullWidth fullRounded label={t('friend.btn_send_invite')} onPress={() => {
                     setState(true);
                     if (userId) {
                         friendApplyService.create(userId, remark).then(res => {
@@ -63,14 +72,9 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: 'white',
     },
-    contentContainer: {
-    },
     inputContainer: {
         height: '50%',
         padding: s(15),
-        borderColor: '#F4F4F4',
-        borderWidth: 1,
-        backgroundColor: '#F8F8F8',
         marginHorizontal: s(15),
         borderRadius: s(16),
         marginTop: verticalScale(20),
@@ -78,11 +82,10 @@ const styles = StyleSheet.create({
     input: {
         fontSize: 16,
         fontWeight: '400',
-        color: '#333',
         height: verticalScale(82),
     },
     buttonContainer: {
-        paddingHorizontal: s(23),
+        paddingHorizontal: s(16),
         marginTop: verticalScale(30),
     },
     button: {
