@@ -5,6 +5,9 @@ import { Text, View } from "react-native";
 import ApplyListItemComponent from "./components/ApplyListItem";
 import ApplyInfoModal, { ApplyInfoModalRef } from "./ApplyInfoModal"
 import BaseModal from "app/components/base-modal";
+import { useRecoilValue } from "recoil";
+import { ColorsState } from "app/stores/system";
+import { useTranslation } from "react-i18next";
 
 // 羣申請列表
 export interface ApplyListModalRef {
@@ -18,6 +21,8 @@ export default forwardRef((props: {
     const [items, setItems] = useState<GroupApplyItem[]>([]);
     const applyInfoModalRef = useRef<ApplyInfoModalRef>(null);
     const [selfEnc, setSelfEnc] = useState<{ k: string, p: string }>()
+    const themeColor = useRecoilValue(ColorsState)
+    const { t } = useTranslation('screens')
     useImperativeHandle(ref, () => ({
         open: (id: number, encKey: string, encPri: string) => {
             setGid(id);
@@ -38,13 +43,14 @@ export default forwardRef((props: {
         setVisible(false)
     }
 
-    return <BaseModal animationType="slide" visible={visible} onClose={onClose} title="申請列表" styles={{
-        flex: 1
+    return <BaseModal animationType="slide" visible={visible} onClose={onClose} title={t('groupChat.title_apply_list')} styles={{
+        flex: 1, backgroundColor: themeColor.background
     }}>
-        <View style={{ flex: 1,}}>
+        <View style={{ flex: 1, }}>
             {items.map((item, idx) => {
                 const isLast = idx === (items.length - 1);
                 return <ApplyListItemComponent
+                    themeColor={themeColor}
                     key={item.id}
                     onCheck={() => {
                         applyInfoModalRef.current?.open(item, selfEnc?.k ?? '', selfEnc?.p ?? '');

@@ -47,7 +47,7 @@ export const MenuModal = forwardRef((props: MenuModalProps, ref) => {
             </Card>
             <View style={{ alignItems: 'center', margin: s(32), }}>
                 <TouchableOpacity style={[$closeIcon, {
-                    backgroundColor: $colors.slate900,
+                    backgroundColor: theme === 'dark' ? $colors.slate500 : $colors.slate900,
                 }]} onPress={close}>
                     <IconFont name="close" size={24} color={$colors.white} />
                 </TouchableOpacity>

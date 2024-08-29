@@ -33,7 +33,7 @@ export const SystemFeedbackScreen = (props: Props) => {
     const [images, setImages] = useState<string[]>([])
     const loadingModalRef = useRef<LoadingModalType>(null)
     const style = styles({ themeColor })
-    const {t} = useTranslation("screens")
+    const { t } = useTranslation("screens")
     const doSubmit = async () => {
         if (!category) {
             toast(t('feedback.labelChooseCategory'))
@@ -98,7 +98,7 @@ export const SystemFeedbackScreen = (props: Props) => {
                 }} onPress={() => {
                     systemCategoryModalRef.current?.open()
                 }}>
-                    <Text>
+                    <Text style={{ color: themeColor.secondaryText }}>
                         {
                             category === null ? '请选择分类' : category.name
                         }
@@ -110,6 +110,12 @@ export const SystemFeedbackScreen = (props: Props) => {
                 <TextInput
                     value={content}
                     placeholder="请仔细描述你的问题"
+                    placeholderTextColor={themeColor.secondaryText}
+                    style={{
+                        padding: s(8),
+                        color: themeColor.text
+                    }}
+                    cursorColor={themeColor.text}
                     numberOfLines={3}
                     textAlignVertical="top"
                     maxLength={200}

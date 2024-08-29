@@ -31,6 +31,7 @@ export const LinkScreen = ({ navigation, route }: Props) => {
                 const params = Object.fromEntries(new URLSearchParams(parsedUrl.search));
                 console.log('[linkroute]', pathname);
                 console.log('[linkparam]', params);
+                const hostname = parsedUrl.hostname
                 if (pathname === 'UserInfo') {
                     console.log('userinfo');
 
@@ -41,21 +42,26 @@ export const LinkScreen = ({ navigation, route }: Props) => {
                     navigate('GroupInfoScreen', { id: params.id, outside: true })
                     // navigate('AuthStackNav', { screen: pathname, params: { id: params.id, outside: true } })
                 }
+                if (hostname === 'group') {
+                    navigate('GroupInfoScreen', { id: pathname, outside: true })
+                }
             }
             if (param.from === 'notify') {
                 const url = param.url
                 console.log('link notify');
-                
+
                 const parsedUrl = new URL(url);
                 console.log('url==', parsedUrl.hostname);
                 console.log(parsedUrl.protocol); // 'xx:'
                 console.log(parsedUrl.hostname); // 'example.com'
                 console.log(parsedUrl.pathname); // '/some/path'
                 // const routeName = parsedUrl.hostname.replace('/', '');
+
                 const pathname = parsedUrl.pathname.replace('/', '');
                 const params = Object.fromEntries(new URLSearchParams(parsedUrl.search));
                 console.log('[linkroute]', pathname);
                 console.log('[linkparam]', params);
+
                 if (params.id) {
                     if (pathname === 'UserChatUI') {
                         navigate('UserChatScreen', { chatId: params.id, fromNotify: true })
@@ -68,7 +74,7 @@ export const LinkScreen = ({ navigation, route }: Props) => {
         }
         // if (navigation.canGoBack()) {
         //     console.log('goback');
-            
+
         //     navigation.goBack()
         // }
     }, [])

@@ -10,7 +10,7 @@ import { colors } from "app/theme";
 import toast from "app/utils/toast";
 import { useTranslation } from "react-i18next";
 import { useRecoilValue } from "recoil";
-import { ColorsState } from "app/stores/system";
+import { ColorsState, ThemeState } from "app/stores/system";
 import { ScreenModal, ScreenModalType } from "app/components/ScreenModal";
 import { UserChatUIContext } from "./context";
 import { IconFont } from "app/components/IconFont/IconFont";
@@ -33,6 +33,8 @@ export default forwardRef((_, ref) => {
     const { t } = useTranslation('screens')
     const themeColor = useRecoilValue(ColorsState)
     const confirmModalRef = useRef<ConfirmModalType>(null);
+    const $theme = useRecoilValue(ThemeState)
+
     const chat = useMemo(() => {
         return userContext.chatItem
     }, [userContext.chatItem])
@@ -58,12 +60,11 @@ export default forwardRef((_, ref) => {
         }
     })
 
-    return <ScreenModal ref={screenModalRef} >
+    return <ScreenModal ref={screenModalRef} theme={$theme}>
 
         <View style={{
             flex: 1,
             paddingHorizontal: s(16),
-            marginTop: s(32),
             backgroundColor: themeColor.background,
             borderTopLeftRadius: s(24),
             borderTopRightRadius: s(24)
@@ -71,7 +72,8 @@ export default forwardRef((_, ref) => {
             <View style={{
                 marginTop: s(15),
             }}>
-                <ActionItem title={'查看个人资料'}
+                <ActionItem title={t('chat.btn_user_profile')}
+                    textColor={themeColor.text}
                     onPress={() => {
                         userInfoModalRef.current?.open(userContext.chatItem.sourceId, author?.id ?? 0)
                     }}
@@ -86,12 +88,13 @@ export default forwardRef((_, ref) => {
             <View style={{
                 marginTop: s(15),
             }}>
-                <ActionItem title={'消息免打扰'}
+                <ActionItem title={t('chat.title_inhibite')}
+                    textColor={themeColor.text}
                     leftComponent={
                         <IconFont name="notificationOff" color={themeColor.text} size={26} />
                     }
                     rightComponent={<Switch
-                        thumbColor={themeColor.background}
+                        thumbColor={colors.palette.neutral100}
                         trackColor={{
                             true: themeColor.primary,
                             false: themeColor.border
@@ -115,11 +118,12 @@ export default forwardRef((_, ref) => {
                 marginTop: s(15),
             }}>
                 <ActionItem title={t('chat.btn_chat_top')}
+                    textColor={themeColor.text}
                     leftComponent={
                         <IconFont name="chatTop" color={themeColor.text} size={26} />
                     }
                     rightComponent={<Switch
-                        thumbColor={themeColor.background}
+                        thumbColor={colors.palette.neutral100}
                         trackColor={{
                             true: themeColor.primary,
                             false: themeColor.border
@@ -141,7 +145,8 @@ export default forwardRef((_, ref) => {
             <View style={{
                 marginTop: s(15),
             }}>
-                <ActionItem title={'查找聊天内容'}
+                <ActionItem title={t('chat.title_chat_history')}
+                    textColor={themeColor.text}
                     onPress={() => {
                         if (chat && chat.id) {
                             chatHistoryModalRef.current?.open(chat.id)
@@ -163,14 +168,15 @@ export default forwardRef((_, ref) => {
                     confirmModalRef.current?.open({
                         title: t('chat.btn_message_delete'),
                         content: t('chat.btn_message_delete_desc'),
-                        onSubmit: () => {
+                        onSubmit: async () => {
                             messageSenderService.clearMineMessage([chat?.id ?? ""]).then(() => {
                                 eventUtil.sendClearMsgEvent(chat.id)
                                 toast(t('chat.success_cleaned'))
                             })
                         }
                     })
-                }} title={t('chat.btn_message_delete')} textColor="#FB3737"
+                }} title={t('chat.btn_message_delete')}
+                    textColor={colors.palette.red500}
                     leftComponent={
                         <IconFont name="circleClose" color={colors.palette.red500} size={26} />
                     }

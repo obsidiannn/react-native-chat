@@ -48,25 +48,25 @@ export const SearchTab = (props: {
                         ...style.typeButton,
                         ...choosedStyle(1)
                     }} onPress={() => { changeType(1) }}>
-                        <Text style={{ color: props.themeColor.primary }}>最近使用</Text>
+                        <Text style={{ color: props.themeColor.text }}>最近使用</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={{
                         ...style.typeButton,
                         ...choosedStyle(2)
                     }} onPress={() => { changeType(2) }}>
-                        <Text style={{ color: props.themeColor.primary }}>链接</Text>
+                        <Text style={{ color: props.themeColor.text }}>链接</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={{
                         ...style.typeButton,
                         ...choosedStyle(3)
                     }} onPress={() => { changeType(3) }}>
-                        <Text style={{ color: props.themeColor.primary }}>图片与视频</Text>
+                        <Text style={{ color: props.themeColor.text }}>图片与视频</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={{
                         ...style.typeButton,
                         ...choosedStyle(4)
                     }} onPress={() => { changeType(4) }}>
-                        <Text style={{ color: props.themeColor.primary }}>语音</Text>
+                        <Text style={{ color: props.themeColor.text }}>语音</Text>
                     </TouchableOpacity>
                 </View>
                 <TouchableOpacity style={{
@@ -110,7 +110,7 @@ export const SearchTab = (props: {
                         ...style.typeButton,
                         ...choosedStyle(1)
                     }} onPress={() => { changeType(1) }}>
-                        <Text style={{ color: props.themeColor.primary }} >最近使用</Text>
+                        <Text style={{ color: props.themeColor.text }} >最近使用</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={{
                         ...style.typeButton,
@@ -122,25 +122,25 @@ export const SearchTab = (props: {
                         ...style.typeButton,
                         ...choosedStyle(3)
                     }} onPress={() => { changeType(3) }}>
-                        <Text style={{ color: props.themeColor.primary }}>图片与视频</Text>
+                        <Text style={{ color: props.themeColor.text }}>图片与视频</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={{
                         ...style.typeButton,
                         ...choosedStyle(4)
                     }} onPress={() => { changeType(4) }}>
-                        <Text style={{ color: props.themeColor.primary }}>语音</Text>
+                        <Text style={{ color: props.themeColor.text }}>语音</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={{
                         ...style.typeButton,
                         ...choosedStyle(5)
                     }} onPress={() => { changeType(5) }}>
-                        <Text style={{ color: props.themeColor.primary }}>文件</Text>
+                        <Text style={{ color: props.themeColor.text }}>文件</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={{
                         ...style.typeButton,
                         ...choosedStyle(5)
                     }} onPress={() => { changeType(5) }}>
-                        <Text style={{ color: props.themeColor.primary }}>聊天记录</Text>
+                        <Text style={{ color: props.themeColor.text }}>聊天记录</Text>
                     </TouchableOpacity>
                 </View>
 

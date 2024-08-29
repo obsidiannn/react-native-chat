@@ -114,8 +114,6 @@ const checkAndRefresh = async (): Promise<GroupDetailItem[]> => {
     const news: GroupDetailItem[] = []
     try {
         const lastest = await LocalGroupService.findLatestId()
-
-
         if (lastest) {
             const idResp = await groupApi.groupIdAfter(lastest)
             if (idResp && idResp.items.length > 0) {
@@ -363,7 +361,7 @@ const saveTag = async (param: GroupTagReq) => {
     return groupApi.saveGroupTag(param)
 }
 const clearGroupMessages = async (groupIds: number[], chatIds: string[]) => {
-    await LocalMessageService.deleteMessageByChatIdIn(chatIds)
+    await LocalMessageService.delByChatIdIn(chatIds)
     return groupApi.clearGroupMessages({ ids: groupIds })
 }
 

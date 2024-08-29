@@ -20,6 +20,7 @@ import { colors } from 'app/theme'
 import { ImageMessageReply } from '../ImageMessage/ImageMessageReply'
 import { TextMessageReply } from '../TextMessage/TextMessageReply'
 import { VideoMessageReply } from '../VideoMessage/VideoMessageReply'
+import { UserCardReply } from '../UserCard/UserCardReply'
 
 export interface InputTopLevelProps {
   /** Whether attachment is uploading. Will replace attachment button with a
@@ -220,6 +221,9 @@ export const Input = ({
         />
       case 'text':
         return <TextMessageReply message={replyDerived} />
+        case 'userCard':
+          // return <UserCardReply message={replyDerived} />
+        return <Text>【个人名片】</Text>
       default:
         return null
     }

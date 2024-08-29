@@ -12,6 +12,8 @@ import toast from "app/utils/toast";
 import { useRecoilValue } from "recoil";
 import { ColorsState } from "app/stores/system";
 import { colors } from "app/theme";
+import AvatarX from "app/components/AvatarX";
+import fileService from "app/services/file.service";
 export interface QRcodeModalRef {
     open: (params: {
         group: GroupDetailItem;
@@ -34,16 +36,19 @@ export default forwardRef((_, ref) => {
         }) => {
             setGroup(params.group);
             setCount(params.count)
-            setData('action=groupInfo&groupId=' + params.group?.id);
+            // setData('action=groupInfo&groupId=' + params.group?.id);
+            setData('nextchat://group/' + params.group.id)
             setVisible(true);
         }
     }));
     const onClose = () => {
         setVisible(false)
     }
-    return <BaseModal visible={visible} onClose={onClose} title={'群二维码'} animationType="slide" >
+    return <BaseModal visible={visible} onClose={onClose} title={t('groupChat.title_qrcode')} animationType="slide" styles={{ flex: 1 }} >
         <View style={{
+            flex: 1,
             paddingHorizontal: s(15),
+            backgroundColor: themeColor.background
         }}>
             <View style={{
                 borderRadius: s(16),
@@ -55,7 +60,7 @@ export default forwardRef((_, ref) => {
                     flexDirection: 'row',
                     alignItems: 'center',
                 }}>
-                    <Image source={group?.avatar} style={{
+                    <Image source={fileService.getFullUrl(group?.avatar ?? "")} style={{
                         width: s(50),
                         height: s(50),
                         borderRadius: s(10),
@@ -71,22 +76,25 @@ export default forwardRef((_, ref) => {
                         <Text style={{ fontSize: s(14), color: colors.palette.gray400, fontWeight: '400', marginHorizontal: s(12) }}>({count}人)</Text>
                     </Text>
                 </View>
-                <ViewShot ref={viewRef} style={{
-                    padding: s(14),
-                    borderRadius: s(16),
-                    marginTop: s(40),
-                    backgroundColor: 'white',
-                    shadowColor: "#000",
-                    shadowOffset: {
-                        width: 0,
-                        height: 1,
-                    },
-                    shadowOpacity: 0.30,
-                    shadowRadius: 1,
-                    elevation: 1,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                }}>
+                <ViewShot ref={viewRef}
+                    style={{
+                        padding: s(14),
+                        borderRadius: s(16),
+                        marginTop: s(40),
+                        backgroundColor: 'white',
+                        shadowColor: "#000",
+                        shadowOffset: {
+                            width: 0,
+                            height: 1,
+                        },
+                        shadowOpacity: 0.30,
+                        shadowRadius: 1,
+                        elevation: 1,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                    }}>
                     {data ? <QRCode
                         size={260}
                         value={data}

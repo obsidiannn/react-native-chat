@@ -63,12 +63,10 @@ export default forwardRef((props: {
     }));
 
     const renderTopRight = () => {
-        if (user?.id !== selfId) {
+        if (user?.id !== selfId && user?.isFriend !== 0) {
             return <TouchableOpacity
                 onPress={() => {
-                    console.log('open');
-
-                    userConfigModalRef.current?.open()
+                    userConfigModalRef.current?.open(user?.id ?? 0)
                 }}
                 style={{
                     padding: s(3),
@@ -81,12 +79,53 @@ export default forwardRef((props: {
         return null
     }
 
+    const renderButton = () => {
+        if (!user) {
+            return null
+        }
+        if (selfId === user.id) {
+            return null
+        }
+
+        if (user.isFriend === 0) {
+            // 非好友
+            return <Button
+                fullRounded fullWidth
+                size="large"
+                onPress={() => {
+                    navigate('InviteFriendScreen', {
+                        userId: user.id
+                    })
+                }}
+                label={t('userInfo.label_add_friend')}
+            />
+        } else {
+            return <Button
+                fullRounded fullWidth
+                size="large"
+                onPress={() => {
+                    if (user.chatId && user.chatId !== '') {
+                        navigate('UserChatScreen', {
+                            chatId: user.chatId
+                        })
+                    }
+                }}
+                label={t('userInfo.label_start_chat')}
+            />
+        }
+    }
+
     return (
         <BaseModal visible={visible} title="" onClose={onClose} renderRight={
             renderTopRight()
         } styles={{ flex: 1 }}>
             {user ?
-                <View style={{ flex: 1, backgroundColor: themeColor.background }}>
+                <View style={{
+                    flex: 1,
+                    backgroundColor: themeColor.background,
+                    borderTopLeftRadius: s(24),
+                    borderTopRightRadius: s(24),
+                }}>
                     <View style={{
                         backgroundColor: themeColor.secondaryBackground,
                         paddingTop: s(36)
@@ -97,32 +136,7 @@ export default forwardRef((props: {
                         paddingHorizontal: s(16),
                     }}>
                         {
-                            selfId !== user?.id ?
-                                <Button
-                                    fullRounded fullWidth
-                                    size="large"
-                                    onPress={() => {
-                                        if (!user.isFriend) {
-                                            navigate('InviteFriendScreen', {
-                                                userId: user.id
-                                            })
-                                        } else {
-                                            if (user.chatId && user.chatId !== '') {
-                                                chatService.mineChatList([user.chatId]).then(res => {
-                                                    if (res.length > 0) {
-                                                        console.log(res[0]);
-                                                        navigate('UserChatScreen', {
-                                                            item: res[0]
-                                                        })
-                                                    }
-
-                                                })
-                                            }
-
-                                        }
-                                    }}
-                                    label={user.isFriend ? t('userInfo.label_start_chat') : t('userInfo.label_add_friend')}
-                                /> : null
+                            renderButton()
                         }
                     </View>
                 </View> : null}

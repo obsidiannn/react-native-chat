@@ -93,7 +93,9 @@ export default forwardRef((_, ref) => {
             padding: s(15),
         }}>
             {/* 群信息 */}
-            <MenuItem label={t('groupChat.title_group_info')}
+            <MenuItem
+                label={t('groupChat.title_group_info')}
+                labelColor={themeColor.text}
                 leftIcon={
                     <IconFont name="userGroup" color={themeColor.text} size={24} />
                 }
@@ -104,7 +106,9 @@ export default forwardRef((_, ref) => {
                     groupDetailModalRef.current?.open()
                 }}
             />
-            <MenuItem label={t('groupChat.title_qrcode')}
+            <MenuItem
+                label={t('groupChat.title_qrcode')}
+                labelColor={themeColor.text}
                 leftIcon={
                     <IconFont name="qrcode" color={themeColor.text} size={24} />
                 }
@@ -122,6 +126,7 @@ export default forwardRef((_, ref) => {
                 // 管理员
                 (groupContext.selfMember && groupContext.selfMember.role === IModel.IGroup.IGroupMemberRoleEnum.OWNER) ?
                     <MenuItem label={t('groupChat.title_manager')}
+                        labelColor={themeColor.text}
                         onPress={() => {
                             if (!groupContext.group) {
                                 return;
@@ -143,6 +148,7 @@ export default forwardRef((_, ref) => {
             }} />
 
             <MenuItem label={t('groupChat.title_top')}
+                labelColor={themeColor.text}
                 leftIcon={
                     <IconFont name="chatTop" color={themeColor.text} size={24} />
                 }
@@ -164,6 +170,7 @@ export default forwardRef((_, ref) => {
                         }} />} />
 
             <MenuItem label={t('groupChat.title_inhibite')}
+                labelColor={themeColor.text}
                 leftIcon={
                     <IconFont name="notificationOff" color={themeColor.text} size={24} />
                 }
@@ -184,9 +191,10 @@ export default forwardRef((_, ref) => {
                     }} />} />
 
             <MenuItem label={t('groupChat.title_chat_history')}
+                labelColor={themeColor.text}
                 onPress={() => {
                     if (groupContext.chatItem && groupContext.chatItem.id) {
-                        console.log('group',groupContext.chatItem);
+                        console.log('group', groupContext.chatItem);
                         chatHistoryModalRef.current?.open(groupContext.chatItem.id)
                     }
                 }}
@@ -212,7 +220,9 @@ export default forwardRef((_, ref) => {
                                 groupContext.group?.id,
                                 groupContext.group?.encKey ?? '',
                                 groupContext.group?.encPri ?? '');
-                        }} icon={"arrowRight"} label={t('groupChat.title_apply_list')} />
+                        }} icon={"arrowRight"} label={t('groupChat.title_apply_list')}
+                            labelColor={themeColor.text}
+                        />
                         {/* 清空群记录 */}
                         <MenuItem label={t('groupChat.title_drop_message')} labelColor="#FB3737"
                             onPress={() => {
@@ -239,9 +249,8 @@ export default forwardRef((_, ref) => {
                     confirmModalRef.current?.open({
                         title: t('groupChat.title_clear_message'),
                         content: t('groupChat.title_drop_message_desc'),
-                        onSubmit: () => {
+                        onSubmit: async () => {
                             groupService.clearGroupMessages([groupContext.group.id], [groupContext.group?.chatId]).then(() => {
-
                                 eventUtil.sendClearMsgEvent(groupContext.group.chatId)
                             })
                         }
@@ -259,7 +268,7 @@ export default forwardRef((_, ref) => {
                             confirmModalRef.current?.open({
                                 title: t('groupChat.title_clear_message'),
                                 content: t('groupChat.title_drop_message_desc'),
-                                onSubmit: () => {
+                                onSubmit: async () => {
                                     messageSendService.clearMineMessage([groupContext.group.chatId]).then(res => {
                                         eventUtil.sendClearMsgEvent(groupContext.group.chatId)
                                         toast(t('groupChat.option_success'))

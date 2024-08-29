@@ -1,4 +1,4 @@
-import { Button } from "app/components"; 
+import { Button } from "app/components";
 import { ScreenModal, ScreenModalType } from "app/components/ScreenModal";
 import { AuthService } from "app/services/auth.service";
 import { ColorsState, ThemeState } from "app/stores/system"
@@ -18,7 +18,7 @@ export interface UpdateNickNameModalRef {
     ) => void;
 
 }
-export const UpdateNickNameModal = forwardRef((props:{
+export const UpdateNickNameModal = forwardRef((props: {
     theme: 'light' | 'dark'
 }, ref) => {
     const maxLength = 150
@@ -47,13 +47,16 @@ export const UpdateNickNameModal = forwardRef((props:{
         },
     }));
 
-    return <ScreenModal theme={props.theme} ref={screenModalRef} title="更新昵称" >
-        <>
+    return <ScreenModal theme={props.theme} ref={screenModalRef} title="更新昵称" style={{ flex: 1 }} >
+        <View style={{
+            padding: s(14),
+            flex: 1,
+        }}>
             <View style={{
+                flex: 1,
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
-                padding: s(14)
             }}>
                 <Text style={{
                     color: themeColor.title,
@@ -137,12 +140,12 @@ export const UpdateNickNameModal = forwardRef((props:{
                     alignItems: 'stretch',
                     padding: s(12)
                 }}>
-                     
+
                     <Text style={{
                         ...styles.paragraph,
                         color: themeColor.secondaryText
                     }}>
-                       * {t('profile.paragraph_nickname_3')}
+                        * {t('profile.paragraph_nickname_3')}
                     </Text>
 
                 </View>
@@ -175,7 +178,7 @@ export const UpdateNickNameModal = forwardRef((props:{
                             onClose()
                         })
                 }} />
-        </>
+        </View>
     </ScreenModal>
 })
 

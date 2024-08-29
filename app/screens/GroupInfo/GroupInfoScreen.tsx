@@ -1,6 +1,5 @@
 import { StyleSheet, Text, View } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useEffect, useRef, useState } from "react";
 import { GroupDetailItem, GroupMemberResp } from "@repo/types";
 import { useTranslation } from 'react-i18next';
@@ -27,10 +26,12 @@ export const GroupInfoScreen = ({ navigation, route }: Props) => {
     const { t } = useTranslation('screens')
     useEffect(() => {
         const unsubscribe = navigation.addListener('focus', async () => {
+            console.log('groupInfo: ', route.params);
+            const groupId = Number(route.params.id)
             let _group = route.params.group
             if (!_group) {
-                const groupMap = await groupService.queryByIdIn([route.params.id])
-                _group = groupMap.get(route.params.id)
+                const groupMap = await groupService.queryByIdIn([groupId])
+                _group = groupMap.get(groupId)
             }
             if (!_group) {
                 return
@@ -67,15 +68,6 @@ export const GroupInfoScreen = ({ navigation, route }: Props) => {
                 navigation.goBack()
             }
         }} theme={$theme}>
-            <View>
-                <Navbar title="羣聊詳情" onLeftPress={() => {
-                    if (route.params.outside) {
-                        navigation.replace('TabStack')
-                    } else {
-                        navigation.goBack()
-                    }
-                }} />
-            </View>
             <View style={{
                 paddingHorizontal: s(15),
                 paddingTop: s(20)
@@ -130,8 +122,7 @@ export const GroupInfoScreen = ({ navigation, route }: Props) => {
 
                         </View>
                         <Button
-                            fullRounded fullWidth
-                            size="large"
+                            fullRounded
                             onPress={() => {
                                 if ((group?.role ?? -1) > 0) {
                                     navigation.navigate('GroupChatScreen', {

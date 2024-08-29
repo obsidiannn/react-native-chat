@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, TextInput } from "react-native"
-import { Button } from "app/components"; 
+import { Button } from "app/components";
 import { ScreenModal, ScreenModalType } from "app/components/ScreenModal";
 import { AuthService } from "app/services/auth.service";
 import { ColorsState } from "app/stores/system";
@@ -18,7 +18,7 @@ export interface UpdateUsernameModalRef {
     ) => void;
 
 }
-export const UpdateUserNameModal =  forwardRef((props:{
+export const UpdateUserNameModal = forwardRef((props: {
     theme: 'light' | 'dark'
 }, ref) => {
     const maxLength = 60
@@ -103,13 +103,14 @@ export const UpdateUserNameModal =  forwardRef((props:{
                     display: 'flex',
                     flexDirection: 'row',
                     alignItems: 'stretch',
-                    padding: s(12)
+                    padding: s(12),
                 }}>
-                    
+
                     <Text style={{
-                        ...styles.paragraph
+                        ...styles.paragraph,
+                        color: themeColor.secondaryText
                     }}>
-                       * {t('profile.paragraph_username_1')}
+                        * {t('profile.paragraph_username_1')}
                     </Text>
 
                 </View>
@@ -120,11 +121,12 @@ export const UpdateUserNameModal =  forwardRef((props:{
                     alignItems: 'stretch',
                     padding: s(12)
                 }}>
-                    
+
                     <Text style={{
-                        ...styles.paragraph
+                        ...styles.paragraph,
+                        color: themeColor.secondaryText
                     }}>
-                       * {t('profile.paragraph_username_2')}
+                        * {t('profile.paragraph_username_2')}
                     </Text>
 
                 </View>
@@ -135,11 +137,12 @@ export const UpdateUserNameModal =  forwardRef((props:{
                     alignItems: 'stretch',
                     padding: s(12)
                 }}>
-                  
+
                     <Text style={{
-                        ...styles.paragraph
+                        ...styles.paragraph,
+                        color: themeColor.secondaryText
                     }}>
-                       * {t('profile.paragraph_username_3')}
+                        * {t('profile.paragraph_username_3')}
                     </Text>
 
                 </View>
@@ -151,6 +154,9 @@ export const UpdateUserNameModal =  forwardRef((props:{
                 fullRounded
                 fullWidth
                 type="primary"
+                containerStyle={{
+                    marginBottom: s(24)
+                }}
                 onPress={async () => {
                     if (loading) {
                         return;
@@ -169,8 +175,7 @@ export const UpdateUserNameModal =  forwardRef((props:{
                         })
                 }}
                 label={t('common.btn_submit')}
-            >
-            </Button>
+            />
         </View>
 
     </ScreenModal>

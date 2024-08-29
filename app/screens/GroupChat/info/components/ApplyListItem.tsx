@@ -1,29 +1,30 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native"
 import dayjs from "dayjs";
 import relativeTime from 'dayjs/plugin/relativeTime';
-import { Image } from "expo-image";
 import { GroupApplyItem } from "@repo/types";
 import { useTranslation } from 'react-i18next';
 import { IModel } from "@repo/enums";
 import { s } from "app/utils/size";
+import AvatarX from "app/components/AvatarX";
+import fileService from "app/services/file.service";
 dayjs.extend(relativeTime)
 export default (props: {
     item: GroupApplyItem,
     isLast: boolean,
     onCheck: () => void;
+    themeColor: IColors
 }) => {
     const { item, isLast } = props;
-    const {t} = useTranslation('common')
+    const { t } = useTranslation('screens')
+    const styles = style({ themeColor: props.themeColor })
     return <TouchableOpacity onPress={() => {
         props.onCheck();
     }} style={styles.container}>
         <View style={styles.avatarContainer}>
-            <Image source={item.avatar} style={styles.avatar} />
+            <AvatarX uri={fileService.getFullUrl(item.avatar ?? '')} />
         </View>
         <View style={{
             ...styles.rightContainer,
-            // borderBottomColor: isLast ? 'white' : '#F4F4F4',
-            borderBottomColor: isLast ? 'white' : '#F4F4F4',
         }}>
             <View style={styles.nameContainer}>
                 <Text style={styles.nameText}>{item.name}</Text>
@@ -31,20 +32,19 @@ export default (props: {
             <View style={styles.statusContainer}>
                 <Text style={{
                     ...styles.statusText,
-                    color: item.status === IModel.IGroup.IGroupMemberStatus.PENDING ? '#009B0F' : colors.gray400,
+                    color: item.status === IModel.IGroup.IGroupMemberStatus.PENDING ? '#009B0F' : props.themeColor.text,
                 }}>
-                    {item.status === IModel.IGroup.IGroupMemberStatus.PENDING? t('group_status_pending'):null}
-                    {item.status === IModel.IGroup.IGroupMemberStatus.NORMAL?  t('group_status_added'):null}
-                    {item.status === IModel.IGroup.IGroupMemberStatus.REJECTED? t('group_status_rejected'):null}
+                    {item.status === IModel.IGroup.IGroupMemberStatus.PENDING ? t('groupChat.group_status_pending') : null}
+                    {item.status === IModel.IGroup.IGroupMemberStatus.NORMAL ? t('groupChat.group_status_added') : null}
+                    {item.status === IModel.IGroup.IGroupMemberStatus.REJECTED ? t('groupChat.group_status_rejected') : null}
                 </Text>
             </View>
         </View>
     </TouchableOpacity>
 }
 
-const styles = StyleSheet.create({
+const style = ({ themeColor }: { themeColor: IColors }) => StyleSheet.create({
     container: {
-        height: s(76),
         width: '100%',
         paddingHorizontal: s(16),
         display: 'flex',
@@ -56,19 +56,13 @@ const styles = StyleSheet.create({
         display: 'flex',
         justifyContent: 'center',
     },
-    avatar: {
-        width: s(48),
-        height: s(48),
-        borderRadius: s(24),
-        marginRight: s(10),
-        borderWidth: 1,
-        borderColor: '#F0F0F0'
-    },
+
     rightContainer: {
         flex: 1,
         display: 'flex',
         flexDirection: 'row',
-        borderBottomWidth: 1,
+        borderBottomWidth: s(0.5),
+        borderBottomColor: themeColor.border
     },
     nameContainer: {
         flex: 1,
@@ -78,7 +72,7 @@ const styles = StyleSheet.create({
     nameText: {
         fontWeight: '400',
         fontSize: 16,
-        color: '#000000',
+        color: themeColor.text,
     },
     statusContainer: {
         width: '30%',

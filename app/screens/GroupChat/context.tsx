@@ -8,7 +8,7 @@ export interface GroupChatUiContextType {
 	selfMember: GroupMemberItemVO
 	chatItem: ChatDetailItem
 	reloadMember: (groupId: number) => Promise<void>
-	reloadMemberByUids: (uids: number[]) => Promise<void>
+	reloadMemberByUids: (groupId: number, uids: number[]) => Promise<void>
 	reloadGroup: (groupId: number) => Promise<GroupDetailItem>
 	reloadChat: (chat: ChatDetailItem) => void
 }

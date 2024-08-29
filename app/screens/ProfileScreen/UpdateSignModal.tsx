@@ -1,5 +1,5 @@
 
-import { Button } from "app/components"; 
+import { Button } from "app/components";
 import { ScreenModal, ScreenModalType } from "app/components/ScreenModal";
 import { AuthService } from "app/services/auth.service";
 import { ColorsState } from "app/stores/system"
@@ -47,7 +47,14 @@ export const UpdateSignModal = forwardRef((props: {
     }));
 
     return <ScreenModal theme={props.theme} ref={screenModalRef} title={t('profile.title_sign')}>
-
+        <View style={{
+            flex: 1,
+            width: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            padding: s(18)
+        }}>
             <View style={{
                 flex: 1,
                 width: '100%',
@@ -94,12 +101,12 @@ export const UpdateSignModal = forwardRef((props: {
                     alignItems: 'stretch',
                     alignSelf: 'flex-start'
                 }}>
-                    
+
                     <Text style={{
                         ...styles.paragraph,
                         color: themeColor.secondaryText
                     }}>
-                       * {t('profile.paragraph_sign_1')}
+                        * {t('profile.paragraph_sign_1')}
                     </Text>
 
                 </View>
@@ -111,12 +118,12 @@ export const UpdateSignModal = forwardRef((props: {
                     alignItems: 'stretch',
                     alignSelf: 'flex-start'
                 }}>
-                    
+
                     <Text style={{
                         ...styles.paragraph,
                         color: themeColor.secondaryText
                     }}>
-                       * {t('profile.paragraph_sign_2')}
+                        * {t('profile.paragraph_sign_2')}
                     </Text>
 
                 </View>
@@ -128,12 +135,12 @@ export const UpdateSignModal = forwardRef((props: {
                     alignItems: 'stretch',
                     alignSelf: 'flex-start'
                 }}>
-                    
+
                     <Text style={{
                         ...styles.paragraph,
                         color: themeColor.secondaryText
                     }}>
-                       * {t('profile.paragraph_sign_3')}
+                        * {t('profile.paragraph_sign_3')}
                     </Text>
 
                 </View>
@@ -162,8 +169,8 @@ export const UpdateSignModal = forwardRef((props: {
                         })
                 }}
                 label={t('common.btn_submit')}
-            >
-            </Button>
+            />
+        </View>
     </ScreenModal>
 })
 

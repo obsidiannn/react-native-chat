@@ -9,6 +9,8 @@ import ChatPage, { GroupChatPageRef } from './ChatPage';
 import { GroupChatUiContext } from "./context";
 import { useRecoilValue } from "recoil";
 import { IUser } from "drizzle/schema";
+import { useTranslation } from 'react-i18next';
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { App } from "types/app";
 import { AuthUser } from "app/stores/auth";
 import NetInfo from '@react-native-community/netinfo'
@@ -31,16 +33,17 @@ export const GroupChatScreen = ({ navigation, route }: Props) => {
     const [members, setMembers] = useState<GroupMemberItemVO[]>([]);
     const [group, setGroup] = useState<GroupDetailItem | null>()
     const authUser = useRecoilValue<IUser | null>(AuthUser)
-
+    const $theme = useRecoilValue(ThemeState)
     const groupInfoModalRef = useRef<GroupInfoModalType>(null)
     const chatPageRef = useRef<GroupChatPageRef>(null);
     const [selfMember, setSelfMember] = useState<GroupMemberItemVO>()
 
     const themeColor = useRecoilValue(ColorsState)
+    const { t } = useTranslation('screens')
 
     // TODO: 這裏是根據uid變化而部分請求接口的函數
-    const refreshMember = useCallback(async (uids: number[]) => {
-        loadMembers(group?.id ?? 0)
+    const refreshMember = useCallback(async (groupId: number, uids: number[]) => {
+        loadMembers(groupId)
     }, []);
 
     const loadLocalChat = useCallback(async (chatId: string): Promise<ChatDetailItem | null> => {

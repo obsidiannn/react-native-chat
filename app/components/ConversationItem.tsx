@@ -1,10 +1,10 @@
-import { s } from "app/utils/size"; 
+import { s } from "app/utils/size";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native"
 import AvatarComponent from "./Avatar";
 import { colors } from "app/theme";
 import { IconFont } from "./IconFont/IconFont";
 import { $colors } from "app/Colors";
-
+import { $dark, $light } from "app/theme";
 
 export interface IContactListItemProps {
     icon: string | null;
@@ -21,15 +21,14 @@ export interface IContactListItemProps {
     theme?: 'light' | 'dark'
 }
 export default (props: IContactListItemProps) => {
-
+    const styles = style({ themeColor: props.theme && props.theme === 'dark' ? $dark : $light })
     const renderPoint = () => {
         if (props.inhibite) {
-            console.log('inhibite==>', props.inhibite, props.title);
-            return <IconFont name="silent" color={colors.palette.gray300} size={20}/>
+            return <IconFont name="silent" color={colors.palette.gray300} size={20} />
         }
         if (props.badgeNumber && props.badgeNumber > 0) {
             return <View style={{
-                padding: s(3),backgroundColor: colors.palette.red500,borderRadius: s(8)
+                padding: s(3), backgroundColor: colors.palette.red500, borderRadius: s(8)
             }}>
             </View>
         }
@@ -43,10 +42,10 @@ export default (props: IContactListItemProps) => {
         },
         props.bottomLine && {
             borderBottomColor: props.theme === 'light' ? $colors.slate400 : $colors.slate100,
-        } 
+        }
     ]}>
         <View style={styles.iconContainer}>
-            <AvatarComponent size={50} url={props.icon ?? ''} online={props.online} />
+            <AvatarComponent url={props.icon ?? ''} online={props.online} size={48} />
         </View>
         <View style={{
             ...styles.rightContainer,
@@ -73,7 +72,7 @@ export default (props: IContactListItemProps) => {
     </TouchableOpacity>
 }
 
-const styles = StyleSheet.create({
+const style = ({ themeColor }: { themeColor: IColors }) => StyleSheet.create({
     container: {
         height: s(76),
         width: '100%',
@@ -85,33 +84,6 @@ const styles = StyleSheet.create({
         height: s(76),
         display: 'flex',
         justifyContent: 'center',
-    },
-    icon: {
-        width: s(48),
-        height: s(48),
-        borderRadius: s(24),
-        marginRight: s(10),
-        borderWidth: 1,
-        borderColor: '#F0F0F0'
-    },
-    badgeContainer: {
-        position: 'absolute',
-        top: s(12),
-        left: s(32),
-        width: s(20),
-        height: s(20),
-        borderColor: '#ffffffcc',
-        borderRadius: s(11),
-        backgroundColor: '#FF3D00',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    badgeText: {
-        color: 'white',
-        fontSize: 12,
-        fontWeight: '600',
-        textAlign: 'center',
     },
     rightContainer: {
         width: s(260),
@@ -128,23 +100,22 @@ const styles = StyleSheet.create({
     title: {
         fontWeight: '600',
         fontSize: 16,
-        color: '#000000',
-        marginBottom: s(8)
+        marginBottom: s(8),
+        color: themeColor.text
     },
     describe: {
         fontWeight: '400',
         fontSize: 12,
-        color: '#9CA3AF',
+        color: themeColor.secondaryText,
     },
     subTitleContainer: {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        // alignItems: 'flex-end',
         flexDirection: 'row'
     },
     subTitle: {
-        color: '#999',
+        color: themeColor.secondaryText,
         fontWeight: '400',
         fontSize: 12,
         marginRight: s(12),

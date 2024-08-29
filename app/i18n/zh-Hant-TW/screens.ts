@@ -9,7 +9,10 @@ export default {
         btn_recent: "最近",
         btn_group: "群组",
         btn_contract: "联系人",
-        videoDetail: "视频详情"
+        videoDetail: "视频详情",
+        btn_user_profile: "查看个人资料",
+        title_inhibite: "消息免打扰",
+        title_chat_history: "查找聊天内容",
     },
     sign: {
         singIn: "登录",
@@ -89,8 +92,8 @@ export default {
         title_group_create: "創建羣聊",
         placeholder_name: "羣聊名稱",
         placeholder_describe: "群介绍",
-        enc_enable: "私密",
-        enc_enable_desc: "加密（不可更改）",
+        enc_enable: "加密（不可更改）",
+        enc_enable_desc: "不加密，用户将直接可以加入群聊",
         enc_disable: "公開",
         enc_disable_desc: " ",
         error_upload: "圖片上傳失敗",

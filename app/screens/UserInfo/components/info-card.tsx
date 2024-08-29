@@ -17,8 +17,11 @@ export default (props: {
 }) => {
     const { user } = props;
     const { t } = useTranslation('screens')
+    const $colors = useRecoilValue(ColorsState)
+    const styles = style({ themeColor: $colors })
     return <View style={{
         ...styles.container,
+        backgroundColor: $colors.background
     }}>
         <View style={styles.infoBox}>
             <View style={{
@@ -67,7 +70,7 @@ export default (props: {
     </View>
 };
 
-const styles = StyleSheet.create({
+const style = ({ themeColor }: { themeColor: IColors }) => StyleSheet.create({
     container: {
         borderRadius: s(16),
         padding: s(16),
@@ -87,7 +90,7 @@ const styles = StyleSheet.create({
     nameText: {
         fontSize: s(30),
         fontWeight: '500',
-        color: '#000',
+        color: themeColor.text
     },
     infoContainer: {
         display: 'flex',
@@ -96,7 +99,6 @@ const styles = StyleSheet.create({
         marginTop: s(24),
         padding: s(4)
     },
-
     copyIcon: {
         width: s(24),
         height: s(24),
@@ -118,6 +120,8 @@ const styles = StyleSheet.create({
     signText: {
         fontSize: s(16),
         fontWeight: '400',
-        flexWrap: 'wrap'
+        flexWrap: 'wrap',
+        color: themeColor.secondaryText,
+        marginRight: s(4)
     }
 });

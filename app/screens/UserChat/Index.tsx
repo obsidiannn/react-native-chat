@@ -39,6 +39,7 @@ export const UserChatScreen = ({ navigation, route }: Props) => {
     const themeColor = useRecoilValue(ColorsState)
     const currentUser = useRecoilValue(AuthUser)
     const [typing, setTyping] = useState(false)
+    const $theme = useRecoilValue(ThemeState)
     const loadLocalChat = useCallback(async (chatId: string): Promise<ChatDetailItem | null> => {
         const localChat = await LocalChatService.findById(chatId);
         if (localChat) {
