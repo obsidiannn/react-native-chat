@@ -12,7 +12,8 @@ import RecordFileMsg from "./FileMsg";
 import { Image } from "expo-image";
 import { s } from "app/utils/size";
 import dateUtil from "app/utils/dateUtil";
-import { ScreenModal, ScreenModalType } from "app/components/ScreenModal";
+// import { ScreenModal, ScreenModalType } from "app/components/ScreenModal";
+import BaseModal from "app/components/base-modal";
 
 export interface RecordDetailModalType {
     open: (list: MessageType.Any[]) => void
@@ -24,11 +25,13 @@ export default forwardRef((props: {
     const themeColor = useRecoilValue(ColorsState)
     const [data, setData] = useState<MessageType.Any[]>([])
     const style = styles({ themeColor })
-    const screenModalRef = useRef<ScreenModalType>(null)
+    // const screenModalRef = useRef<ScreenModalType>(null)
+    const [visible, setVisible] = useState(false)
     useImperativeHandle(ref, () => ({
         open: (list: MessageType.Any[]) => {
             setData(list)
-            screenModalRef.current?.open()
+            // screenModalRef.current?.open()
+            setVisible(true)
         }
     }));
 
@@ -71,16 +74,14 @@ export default forwardRef((props: {
         return <></>
     }
 
-    return <ScreenModal theme={props.theme} ref={screenModalRef}>
-        <View style={{ flex: 1 }}>
-            <FlashList data={data}
-                estimatedItemSize={100}
-                showsVerticalScrollIndicator
-                keyExtractor={item => item.id + "_record"}
-                renderItem={({ item }) => renderItem(item)}
-            />
-        </View>
-    </ScreenModal>
+    return <BaseModal visible={visible} title="" onClose={() => { setVisible(false) }} styles={{ flex: 1 }}>
+        <FlashList data={data}
+            estimatedItemSize={50}
+            showsVerticalScrollIndicator
+            keyExtractor={item => item.id + "_record"}
+            renderItem={({ item }) => renderItem(item)}
+        />
+    </BaseModal>
 })
 
 

@@ -1,7 +1,10 @@
+import { ThemeState } from "app/stores/system";
 import Navbar from "./Navbar";
 import { ReactNode } from "react";
 import { Modal, View, ViewStyle } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useRecoilValue } from "recoil";
+import { $colors } from "app/Colors";
 
 
 export interface BaseModalProps {
@@ -28,12 +31,14 @@ const BaseModal = ({
     renderLeft
 }: BaseModalProps) => {
     const insets = useSafeAreaInsets()
+    const $theme = useRecoilValue(ThemeState)
     return <Modal transparent={transparent ?? false} style={{ flex: 1 }} visible={visible} animationType={animationType} >
         <View style={{
             flex: 1,
             paddingTop: insets.top,
+            backgroundColor: $theme == "dark" ? $colors.slate950 : $colors.neutra100,
         }}>
-            <Navbar title={title} onLeftPress={onClose} renderRight={() => { return renderRight }}
+            <Navbar title={title} onLeftPress={onClose} renderRight={() => { return renderRight }} theme={$theme}
                 {...{
                     renderLeft: renderLeft ? () => { return renderLeft } : undefined,
                 }}

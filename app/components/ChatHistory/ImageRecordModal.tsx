@@ -268,7 +268,7 @@ const styles = ({ themeColor }: {
         borderRadius: s(8)
     },
     itemContainer: {
-        paddingHorizontal: s(12)
+        padding: s(12)
     },
     itemImage: {
         width: s(84),

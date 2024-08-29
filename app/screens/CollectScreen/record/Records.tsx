@@ -17,7 +17,7 @@ const CollectRecords = (props: {
         if (data.length > 3) {
             const _list = data.slice(0, 3).map(d => {
                 return <View>
-                    <Text>{d.name} : {d.title}</Text>
+                    <Text style={style.textLine}>{d.name} : {d.title}</Text>
                 </View>
             })
             return <>
@@ -27,11 +27,10 @@ const CollectRecords = (props: {
         } else {
             return data.map(d => {
                 return <View>
-                    <Text>{d.name} : {d.title}</Text>
+                    <Text style={style.textLine}>{d.name} : {d.title}</Text>
                 </View>
             })
         }
-
     }
 
     return <Pressable key={item.id + '_collect'} style={style.item} onPress={() => {
@@ -77,6 +76,9 @@ const styles = (
     bottomLabel: {
         color: themeState.secondaryText,
         fontSize: s(12)
+    },
+    textLine: {
+        color: themeState.text
     }
 })
 

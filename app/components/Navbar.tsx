@@ -69,7 +69,7 @@ const Navbar = (props: {
     </View>
 }
 const $container: ViewStyle = {
-    height: s(45),
+    height: s(46),
     display: 'flex',
     flexDirection: 'row',
     width: '100%',

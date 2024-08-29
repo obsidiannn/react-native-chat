@@ -5,6 +5,7 @@ import { s } from "app/utils/size"
 import { IconFont } from "app/components/IconFont/IconFont"
 import { MessageType } from "../chat-ui"
 import { useTranslation } from "react-i18next"
+import { colors } from "app/theme"
 
 
 export interface SearchProps {
@@ -16,7 +17,7 @@ export const SearchInput = (props: SearchProps) => {
     const [label, setLabel] = useState<string>('')
     const [show, setShow] = useState<boolean>(true)
     const textInputRef = useRef<TextInput>(null)
-    const {t} = useTranslation('components')
+    const { t } = useTranslation('components')
     const renderSearchInput = () => {
         if (label && label !== '') {
             return <TouchableOpacity
@@ -51,9 +52,9 @@ export const SearchInput = (props: SearchProps) => {
                 borderWidth: s(0.5),
                 padding: s(8),
                 borderRadius: s(24),
-                marginTop: s(12)
+                marginTop: s(12),
             }}>
-            <Text>{t('chatHistory.btnImageQuery')}</Text>
+            <Text style={{ color: props.color.text }}>{t('chatHistory.btnImageQuery')}</Text>
         </TouchableOpacity>
     }
     return <View style={{
@@ -66,7 +67,8 @@ export const SearchInput = (props: SearchProps) => {
             display: 'flex',
             flexDirection: 'row',
             alignItems: 'center',
-            backgroundColor: props.color.secondaryBackground,
+            // backgroundColor: props.color.secondaryBackground,
+            backgroundColor: colors.palette.gray200,
             borderRadius: s(24),
             paddingHorizontal: s(8)
         }}>
@@ -76,10 +78,11 @@ export const SearchInput = (props: SearchProps) => {
                 ref={textInputRef}
                 activeCursor="auto"
                 value={label}
-                cursorColor={props.color.text}
+                cursorColor={colors.palette.gray900}
                 style={{
                     flex: 1,
-                    color: props.color.text,
+                    // color: props.color.text,
+                    color: colors.palette.gray900,
                     borderRadius: s(24),
                     fontSize: s(12),
                     height: s(42),

@@ -1,6 +1,5 @@
 import { StyleSheet, View, Text, ScrollView, TouchableOpacity } from "react-native";
 import { forwardRef, useContext, useImperativeHandle, useMemo, useRef, useState } from "react";
-import { Image } from "expo-image";
 import SelectMemberModal, { SelectMemberModalType, SelectMemberOption } from "app/components/SelectMemberModal/Index";
 import groupService from "app/services/group.service";
 import { GroupChatUiContext } from "../context";
@@ -8,11 +7,11 @@ import BaseModal from "app/components/base-modal";
 import { useTranslation } from "react-i18next";
 import { IModel } from "@repo/enums";
 import { s } from "app/utils/size";
-import { colors } from "app/theme";
 import AvatarComponent from "app/components/Avatar";
 import { useRecoilValue } from "recoil";
 import { ColorsState, ThemeState } from "app/stores/system"
 import { IconFont } from "app/components/IconFont/IconFont";
+import { colors } from "app/theme";
 
 export interface GroupManagerModalRef {
   open: (groupId: number) => void;
@@ -70,7 +69,7 @@ export default forwardRef((props: {
           managerDescribe.map(
             (e, i) => {
               return <View style={styles.groupDescribe} key={"label_" + i}>
-                <IconFont name="notification" color={themeColor.text} />
+                <IconFont name="notification" color={colors.palette.gray500} />
                 <Text style={{ color: "#6b7280", margin: s(5) }} key={i}> {e} </Text>
               </View>
             }
@@ -87,18 +86,21 @@ export default forwardRef((props: {
                 marginTop: i === 0 ? 0 : s(14)
               }} key={e.id + "member"}>
                 <View style={{ flexDirection: "row", alignItems: "center" }}>
-                  <AvatarComponent url={e.avatar} border size={48}/>
+                  <AvatarComponent url={e.avatar} border size={48} />
                   <Text style={{ ...styles.memberText, marginLeft: s(10), color: themeColor.text }}>{e.name}</Text>
                 </View>
 
                 <TouchableOpacity
                   style={{ padding: s(4) }}
                   onPress={async () => {
-                    await groupService.adminRemove({
-                      id: groupId ?? -1,
-                      uids: [e.uid]
-                    })
-                    groupContext.reloadMemberByUids([e.uid])
+
+                    if (groupId) {
+                      await groupService.adminRemove({
+                        id: groupId,
+                        uids: [e.uid]
+                      })
+                      groupContext.reloadMemberByUids(groupId, [e.uid])
+                    }
                   }}>
 
                   <IconFont name="trash" color={themeColor.secondaryText} size={28} />
@@ -113,6 +115,8 @@ export default forwardRef((props: {
         }} key={"add_member"}
           onPress={async () => {
             const existIds = managers?.map(item => item.uid) ?? [];
+            console.log(groupContext.members);
+
             const options: SelectMemberOption[] = (groupContext.members ?? [])
               .filter(m => { return m.role !== IModel.IGroup.IGroupMemberRoleEnum.OWNER })
               .map((item) => {
@@ -138,11 +142,14 @@ export default forwardRef((props: {
                   const uids = ops.filter((item) => item.status).map(item => Number(item.id));
                   // const totalManagers = new Set([...managers.map(m=>m.uid),...uids])
                   if (uids.length > 0) {
-                    await groupService.adminAdd({
-                      id: groupId ?? -1,
-                      uids: uids
-                    })
-                    groupContext.reloadMemberByUids(uids)
+                    if (groupId) {
+                      await groupService.adminAdd({
+                        id: groupId,
+                        uids: uids
+                      })
+                      groupContext.reloadMemberByUids(groupId, uids)
+                    }
+
                   }
                 },
               })

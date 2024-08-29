@@ -18,7 +18,7 @@ export interface GroupListViewProps {
 export const GroupListView = (props: GroupListViewProps) => {
     const [loading, setLoading] = useState<boolean>(false)
     const { t } = useTranslation('default')
-
+    const defaultItem = { id: -1 } as GroupDetailItem
     const renderState = () => {
         if (loading) {
             return <LoadingComponent />
@@ -28,8 +28,13 @@ export const GroupListView = (props: GroupListViewProps) => {
                     showsVerticalScrollIndicator={false}
                     keyExtractor={(item) => "group" + item.id.toString()}
                     estimatedItemSize={s(76)}
-                    data={props.groups}
+                    data={[defaultItem].concat(props.groups)}
                     renderItem={({ item }) => {
+                        if (item.id === -1) {
+                            return <ContractListItem theme={props.theme} onPress={() => {
+                                navigate("FriendInviteRecordScreen")
+                            }} icon={require('assets/icons/group-add.svg')} title={t('Group waiting verification')} />
+                        }
                         return <ContractListItem
                             theme={props.theme}
                             onPress={async () => {
@@ -52,12 +57,6 @@ export const GroupListView = (props: GroupListViewProps) => {
                 flex: 1,
                 flexDirection: 'column',
             }}>
-                <ContractListItem theme={props.theme} onPress={() => {
-                    navigate("FriendInviteRecordScreen")
-                }} icon={require('assets/icons/group-add.svg')} title={t('Group waiting verification')} />
-                <View style={{
-                    marginBottom: s(14)
-                }} />
                 {
                     renderState()
                 }
@@ -70,6 +69,4 @@ const $container: ViewStyle = {
     flex: 1,
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
 }

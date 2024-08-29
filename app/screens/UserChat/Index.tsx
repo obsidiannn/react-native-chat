@@ -15,7 +15,7 @@ import chatService from "app/services/chat.service";
 import UserChatInfoModal, { UserChatInfoModalRef } from "./UserChatInfoModal";
 import { useRecoilValue } from "recoil";
 import { IconFont } from "app/components/IconFont/IconFont";
-import { ColorsState } from "app/stores/system";
+import { ColorsState, ThemeState } from "app/stores/system";
 import userService from "app/services/user.service";
 import { LocalUserService } from "app/services/LocalUserService";
 import { LocalChatService } from "app/services/LocalChatService";
@@ -38,6 +38,7 @@ export const UserChatScreen = ({ navigation, route }: Props) => {
     const themeColor = useRecoilValue(ColorsState)
     const currentUser = useRecoilValue(AuthUser)
     const [typing, setTyping] = useState(false)
+    const $theme = useRecoilValue(ThemeState)
     const loadLocalChat = useCallback(async (chatId: string): Promise<ChatDetailItem | null> => {
         const localChat = await LocalChatService.findById(chatId);
         if (localChat) {
@@ -171,6 +172,7 @@ export const UserChatScreen = ({ navigation, route }: Props) => {
             reloadChat
         }}>
             <Navbar
+                theme={$theme}
                 renderCenter={renderTitle}
                 onLeftPress={() => {
                     void chatPageRef.current?.close()

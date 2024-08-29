@@ -92,6 +92,8 @@ export const Header = (props: BottomTabHeaderProps) => {
             </TouchableOpacity>
         </View>
         <ScanModal theme={$theme} onChange={(v) => {
+            console.log('scan result=',v);
+            
             scanService.scanQrcode(v)
             scanModalRef.current?.close();
         }} ref={scanModalRef} />

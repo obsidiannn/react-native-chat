@@ -16,15 +16,13 @@ import { AuthUser } from "app/stores/auth";
 import NetInfo from '@react-native-community/netinfo'
 import { s } from "app/utils/size";
 import GroupInfoModal, { GroupInfoModalType } from './info/Index'
-import { ColorsState } from "app/stores/system";
+import { ColorsState, ThemeState } from "app/stores/system";
 import chatService from "app/services/chat.service";
 import { IconFont } from "app/components/IconFont/IconFont";
 import { LocalChatService } from "app/services/LocalChatService";
 import chatMapper from "app/utils/chat.mapper";
-import { LocalGroupService } from "app/services/LocalGroupService";
 import { LocalUserService } from "app/services/LocalUserService";
 import userService from "app/services/user.service";
-import user from "app/api/auth/user";
 
 type Props = StackScreenProps<App.StackParamList, 'GroupChatScreen'>;
 
@@ -35,7 +33,7 @@ export const GroupChatScreen = ({ navigation, route }: Props) => {
     const [members, setMembers] = useState<GroupMemberItemVO[]>([]);
     const [group, setGroup] = useState<GroupDetailItem | null>()
     const authUser = useRecoilValue<IUser | null>(AuthUser)
-
+    const $theme = useRecoilValue(ThemeState)
     const groupInfoModalRef = useRef<GroupInfoModalType>(null)
     const chatPageRef = useRef<GroupChatPageRef>(null);
     const [selfMember, setSelfMember] = useState<GroupMemberItemVO>()
@@ -44,8 +42,8 @@ export const GroupChatScreen = ({ navigation, route }: Props) => {
     const { t } = useTranslation('screens')
 
     // TODO: 這裏是根據uid變化而部分請求接口的函數
-    const refreshMember = useCallback(async (uids: number[]) => {
-        loadMembers(group?.id ?? 0)
+    const refreshMember = useCallback(async (groupId: number, uids: number[]) => {
+        loadMembers(groupId)
     }, []);
 
     const loadLocalChat = useCallback(async (chatId: string): Promise<ChatDetailItem | null> => {
@@ -202,7 +200,9 @@ export const GroupChatScreen = ({ navigation, route }: Props) => {
                 width: '100%',
                 backgroundColor: 'white',
             }}>
-                <Navbar title={group?.name ?? ''}
+                <Navbar
+                    theme={$theme}
+                    title={group?.name ?? ''}
                     onLeftPress={() => {
                         if (route.params.fromNotify) {
                             navigation.replace('TabStack')

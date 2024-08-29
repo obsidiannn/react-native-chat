@@ -87,7 +87,7 @@ export const defaultTheme: Theme = {
       lineHeight: vs(24),
     },
     receivedMessageBodyTextStyle: {
-      color: NEUTRAL_0,
+      color: 'white',
       fontSize: s(16),
       fontWeight: '500',
       lineHeight: vs(24),
@@ -177,7 +177,7 @@ export const lightTheme: Theme = {
   },
   fonts: {
     dateDividerTextStyle: {
-      color: NEUTRAL_2,
+      color: NEUTRAL_0,
       fontSize: s(12),
       fontWeight: '800',
       lineHeight: vs(16),
@@ -193,6 +193,7 @@ export const lightTheme: Theme = {
       fontSize: s(14),
       fontWeight: '500',
       lineHeight: vs(20),
+      color: NEUTRAL_0,
     },
     receivedMessageBodyTextStyle: {
       color: NEUTRAL_0,
@@ -201,7 +202,7 @@ export const lightTheme: Theme = {
       lineHeight: vs(24),
     },
     receivedMessageCaptionTextStyle: {
-      color: NEUTRAL_2,
+      color: NEUTRAL_0,
       fontSize: s(12),
       fontWeight: '500',
       lineHeight: vs(16),
@@ -302,7 +303,7 @@ export const darkTheme: Theme = {
       lineHeight: vs(20),
     },
     receivedMessageBodyTextStyle: {
-      color: NEUTRAL_0,
+      color: NEUTRAL_7,
       fontSize: s(14),
       fontWeight: '500',
       lineHeight: vs(24),

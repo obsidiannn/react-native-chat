@@ -1,8 +1,6 @@
 import { StyleSheet, Text, TextInput } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useEffect, useRef, useState } from "react";
-import Navbar from "app/components/Navbar";
 import { View, Switch } from "react-native";
 
 import groupService from "app/services/group.service";
@@ -68,7 +66,7 @@ export const GroupCreateScreen = ({ route, navigation }: Props) => {
         let imgUrl = createState.avatar
         let coverUrl = createState.cover
         try {
-            if (imgUrl && imgUrl !== '') {
+            if (imgUrl && imgUrl !== '' && imgUrl.startsWith('file://')) {
                 const url = await fileService.uploadImage(imgUrl)
                 if (!url || url === null || url === '') {
                     toast(t('groupCreate.error_upload'))
@@ -76,7 +74,7 @@ export const GroupCreateScreen = ({ route, navigation }: Props) => {
                 }
                 imgUrl = url
             }
-            if (coverUrl && coverUrl !== '') {
+            if (coverUrl && coverUrl !== '' && coverUrl.startsWith('file://')) {
                 const url = await fileService.uploadImage(coverUrl)
                 if (!url || url === null || url === '') {
                     toast(t('groupCreate.error_upload'))
@@ -138,7 +136,8 @@ export const GroupCreateScreen = ({ route, navigation }: Props) => {
                         placeholderTextColor={colors.palette.gray300}
                         maxLength={128}
                         style={{
-                            ...styles.input
+                            ...styles.input,
+                            color: themeColor.text
                         }}
                         value={createState?.name}
                         cursorColor={themeColor.text}
@@ -173,7 +172,7 @@ export const GroupCreateScreen = ({ route, navigation }: Props) => {
                             }}>
                                 <IconFont name="plus" color={themeColor.border} />
                             </View>
-                            <Text style={{ color: themeColor.primary }}>上传封面</Text>
+                            <Text style={{ color: themeColor.text }}>上传封面</Text>
                         </View>
                     </UploadArea>
 
@@ -209,7 +208,7 @@ export const GroupCreateScreen = ({ route, navigation }: Props) => {
                             alignItems: 'center'
                         }}>
                             <IconFont name="unlock" color={themeColor.text} size={24} />
-                            <Text style={{ fontSize: s(16) }}>公开</Text>
+                            <Text style={{ fontSize: s(16), color: themeColor.text }}>{t('groupCreate.enc_disable')}</Text>
                         </View>
                         <Switch value={createState.searchType === '1'}
                             thumbColor={'#ffffff'}
@@ -233,8 +232,8 @@ export const GroupCreateScreen = ({ route, navigation }: Props) => {
                         }}>
                             <IconFont name="lock" color={themeColor.text} size={24} />
                             <View>
-                                <Text style={{ fontSize: s(16), marginBottom: s(4) }}>加密（不可更改）</Text>
-                                <Text style={{ fontSize: s(14), color: themeColor.secondaryText }}>不加密，用户将直接可以加入群聊</Text>
+                                <Text style={{ fontSize: s(16), marginBottom: s(4), color: themeColor.text }}>{t('groupCreate.enc_enable')}</Text>
+                                <Text style={{ fontSize: s(14), color: themeColor.secondaryText }}>{t('groupCreate.enc_enable_desc')}</Text>
                             </View>
                         </View>
                         <Switch value={createState.isEnc}

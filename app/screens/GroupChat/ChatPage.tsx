@@ -7,7 +7,7 @@ import {
 } from "@repo/types";
 import EventManager from 'app/services/event-manager.service'
 import { useTranslation } from 'react-i18next';
-import { Chat, MessageType, darkTheme, lightTheme } from "app/components/chat-ui";
+import { Chat, ChatUiToolsKitProps, MessageType, darkTheme, lightTheme } from "app/components/chat-ui";
 import chatUiAdapter from "app/utils/chat-ui.adapter";
 import { useRecoilValue } from "recoil";
 import messageSendService, { MessageSendService } from "app/services/message-send.service";
@@ -21,7 +21,7 @@ import { IModel } from "@repo/enums";
 import { AuthUser } from "app/stores/auth";
 import quickCrypto from "app/utils/quick-crypto";
 import generateUtil from "app/utils/generateUtil";
-import { GestureResponderEvent, Platform, TouchableOpacity } from "react-native"
+import { GestureResponderEvent, Platform, TouchableOpacity, Text, View } from "react-native"
 import { ThemeState } from "app/stores/system";
 import chatService from "app/services/chat.service";
 import eventUtil from "app/utils/event-util";
@@ -39,6 +39,7 @@ import collectMapper from "app/utils/collect.mapper"
 import { LocalCollectService } from "app/services/LocalCollectService"
 import toast from "app/utils/toast"
 import { LocalCollectDetailService } from "app/services/LocalCollectDetailService"
+import UserInfoModal, { UserInfoModalType } from "../UserInfo/UserInfoModal";
 
 export interface GroupChatPageRef {
     init: (
@@ -67,6 +68,8 @@ export default forwardRef((_, ref) => {
     const loadingModalRef = useRef<LoadingModalType>(null)
     const fileModalRef = useRef<ChatUIFileModalRef>()
     const selectMemberModalRef = useRef<SelectMemberModalType>(null);
+
+    const userInfoModalRef = useRef<UserInfoModalType>(null)
 
     const theme = useRecoilValue(ThemeState)
     const { t } = useTranslation('screen-group-chat')
@@ -263,7 +266,6 @@ export default forwardRef((_, ref) => {
             const key = myWallet.computeSharedSecret(myWallet.getPublicKey())
             const decode = quickCrypto.De(key, Buffer.from(group.encKey, 'hex'))
             sharedSecret = Buffer.from(decode).toString('utf8')
-            console.log('sharedSecret==', sharedSecret);
         }
 
         console.log('sharedSecret==', sharedSecret);
@@ -310,8 +312,8 @@ export default forwardRef((_, ref) => {
     const handleEvent = (e: any) => {
         const { type } = e
         console.log(author?.nickName, '收到消息', e);
-        console.log('[lastSeq]',lastSeq.current,remoteLastSeq.current);
-        
+        console.log('[lastSeq]', lastSeq.current, remoteLastSeq.current);
+
 
         if (type === IModel.IClient.SocketTypeEnum.MESSAGE) {
             const _eventItem = e as SocketMessageEvent
@@ -409,6 +411,10 @@ export default forwardRef((_, ref) => {
                 encKey: sharedSecretRef.current,
                 video: message
             })
+        }
+        if (message.type === 'userCard') {
+            const userCardMsg = message as MessageType.UserCard
+            userInfoModalRef.current?.open(Number(userCardMsg.userId), author?.id ?? 0)
         }
     }
 
@@ -536,7 +542,7 @@ export default forwardRef((_, ref) => {
             {renderMultiNavbar()}
             <Chat
                 enableMultiSelect={multi}
-                tools={tools}
+                tools={tools as ChatUiToolsKitProps[]}
                 messages={messages}
                 onEndReached={async () => {
                     loadHistoryMessages(chatItemRef.current?.id ?? '', firstSeq.current)
@@ -604,7 +610,7 @@ export default forwardRef((_, ref) => {
                 }} />
 
             <SelectMemberModal ref={selectMemberModalRef} />
-
+            <UserInfoModal ref={userInfoModalRef} />
         </>
     )
 });

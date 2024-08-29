@@ -17,6 +17,7 @@ export interface FriendListViewProps {
 
 export const FriendListView = (props: FriendListViewProps) => {
   const [loading, setLoading] = useState<boolean>(false)
+  const defaultItem = { id: -1 } as IUser
   const renderList = () => {
     return <View style={{
       flex: 1,
@@ -42,12 +43,16 @@ export const FriendListView = (props: FriendListViewProps) => {
     } else {
       return props.contacts.length <= 0 ? <EmptyComponent /> : (
         <FlashList
-          // ref={listRef}
           showsVerticalScrollIndicator={false}
           keyExtractor={(item) => "friend" + item.id.toString()}
           estimatedItemSize={s(76)}
-          data={props.contacts}
+          data={[defaultItem].concat(props.contacts)}
           renderItem={({ item, index }) => {
+            if (item.id === -1) {
+              return <ContractListItem theme={props.theme} onPress={() => {
+                navigate("FriendInviteRecordScreen")
+              }} icon={require('assets/icons/friend-add.svg')} bottomLine={props.contacts.length > 1} title="新的好友" />
+            }
             return <ContractListItem theme={props.theme} onPress={async () => {
               navigate('UserChatScreen', {
                 chatId: item.chatId,
@@ -64,15 +69,15 @@ export const FriendListView = (props: FriendListViewProps) => {
 
   return <>
     <View style={$container}>
-      {renderList()}
+      {
+        renderState()
+      }
     </View>
   </>
 }
 
-const $container:ViewStyle = {
+const $container: ViewStyle = {
   flex: 1,
   display: 'flex',
   flexDirection: 'column',
-  alignItems: 'center',
-  justifyContent: 'center',
 }

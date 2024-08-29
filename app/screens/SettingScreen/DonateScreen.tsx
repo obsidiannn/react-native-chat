@@ -99,11 +99,13 @@ export const DonateScreen = (props: Props) => {
                     </View>
                 </View>
 
-                <Button label={t('donate.btnPayment')} size="large" containerStyle={{
-                    backgroundColor: themeColor.primary,
-                    marginTop: s(24),
-                    width: '100%'
-                }} />
+                <Button label={t('donate.btnPayment')} size="large"
+                    fullRounded
+                    containerStyle={{
+                        backgroundColor: themeColor.primary,
+                        marginTop: s(24),
+                        width: '100%'
+                    }} />
             </View>
 
 
@@ -124,14 +126,15 @@ export const DonateScreen = (props: Props) => {
                     {t('donate.donateCoin')}
                 </Text>
                 <Text style={{
-                    fontSize: s(14)
+                    fontSize: s(14),
+                    color: themeColor.text,
                 }}>
                     {t('donate.donateCoinDesc')}
                 </Text>
 
                 <View style={{
                     width: '100%',
-                    marginTop: s(16)
+                    marginTop: s(16),
                 }}>
                     <View style={{
                         marginBottom: s(12),
@@ -149,9 +152,12 @@ export const DonateScreen = (props: Props) => {
                             flexDirection: 'column',
                         }}>
                             <Text style={{
-                                fontSize: s(16)
+                                fontSize: s(16),
+                                color: themeColor.text,
+
                             }}>以太坊地址</Text>
                             <Text style={{
+                                color: themeColor.secondaryText,
                                 fontSize: s(12), marginTop: s(4),
                                 flexWrap: 'wrap'
                             }}>0x6D85d7Ea27fF9e243724c2133BD7F8CD149Be98A</Text>
@@ -177,9 +183,11 @@ export const DonateScreen = (props: Props) => {
                             flexDirection: 'column',
                         }}>
                             <Text style={{
+                                color: themeColor.text,
                                 fontSize: s(16)
                             }}>以太坊地址</Text>
                             <Text style={{
+                                color: themeColor.secondaryText,
                                 fontSize: s(12), marginTop: s(4),
                                 flexWrap: 'wrap'
                             }}>0x6D85d7Ea27fF9e243724c2133BD7F8CD149Be98A</Text>
@@ -205,9 +213,11 @@ export const DonateScreen = (props: Props) => {
                             flexDirection: 'column',
                         }}>
                             <Text style={{
+                                color: themeColor.text,
                                 fontSize: s(16)
                             }}>以太坊地址</Text>
                             <Text style={{
+                                color: themeColor.secondaryText,
                                 fontSize: s(12), marginTop: s(4),
                                 flexWrap: 'wrap'
                             }}>0x6D85d7Ea27fF9e243724c2133BD7F8CD149Be98A</Text>
@@ -233,9 +243,11 @@ export const DonateScreen = (props: Props) => {
                             flexDirection: 'column',
                         }}>
                             <Text style={{
+                                color: themeColor.text,
                                 fontSize: s(16)
                             }}>以太坊地址</Text>
                             <Text style={{
+                                color: themeColor.secondaryText,
                                 fontSize: s(12), marginTop: s(4),
                                 flexWrap: 'wrap'
                             }}>0x6D85d7Ea27fF9e243724c2133BD7F8CD149Be98A</Text>

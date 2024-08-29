@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
         height: s(40),
         borderRadius: s(20),
         marginRight: s(10),
-        borderWidth: 1,
+        borderWidth: s(0.5),
         borderColor: '#F0F0F0'
     },
     badgeContainer: {
@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
         left: s(32),
         width: s(20),
         height: s(20),
-        borderWidth: 1,
+        borderWidth: s(0.5),
         borderColor: '#ffffffcc',
         borderRadius: s(11),
         backgroundColor: '#FF3D00',
@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
         flex: 1,
         display: 'flex',
         flexDirection: 'row',
-        borderBottomWidth: 1,
+        borderBottomWidth: s(0.5),
     },
     titleContainer: {
         flex: 1,

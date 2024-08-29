@@ -18,7 +18,7 @@ const CollectRecords = (props: {
         if (data.length > 3) {
             const _list = data.slice(0, 3).map(d => {
                 return <View key={generateUtil.generateId()}>
-                    <Text>{d.name} : {d.title}</Text>
+                    <Text style={style.textLine}>{d.name} : {d.title}</Text>
                 </View>
             })
             return <>
@@ -28,7 +28,7 @@ const CollectRecords = (props: {
         } else {
             return data.map(d => {
                 return <View key={generateUtil.generateId()}>
-                    <Text>{d.name} : {d.title}</Text>
+                    <Text style={style.textLine}>{d.name} : {d.title}</Text>
                 </View>
             })
         }
@@ -78,6 +78,9 @@ const styles = (
     bottomLabel: {
         color: themeState.secondaryText,
         fontSize: s(12)
+    },
+    textLine: {
+        color: themeState.secondaryText
     }
 })
 

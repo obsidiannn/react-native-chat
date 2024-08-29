@@ -103,8 +103,9 @@ export default forwardRef((props: {
         }
     })
 
-    return <BaseModal visible={visible} onClose={onClose} styles={{ flex: 1 }} >
+    return <BaseModal visible={visible} onClose={onClose} styles={{ flex: 1, }} >
         <View style={{
+            flex: 1,
             backgroundColor: themeColor.background,
             borderTopLeftRadius: s(24),
             borderTopRightRadius: s(24),

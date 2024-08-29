@@ -11,6 +11,7 @@ import {
 import { StyleSheet } from 'react-native'
 import { s, vs } from 'app/utils/size'
 import { colors } from 'app/theme'
+import strUtil from 'app/utils/str-util'
 
 export interface FileMessageReplyProps {
     message: MessageType.DerivedFile
@@ -26,7 +27,14 @@ export const FileMessageReply = ({ message }: FileMessageReplyProps) => {
     return (
         <View
             accessibilityLabel={translate("chatUI.fileButtonAccessibilityLabel")}
-            style={container}
+            style={{
+                alignItems: 'center',
+                flexDirection: 'row',
+                padding: s(12),
+                backgroundColor: colors.palette.gray400,
+                borderRadius: s(12)
+
+            }}
         >
             <View style={iconContainer}>
                 {theme.icons?.documentIcon?.() ?? (
@@ -36,9 +44,9 @@ export const FileMessageReply = ({ message }: FileMessageReplyProps) => {
                     />
                 )}
             </View>
-            <View style={textContainer}>
-                <Text style={name}>{message.name}</Text>
-                <Text style={size}>{formatBytes(message.size)}</Text>
+            <View style={{marginLeft: s(8)}}>
+                <Text style={{ ...theme.fonts.sentMessageBodyTextStyle, flexWrap: 'wrap' }}>{strUtil.truncateMiddle(message.name, 10)}</Text>
+                <Text style={{ ...theme.fonts.sentMessageBodyTextStyle }}>{formatBytes(message.size)}</Text>
             </View>
         </View>
     )
@@ -76,7 +84,7 @@ const styles = ({
         }
         ,
         size: {
-            ...( theme.fonts.sentMessageCaptionTextStyle),
+            ...(theme.fonts.sentMessageCaptionTextStyle),
             color: colors.palette.gray400,
             marginTop: vs(4),
         },
