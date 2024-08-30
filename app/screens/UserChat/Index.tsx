@@ -162,7 +162,6 @@ export const UserChatScreen = ({ navigation, route }: Props) => {
             <Text style={{ fontSize: s(8) }}>{typing ? "typing..." : null}</Text>
         </>
     }
-    const $theme = useRecoilValue(ThemeState)
     return <FullScreen theme={$theme}>
         <UserChatUIContext.Provider value={{
             friend: user,

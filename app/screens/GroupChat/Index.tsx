@@ -33,11 +33,10 @@ export const GroupChatScreen = ({ navigation, route }: Props) => {
     const [members, setMembers] = useState<GroupMemberItemVO[]>([]);
     const [group, setGroup] = useState<GroupDetailItem | null>()
     const authUser = useRecoilValue<IUser | null>(AuthUser)
-    const $theme = useRecoilValue(ThemeState)
     const groupInfoModalRef = useRef<GroupInfoModalType>(null)
     const chatPageRef = useRef<GroupChatPageRef>(null);
     const [selfMember, setSelfMember] = useState<GroupMemberItemVO>()
-
+    const $theme = useRecoilValue(ThemeState)
     const themeColor = useRecoilValue(ColorsState)
     const { t } = useTranslation('screens')
 
@@ -186,7 +185,6 @@ export const GroupChatScreen = ({ navigation, route }: Props) => {
             blurEvent();
         }
     }, [navigation])
-    const $theme = useRecoilValue(ThemeState)
 
     return (
         <FullScreen theme={$theme}>
