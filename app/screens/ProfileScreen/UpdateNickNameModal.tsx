@@ -74,7 +74,7 @@ export const UpdateNickNameModal = forwardRef((props: {
                             fontSize: s(16),
                             height: s(44),
                             color: themeColor.text,
-                            backgroundColor: themeColor.background,
+                            backgroundColor: themeColor.secondaryBackground,
                             width: '100%',
                             borderRadius: s(12),
                         }}

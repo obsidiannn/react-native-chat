@@ -20,6 +20,8 @@ import { SearchTab } from "./SearchTab";
 import { ScreenX } from "app/components/ScreenX";
 import { useTranslation } from "react-i18next";
 import { ViewStyle } from "react-native";
+import CollectUserCardMsg from "./components/UserCard";
+import { navigate } from "app/navigators";
 
 export interface CollectItem {
     id: number,
@@ -103,6 +105,11 @@ export const CollectScreen = (props: Props) => {
                         }
                     })
                 }} />
+            case "userCard":
+                return <CollectUserCardMsg item={item} themeState={themeState} onPress={() => {
+                    const userCardMsg = item.data as MessageType.UserCard
+                    navigate('UserInfoScreen', { userId: userCardMsg.userId })
+                }} />
         }
         return <></>
     }
@@ -140,7 +147,7 @@ export const CollectScreen = (props: Props) => {
     }, [])
 
     const $theme = useRecoilValue(ThemeState);
-    const {t} =useTranslation('default')
+    const { t } = useTranslation('default')
     return <ScreenX theme={$theme} title={t('Favorites')}>
         <View style={$container}>
             <SearchTab chooseIdx={chooseIdx}
@@ -171,7 +178,7 @@ export const CollectScreen = (props: Props) => {
     </ScreenX>
 }
 
-const $container:ViewStyle = {
+const $container: ViewStyle = {
     padding: s(8),
     display: 'flex',
     flexDirection: 'column',

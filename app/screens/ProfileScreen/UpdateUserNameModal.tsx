@@ -78,7 +78,7 @@ export const UpdateUserNameModal = forwardRef((props: {
                     style={{
                         height: verticalScale(44),
                         color: themeColor.text,
-                        backgroundColor: themeColor.background,
+                        backgroundColor: themeColor.secondaryBackground,
                         width: '100%',
                         borderRadius: s(12),
                         paddingLeft: s(14)

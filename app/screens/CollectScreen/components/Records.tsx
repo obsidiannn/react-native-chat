@@ -73,7 +73,9 @@ const styles = (
         marginTop: s(12),
         display: 'flex',
         flexDirection: 'column',
-        padding: s(12)
+        padding: s(12),
+        borderBottomWidth:s(0.5),
+        borderBottomColor: themeState.border
     },
     bottomLabel: {
         color: themeState.secondaryText,

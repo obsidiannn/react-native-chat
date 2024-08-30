@@ -17,8 +17,19 @@ export const SearchTab = (props: {
     const choosedStyle = (idx: number) => {
         if (idx === props.chooseIdx) {
             return {
-                backgroundColor: props.themeColor.background,
-                color: props.themeColor.text
+                backgroundColor: props.themeColor.btnChoosed,
+                color: props.themeColor.textChoosed
+            }
+        }
+        return {
+            color: props.themeColor.text
+        }
+    }
+
+    const choosedLabel = (idx: number) => {
+        if (idx === props.chooseIdx) {
+            return {
+                color: props.themeColor.textChoosed
             }
         }
         return {
@@ -49,25 +60,25 @@ export const SearchTab = (props: {
                         ...style.typeButton,
                         ...choosedStyle(1)
                     }} onPress={() => { changeType(1) }}>
-                        <Text style={{ color: props.themeColor.text }}>{t("Recent use")}</Text>
+                        <Text style={choosedLabel(1)}>{t("Recent use")}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={{
                         ...style.typeButton,
                         ...choosedStyle(2)
                     }} onPress={() => { changeType(2) }}>
-                        <Text style={{ color: props.themeColor.text }}>{t("Link")}</Text>
+                        <Text style={choosedLabel(2)}>{t("Link")}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={{
                         ...style.typeButton,
                         ...choosedStyle(3)
                     }} onPress={() => { changeType(3) }}>
-                        <Text style={{ color: props.themeColor.text }}>{t("Image & Video")}</Text>
+                        <Text style={choosedLabel(3)}>{t("Image & Video")}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={{
                         ...style.typeButton,
                         ...choosedStyle(4)
                     }} onPress={() => { changeType(4) }}>
-                        <Text style={{ color: props.themeColor.text }}>{t("Voice")}</Text>
+                        <Text style={choosedLabel(4)}>{t("Voice")}</Text>
                     </TouchableOpacity>
                 </View>
                 <TouchableOpacity style={{
@@ -111,25 +122,25 @@ export const SearchTab = (props: {
                         ...style.typeButton,
                         ...choosedStyle(1)
                     }} onPress={() => { changeType(1) }}>
-                        <Text style={{ color: props.themeColor.text }} >{t("Recent use")}</Text>
+                        <Text style={choosedLabel(1)} >{t("Recent use")}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={{
                         ...style.typeButton,
                         ...choosedStyle(2)
                     }} onPress={() => { changeType(2) }}>
-                        <Text style={{ color: props.themeColor.text }}>{t("Link")}</Text>
+                        <Text style={choosedLabel(2)}>{t("Link")}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={{
                         ...style.typeButton,
                         ...choosedStyle(3)
                     }} onPress={() => { changeType(3) }}>
-                        <Text style={{ color: props.themeColor.text }}>{t("Image & Video")}</Text>
+                        <Text style={choosedLabel(3)}>{t("Image & Video")}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={{
                         ...style.typeButton,
                         ...choosedStyle(4)
                     }} onPress={() => { changeType(4) }}>
-                        <Text style={{ color: props.themeColor.text }}>{t("Voice")}</Text>
+                        <Text style={choosedLabel(4)}>{t("Voice")}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={{
                         ...style.typeButton,
@@ -141,7 +152,7 @@ export const SearchTab = (props: {
                         ...style.typeButton,
                         ...choosedStyle(5)
                     }} onPress={() => { changeType(5) }}>
-                        <Text style={{ color: props.themeColor.text }}>{t('Chat history')}</Text>
+                        <Text style={choosedLabel(5)}>{t('Chat history')}</Text>
                     </TouchableOpacity>
                 </View>
 
@@ -154,7 +165,7 @@ export const SearchTab = (props: {
             display: 'flex',
             flexDirection: 'row',
             alignItems: 'center',
-            backgroundColor: props.themeColor.background,
+            backgroundColor: props.themeColor.secondaryBackground,
             borderRadius: s(24),
             paddingHorizontal: s(8)
         }}>
@@ -165,7 +176,7 @@ export const SearchTab = (props: {
                 style={{
                     flex: 1,
                     color: props.themeColor.text,
-                    backgroundColor: props.themeColor.background,
+                    backgroundColor: props.themeColor.secondaryBackground,
                     borderRadius: s(24),
                     fontSize: s(12),
                     height: s(42),

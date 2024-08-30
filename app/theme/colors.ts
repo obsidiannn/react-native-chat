@@ -122,7 +122,7 @@ export const $light: IColors = {
   background: "white",
   secondaryBackground: "#F3F4F6",
   text: colors.palette.gray600,
-  textChoosed: '#FFFFFF',
+  textChoosed: 'white',
   btnChoosed: colors.palette.gray800,
   btnDefault: colors.palette.gray100,
   border: "#D1D5DB",
