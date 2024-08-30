@@ -4,10 +4,10 @@ import { SYSTEM_API_URL} from "@env";
 
 export class SystemService {
     static GetApiUrlByCache = () => {
-        const apiUrl = globalStorage.get('string', 'NOW_API_URL')
-        if (apiUrl) {
-            return apiUrl as string;
-        }
+        // const apiUrl = globalStorage.get('string', 'NOW_API_URL')
+        // if (apiUrl) {
+        //     return apiUrl as string;
+        // }
         return SYSTEM_API_URL;
     }
     static GetApiUrl = () => {

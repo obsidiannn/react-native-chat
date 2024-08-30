@@ -69,7 +69,7 @@ export default forwardRef((props: {
           managerDescribe.map(
             (e, i) => {
               return <View style={styles.groupDescribe} key={"label_" + i}>
-                <IconFont name="notification" color={colors.palette.gray500} />
+                <IconFont name="notification" color={colors.palette.gray500} size={22}/>
                 <Text style={{ color: "#6b7280", margin: s(5) }} key={i}> {e} </Text>
               </View>
             }

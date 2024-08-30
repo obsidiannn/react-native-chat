@@ -16,8 +16,19 @@ export const SearchTab = (props: {
     const choosedStyle = (idx: number) => {
         if (idx === props.chooseIdx) {
             return {
-                backgroundColor: props.themeColor.background,
-                color: props.themeColor.text
+                backgroundColor: props.themeColor.btnChoosed,
+                color: props.themeColor.textChoosed
+            }
+        }
+        return {
+            color: props.themeColor.text
+        }
+    }
+
+    const choosedLabel = (idx: number) => {
+        if (idx === props.chooseIdx) {
+            return {
+                color: props.themeColor.textChoosed
             }
         }
         return {
@@ -31,6 +42,7 @@ export const SearchTab = (props: {
             props.setChooseIdx(idx)
         }
     }
+
 
     const renderButton = () => {
         if (!open) {
@@ -48,25 +60,25 @@ export const SearchTab = (props: {
                         ...style.typeButton,
                         ...choosedStyle(1)
                     }} onPress={() => { changeType(1) }}>
-                        <Text style={{ color: props.themeColor.text }}>最近使用</Text>
+                        <Text style={choosedLabel(1)}>最近使用</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={{
                         ...style.typeButton,
                         ...choosedStyle(2)
                     }} onPress={() => { changeType(2) }}>
-                        <Text style={{ color: props.themeColor.text }}>链接</Text>
+                        <Text style={choosedLabel(2)}>链接</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={{
                         ...style.typeButton,
                         ...choosedStyle(3)
                     }} onPress={() => { changeType(3) }}>
-                        <Text style={{ color: props.themeColor.text }}>图片与视频</Text>
+                        <Text style={choosedLabel(3)}>图片与视频</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={{
                         ...style.typeButton,
                         ...choosedStyle(4)
                     }} onPress={() => { changeType(4) }}>
-                        <Text style={{ color: props.themeColor.text }}>语音</Text>
+                        <Text style={choosedLabel(4)}>语音</Text>
                     </TouchableOpacity>
                 </View>
                 <TouchableOpacity style={{
@@ -110,25 +122,25 @@ export const SearchTab = (props: {
                         ...style.typeButton,
                         ...choosedStyle(1)
                     }} onPress={() => { changeType(1) }}>
-                        <Text style={{ color: props.themeColor.text }} >最近使用</Text>
+                        <Text style={choosedLabel(1)} >最近使用</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={{
                         ...style.typeButton,
                         ...choosedStyle(2)
                     }} onPress={() => { changeType(2) }}>
-                        <Text style={{ color: props.themeColor.primary }}>链接</Text>
+                        <Text style={choosedLabel(2)}>链接</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={{
                         ...style.typeButton,
                         ...choosedStyle(3)
                     }} onPress={() => { changeType(3) }}>
-                        <Text style={{ color: props.themeColor.text }}>图片与视频</Text>
+                        <Text style={choosedLabel(3)}>图片与视频</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={{
                         ...style.typeButton,
                         ...choosedStyle(4)
                     }} onPress={() => { changeType(4) }}>
-                        <Text style={{ color: props.themeColor.text }}>语音</Text>
+                        <Text style={choosedLabel(4)}>语音</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={{
                         ...style.typeButton,
@@ -140,7 +152,7 @@ export const SearchTab = (props: {
                         ...style.typeButton,
                         ...choosedStyle(5)
                     }} onPress={() => { changeType(5) }}>
-                        <Text style={{ color: props.themeColor.text }}>聊天记录</Text>
+                        <Text style={choosedLabel(5)}>聊天记录</Text>
                     </TouchableOpacity>
                 </View>
 
@@ -153,7 +165,7 @@ export const SearchTab = (props: {
             display: 'flex',
             flexDirection: 'row',
             alignItems: 'center',
-            backgroundColor: props.themeColor.background,
+            backgroundColor: props.themeColor.secondaryBackground,
             borderRadius: s(24),
             paddingHorizontal: s(8)
         }}>
@@ -164,7 +176,7 @@ export const SearchTab = (props: {
                 style={{
                     flex: 1,
                     color: props.themeColor.text,
-                    backgroundColor: props.themeColor.background,
+                    backgroundColor: props.themeColor.secondaryBackground,
                     borderRadius: s(24),
                     fontSize: s(12),
                     height: s(42),

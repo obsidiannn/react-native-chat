@@ -1,13 +1,13 @@
 import { useRef } from "react";
 import { StyleSheet, TouchableOpacity, ViewStyle } from "react-native";
 import { MenuModalRef, MenuModal } from 'app/components/MenuModal/MenuModal';
-import { IMenuItem } from 'app/components/MenuModal/MenuItem';
+import { IMenuItemProps } from 'app/components/MenuModal/MenuItem';
 import { Image } from "expo-image";
 import { useTranslation } from 'react-i18next';
 import { chooseImage } from "app/services/file.service";
 import { s } from "app/utils/size";
 import { useRecoilValue } from "recoil";
-import { ColorsState } from "app/stores/system";
+import { ColorsState, ThemeState } from "app/stores/system";
 import { IconFont } from "./IconFont/IconFont";
 import { View } from "react-native";
 import { colors } from "app/theme";
@@ -23,10 +23,12 @@ export const AvatarUpload = (props: {
     console.log('[avatar]', props.avatar);
     const size = props.size ?? 64
     const themeColor = useRecoilValue(ColorsState)
+    const $theme = useRecoilValue(ThemeState)
     const menuModalRef = useRef<MenuModalRef>();
-    const options: IMenuItem[] = [
+    const options: IMenuItemProps[] = [
         {
             title: t('upload.label_camera'),
+            iconName: "camera",
             onPress: () => {
                 chooseImage(true, {
                     aspect: [1, 1],
@@ -43,6 +45,7 @@ export const AvatarUpload = (props: {
         },
         {
             title: t('upload.label_pick_album'),
+            iconName: "picture",
             onPress: () => {
                 chooseImage(false, {
                     aspect: [1, 1],
@@ -59,8 +62,7 @@ export const AvatarUpload = (props: {
     return <>
         <TouchableOpacity style={{
             ...styles.container,
-            backgroundColor: themeColor.primary,
-
+            backgroundColor: themeColor.background,
             width: size,
             height: size
         }} onPress={() => {
@@ -83,7 +85,7 @@ export const AvatarUpload = (props: {
                 <IconFont name="camera" color={themeColor.textChoosed} size={16} />
             </View>
         </TouchableOpacity>
-        <MenuModal ref={menuModalRef} />
+        <MenuModal ref={menuModalRef} theme={$theme} />
     </>
 }
 const styles = StyleSheet.create({

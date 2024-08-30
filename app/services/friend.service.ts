@@ -11,7 +11,6 @@ const getReleationList = async (userIds: number[]) => {
     return await friendApi.getRelationList(userIds);
 }
 
-
 /**
  * 根據userId獲取friendInfo
  * @param userId
@@ -28,8 +27,8 @@ const getFriendInfoByUserId = async (userId: number): Promise<IUser | null> => {
                 const { friends } = await friendApi.getBatchInfo(friendResp.items);
                 const friend = friends[0]
                 user.friendId = friend.id
-                user.remark = friend.remark
-                user.remarkIdx = friend.remarkIdx
+                user.friendAlias = friend.remark
+                user.friendAliasIdx = friend.remarkIdx
                 user.chatId = friend.chatId
             }
             // todo: await LocalUserService.update(user)
@@ -142,7 +141,7 @@ const remove = async (id: number): Promise<string | null> => {
     if (result && result.chatId) {
         // 去除chat等
         await LocalChatService.deleteIdIn([result.chatId])
-        await LocalMessageService.deleteMessageByChatIdIn([result.chatId])
+        await LocalMessageService.delByChatIdIn([result.chatId])
         return result.chatId
     }
     return null
