@@ -2,10 +2,10 @@ import { ActivityIndicator, Text, TouchableOpacity, View } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
 import { useEffect, useState } from "react";
 import { FlashList } from "@shopify/flash-list";
-import InviteItem from "./InviteItem";
 import userService from "app/services/user.service";
-import friendApplyService from "app/services/friend-apply.service"; 
-import { IFriendApplies, IUser } from "drizzle/schema";
+import friendApplyService from "app/services/friend-apply.service";
+import { IServer } from "@repo/types";
+import { IUser } from "drizzle/schema";
 import { useTranslation } from 'react-i18next';
 import { App } from "types/app";
 import { useRecoilValue } from "recoil";
@@ -19,78 +19,40 @@ import eventUtil from "app/utils/event-util";
 import { ScreenX } from "app/components/ScreenX";
 import { ThemeState } from "app/stores/system";
 import { StyleSheet } from "react-native";
-import { LocalFriendApplyService } from "app/services/LocalFriendApplyService";
 
 
-type Props = StackScreenProps<App.StackParamList, 'FriendInviteRecordScreen'>;
-export const FriendInviteRecordScreen = ({ navigation }: Props) => {
-
+type Props = StackScreenProps<App.StackParamList, 'GroupInviteRecordScreen'>;
+export const GroupInviteRecordScreen = ({ navigation }: Props) => {
     const [items, setItems] = useState<{
-        friendApply: IFriendApplies,
+        friendApply: IServer.IFriendApply,
         user: IUser | undefined
-    }[]>([])
+    }[]>([]);
+
     const currentUser = useRecoilValue(AuthUser)
     const { t } = useTranslation('screens')
     const $theme = useRecoilValue(ThemeState)
     const [loading, setLoading] = useState<boolean>(false)
-
-    const loadLocalFriendApplies = async () => {
-        if (!currentUser) {
-            return
-        }
-        const list = await LocalFriendApplyService.getList()
-        if (list.length > 0) {
-            const userIds = list.map(f => {
-                return f.userId == currentUser.id ? f.friendId : f.userId
-            });
-            const users = await userService.findByIds(userIds)
-            const userMap = userService.initUserHash(users)
-            const data = list.map(f => {
-                let user: IUser | undefined;
-                if (currentUser.id == f.userId) {
-                    user = userMap.get(f.friendId)
-                } else {
-                    user = userMap.get(f.userId)
-                }
-                return {
-                    friendApply: f, user
-                }
-            })
-            setItems(data)
-        }
-    }
-
-    const loadRemoteFriendApplies = async () => {
-        if (!currentUser) {
-            return
-        }
-        const friendApplys = await friendApplyService.getList()
-        const userIds = friendApplys.map(f => {
-            return f.userId == currentUser.id ? f.friendId : f.userId
-        });
-        const tmps = await userService.findByIds(userIds);
-        const userMap = userService.initUserHash(tmps)
-        const data = friendApplys.map(f => {
-            let user: IUser | undefined;
-            if (currentUser.id == f.userId) {
-                user = userMap.get(f.friendId)
-            } else {
-                user = userMap.get(f.userId)
-            }
-            return {
-                friendApply: f, user
-            }
-        })
-        setItems(data)
-    }
-
     useEffect(() => {
         const unsubscribe = navigation.addListener('focus', async () => {
             if (currentUser) {
                 setLoading(true)
-                await loadLocalFriendApplies()
-                await loadRemoteFriendApplies()
-
+                const friendApplys = await friendApplyService.getList()
+                const userIds = friendApplys.map(f => {
+                    return f.userId == currentUser.id ? f.friendId : f.userId
+                });
+                const tmps = await userService.findByIds(userIds);
+                setItems(friendApplys.map(f => {
+                    let user: IUser | undefined;
+                    if (currentUser.id == f.userId) {
+                        user = tmps.find(u => u.id == f.friendId)
+                    } else {
+                        user = tmps.find(u => u.id == f.userId)
+                    }
+                    return {
+                        friendApply: f,
+                        user
+                    }
+                }));
                 setLoading(false)
             }
         });

@@ -3,29 +3,28 @@ import dayjs from "dayjs";
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { Image } from "expo-image";
 
-import { IUser } from "drizzle/schema";
+import { IFriendApplies, IUser } from "drizzle/schema";
 import { useTranslation } from 'react-i18next';
 import { IModel } from "@repo/enums";
 import { navigate } from "app/navigators";
-import { IServer } from "@repo/types";
 import { s } from "app/utils/size";
 import fileService from "app/services/file.service";
 import { $colors } from "app/Colors";
 dayjs.extend(relativeTime)
+
 export default (props: {
-    item: IServer.IFriendApply;
+    item: IFriendApplies;
     user: IUser;
     isLast: boolean;
     theme?: "light" | "dark";
     renderRight?: () => React.ReactNode;
 }) => {
-    const { item, isLast, user, renderRight,theme="dark" } = props;
+    const { item, isLast, user, renderRight, theme = "dark" } = props;
     const { t } = useTranslation('screens')
     return <TouchableOpacity onPress={() => {
         if (item.status === IModel.IFriendApply.Status.PENDING) {
             navigate('InviteInfoScreen', {
-                friendApply: item,
-                user: user,
+                id: props.item.id
             });
         } else {
             navigate('UserInfoScreen', {
@@ -44,7 +43,7 @@ export default (props: {
                 <Text style={[
                     styles.nameText,
                     {
-                        color: theme === 'dark'? $colors.white : $colors.black
+                        color: theme === 'dark' ? $colors.white : $colors.black
                     }
                 ]}>{user.nickName}</Text>
             </View>

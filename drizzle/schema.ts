@@ -170,3 +170,26 @@ export const collectDetail = sqliteTable('collect_detail', {
 }))
 
 export type ICollectDetail = typeof collectDetail.$inferInsert
+
+
+// export interface IFriendApply {
+//     id: number;
+//     userId: number;
+//     friendId: number;
+//     status: number;
+//     createdAt: string;
+//     remark?: string;
+//     rejectReason?: string;
+// }
+export const friendApplies = sqliteTable('friend_apply', {
+    id: integer('id').primaryKey(),
+    userId: integer('user_id').notNull(),
+    friendId: integer('friend_id').notNull(),
+    status: integer('status'),
+    remark: text('remark'),
+    rejectReason: text('reject_reason'),
+    createdAt: integer('created_at'),
+    updatedAt: integer('updated_at')
+})
+
+export type IFriendApplies = typeof friendApplies.$inferSelect

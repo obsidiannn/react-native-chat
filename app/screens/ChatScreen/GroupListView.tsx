@@ -32,7 +32,7 @@ export const GroupListView = (props: GroupListViewProps) => {
                     renderItem={({ item }) => {
                         if (item.id === -1) {
                             return <ContractListItem theme={props.theme} onPress={() => {
-                                navigate("FriendInviteRecordScreen")
+                                navigate("GroupInviteRecordScreen")
                             }} icon={require('assets/icons/group-add.svg')} title={t('Group waiting verification')} />
                         }
                         return <ContractListItem

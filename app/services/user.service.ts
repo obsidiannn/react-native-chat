@@ -63,7 +63,10 @@ const findByIds = async (ids: number[]): Promise<IUser[]> => {
                 refreshAt: dayjs().unix(),
                 isFriend: 0,
                 chatId: '',
-                friendId: 0
+                friendId: 0,
+                friendAlias: '',
+                friendAliasIdx: '',
+                isSelf: 0
             } as IUser
         })
 

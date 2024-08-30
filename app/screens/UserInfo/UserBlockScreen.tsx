@@ -1,14 +1,11 @@
 import { StackScreenProps } from "@react-navigation/stack";
 import { FlashList } from "@shopify/flash-list";
 import ContractListItem from "app/components/ContractListItem";
-import Navbar from "app/components/Navbar";
 import fileService from "app/services/file.service";
 import friendService from "app/services/friend.service";
 import { s } from "app/utils/size";
 import { IUser } from "drizzle/schema";
 import { useCallback, useRef, useState } from "react";
-import { StyleSheet, View } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { App } from "types/app";
 import UserBlockModal, { UserBlockModalType } from "./UserBlockModal";
 import { ScreenX } from "app/components/ScreenX";
@@ -42,6 +39,7 @@ export const UserBlockScreen = (props: Props) => {
             }}
             renderItem={({ item, index }) => {
                 return <ContractListItem
+                    theme={$theme}
                     onPress={async () => {
                         userBlockModalRef.current?.open(item)
                     }}

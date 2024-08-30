@@ -42,14 +42,15 @@ declare namespace App {
       userId: number
     };
     InviteInfoScreen: {
-      friendApply: IServer.IFriendApply;
-      user: IUser;
+      id: number
+      // friendApply: IServer.IFriendApply;
+      // user: IUser;
     }
     GroupCreateScreen: {
       selected: SelectMemberOption[]
     }
-
     FriendInviteRecordScreen: undefined
+    GroupInviteRecordScreen: undefined
     // IGNITE_GENERATOR_ANCHOR_APP_STACK_PARAM_LIST
     UserChatInfoModal: {
 

@@ -1,16 +1,24 @@
 import friendApplyApi from "app/api/friend/friend-apply";
-import { IUser } from "drizzle/schema";
+import { IFriendApplies, IUser } from "drizzle/schema";
 import userService from "./user.service";
 import { FriendInviteApplyItem } from "@repo/types";
+import friendApplyMapper from "app/utils/friend-apply.mapper";
+import { LocalFriendApplyService } from "./LocalFriendApplyService";
 const create = async (userId: number, remark: string) => {
 
     return await friendApplyApi.create(userId, remark);
 }
-const getList = async () => {
+const getList = async (): Promise<IFriendApplies[]> => {
     const result = await friendApplyApi.getList();
     if (result.ids && result.ids.length > 0) {
         const data = await friendApplyApi.getBatchInfo(result.ids)
-        return data.items
+        const entities = data.items.map(f => {
+            return friendApplyMapper.dto2Entity(f)
+        })
+        if (entities.length > 0) {
+            void LocalFriendApplyService.addBatch(entities)
+        }
+        return entities
     }
     return []
 }

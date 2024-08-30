@@ -2,20 +2,21 @@ import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
 import { useEffect, useState } from "react";
 import friendApplyService from "app/services/friend-apply.service";
-import { IUser } from "drizzle/schema";
+import { IFriendApplies, IUser } from "drizzle/schema";
 import { useRecoilValue } from "recoil";
 import { useTranslation } from 'react-i18next';
 import { s, verticalScale } from "app/utils/size";
 import { Button } from "app/components";
 import { AuthUser } from "app/stores/auth";
 import { ThemeState } from "app/stores/system";
-import { IServer } from "@repo/types";
 import { App } from "types/app";
 import { IModel } from "@repo/enums";
 import InfoCard from "../UserInfo/components/info-card";
 import chatService from "app/services/chat.service";
 import eventUtil from "app/utils/event-util";
 import { ScreenX } from "app/components/ScreenX";
+import { LocalFriendApplyService } from "app/services/LocalFriendApplyService";
+import userService from "app/services/user.service";
 
 type Props = StackScreenProps<App.StackParamList, 'InviteInfoScreen'>;
 export const InviteInfoScreen = ({ navigation, route }: Props) => {
@@ -23,19 +24,32 @@ export const InviteInfoScreen = ({ navigation, route }: Props) => {
     const currentUser = useRecoilValue(AuthUser)
     const { t } = useTranslation('screens')
     const [info, setInfo] = useState<{
-        friendApply: IServer.IFriendApply;
+        friendApply: IFriendApplies;
         user: IUser;
         isSelf: boolean;
     }>();
     useEffect(() => {
-        const unsubscribe = navigation.addListener('focus', () => {
+        const unsubscribe = navigation.addListener('focus', async () => {
             if (currentUser) {
-                const { friendApply, user } = route.params;
-                setInfo({
-                    friendApply,
-                    user,
-                    isSelf: currentUser.id === friendApply.userId
-                })
+                const { id } = route.params;
+                const applies = await LocalFriendApplyService.findByIds([id])
+                if (applies.length > 0) {
+                    const apply = applies[0]
+                    const isSelf = currentUser.id === apply.userId
+                    let user: IUser | null
+                    if (isSelf) {
+                        user = await userService.findById(apply.userId)
+                    } else {
+                        user = await userService.findById(apply.friendId)
+                    }
+                    if (user) {
+                        setInfo({
+                            friendApply: apply,
+                            user,
+                            isSelf
+                        })
+                    }
+                }
             }
 
         });

@@ -10,7 +10,6 @@ import { GroupChatUiContext } from "./context";
 import { useRecoilValue } from "recoil";
 import { IUser } from "drizzle/schema";
 import { useTranslation } from 'react-i18next';
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { App } from "types/app";
 import { AuthUser } from "app/stores/auth";
 import NetInfo from '@react-native-community/netinfo'

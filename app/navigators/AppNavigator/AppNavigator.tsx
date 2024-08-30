@@ -184,9 +184,11 @@ export const AppNavigator = () => {
     config: {
       screens: {
         ChatScreen: 'chat/:id',
-        GroupScreen: 'group/:id',
+        GroupInfoScreen: 'group/:id',
         UserScreen: 'user/:user_name',
-        UserInfoScreen: 'userinfo/:userId'
+        UserInfoScreen: 'userinfo/:userId',
+        GroupChatScreen: 'groupchat/:chatId?fromNotify=true',
+        UserChatScreen: 'userchat/:chatId?fromNotify=true'
       },
     },
     async getInitialURL() {

@@ -10,18 +10,21 @@ import strUtil from "app/utils/str-util";
 import { IconFont } from "app/components/IconFont/IconFont";
 import fileService from "app/services/file.service";
 import AvatarX from "app/components/AvatarX";
+import { useRecoilValue } from "recoil";
+import { ColorsState } from "app/stores/system";
 import { $colors } from "app/Colors";
+
 export default (props: {
     user: IUser;
     theme: 'dark' | 'light';
 }) => {
     const { user } = props;
     const { t } = useTranslation('screens')
-    const $colors = useRecoilValue(ColorsState)
-    const styles = style({ themeColor: $colors })
+    const themeColor = useRecoilValue(ColorsState)
+    const styles = style({ themeColor })
     return <View style={{
         ...styles.container,
-        backgroundColor: $colors.background
+        backgroundColor: themeColor.background
     }}>
         <View style={styles.infoBox}>
             <View style={{
@@ -36,7 +39,7 @@ export default (props: {
                 {
                     user.gender !== IModel.IUser.Gender.UNKNOWN ?
                         (
-                            <IconFont name={user.gender === IModel.IUser.Gender.MALE ? "men" : "women"} color={$colors.text} />
+                            <IconFont name={user.gender === IModel.IUser.Gender.MALE ? "men" : "women"} color={themeColor.text} />
                         ) : null
                 }
 
@@ -49,7 +52,7 @@ export default (props: {
                 <Text style={[
                     styles.signText,
                     {
-                        color: props.theme == 'dark'? $colors.gray400 : $colors.gray500,
+                        color: props.theme == 'dark' ? $colors.gray400 : $colors.gray500,
                     }
                 ]}>@{strUtil.truncateMiddle(user.userName ?? "", 30)}</Text>
                 <IconFont name={"copy"} color={props.theme == 'dark' ? $colors.white : $colors.gray400} size={16} />
@@ -58,7 +61,7 @@ export default (props: {
         <View style={[
             styles.signContainer,
             {
-                backgroundColor: props.theme == 'dark'? $colors.slate800 : $colors.gray100
+                backgroundColor: props.theme == 'dark' ? $colors.slate800 : $colors.gray100
             }
         ]}>
             <Text style={{
