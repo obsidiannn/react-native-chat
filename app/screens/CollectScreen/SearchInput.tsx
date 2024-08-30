@@ -3,7 +3,6 @@ import { useRef, useState } from "react"
 import { TextInput } from "react-native-gesture-handler"
 import { s } from "app/utils/size"
 import { IconFont } from "app/components/IconFont/IconFont"
-import { Text } from "react-native"
 
 
 export interface SearchProps {
@@ -35,9 +34,7 @@ export const SearchInput = (props: SearchProps) => {
                 fontSize: s(12),
                 height: s(42),
             }}
-            onChangeText={(v) => {
-                setLabel(v)
-            }} >
+            onChangeText={(v) => setLabel(v)} >
 
         </TextInput>
         <TouchableOpacity

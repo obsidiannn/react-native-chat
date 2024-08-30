@@ -26,7 +26,7 @@ export default forwardRef((props: {
 }, ref) => {
     const [visible, setVisible] = useState(false);
 
-    const { t } = useTranslation('screens')
+    const { t } = useTranslation('default')
     const [item, setItem] = useState<GroupApplyItem>();
     const [selfEnc, setSelfEnc] = useState<{ k: string, p: string }>()
     const [loading, setLoading] = useState(false);
@@ -44,7 +44,7 @@ export default forwardRef((props: {
     const onClose = () => {
         setVisible(false)
     }
-    return <BaseModal visible={visible} onClose={onClose} title={t('groupChat.title_apply_info')} animationType="slide" styles={{ backgroundColor: themeColor.background, flex: 1 }}>
+    return <BaseModal visible={visible} onClose={onClose} title={t('Verification information')} animationType="slide" styles={{ backgroundColor: themeColor.background, flex: 1 }}>
         <View style={{ flex: 1 }}>
 
             <View style={{ paddingHorizontal: s(14), paddingTop: vs(21), }}>
@@ -70,7 +70,7 @@ export default forwardRef((props: {
                         <Text style={{ fontSize: 16, fontWeight: '500', color: themeColor.text }}>{item?.name}</Text>
                         <TouchableOpacity onPress={async () => {
                             await clipboard.setStringAsync(item?.address ?? '');
-                            toast(t('common.success_copied'));
+                            toast(t('Copy success'));
                         }} style={{
                             display: 'flex',
                             flexDirection: 'row',
@@ -156,7 +156,7 @@ export default forwardRef((props: {
                             fontSize: 16,
                             fontWeight: '700',
                         }}
-                        label={t('groupChat.btn_allow')} />
+                        label={t('Passed')} />
 
                     <Button size="large" containerStyle={{
                         height: vs(50),
@@ -170,7 +170,7 @@ export default forwardRef((props: {
                             };
                             setLoading(true);
                             groupService.rejectJoin(item?.gid, [item?.uid]).then(res => {
-                                toast(t('groupChat.label_rejected'));
+                                toast(t('Rejected'));
                                 setTimeout(() => {
                                     setVisible(false);
                                 }, 500)
@@ -181,7 +181,7 @@ export default forwardRef((props: {
                         }} textStyle={{
                             fontSize: 16,
                             fontWeight: '700',
-                        }} label={t('groupChat.btn_reject')} />
+                        }} label={t('Reject')} />
                 </> : null}
             </View>
         </View>

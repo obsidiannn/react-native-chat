@@ -34,7 +34,7 @@ export const GroupCreateScreen = ({ route, navigation }: Props) => {
     const $theme = useRecoilValue(ThemeState)
     const loadingModalRef = useRef<LoadingModalType>();
     const themeColor = useRecoilValue(ColorsState)
-    const { t } = useTranslation('screens')
+    const { t } = useTranslation('default')
     const [createState, setCreateState] = useState<GroupCreateType>({
         name: '',
         avatar: '',
@@ -59,7 +59,7 @@ export const GroupCreateScreen = ({ route, navigation }: Props) => {
     }, [])
     const doGroupCreate = async () => {
         if (!createState.name) {
-            toast(t('groupCreate.require_name'))
+            toast(t('Please fill in the group name.'))
             return
         }
         loadingModalRef.current?.open()
@@ -69,7 +69,7 @@ export const GroupCreateScreen = ({ route, navigation }: Props) => {
             if (imgUrl && imgUrl !== '' && !imgUrl.startsWith('http')) {
                 const url = await fileService.uploadImage(imgUrl)
                 if (!url || url === null || url === '') {
-                    toast(t('groupCreate.error_upload'))
+                    toast(t('Upload failed'))
                     return
                 }
                 imgUrl = url
@@ -77,7 +77,7 @@ export const GroupCreateScreen = ({ route, navigation }: Props) => {
             if (coverUrl && coverUrl !== '' && !coverUrl.startsWith('http')) {
                 const url = await fileService.uploadImage(coverUrl)
                 if (!url || url === null || url === '') {
-                    toast(t('groupCreate.error_upload'))
+                    toast(t('Upload failed'))
                     return
                 }
                 coverUrl = url
@@ -102,17 +102,17 @@ export const GroupCreateScreen = ({ route, navigation }: Props) => {
                 }
                 await groupService.invite(items, groupInfo);
             }
-            toast(t('groupCreate.option_success'))
+            toast(t('Operation failed'))
             navigation.goBack()
         } catch (e) {
-            toast(t('groupCreate.option_failed'))
+            toast(t('Operation success'))
             loadingModalRef.current?.close()
         } finally {
             loadingModalRef.current?.close()
         }
     }
     return (
-        <ScreenX title={t('groupCreate.title_group_create')} theme={$theme} >
+        <ScreenX title={t('Create Group')} theme={$theme} >
             <ScrollView
                 scrollEnabled
                 contentContainerStyle={{
@@ -132,7 +132,7 @@ export const GroupCreateScreen = ({ route, navigation }: Props) => {
                             })
                         }} />
                     <TextInput
-                        placeholder={t('groupCreate.placeholder_name')}
+                        placeholder={t('Group Name')}
                         placeholderTextColor={colors.palette.gray300}
                         maxLength={128}
                         style={{
@@ -172,12 +172,12 @@ export const GroupCreateScreen = ({ route, navigation }: Props) => {
                             }}>
                                 <IconFont name="plus" color={themeColor.border} />
                             </View>
-                            <Text style={{ color: themeColor.text }}>上传封面</Text>
+                            <Text style={{ color: themeColor.text }}>{t('Upload Cover')}</Text>
                         </View>
                     </UploadArea>
 
                     <TextInput
-                        placeholder={t('groupCreate.placeholder_describe')}
+                        placeholder={t('Introduction')}
                         placeholderTextColor={colors.palette.gray300}
                         maxLength={128}
                         multiline
@@ -208,7 +208,7 @@ export const GroupCreateScreen = ({ route, navigation }: Props) => {
                             alignItems: 'center'
                         }}>
                             <IconFont name="unlock" color={themeColor.text} size={24} />
-                            <Text style={{ fontSize: s(16), color: themeColor.text }}>{t('groupCreate.enc_disable')}</Text>
+                            <Text style={{ fontSize: s(16), color: themeColor.text }}>{t('Public')}</Text>
                         </View>
                         <Switch value={createState.searchType === '1'}
                             thumbColor={'#ffffff'}
@@ -232,8 +232,7 @@ export const GroupCreateScreen = ({ route, navigation }: Props) => {
                         }}>
                             <IconFont name="lock" color={themeColor.text} size={24} />
                             <View>
-                                <Text style={{ fontSize: s(16), marginBottom: s(4), color: themeColor.text }}>{t('groupCreate.enc_enable')}</Text>
-                                <Text style={{ fontSize: s(14), color: themeColor.secondaryText }}>{t('groupCreate.enc_enable_desc')}</Text>
+                                <Text style={{ fontSize: s(16), marginBottom: s(4), color: themeColor.text }}>{t('Public')}</Text>
                             </View>
                         </View>
                         <Switch value={createState.isEnc}
@@ -252,14 +251,15 @@ export const GroupCreateScreen = ({ route, navigation }: Props) => {
                     </View>
                 </View>
                 <Button onPress={doGroupCreate}
-                    size="large" label={t('groupCreate.title_group_create')}
+                    size="large" label={t('Submit')}
                     fullWidth fullRounded
+                    theme={$theme}
                     containerStyle={{
                         marginVertical: s(24),
                     }} />
             </ScrollView>
 
-            <LoadingModal ref={loadingModalRef} />
+            <LoadingModal theme={$theme} ref={loadingModalRef} />
         </ScreenX>
     );
 };

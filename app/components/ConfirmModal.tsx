@@ -37,9 +37,11 @@ export const ConfirmModal = forwardRef((props: {
       <View style={$container}>
         <Card theme={theme} rounded>
           <View style={$titleContainer}>
-            <Text style={[$title, { color: $colors.text }]}>{option.title}</Text>
+            <Text style={[$title, {
+              color: props.theme === 'light' ? $colors.black : $colors.white
+            }]}>{option.title}</Text>
           </View>
-          <Text style={[$content, { color: $colors.secondaryText }]}>{option.content}</Text>
+          <Text style={[$content, { color: $colors.slate400 }]}>{option.content}</Text>
           <View>
             <Button theme={theme}
               onPress={async () => {

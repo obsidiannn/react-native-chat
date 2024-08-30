@@ -1,15 +1,14 @@
-import { forwardRef, useCallback, useImperativeHandle, useRef, useState } from "react";
-import { Modal, View } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { forwardRef, useImperativeHandle, useRef, useState } from "react";
+import { View } from "react-native";
 import BottomBar from "./bottom-bar";
 import AplphabetIndex from "./alphabet-index";
 import { FlashList } from "@shopify/flash-list";
 import ListItemComponent from "./list-item";
-import Navbar from "../Navbar";
+
 import { s } from "app/utils/size";
 import { useRecoilValue } from "recoil";
 import { ColorsState } from "app/stores/system";
-import { param } from "drizzle-orm";
+import { ScreenModal, ScreenModalType } from "../ScreenModal";
 
 export interface SelectMemberOption {
     id: number;
@@ -31,14 +30,13 @@ export interface SelectMemberModalType {
 }
 export interface SelectMemberModalProps {
     disabledUids?: string[];
+    theme: 'light' |'dark';
 }
 
 export default forwardRef((props: SelectMemberModalProps, ref) => {
-    const [visible, setVisible] = useState<boolean>(false);
     const [checkedAll, setCheckedAll] = useState<boolean>(false);
     const [contactAlphabetIndex, setContactAlphabetIndex] = useState<{ [key: string]: number }>({});
     const [aplphabet, setAplphabet] = useState<string[]>([]);
-    const insets = useSafeAreaInsets();
     // users 爲列表數據 可以爲 string 或者 Item
     const [options, setOptions] = useState<SelectMemberOption[]>([]);
     const flashListRef = useRef<FlashList<(SelectMemberOption)>>(null);
@@ -58,22 +56,14 @@ export default forwardRef((props: SelectMemberModalProps, ref) => {
             setMax(params.max)
             callbackRef.current = params.callback;
             setOptions(params.options)
-            setVisible(true);
+            screenModalRef.current?.open();
         }
     }));
-    return <Modal animationType="slide" transparent={true} visible={visible} style={{
-        flex: 1,
-    }}>
+    const screenModalRef = useRef<ScreenModalType>();
+    return <ScreenModal ref={screenModalRef} theme={props.theme}>
         <View style={{
             flex: 1,
-            backgroundColor: 'white',
-            paddingBottom: insets.bottom,
-            paddingTop: insets.top,
         }}>
-            <Navbar title={title} onLeftPress={() => {
-                setCheckedAll(false)
-                setVisible(false);
-            }} />
             <View style={{
                 flex: 1,
                 display: 'flex',
@@ -170,8 +160,8 @@ export default forwardRef((props: SelectMemberModalProps, ref) => {
                         }
                     });
                     callbackRef.current?.(tmps);
-                    setVisible(false);
+                    screenModalRef.current?.close();
                 }} />
         </View>
-    </Modal>
+    </ScreenModal>
 });

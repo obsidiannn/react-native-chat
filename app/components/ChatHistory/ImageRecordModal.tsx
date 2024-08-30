@@ -1,10 +1,9 @@
-import { forwardRef, useImperativeHandle, useMemo, useState } from "react";
-import { Modal, Pressable, Text, View, TouchableOpacity, Platform } from "react-native";
+import { forwardRef, useImperativeHandle, useMemo, useRef, useState } from "react";
+import { Pressable, Text, View, TouchableOpacity, Platform } from "react-native";
 import { MessageType } from "../chat-ui";
 import dateUtil from "app/utils/dateUtil";
 import { StyleSheet } from "react-native";
 import { $dark, colors } from "app/theme";
-import BaseModal from "../base-modal";
 import { FlashList } from "@shopify/flash-list";
 import { s } from "app/utils/size";
 import { Image } from "expo-image";
@@ -13,6 +12,7 @@ import { IconFont } from "../IconFont/IconFont";
 import { hasAndroidPermission } from "app/services/permissions";
 import toast from "app/utils/toast";
 import { CameraRoll } from "@react-native-camera-roll/camera-roll";
+import { ScreenModal, ScreenModalType } from "../ScreenModal";
 
 export interface ImageRecordModalType {
     open: () => void
@@ -22,13 +22,13 @@ interface ImgRecordType {
     data: MessageType.Image[]
 }
 export default forwardRef((props: {
+    theme: 'light' | 'dark';
     images: MessageType.Image[]
 }, ref) => {
     // const themeColor = useRecoilValue(ColorsState)
     const themeColor = $dark
     const style = styles({ themeColor })
 
-    const [visible, setVisible] = useState(false)
     const [choosing, setChoosing] = useState<boolean>(false)
     const [choosedIds, setChoosedIds] = useState<string[]>([])
     const pushBullet = (
@@ -106,13 +106,9 @@ export default forwardRef((props: {
     }, [props.images, choosing, choosedIds])
 
 
-    const onClose = () => {
-        setVisible(false)
-    }
-
     useImperativeHandle(ref, () => ({
         open: () => {
-            setVisible(true)
+            screenModalRef.current?.open()
         }
     }));
 
@@ -212,10 +208,8 @@ export default forwardRef((props: {
         }
         toast('保存到相冊成功');
     }
-
-    return <BaseModal visible={visible} styles={style.container} onClose={onClose} title="图片"
-        renderRight={renderRightBtn()}
-    >
+    const screenModalRef = useRef<ScreenModalType>(null)
+    return <ScreenModal ref={screenModalRef} theme={props.theme} title="图片" renderRight={renderRightBtn()}>
         <View style={{ flex: 1 }}>
             <FlashList data={weekGroups} renderItem={({ item, index }) => renderItem(item, index)}
                 estimatedItemSize={30}
@@ -251,7 +245,7 @@ export default forwardRef((props: {
                 </View>) : null
             }
         </View>
-    </BaseModal>
+    </ScreenModal>
 })
 
 

@@ -1,10 +1,10 @@
-import { forwardRef, useImperativeHandle, useState } from "react";
+import { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import { useCameraPermissions } from 'expo-camera';
-import { Modal, View } from "react-native";
+import { View } from "react-native";
 import { CameraPermissionView } from "./CameraPermissionView";
 import { CameraWindow } from "./CameraWindow";
-import { ScreenX } from "../ScreenX";
 import { useTranslation } from "react-i18next";
+import { ScreenModal, ScreenModalType } from "../ScreenModal";
 export interface ScanModalType {
     open: () => void,
     close: () => void
@@ -18,17 +18,14 @@ export interface ScanModalProps {
 export default forwardRef((props: ScanModalProps, ref) => {
     const [visible, setVisible] = useState(false);
     const [permission, requestPermission] = useCameraPermissions();
-    const onClose = () => {
-        setVisible(false)
-    }
     useImperativeHandle(ref, () => ({
-        open: async () => setVisible(true),
-        close: async () => setVisible(false)
+        open: async () => screenModalRef.current?.open(),
+        close: async () => screenModalRef.current?.close()
     }));
     const {t} = useTranslation('default');
-    return <Modal transparent={false} style={{ flex: 1 }} visible={visible} animationType="slide" >
-        <ScreenX theme={props.theme} title={t('Scan')} onLeftPress={onClose}>
-            <View style={{
+    const screenModalRef = useRef<ScreenModalType>(null);
+    return <ScreenModal theme={props.theme} ref={screenModalRef} title={t('Scan')} >
+        <View style={{
                 flex: 1
             }}>
                 {permission ? (!permission.granted ? <CameraPermissionView theme={props.theme} requestPermission={requestPermission} /> : (visible ? <CameraWindow onChange={(v) => {
@@ -36,6 +33,5 @@ export default forwardRef((props: ScanModalProps, ref) => {
                     setVisible(false);
                 }} /> : null)) : null}
             </View>
-        </ScreenX>
-    </Modal>
+    </ScreenModal>
 })

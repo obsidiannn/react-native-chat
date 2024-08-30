@@ -11,6 +11,7 @@ import UserBlockModal, { UserBlockModalType } from "./UserBlockModal";
 import { ScreenX } from "app/components/ScreenX";
 import { useRecoilValue } from "recoil";
 import { ThemeState } from "app/stores/system";
+import { useTranslation } from "react-i18next";
 
 type Props = StackScreenProps<App.StackParamList, 'UserBlockScreen'>;
 
@@ -25,8 +26,9 @@ export const UserBlockScreen = (props: Props) => {
 
         setUsers(list)
     }, [])
+    const {t} = useTranslation('default')
 
-    return <ScreenX title="黑名单" theme={$theme} >
+    return <ScreenX title={t('Blacklist')} theme={$theme} >
         <FlashList
             // ref={listRef}
             onEndReached={loadData}
@@ -49,14 +51,6 @@ export const UserBlockScreen = (props: Props) => {
                     bottomLine={users.length > 1 && index < users.length - 1} />;
             }}
         />
-        <UserBlockModal ref={userBlockModalRef} />
+        <UserBlockModal theme={$theme} ref={userBlockModalRef} />
     </ScreenX>
 }
-
-
-// const styles = StyleSheet.create({
-//     container: {
-//         flex: 1,
-//         backgroundColor: 'white',
-//     },
-// });

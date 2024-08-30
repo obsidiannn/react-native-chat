@@ -1,6 +1,6 @@
 import { StackScreenProps } from "@react-navigation/stack";
 import { ColorsState, ThemeState } from "app/stores/system";
-import { FlatList, StyleSheet } from "react-native";
+import { FlatList } from "react-native";
 import { View } from "react-native";
 import { useRecoilValue } from "recoil";
 import { App } from "types/app";
@@ -42,8 +42,6 @@ export interface CollectRecord {
 type Props = StackScreenProps<App.StackParamList, 'CollectScreen'>;
 export const CollectScreen = (props: Props) => {
     const themeState = useRecoilValue(ColorsState);
-    const style = styles({ themeState })
-
     const [data, setData] = useState<CollectItem[]>([])
     const [page, setPage] = useState<number>(1)
     const [chooseIdx, setChooseIdx] = useState<number>(-1)
@@ -179,24 +177,3 @@ const $container:ViewStyle = {
     flexDirection: 'column',
     flex: 1
 }
-const styles = (
-    { themeState }: { themeState: IColors }
-) => StyleSheet.create({
-    headerButton: {
-        padding: s(12),
-    },
-    item: {
-        backgroundColor: themeState.background,
-        borderRadius: s(8),
-        marginHorizontal: s(4),
-        marginTop: s(12),
-        display: 'flex',
-        flexDirection: 'column',
-        padding: s(12)
-    },
-    typeButton: {
-        color: themeState.primary,
-        padding: s(8),
-        borderRadius: s(4),
-    }
-})

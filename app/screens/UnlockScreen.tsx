@@ -23,7 +23,6 @@ import { useTranslation } from "react-i18next";
 type Props = NativeStackScreenProps<App.StackParamList, 'UnlockScreen'>;
 export const UnlockScreen = ({ navigation }: Props) => {
   const $theme = useRecoilValue(ThemeState)
-  // 密码 与 确认密码
   const [password, setPassword] = useState('');
   const setAuthWallet = useSetRecoilState(AuthWallet)
   const setAuthUser = useSetRecoilState(AuthUser)

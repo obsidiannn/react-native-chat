@@ -16,6 +16,7 @@ import * as Application from 'expo-application';
 import { IconFont } from "app/components/IconFont/IconFont"
 import { colors } from "app/theme"
 import { ScreenX } from "app/components/ScreenX"
+import { useTranslation } from "react-i18next"
 type Props = StackScreenProps<App.StackParamList, 'SettingScreen'>;
 export const SettingScreen = ({ navigation }: Props) => {
     const $colors = useRecoilValue(ColorsState);
@@ -24,7 +25,8 @@ export const SettingScreen = ({ navigation }: Props) => {
     const langModalRef = useRef<LangModalType>(null);
     const upgradeModalRef = useRef<UpgradeModalType>(null);
     const version = Application.nativeApplicationVersion;
-    return <ScreenX theme={$theme} title="设置">
+    const {t} = useTranslation('default');
+    return <ScreenX theme={$theme} title={t('Setting')}>
         <View style={{
             paddingHorizontal: s(15),
             paddingTop:s(20)
@@ -32,24 +34,24 @@ export const SettingScreen = ({ navigation }: Props) => {
             <CardMenu theme={$theme} items={[
                 {
                     icon: <IconFont name="about" color={$colors.text} size={24} />,
-                    title: "关于我们",
+                    title: t('About Us'),
                     onPress: () => {
                         navigate("WebViewScreen", {
-                            title: "关于我们",
+                            title: t('About Us'),
                             url: "https://www.baidu.com"
                         })
                     }
                 },
                 {
                     icon: <IconFont name="language" color={$colors.text} size={24} />,
-                    title: "语言",
+                    title: t('Language'),
                     onPress: () => {
                         langModalRef.current?.open()
                     }
                 },
                 {
                     icon: <IconFont name="book" color={$colors.text} size={24} />,
-                    title: "当前版本",
+                    title: t('Current Version'),
                     onPress: () => {
                         upgradeModalRef.current?.open()
                     },
@@ -65,7 +67,7 @@ export const SettingScreen = ({ navigation }: Props) => {
                 },
                 {
                     icon: <IconFont name="userRemove" color={$colors.text} size={24} />,
-                    title: "黑名单",
+                    title: t('Blacklist'),
                     onPress: () => {
                         navigate('UserBlockScreen')
                     },
@@ -79,7 +81,7 @@ export const SettingScreen = ({ navigation }: Props) => {
 
                 {
                     icon: <IconFont name="doc" color={$colors.text} size={24} />,
-                    title: "系统反馈",
+                    title: t('System Feedback'),
                     onPress: () => {
                         navigate('SystemFeedbackScreen')
                     },
@@ -92,7 +94,7 @@ export const SettingScreen = ({ navigation }: Props) => {
                 },
                 {
                     icon: <IconFont name="doc" color={$colors.text} size={24} />,
-                    title: "捐赠",
+                    title: t('Donation'),
                     onPress: () => {
                         navigate('DonateScreen')
                     },
@@ -109,13 +111,13 @@ export const SettingScreen = ({ navigation }: Props) => {
             }} items={[
                 {
                     icon: <IconFont name="power" color={colors.palette.red500} size={24} />,
-                    title: "注销账号",
+                    title: t('Destroy the account'),
                     onPress: () => {
                         confirmModalRef.current?.open({
-                            content: "是否注销账号？",
-                            title: "注销账号",
+                            content: t("Are you sure to destroy the account?"),
+                            title: t('Destroy the account'),
                             onCancel: () => { },
-                            onSubmit: () => {
+                            onSubmit: async () => {
                                 quit();
                                 navigation.reset({
                                     index: 0,
@@ -131,13 +133,13 @@ export const SettingScreen = ({ navigation }: Props) => {
                 },
                 {
                     icon: <IconFont name="logout" color={colors.palette.red500} size={24} />,
-                    title: "退出登录",
+                    title: t("Logout"),
                     onPress: () => {
                         confirmModalRef.current?.open({
-                            content: "是否退出登录？",
-                            title: "退出登录",
+                            content: t('Are you sure to logout?'),
+                            title: t("Logout"),
                             onCancel: () => { },
-                            onSubmit: () => {
+                            onSubmit: async () => {
                                 quit();
                                 navigation.reset({
                                     index: 0,

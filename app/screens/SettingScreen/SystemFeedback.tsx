@@ -33,10 +33,10 @@ export const SystemFeedbackScreen = (props: Props) => {
     const [images, setImages] = useState<string[]>([])
     const loadingModalRef = useRef<LoadingModalType>(null)
     const style = styles({ themeColor })
-    const { t } = useTranslation("screens")
+    const { t } = useTranslation("default")
     const doSubmit = async () => {
         if (!category) {
-            toast(t('feedback.labelChooseCategory'))
+            toast(t('Please select category'))
             return
         }
         loadingModalRef.current?.open()
@@ -60,7 +60,7 @@ export const SystemFeedbackScreen = (props: Props) => {
             }
             const id = await AuthService.doFeedback(category.id, urls, content)
             if (id) {
-                toast('操作成功')
+                toast(t('Operation success'))
             }
         } catch (error) {
 
@@ -77,7 +77,7 @@ export const SystemFeedbackScreen = (props: Props) => {
         })
     }, [])
     const $theme = useRecoilValue(ThemeState);
-    return <ScreenX title="意见反馈" theme={$theme}>
+    return <ScreenX title={t('Feedback')} theme={$theme}>
         <View style={{
             flex: 1,
             marginTop: s(32),
@@ -87,10 +87,10 @@ export const SystemFeedbackScreen = (props: Props) => {
                 <Text style={{
                     fontSize: s(16), color: themeColor.text
                 }}>
-                    所属分类
+                    {t('Category')}
                     <Text style={{
                         fontSize: s(12), color: themeColor.secondaryText
-                    }}>(必填)
+                    }}>({t('Required')})
                     </Text>
                 </Text>
                 <TouchableOpacity style={{
@@ -100,7 +100,7 @@ export const SystemFeedbackScreen = (props: Props) => {
                 }}>
                     <Text style={{ color: themeColor.secondaryText }}>
                         {
-                            category === null ? '请选择分类' : category.name
+                            category === null ? t('Please select category') : category.name
                         }
                     </Text>
                     <IconFont name="arrowRight" color={themeColor.secondaryText} size={16} />
@@ -109,7 +109,7 @@ export const SystemFeedbackScreen = (props: Props) => {
             <View style={{ marginTop: s(12), backgroundColor: themeColor.background, }}>
                 <TextInput
                     value={content}
-                    placeholder="请仔细描述你的问题"
+                    placeholder={t('Please describe your problem in detail')}
                     placeholderTextColor={themeColor.secondaryText}
                     style={{
                         padding: s(8),
@@ -157,10 +157,10 @@ export const SystemFeedbackScreen = (props: Props) => {
                     <IconFont name="plus" color={themeColor.secondaryText} />
                     <Text style={{
                         color: themeColor.secondaryText
-                    }}>照片 ({images.length}/{9})</Text>
+                    }}>{t('Photo')} ({images.length}/{9})</Text>
                 </TouchableOpacity>
             </View>
-            <Button label="提交反馈" size="large"
+            <Button theme={$theme} label={t('Submit')} size="large"
                 onPress={doSubmit}
                 fullRounded fullWidth
                 containerStyle={{
@@ -171,7 +171,7 @@ export const SystemFeedbackScreen = (props: Props) => {
             ref={systemCategoryModalRef}
             onChoose={(item: SysCategoryItem) => { setCategory(item) }}
             list={categories} />
-        <LoadingModal ref={loadingModalRef} />
+        <LoadingModal theme={$theme} ref={loadingModalRef} />
     </ScreenX>
 }
 

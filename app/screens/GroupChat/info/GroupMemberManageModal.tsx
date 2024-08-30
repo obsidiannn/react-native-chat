@@ -1,5 +1,4 @@
-import BaseModal from "app/components/base-modal";
-import { ColorsState, ThemeState } from "app/stores/system"
+import { ColorsState } from "app/stores/system"
 import { s } from "app/utils/size";
 import { forwardRef, useContext, useImperativeHandle, useRef, useState } from "react";
 import { StyleSheet, View } from "react-native";
@@ -17,14 +16,16 @@ import groupService from "app/services/group.service";
 import { IconFont } from "app/components/IconFont/IconFont";
 import { colors } from "app/theme";
 import strUtil from "app/utils/str-util";
+import { ScreenModal, ScreenModalType } from "app/components/ScreenModal";
 
 
 export interface GroupMemberManageModalType {
     open: (groupId: number, member: GroupMemberItemVO, selfMember: GroupMemberItemVO) => void;
 }
 
-export default forwardRef((_, ref) => {
-    const [visible, setVisible] = useState(false)
+export default forwardRef((props:{
+    theme: 'light' | 'dark';
+}, ref) => {
     const themeColor = useRecoilValue(ColorsState)
     const confirmModalRef = useRef<ConfirmModalType>(null);
     const confirmInputModalRef = useRef<ConfirmInputModalType>(null);
@@ -33,27 +34,16 @@ export default forwardRef((_, ref) => {
     const { t } = useTranslation('screens')
     const [member, setMember] = useState<GroupMemberItemVO | null>(null)
     const [self, setSelf] = useState<GroupMemberItemVO | null>(null)
-    const $theme = useRecoilValue(ThemeState);
-
-    const onClose = () => {
-        setMember(null)
-        setSelf(null)
-        setVisible(false)
-    }
 
     useImperativeHandle(ref, () => ({
         open: (groupId: number, member: GroupMemberItemVO, selfMember: GroupMemberItemVO) => {
             setMember(member)
             setSelf(selfMember)
-            setVisible(true);
+            screenModalRef.current?.open()
         }
     }));
-
-    return <BaseModal visible={visible} onClose={onClose} title={t('groupChat.title_group_config')} styles={{
-        backgroundColor: themeColor.secondaryBackground,
-        paddingTop: s(24),
-        flex: 1
-    }}>
+    const screenModalRef = useRef<ScreenModalType>(null)
+    return <ScreenModal ref={screenModalRef} theme={props.theme} title={t('groupChat.title_group_config')} >
         <View style={{
             flex: 1,
             borderTopLeftRadius: s(24),
@@ -156,10 +146,10 @@ export default forwardRef((_, ref) => {
         </View>
 
 
-        <UserInfoModal ref={userInfoModalRef} />
-        <ConfirmModal ref={confirmModalRef} />
+        <UserInfoModal theme={props.theme} ref={userInfoModalRef} />
+        <ConfirmModal theme={props.theme} ref={confirmModalRef} />
         <ConfirmInputModal ref={confirmInputModalRef} />
-    </BaseModal>
+    </ScreenModal>
 })
 
 

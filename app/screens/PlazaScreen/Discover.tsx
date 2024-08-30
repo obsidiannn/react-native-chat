@@ -10,7 +10,7 @@ import groupService from "app/services/group.service";
 import { GroupDetailItem } from "../../../../../packages/types/dist/client/group";
 import { Search } from "app/components/Search";
 import { useRecoilValue } from "recoil";
-import { ColorsState } from "app/stores/system";
+import { ColorsState, ThemeState } from "app/stores/system";
 
 
 type Props = StackScreenProps<App.StackParamList, 'DiscoverScreen'>;
@@ -47,7 +47,7 @@ export const DiscoverScreen = ({ navigation }: Props) => {
         }
     }, [])
 
-
+    const $theme =useRecoilValue(ThemeState)
     const renderSearch = () => {
         return <View>
             <Search color={themeColor} onSearch={async (val) => {
@@ -77,7 +77,7 @@ export const DiscoverScreen = ({ navigation }: Props) => {
                 estimatedItemSize={s(40)}
                 renderItem={({ item, index }) => {
                     return <View style={{ padding: s(8) }} key={item.id}>
-                        <GroupCard group={item} onPress={() => {
+                        <GroupCard theme={$theme} group={item} onPress={() => {
                             navigation.navigate('GroupInfoScreen', {
                                 group: item
                             })
@@ -90,6 +90,3 @@ export const DiscoverScreen = ({ navigation }: Props) => {
     </View>
 }
 
-const styles = StyleSheet.create({
-
-})

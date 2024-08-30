@@ -29,13 +29,13 @@ export const ProfileScreen = () => {
     const updateSignModalRef = useRef<UpdateSignModalRef>(null)
     const updateUsernameModalRef = useRef<UpdateUsernameModalRef>(null)
     const [authUser, setAuthUser] = useRecoilState(AuthUser)
-    const { t } = useTranslation('screens');
+    const { t } = useTranslation('default');
     const authUpdate = (user: IUser) => {
         void LocalUserService.addBatch([user])
         setAuthUser(user)
     }
 
-    return <ScreenX theme={$theme} title={t('profile.title_user_profile')} >
+    return <ScreenX theme={$theme} title={t('Edit Profile')} >
         <View style={{
             padding: s(16),
         }}>
@@ -46,9 +46,9 @@ export const ProfileScreen = () => {
                             ...authUser,
                             avatar: res
                         })
-                        toast(t('common.success_updated'));
+                        toast(t('Operation success'));
                     } else {
-                        toast(t('common.failed_updated'));
+                        toast(t('Operation failed'));
                     }
                 })
             }} />
@@ -59,7 +59,7 @@ export const ProfileScreen = () => {
             <CardMenu theme={$theme} items={[
                 {
                     icon: <IconFont name="pencil" color={$colors.text} size={24} />,
-                    title: t('profile.title_nickname'),
+                    title: t('Nickname'),
                     onPress: () => {
                         updateNickNameModalRef.current?.open({
                             value: authUser?.nickName ?? '',
@@ -68,7 +68,7 @@ export const ProfileScreen = () => {
                                     ...authUser,
                                     nickName: val
                                 })
-                                toast(t('common.success_updated'));
+                                toast(t('Operation success'));
                             }
                         })
                     },
@@ -79,7 +79,7 @@ export const ProfileScreen = () => {
                 },
                 {
                     icon: <IconFont name="userProfile" color={$colors.text} size={24} />,
-                    title: t('profile.title_username'),
+                    title: t('Username'),
                     onPress: () => {
                         updateUsernameModalRef.current?.open({
                             value: authUser?.userName ?? '',
@@ -88,7 +88,7 @@ export const ProfileScreen = () => {
                                     ...authUser,
                                     userName: val
                                 })
-                                toast(t('success_updated'));
+                                toast(t('Operation success'));
                             }
                         })
                     },
@@ -100,7 +100,7 @@ export const ProfileScreen = () => {
                 },
                 {
                     icon: <IconFont name="women" color={$colors.text} size={24} />,
-                    title: t('profile.title_gender'),
+                    title: t('Gender'),
                     onPress: () => {
                         updateGenderModalRef.current?.open({
                             value: authUser?.gender ?? IModel.IUser.Gender.UNKNOWN,
@@ -109,7 +109,7 @@ export const ProfileScreen = () => {
                                     ...authUser,
                                     gender: val
                                 })
-                                toast(t('common.success_updated'));
+                                toast(t('Operation success'));
                             }
                         })
                     },
@@ -120,7 +120,7 @@ export const ProfileScreen = () => {
                 },
                 {
                     icon: <IconFont name="doc" color={$colors.text} size={24} />,
-                    title: t('profile.title_sign'),
+                    title: t('Signature'),
                     onPress: () => {
                         updateSignModalRef.current?.open({
                             value: authUser?.sign ?? '',
@@ -129,7 +129,7 @@ export const ProfileScreen = () => {
                                     ...authUser,
                                     sign: val
                                 })
-                                toast(t('common.success_updated'));
+                                toast(t('Operation success'));
                             }
                         })
                     },

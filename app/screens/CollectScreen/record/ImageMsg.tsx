@@ -1,7 +1,5 @@
 import { StyleSheet, View } from "react-native";
-import { CollectItem } from "../Index";
 import { s } from "app/utils/size";
-import { Text } from "app/components";
 import { Image } from "expo-image";
 import { MessageType } from "app/components/chat-ui";
 

@@ -1,13 +1,14 @@
 import BaseModal from "app/components/base-modal";
 import { ColorsState } from "app/stores/system";
 import { s } from "app/utils/size";
-import { forwardRef, useImperativeHandle, useRef, useState } from "react";
+import { forwardRef, useImperativeHandle, useState } from "react";
 import { StyleSheet } from "react-native";
 import { View, Text, TouchableOpacity } from "react-native";
 import { useRecoilValue } from "recoil";
 import { SysCategoryItem } from "@repo/types";
 import { FlashList } from "@shopify/flash-list";
 import { IconFont } from "app/components/IconFont/IconFont";
+import { useTranslation } from "react-i18next";
 
 export interface SystemCategoryModalType {
     open: () => void
@@ -34,7 +35,7 @@ export default forwardRef((props: {
 
     const _style = styles({ themeColor })
 
-
+    const {t} = useTranslation('default')
     const renderItem = (item: SysCategoryItem) => {
         return <TouchableOpacity
             onPress={() => {
@@ -62,7 +63,7 @@ export default forwardRef((props: {
         </TouchableOpacity>
     }
 
-    return <BaseModal visible={visible} title="意见反馈" onClose={onClose} styles={{ flex: 1 }}>
+    return <BaseModal visible={visible} title={t('Feedback')} onClose={onClose} styles={{ flex: 1 }}>
         <View style={_style.container}>
             <FlashList
                 data={props.list}

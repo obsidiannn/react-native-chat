@@ -18,7 +18,7 @@ export const AddFriendScreen = () => {
     const [keyword, setKeyword] = useState('')
     const [loading, setLoading] = useState(false);
     const [friends, setFriends] = useState<IServer.IFriend[]>([]);
-    const { t } = useTranslation('screens')
+    const { t } = useTranslation('default')
     const search = useCallback(async (v: string, l: boolean) => {
         if (!v) {
             return;
@@ -29,13 +29,10 @@ export const AddFriendScreen = () => {
         setLoading(true);
         const user = await userService.findByUserName(v);
         if (user) {
-            console.log('userRelations', "请求关系");
             const userRelations = await friendService.getReleationList([user.id])
-            console.log('userRelations', userRelations);
 
             if (userRelations.items) {
                 const userRelation = userRelations.items.find(item => item.userId == user.id);
-                console.log('userRelation', userRelation);
                 if (userRelation) {
                     setFriends([
                         {
@@ -59,7 +56,7 @@ export const AddFriendScreen = () => {
             setLoading(false)
         }
     }, [])
-    return <ScreenX title={t('friend.add_friend_title')} theme={$theme} >
+    return <ScreenX title={t('Add friend')} theme={$theme} >
         <View style={{
             ...styles.mainContainer,
             backgroundColor: themeColor.background
@@ -80,7 +77,7 @@ export const AddFriendScreen = () => {
                         }
                         search(keyword, true)
                     }}
-                    returnKeyLabel={t('friend.label_search')}
+                    returnKeyLabel={t('Search')}
                     returnKeyType="search"
                     onChangeText={(v) => {
                         setKeyword(v)
@@ -90,10 +87,7 @@ export const AddFriendScreen = () => {
                 />
                 <Pressable style={{
 
-                }} onPress={() => {
-                    console.log('search');
-                    search(keyword, false)
-                }}>
+                }} onPress={() => search(keyword, false)}>
                     <IconFont name="search" color={themeColor.secondaryText} size={26} />
                 </Pressable>
             </View>

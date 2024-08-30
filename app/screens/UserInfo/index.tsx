@@ -17,7 +17,7 @@ import { ScreenX } from "app/components/ScreenX";
 type Props = StackScreenProps<App.StackParamList, 'UserInfoScreen'>;
 export const UserInfoScreen = ({ navigation, route }: Props) => {
     const [user, setUser] = useState<IUser>();
-    const { t } = useTranslation('screens')
+    const { t } = useTranslation('default')
     const $theme = useRecoilValue(ThemeState)
     useEffect(() => {
         const unsubscribe = navigation.addListener('focus', async () => {
@@ -41,7 +41,7 @@ export const UserInfoScreen = ({ navigation, route }: Props) => {
 
 
     return (
-        <ScreenX theme={$theme} title={t('userInfo.title_user_info')} onLeftPress={() => {
+        <ScreenX theme={$theme} title={t('User Info')} onLeftPress={() => {
             if (route.params.outside) {
                 navigation.replace('TabStack')
             } else {
@@ -60,7 +60,7 @@ export const UserInfoScreen = ({ navigation, route }: Props) => {
                         alignItems: 'center',
                         marginTop: verticalScale(40),
                     }}>
-                        <Button fullRounded fullWidth size="large" onPress={() => {
+                        <Button theme={$theme} fullRounded fullWidth size="large" onPress={() => {
                             if (!user.isFriend) {
                                 navigation.navigate('InviteFriendScreen', {
                                     userId: user.id
@@ -77,7 +77,7 @@ export const UserInfoScreen = ({ navigation, route }: Props) => {
                                 })
                             }
                         }}
-                            label={user?.isFriend ? "进入聊天" : "添加好友"}
+                            label={t(user?.isFriend ? "Enter Chat" : "Add friend")}
                         />
                     </View>
                 </View> : null}

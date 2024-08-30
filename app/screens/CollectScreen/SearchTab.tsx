@@ -1,6 +1,7 @@
 import { IconFont } from "app/components/IconFont/IconFont"
 import { s } from "app/utils/size"
 import { useRef, useState } from "react"
+import { useTranslation } from "react-i18next"
 import { StyleSheet, Text, TouchableOpacity, View, TextInput } from "react-native"
 
 export const SearchTab = (props: {
@@ -31,7 +32,7 @@ export const SearchTab = (props: {
             props.setChooseIdx(idx)
         }
     }
-
+    const {t} =useTranslation('default')
     const renderButton = () => {
         if (!open) {
             return <View style={{
@@ -48,25 +49,25 @@ export const SearchTab = (props: {
                         ...style.typeButton,
                         ...choosedStyle(1)
                     }} onPress={() => { changeType(1) }}>
-                        <Text style={{ color: props.themeColor.text }}>最近使用</Text>
+                        <Text style={{ color: props.themeColor.text }}>{t("Recent use")}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={{
                         ...style.typeButton,
                         ...choosedStyle(2)
                     }} onPress={() => { changeType(2) }}>
-                        <Text style={{ color: props.themeColor.text }}>链接</Text>
+                        <Text style={{ color: props.themeColor.text }}>{t("Link")}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={{
                         ...style.typeButton,
                         ...choosedStyle(3)
                     }} onPress={() => { changeType(3) }}>
-                        <Text style={{ color: props.themeColor.text }}>图片与视频</Text>
+                        <Text style={{ color: props.themeColor.text }}>{t("Image & Video")}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={{
                         ...style.typeButton,
                         ...choosedStyle(4)
                     }} onPress={() => { changeType(4) }}>
-                        <Text style={{ color: props.themeColor.text }}>语音</Text>
+                        <Text style={{ color: props.themeColor.text }}>{t("Voice")}</Text>
                     </TouchableOpacity>
                 </View>
                 <TouchableOpacity style={{
@@ -95,7 +96,7 @@ export const SearchTab = (props: {
                         <IconFont name="qrcode" size={22} color={props.themeColor.text} />
                         <Text style={{
                             color: props.themeColor.text
-                        }}>类型</Text>
+                        }}>{t('Type')}</Text>
                     </View>
                     <TouchableOpacity style={{
                         ...style.typeButton,
@@ -110,37 +111,37 @@ export const SearchTab = (props: {
                         ...style.typeButton,
                         ...choosedStyle(1)
                     }} onPress={() => { changeType(1) }}>
-                        <Text style={{ color: props.themeColor.text }} >最近使用</Text>
+                        <Text style={{ color: props.themeColor.text }} >{t("Recent use")}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={{
                         ...style.typeButton,
                         ...choosedStyle(2)
                     }} onPress={() => { changeType(2) }}>
-                        <Text style={{ color: props.themeColor.primary }}>链接</Text>
+                        <Text style={{ color: props.themeColor.text }}>{t("Link")}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={{
                         ...style.typeButton,
                         ...choosedStyle(3)
                     }} onPress={() => { changeType(3) }}>
-                        <Text style={{ color: props.themeColor.text }}>图片与视频</Text>
+                        <Text style={{ color: props.themeColor.text }}>{t("Image & Video")}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={{
                         ...style.typeButton,
                         ...choosedStyle(4)
                     }} onPress={() => { changeType(4) }}>
-                        <Text style={{ color: props.themeColor.text }}>语音</Text>
+                        <Text style={{ color: props.themeColor.text }}>{t("Voice")}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={{
                         ...style.typeButton,
                         ...choosedStyle(5)
                     }} onPress={() => { changeType(5) }}>
-                        <Text style={{ color: props.themeColor.text }}>文件</Text>
+                        <Text style={{ color: props.themeColor.text }}>{t("File")}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={{
                         ...style.typeButton,
                         ...choosedStyle(5)
                     }} onPress={() => { changeType(5) }}>
-                        <Text style={{ color: props.themeColor.text }}>聊天记录</Text>
+                        <Text style={{ color: props.themeColor.text }}>{t('Chat history')}</Text>
                     </TouchableOpacity>
                 </View>
 

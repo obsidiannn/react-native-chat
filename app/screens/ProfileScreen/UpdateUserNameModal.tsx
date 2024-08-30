@@ -22,7 +22,7 @@ export const UpdateUserNameModal = forwardRef((props: {
     theme: 'light' | 'dark'
 }, ref) => {
     const maxLength = 60
-    const { t } = useTranslation('screens')
+    const { t } = useTranslation('default')
     const [val, setVal] = useState('')
     const [loading, setLoading] = useState<boolean>(false)
     const onFinishRef = useRef<(v: string) => void>()
@@ -54,7 +54,7 @@ export const UpdateUserNameModal = forwardRef((props: {
         setVal(validText);
     };
 
-    return <ScreenModal theme={props.theme} ref={screenModalRef} title={t('profile.title_username')}>
+    return <ScreenModal theme={props.theme} ref={screenModalRef} title={t('Username')}>
         <View style={{
             flex: 1,
             display: 'flex',
@@ -72,7 +72,7 @@ export const UpdateUserNameModal = forwardRef((props: {
             }}>
                 <TextInput
                     cursorColor={themeColor.text}
-                    placeholder={t('profile.placeholder_nickname')}
+                    placeholder={t('Set Username')}
                     placeholderTextColor={themeColor.border}
                     maxLength={maxLength}
                     style={{
@@ -110,42 +110,11 @@ export const UpdateUserNameModal = forwardRef((props: {
                         ...styles.paragraph,
                         color: themeColor.secondaryText
                     }}>
-                        * {t('profile.paragraph_username_1')}
+                        * 提示
                     </Text>
 
                 </View>
 
-                <View style={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    alignItems: 'stretch',
-                    padding: s(12)
-                }}>
-
-                    <Text style={{
-                        ...styles.paragraph,
-                        color: themeColor.secondaryText
-                    }}>
-                        * {t('profile.paragraph_username_2')}
-                    </Text>
-
-                </View>
-
-                <View style={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    alignItems: 'stretch',
-                    padding: s(12)
-                }}>
-
-                    <Text style={{
-                        ...styles.paragraph,
-                        color: themeColor.secondaryText
-                    }}>
-                        * {t('profile.paragraph_username_3')}
-                    </Text>
-
-                </View>
             </View>
 
             <Button
@@ -174,7 +143,7 @@ export const UpdateUserNameModal = forwardRef((props: {
                             onClose()
                         })
                 }}
-                label={t('common.btn_submit')}
+                label={t('Submit')}
             />
         </View>
 

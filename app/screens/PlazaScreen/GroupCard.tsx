@@ -13,12 +13,12 @@ import { useRecoilValue } from "recoil"
 export interface GroupCardProps {
     group: GroupDetailItem
     onPress: () => void
+    theme: 'light' | 'dark'
 }
 
 export const GroupCard = (props: GroupCardProps) => {
     const authUser = useRecoilValue(AuthUser)
     const themeColor = useRecoilValue(ColorsState)
-    const $theme = useRecoilValue(ThemeState)
 
     const { group } = props
     return <Pressable onPress={props.onPress}>

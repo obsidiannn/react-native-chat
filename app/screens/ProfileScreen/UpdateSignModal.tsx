@@ -22,7 +22,7 @@ export const UpdateSignModal = forwardRef((props: {
     theme: 'light' | 'dark'
 }, ref) => {
     const maxLength = 150
-    const { t } = useTranslation('screens')
+    const { t } = useTranslation('default')
     const [val, setVal] = useState('')
     const [loading, setLoading] = useState<boolean>(false)
     const onFinishRef = useRef<(v: string) => void>()
@@ -46,7 +46,7 @@ export const UpdateSignModal = forwardRef((props: {
         },
     }));
 
-    return <ScreenModal theme={props.theme} ref={screenModalRef} title={t('profile.title_sign')}>
+    return <ScreenModal theme={props.theme} ref={screenModalRef} title={t('Signature')}>
         <View style={{
             flex: 1,
             width: '100%',
@@ -67,7 +67,7 @@ export const UpdateSignModal = forwardRef((props: {
                     textAlignVertical="top"
                     multiline
                     cursorColor={themeColor.text}
-                    placeholder={t('profile.placeholder_sign')}
+                    placeholder={t('Set Signature')}
                     placeholderTextColor={themeColor.border}
                     maxLength={maxLength}
                     style={{
@@ -94,6 +94,8 @@ export const UpdateSignModal = forwardRef((props: {
                 </Text>
 
 
+
+         
                 <View style={{
                     marginTop: s(24),
                     display: 'flex',
@@ -106,41 +108,7 @@ export const UpdateSignModal = forwardRef((props: {
                         ...styles.paragraph,
                         color: themeColor.secondaryText
                     }}>
-                        * {t('profile.paragraph_sign_1')}
-                    </Text>
-
-                </View>
-
-                <View style={{
-                    marginTop: s(24),
-                    display: 'flex',
-                    flexDirection: 'row',
-                    alignItems: 'stretch',
-                    alignSelf: 'flex-start'
-                }}>
-
-                    <Text style={{
-                        ...styles.paragraph,
-                        color: themeColor.secondaryText
-                    }}>
-                        * {t('profile.paragraph_sign_2')}
-                    </Text>
-
-                </View>
-
-                <View style={{
-                    marginTop: s(24),
-                    display: 'flex',
-                    flexDirection: 'row',
-                    alignItems: 'stretch',
-                    alignSelf: 'flex-start'
-                }}>
-
-                    <Text style={{
-                        ...styles.paragraph,
-                        color: themeColor.secondaryText
-                    }}>
-                        * {t('profile.paragraph_sign_3')}
+                        * 提示
                     </Text>
 
                 </View>
@@ -168,7 +136,7 @@ export const UpdateSignModal = forwardRef((props: {
                             onClose()
                         })
                 }}
-                label={t('common.btn_submit')}
+                label={t('Submit')}
             />
         </View>
     </ScreenModal>

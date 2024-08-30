@@ -17,6 +17,7 @@ export const ScreenModal = forwardRef((props: {
     title?: string
     children?: React.ReactNode;
     theme: "light" | "dark";
+    renderRight?: React.ReactNode;
 }, ref) => {
     const [visible, setVisible] = useState(false);
     const onSwipeEnd = (event: GestureStateChangeEvent<PanGestureHandlerEventPayload>) => {
@@ -36,7 +37,7 @@ export const ScreenModal = forwardRef((props: {
         <Modal transparent={false} style={{ flex: 1 }} visible={visible} animationType="slide">
             <WithHoc>
                 <GestureDetector gesture={gesture}>
-                    <ScreenX theme={props.theme} title={props.title ?? ''} onLeftPress={() => setVisible(false)} >
+                    <ScreenX renderRight={props.renderRight} theme={props.theme} title={props.title ?? ''} onLeftPress={() => setVisible(false)} >
                         {props.children}
                     </ScreenX>
                 </GestureDetector>

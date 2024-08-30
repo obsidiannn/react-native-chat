@@ -1,19 +1,17 @@
-import { View, TouchableOpacity } from "react-native";
+import { View } from "react-native";
 import friendService from 'app/services/friend.service'
 import userService from 'app/services/user.service'
 import { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import InfoCard from "./components/info-card";
 import { IUser } from "drizzle/schema";
-import chatService from "app/services/chat.service";
 import { useTranslation } from 'react-i18next';
 import { s } from "app/utils/size";
 import { useRecoilValue } from "recoil";
 import { ColorsState } from "app/stores/system";
 import { navigate } from "app/navigators";
 import { Button } from "app/components";
-import BaseModal from "app/components/base-modal";
-import { IconFont } from "app/components/IconFont/IconFont";
 import UserConfigModal, { UserConfigModalType } from "./UserConfigModal";
+import { ScreenModal, ScreenModalType } from "app/components/ScreenModal";
 
 
 export interface UserInfoModalType {
@@ -21,26 +19,19 @@ export interface UserInfoModalType {
 }
 
 export default forwardRef((props: {
-    user?: IUser
+    user?: IUser;
+    theme: 'light' | 'dark';
 }, ref) => {
     const [selfId, setSelfId] = useState<number>(0)
     const [user, setUser] = useState<IUser | null>(null);
     const themeColor = useRecoilValue(ColorsState)
-    const [visible, setVisible] = useState<boolean>(false)
     const userConfigModalRef = useRef<UserConfigModalType>(null)
-    const { t } = useTranslation('screens')
-
-    const onClose = () => {
-        setSelfId(0)
-        setUser(null)
-        setVisible(false)
-    }
+    const { t } = useTranslation('default')
 
     useImperativeHandle(ref, () => ({
         open: async (userId: number, selfId: number) => {
             if (userId <= 0) { return }
             const u = props.user ?? await userService.findById(userId);
-            console.log('user=', u);
 
             setSelfId(selfId)
             if (u && userId !== selfId) {
@@ -58,28 +49,10 @@ export default forwardRef((props: {
             } else {
                 setUser(u)
             }
-            setVisible(true)
+            screenModalRef.current?.open();
         }
     }));
-
-    const renderTopRight = () => {
-        if (user?.id !== selfId && user?.isFriend !== 0) {
-            return <TouchableOpacity
-                onPress={() => {
-                    userConfigModalRef.current?.open(user?.id ?? 0)
-                }}
-                style={{
-                    padding: s(3),
-                    backgroundColor: themeColor.background,
-                    borderRadius: s(8)
-                }}>
-                <IconFont name="ellipsis" color={themeColor.text} size={24} />
-            </TouchableOpacity>
-        }
-        return null
-    }
-
-    const renderButton = () => {
+    const RenderButton = () => {
         if (!user) {
             return null
         }
@@ -97,10 +70,11 @@ export default forwardRef((props: {
                         userId: user.id
                     })
                 }}
-                label={t('userInfo.label_add_friend')}
+                label={t('Add friend')}
             />
         } else {
             return <Button
+                theme={props.theme}
                 fullRounded fullWidth
                 size="large"
                 onPress={() => {
@@ -110,15 +84,13 @@ export default forwardRef((props: {
                         })
                     }
                 }}
-                label={t('userInfo.label_start_chat')}
+                label={t('Send Message')}
             />
         }
     }
-
+    const screenModalRef = useRef<ScreenModalType>(null)
     return (
-        <BaseModal visible={visible} title="" onClose={onClose} renderRight={
-            renderTopRight()
-        } styles={{ flex: 1 }}>
+        <ScreenModal ref={screenModalRef} theme={props.theme} renderRight={<RenderButton/>} >
             {user ?
                 <View style={{
                     flex: 1,
@@ -130,17 +102,15 @@ export default forwardRef((props: {
                         backgroundColor: themeColor.secondaryBackground,
                         paddingTop: s(36)
                     }}>
-                        <InfoCard user={user} />
+                        <InfoCard theme={props.theme} user={user} />
                     </View>
                     <View style={{
                         paddingHorizontal: s(16),
                     }}>
-                        {
-                            renderButton()
-                        }
+                        <RenderButton/>
                     </View>
                 </View> : null}
-            <UserConfigModal ref={userConfigModalRef} friend={user} />
-        </BaseModal>
+            <UserConfigModal theme={props.theme} ref={userConfigModalRef} friend={user} />
+        </ScreenModal>
     );
 })

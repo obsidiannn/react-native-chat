@@ -100,7 +100,7 @@ export const Header = (props: BottomTabHeaderProps) => {
         <MyBusinessCardModal theme={$theme} ref={myBusinessCardModalRef} />
         <SettingCenterModal ref={settingCenterModalRef} />
         <MenuModal theme={$theme} ref={menuModalRef} />
-        <SelectMemberModal ref={selectMemberModalRef} />
+        <SelectMemberModal theme={$theme} ref={selectMemberModalRef} />
     </View>
 }
 const $container: ViewStyle = {

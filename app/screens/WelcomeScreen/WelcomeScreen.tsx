@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react"
+import React, { useRef, useState } from "react"
 import { Image } from "expo-image"
 import { ImageStyle, View, Text, Pressable, ViewStyle, TextStyle } from "react-native";
 import { s } from 'app/utils/size';
@@ -29,8 +29,6 @@ export const WelcomeScreen = ({ navigation }: Props) => {
       url: 'https://pages.ducloud.buzz/#/privacy-policy'
     },
   ];
-  useEffect(() => {
-  }, [])
   return (
     <FullScreen theme={$theme}>
       <Text style={[$titleText, {
@@ -46,7 +44,7 @@ export const WelcomeScreen = ({ navigation }: Props) => {
             confirmModalRef.current?.open({
               title: t('Confirm that you have read and agreed to the relevant agreements.'),
               content: t('Confirm that you have read and agreed to the relevant agreements.'),
-              onSubmit: () => navigation.navigate("SignUpScreen")
+              onSubmit: async () => navigation.navigate("SignUpScreen")
             });
             return;
           }

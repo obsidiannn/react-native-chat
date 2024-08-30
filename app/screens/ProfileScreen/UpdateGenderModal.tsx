@@ -3,7 +3,7 @@ import { Button } from "app/components";
 import { IconFont } from "app/components/IconFont/IconFont";
 import { ScreenModal, ScreenModalType } from "app/components/ScreenModal";
 import { AuthService } from "app/services/auth.service";
-import { ColorsState, ThemeState } from "app/stores/system"
+import { ColorsState } from "app/stores/system"
 import { s } from "app/utils/size";
 import { Image } from "expo-image";
 import { forwardRef, useImperativeHandle, useRef, useState } from "react"
@@ -25,7 +25,7 @@ export interface UpdateGenderModalRef {
 export const UpdateGenderModal = forwardRef((props: {
     theme: 'light' | 'dark'
 }, ref) => {
-    const { t } = useTranslation('screens')
+    const { t } = useTranslation('default')
 
     const themeColor = useRecoilValue(ColorsState)
     const [val, setVal] = useState<number>(IModel.IUser.Gender.UNKNOWN)
@@ -73,7 +73,7 @@ export const UpdateGenderModal = forwardRef((props: {
                         <View style={{ width: s(12), height: s(12) }}></View>
                     </>
             }
-            <Text style={styles.gender_label}>{t('profile.status_gender_male')}</Text>
+            <Text style={styles.gender_label}>{t('Man')}</Text>
 
         </TouchableOpacity>
     }
@@ -101,7 +101,7 @@ export const UpdateGenderModal = forwardRef((props: {
                         <View style={{ width: s(12), height: s(12) }}></View>
                     </>
             }
-            <Text style={styles.gender_label}>{t('profile.status_gender_female')}</Text>
+            <Text style={styles.gender_label}>{t('Women')}</Text>
         </TouchableOpacity>
 
     }
@@ -109,7 +109,7 @@ export const UpdateGenderModal = forwardRef((props: {
     const genderChoose = (chooseVal: number) => {
         setVal(chooseVal)
     }
-    return <ScreenModal theme={props.theme} ref={screenModalRef} title={t('profile.title_choose_gender')} >
+    return <ScreenModal theme={props.theme} ref={screenModalRef} title={t('Gender')} >
         <View
             style={{
                 flex: 1,
@@ -145,7 +145,7 @@ export const UpdateGenderModal = forwardRef((props: {
                             onClose()
                         })
                 }}
-                label={t('common.btn_submit')}
+                label={t('Submit')}
             />
         </View>
 

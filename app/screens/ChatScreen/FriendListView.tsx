@@ -8,6 +8,7 @@ import { navigate } from "app/navigators"
 import { IUser } from "drizzle/schema"
 import ContractListItem from "app/components/ContractListItem"
 import fileService from "app/services/file.service"
+import { useTranslation } from "react-i18next"
 
 
 export interface FriendListViewProps {
@@ -36,10 +37,10 @@ export const FriendListView = (props: FriendListViewProps) => {
     </View>
   }
 
-
+  const {t} =useTranslation('default')
   const renderState = () => {
     if (loading) {
-      return <LoadingComponent />
+      return <LoadingComponent theme={props.theme} />
     } else {
       return props.contacts.length <= 0 ? <EmptyComponent /> : (
         <FlashList
@@ -51,7 +52,7 @@ export const FriendListView = (props: FriendListViewProps) => {
             if (item.id === -1) {
               return <ContractListItem theme={props.theme} onPress={() => {
                 navigate("FriendInviteRecordScreen")
-              }} icon={require('assets/icons/friend-add.svg')} bottomLine={props.contacts.length > 1} title="新的好友" />
+              }} icon={require('assets/icons/friend-add.svg')} bottomLine={props.contacts.length > 1} title={t('New friend')} />
             }
             return <ContractListItem theme={props.theme} onPress={async () => {
               navigate('UserChatScreen', {

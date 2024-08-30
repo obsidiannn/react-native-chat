@@ -19,9 +19,10 @@ export const GroupListView = (props: GroupListViewProps) => {
     const [loading, setLoading] = useState<boolean>(false)
     const { t } = useTranslation('default')
     const defaultItem = { id: -1 } as GroupDetailItem
+    
     const renderState = () => {
         if (loading) {
-            return <LoadingComponent />
+            return <LoadingComponent theme={props.theme} />
         } else {
             return (props.groups.length <= 0) ? <EmptyComponent label={t('No group')} /> : (
                 <FlashList
@@ -31,9 +32,7 @@ export const GroupListView = (props: GroupListViewProps) => {
                     data={[defaultItem].concat(props.groups)}
                     renderItem={({ item }) => {
                         if (item.id === -1) {
-                            return <ContractListItem theme={props.theme} onPress={() => {
-                                navigate("GroupInviteRecordScreen")
-                            }} icon={require('assets/icons/group-add.svg')} title={t('Group waiting verification')} />
+                            return <ContractListItem theme={props.theme} onPress={() => navigate("FriendInviteRecordScreen")} icon={require('assets/icons/group-add.svg')} title={t('Group waiting verification')} />
                         }
                         return <ContractListItem
                             theme={props.theme}

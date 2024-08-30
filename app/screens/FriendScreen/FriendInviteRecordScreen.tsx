@@ -30,7 +30,7 @@ export const FriendInviteRecordScreen = ({ navigation }: Props) => {
         user: IUser | undefined
     }[]>([])
     const currentUser = useRecoilValue(AuthUser)
-    const { t } = useTranslation('screens')
+    const { t } = useTranslation('default')
     const $theme = useRecoilValue(ThemeState)
     const [loading, setLoading] = useState<boolean>(false)
 
@@ -111,12 +111,12 @@ export const FriendInviteRecordScreen = ({ navigation }: Props) => {
                 // navigation.navigate('AddFriendModal');
                 navigate('AddFriendModal')
             }}>
-                <Text style={styles.text}>{t('friend.add_friend_title')}</Text>
+                <Text style={styles.text}>{t('Add friend')}</Text>
             </TouchableOpacity>
         </View>
     }
     return (
-        <ScreenX theme={$theme} title={t('friend.title_new_friend')} renderRight={() => renderNavbarRight()}>
+        <ScreenX theme={$theme} title={t('New friend')} renderRight={() => renderNavbarRight()}>
             <View style={styles.listContainer}>
                 <FlashList
                     data={items}
@@ -135,7 +135,7 @@ export const FriendInviteRecordScreen = ({ navigation }: Props) => {
                                     isLast={index === items.length - 1}
                                     renderRight={() => <Button
                                         containerStyle={{ borderRadius: s(24) }}
-                                        label={t('friend.label_add')} onPress={async () => {
+                                        label={t('Add')} onPress={async () => {
                                             try {
                                                 const res = await friendApplyService.agree(item.friendApply.id)
                                                 if (res && res.chatId) {

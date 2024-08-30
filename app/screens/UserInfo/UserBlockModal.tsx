@@ -6,50 +6,54 @@ import { s } from "app/utils/size";
 import { useRecoilValue } from "recoil";
 import { ColorsState } from "app/stores/system";
 import { Button } from "app/components";
-import BaseModal from "app/components/base-modal";
 import UserConfigModal, { UserConfigModalType } from "./UserConfigModal";
 import friendService from "app/services/friend.service";
 import chatService from "app/services/chat.service";
 import eventUtil from "app/utils/event-util";
+import { useTranslation } from "react-i18next";
+import { ScreenModal, ScreenModalType } from "app/components/ScreenModal";
 
 
 export interface UserBlockModalType {
     open: (user: IUser) => void
 }
 
-export default forwardRef((_, ref) => {
+export default forwardRef((props: {
+    theme: 'light' | 'dark'
+}, ref) => {
     const [user, setUser] = useState<IUser | null>(null);
     const themeColor = useRecoilValue(ColorsState)
-    const [visible, setVisible] = useState<boolean>(false)
     const userConfigModalRef = useRef<UserConfigModalType>(null)
 
     const onClose = () => {
         setUser(null)
-        setVisible(false)
+        screenModalRef.current?.close()
     }
 
     useImperativeHandle(ref, () => ({
         open: async (user: IUser) => {
             setUser(user)
-            setVisible(true)
+            screenModalRef.current?.open()
         }
     }));
 
-
+    const {t} = useTranslation('default')
+    const screenModalRef = useRef<ScreenModalType>(null)
     return (
-        <BaseModal visible={visible} title="" onClose={onClose} styles={{ flex: 1 }}>
+        <ScreenModal theme={props.theme} ref={screenModalRef}>
             {user ?
                 <View style={{ flex: 1, backgroundColor: themeColor.background }}>
                     <View style={{
                         backgroundColor: themeColor.secondaryBackground,
                         paddingTop: s(36)
                     }}>
-                        <InfoCard user={user} />
+                        <InfoCard theme={props.theme} user={user} />
                     </View>
                     <View style={{
                         paddingHorizontal: s(16),
                     }}>
                         <Button
+                            theme={props.theme}
                             fullRounded fullWidth
                             size="large"
                             onPress={async () => {
@@ -65,15 +69,11 @@ export default forwardRef((_, ref) => {
                                     onClose()
                                 }
                             }}
-                            label={'移出黑名单'}
+                            label={t('Remove from blacklist')}
                         />
                     </View>
                 </View> : null}
-            <UserConfigModal ref={userConfigModalRef} friend={user} />
-        </BaseModal>
+            <UserConfigModal theme={props.theme} ref={userConfigModalRef} friend={user} />
+        </ScreenModal>
     );
 })
-
-// const styles = StyleSheet.create({
-
-// });

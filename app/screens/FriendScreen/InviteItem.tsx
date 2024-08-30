@@ -19,8 +19,8 @@ export default (props: {
     theme?: "light" | "dark";
     renderRight?: () => React.ReactNode;
 }) => {
-    const { item, isLast, user, renderRight, theme = "dark" } = props;
-    const { t } = useTranslation('screens')
+    const { item, isLast, user, renderRight,theme="dark" } = props;
+    const { t } = useTranslation('default')
     return <TouchableOpacity onPress={() => {
         if (item.status === IModel.IFriendApply.Status.PENDING) {
             navigate('InviteInfoScreen', {
@@ -53,9 +53,9 @@ export default (props: {
                         ...styles.statusText,
                         color: item.status === IModel.IFriendApply.Status.PENDING ? '#009B0F' : '#999',
                     }}>
-                        {item.status === IModel.IFriendApply.Status.PASSED && t('friend.status_apply_passed')}
-                        {item.status === IModel.IFriendApply.Status.REJECT && t('friend.status_apply_rejected')}
-                        {item.status === IModel.IFriendApply.Status.PENDING && t('friend.status_apply_pending')}
+                        {item.status === IModel.IFriendApply.Status.PASSED && t('Added')}
+                        {item.status === IModel.IFriendApply.Status.REJECT && t('Rejected')}
+                        {item.status === IModel.IFriendApply.Status.PENDING && t('Waiting verification')}
                     </Text>
                 }
             </View>

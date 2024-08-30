@@ -22,7 +22,7 @@ type Props = StackScreenProps<App.StackParamList, 'InviteInfoScreen'>;
 export const InviteInfoScreen = ({ navigation, route }: Props) => {
     const [loading, setLoading] = useState(false);
     const currentUser = useRecoilValue(AuthUser)
-    const { t } = useTranslation('screens')
+    const { t } = useTranslation('default')
     const [info, setInfo] = useState<{
         friendApply: IFriendApplies;
         user: IUser;
@@ -57,7 +57,7 @@ export const InviteInfoScreen = ({ navigation, route }: Props) => {
     }, [navigation])
     const $theme = useRecoilValue(ThemeState);
     return (
-        <ScreenX theme={$theme} title={t('friend.title_apply_info')}>
+        <ScreenX theme={$theme} title={t('Verification information')}>
             <ScrollView keyboardDismissMode="interactive">
                 <View style={{
                     paddingTop: verticalScale(32),
@@ -115,7 +115,7 @@ export const InviteInfoScreen = ({ navigation, route }: Props) => {
                                 navigation.goBack();
                             }
 
-                        }} label={t('friend.btn_apply')} />
+                        }} label={t('Accept')} />
 
                         <Button type="secondary" containerStyle={{
                             marginTop: s(10)
@@ -130,11 +130,11 @@ export const InviteInfoScreen = ({ navigation, route }: Props) => {
                                 navigation.goBack();
                                 setLoading(false);
                             });
-                        }} label={t('friend.btn_reject')} />
+                        }} label={t('Reject')} />
                     </> : null}
 
                     {info?.friendApply.status === IModel.IFriendApply.Status.PENDING && info.isSelf ?
-                        <Button label={t('friend.label_pending')} fullWidth fullRounded disabled size="large"
+                        <Button label={t('Waiting verification')} fullWidth fullRounded disabled size="large"
                         // icon={<IconFont name="restart"}
                         /> : null}
                 </View>

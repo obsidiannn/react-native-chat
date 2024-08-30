@@ -20,10 +20,10 @@ import { colors } from "app/theme"
 import { ScreenX } from "app/components/ScreenX"
 export const SafetyScreen = () => {
     const $colors = useRecoilValue(ColorsState);
-    const { t } = useTranslation('screens')
+    const { t } = useTranslation('default')
     const confirmModalRef = useRef<ConfirmModalType>(null);
     const $theme = useRecoilValue(ThemeState);
-    return <ScreenX title="安全" theme={$theme}>
+    return <ScreenX title={t('Safety')} theme={$theme}>
         <View style={{
             paddingHorizontal:s(15),
             paddingTop:s(20)
@@ -31,18 +31,18 @@ export const SafetyScreen = () => {
         <CardMenu theme={$theme} items={[
             {
                 icon: <IconFont name="docs" color={$colors.text} size={24} />,
-                title: "备份所有账户",
+                title: t('Backup All Accounts'),
                 onPress: () => {
                     confirmModalRef.current?.open({
-                        content: "是否备份所有账户？",
-                        title: "备份所有账户",
+                        content: t('Are you sure to backup all accounts?'),
+                        title: t('Backup All Accounts'),
                         onCancel: () => { },
                         onSubmit: async () => {
                             if (Platform.OS == "android") {
                                 const fileName = FileSystem.documentDirectory + `bobo_backup_${dayjs().format("YYYYmmdhms")}.txt`;
                                 await FileSystem.writeAsStringAsync(fileName, dump(), { encoding: FileSystem.EncodingType.UTF8 })
                                 if (!Sharing.isAvailableAsync()) {
-                                    toast("不能分享")
+                                    toast(t('Can not share'))
                                 } else {
                                     Sharing.shareAsync(fileName)
                                 }
@@ -50,7 +50,7 @@ export const SafetyScreen = () => {
                                 const fileName = FileSystem.cacheDirectory + `bobo_backup_${dayjs().format("YYYYmmdhms")}.txt`;
                                 await FileSystem.writeAsStringAsync(fileName, dump(), { encoding: FileSystem.EncodingType.UTF8 })
                                 if (!Sharing.isAvailableAsync()) {
-                                    toast("不能分享")
+                                    toast(t('Can not share'))
                                 } else {
                                     Sharing.shareAsync(fileName)
                                 }
@@ -61,27 +61,27 @@ export const SafetyScreen = () => {
             },
             {
                 icon: <IconFont name="quit" color={$colors.text} size={24} />,
-                title: "退出所有群聊",
+                title: t('Exit All Group'),
                 onPress: () => {
                     confirmModalRef.current?.open({
-                        content: "是否退出所有群聊？",
-                        title: "退出所有群聊",
+                        content: t('Are you sure to exit all groups?'),
+                        title: t('Exit All Group'),
                         onCancel: () => { },
-                        onSubmit: () => { }
+                        onSubmit: async () => { }
                     })
                 },
             },
             {
                 icon: <IconFont name="trash" color={$colors.text} size={24} />,
-                title: "清空所有消息",
+                title: t('Clear All Messages'),
                 onPress: () => {
                     confirmModalRef.current?.open({
-                        content: "是否清空所有消息？",
-                        title: "清空所有消息",
+                        content: t("Are you sure to clear all messages?"),
+                        title: t('Clear All Messages'),
                         onCancel: () => { },
                         onSubmit: async () => {
                             await messageSendService.clearMineMessageAll()
-                            toast(t('success_operation'))
+                            toast(t('Operation success'))
                         }
                     })
                 }
@@ -92,16 +92,16 @@ export const SafetyScreen = () => {
         }} items={[
             {
                 icon: <IconFont name="userRemove" color={colors.palette.red500} size={24} />,
-                title: "删除所有好友",
+                title: t('Delete All Friends'),
                 textStyle: {
                     color: "#FB3737"
                 },
                 onPress: () => {
                     confirmModalRef.current?.open({
-                        content: "是否删除所有好友？",
-                        title: "删除所有好友",
+                        content: t('Are you sure to delete all friends?'),
+                        title: t('Delete All Friends'),
                         onCancel: () => { },
-                        onSubmit: () => {
+                        onSubmit: async() => {
                         }
                     })
                 },
@@ -109,16 +109,16 @@ export const SafetyScreen = () => {
             },
             {
                 icon: <IconFont name="restart" color={colors.palette.red500} size={24} />,
-                title: "重置应用",
+                title: t("Reset App"),
                 textStyle: {
                     color: "#FB3737"
                 },
                 onPress: () => {
                     confirmModalRef.current?.open({
-                        content: "是否重置应用？",
-                        title: "重置应用",
+                        content: "Are you sure to reset app?",
+                        title: t("Reset App"),
                         onCancel: () => { },
-                        onSubmit: () => {
+                        onSubmit: async () => {
                             globalStorage.flushAll();
                             globalKV.flushAll();
                             RNRestart.restart();

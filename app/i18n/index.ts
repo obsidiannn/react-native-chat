@@ -1,32 +1,45 @@
 import i18n from "i18next";
 import { initReactI18next } from 'react-i18next';
-import zhHansCN from "./zh-Hans-CN";
-import zhHantTW from "./zh-Hant-TW";
-import zhHantHK from "./zh-Hant-HK";
-import zhHantMO from "./zh-Hant-MO";
-import enGB from "./en-GB";
-import enUS from "./en-US";
+import zhHans from "./zh-Hans";
+import zhHant from "./zh-Hant";
+import ja from "./ja";
+import en from "./en/index";
+import ko from "./ko";
+import pt from "./pt";
+import es from "./es";
+import fr from "./fr";
+import de from "./de";
+import it from "./it";
+import ru from "./ru";
+import tr from "./tr";
 
-export const supportedLanguages = () => {
-    return [
-        { label: '繁體中文(台湾)', value: 'zh-Hant-TW' },
-        { label: '繁體中文(香港)', value: 'zh-Hant-HK' },
-        { label: '繁體中文(澳门)', value: 'zh-Hant-MO' },
-        { label: '简体中文(中国)', value: 'zh-Hans-CN' },
-        { label: '英语(美国)', value: 'en-US' },
-        { label: '英语(英国)', value: 'en-GB' },
-    ]
-}
+export const supportedLanguages = [
+    { label: '繁體中文', value: 'zh-Hant' },
+    { label: '简体中文', value: 'zh-Hans' },
+    { label: 'English', value: 'en' },
+    { label: '日本語', value: 'ja' },
+    { label: '한국어', value: 'ko' },
+    { label: 'Português', value: 'pt' },
+    { label: 'Español', value: 'es' },
+    { label: 'Français', value: 'fr' },
+    { label: 'Deutsch', value: 'de' },
+    { label: 'Italiano', value: 'it' },
+    { label: 'Русский', value: 'ru' },
+    { label: 'Türkçe', value: 'tr' },
+]
 const resources = {
-    'zh': zhHansCN,
-    'zh-Hant-TW': zhHantTW,
-    'zh-Hant-HK': zhHantHK,
-    'zh-Hant-MO': zhHantMO,
-    'zh-Hant': zhHantTW,
-    'zh-Hans': zhHansCN,
-    'zh-Hans-CN': zhHansCN,
-    'en-US': enUS,
-    'en-GB': enGB,
+    'zh-Hant': zhHant,
+    'zh-Hans': zhHans,
+    'en': en,
+    'ja': ja,
+    'pt': pt,
+    'es': es,
+    'fr': fr,
+    'de': de,
+    'it': it,
+    'ru': ru,
+    'tr': tr,
+    'ko': ko,
 }
 
 i18n
@@ -34,10 +47,10 @@ i18n
     .init({
         compatibilityJSON: 'v3',
         resources,
-        lng: 'zh-Hant-TW',
-        supportedLngs: ['zh','zh-Hant-MO', 'zh-Hant-HK','zh-Hant','zh-Hans', 'zh-Hant-TW', 'zh-Hans-CN', 'zh-Hant-CN', 'en-US', 'en-GB'],
-        fallbackLng: 'zh-Hant-TW',
-        debug: false,
+        lng: 'ja',
+        supportedLngs: ['zh','ja','ko','pt','es','fr','de','it','ru','tr','zh-Hant', 'zh-Hans', 'en'],
+        fallbackLng: 'ja',
+        debug: true,
         interpolation: {
             escapeValue: false,
         },

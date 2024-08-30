@@ -4,7 +4,7 @@ import BaseModal from "app/components/base-modal";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { s } from "app/utils/size";
 import { useRecoilValue } from "recoil";
-import { ColorsState, ThemeState } from "app/stores/system"
+import { ColorsState } from "app/stores/system"
 import AvatarX from "app/components/AvatarX";
 import { GroupChatUiContext } from "../context";
 import { ScrollView, TextInput } from "react-native-gesture-handler";
@@ -28,14 +28,16 @@ export interface GroupDetailModalType {
     open: () => void
 }
 
-export default forwardRef((_, ref) => {
+export default forwardRef((props: {
+    theme: 'light' | 'dark',
+}, ref) => {
     const [visible, setVisible] = useState(false);
     const themeColor = useRecoilValue(ColorsState)
     const groupContext = useContext(GroupChatUiContext)
     const [editing, setEditing] = useState(false)
     const [groupName, setGroupName] = useState(groupContext.group.name)
     const groupMemberManageRef = useRef<GroupMemberManageModalType>()
-    const { t } = useTranslation('screens')
+    const { t } = useTranslation('default')
     const selectMemberModalRef = useRef<SelectMemberModalType>(null)
     const onClose = () => {
         setVisible(false)
@@ -148,7 +150,7 @@ export default forwardRef((_, ref) => {
             }}>
                 <TextInput
                     editable={editing && groupContext.selfMember && groupContext.selfMember.role < IModel.IGroup.IGroupMemberRoleEnum.MEMBER}
-                    placeholder={t('groupCreate.placeholder_name')}
+                    placeholder={t('Group Name')}
                     placeholderTextColor={colors.palette.gray300}
                     maxLength={128}
                     style={{
@@ -185,7 +187,7 @@ export default forwardRef((_, ref) => {
                     display: 'flex', flexDirection: 'row', alignItems: 'center',
                 }}>
                     <IconFont name="userGroup" color={themeColor.secondaryText} size={22} />
-                    <Text>{t('groupChat.labelCurrentMemberCount')}</Text>
+                    <Text>{t('Current group member number')}</Text>
                 </View>
                 <Text>
                     {groupContext.members.length}/{groupContext.group.memberLimit}
@@ -239,7 +241,7 @@ export default forwardRef((_, ref) => {
                     if (options.length > 0) {
                         console.log('options', options);
                         selectMemberModalRef.current?.open({
-                            title: t('groupChat.title_add_member'),
+                            title: t('Add member'),
                             options,
                             callback: async (ops: SelectMemberOption[]) => {
                                 const selected = ops.filter((item) => item.status).map(o => {
@@ -252,13 +254,13 @@ export default forwardRef((_, ref) => {
                         })
                     }
                 }}
-                label={t('groupChat.btn_invite_member')}
+                label={t('Invite member')}
             />
 
         </View>
 
-        <SelectMemberModal ref={selectMemberModalRef} />
-        <GroupMemberManageModal ref={groupMemberManageRef} />
+        <SelectMemberModal theme={props.theme} ref={selectMemberModalRef} />
+        <GroupMemberManageModal theme={props.theme} ref={groupMemberManageRef} />
     </BaseModal >
 })
 

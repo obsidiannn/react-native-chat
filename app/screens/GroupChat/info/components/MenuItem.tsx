@@ -1,12 +1,11 @@
-import { IconFont } from "app/components/IconFont/IconFont";
+import { IconFont, IconFontNameType } from "app/components/IconFont/IconFont";
 import { colors } from "app/theme";
 import { s } from "app/utils/size";
-import { Image } from "expo-image";
-import { Pressable, Text, TouchableOpacity, View } from "react-native";
+import { Pressable, Text, View } from "react-native";
 
 export default (props: {
     onPress?: () => void;
-    icon?: string;
+    icon?: IconFontNameType;
     label?: string;
     labelColor?: string;
     rightComponent?: React.ReactNode;

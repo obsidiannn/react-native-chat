@@ -1,10 +1,9 @@
-import { GroupDetailItem, GroupInfoItem } from "@repo/types";
+import { GroupDetailItem } from "@repo/types";
 import { Image } from "expo-image";
 import { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import { Text, View } from "react-native";
 import QRCode from 'react-native-qrcode-svg';
 import ViewShot, { captureRef } from "react-native-view-shot";
-import BaseModal from "app/components/base-modal";
 import { useTranslation } from "react-i18next";
 import { s } from "app/utils/size";
 import { Button } from "app/components";
@@ -12,16 +11,17 @@ import toast from "app/utils/toast";
 import { useRecoilValue } from "recoil";
 import { ColorsState } from "app/stores/system";
 import { colors } from "app/theme";
-import AvatarX from "app/components/AvatarX";
 import fileService from "app/services/file.service";
+import { ScreenModal, ScreenModalType } from "app/components/ScreenModal";
 export interface QRcodeModalRef {
     open: (params: {
         group: GroupDetailItem;
         count: number
     }) => void;
 }
-export default forwardRef((_, ref) => {
-    const [visible, setVisible] = useState(false);
+export default forwardRef((props: {
+    theme: 'light' | 'dark';
+}, ref) => {
     const [group, setGroup] = useState<GroupDetailItem>();
     const [count, setCount] = useState<number>(0)
     const [data, setData] = useState<string>("xxxx");
@@ -38,13 +38,11 @@ export default forwardRef((_, ref) => {
             setCount(params.count)
             // setData('action=groupInfo&groupId=' + params.group?.id);
             setData('nextchat://group/' + params.group.id)
-            setVisible(true);
+            screenModalRef.current?.open()
         }
     }));
-    const onClose = () => {
-        setVisible(false)
-    }
-    return <BaseModal visible={visible} onClose={onClose} title={t('groupChat.title_qrcode')} animationType="slide" styles={{ flex: 1 }} >
+    const screenModalRef = useRef<ScreenModalType>(null);
+    return <ScreenModal ref={screenModalRef} theme={props.theme} title={t('groupChat.title_qrcode')} >
         <View style={{
             flex: 1,
             paddingHorizontal: s(15),
@@ -131,5 +129,5 @@ export default forwardRef((_, ref) => {
                 </View>
             </View>
         </View>
-    </BaseModal>;
+    </ScreenModal>;
 });

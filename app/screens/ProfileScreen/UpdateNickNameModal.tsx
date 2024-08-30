@@ -1,7 +1,7 @@
 import { Button } from "app/components";
 import { ScreenModal, ScreenModalType } from "app/components/ScreenModal";
 import { AuthService } from "app/services/auth.service";
-import { ColorsState, ThemeState } from "app/stores/system"
+import { ColorsState } from "app/stores/system"
 import { s } from "app/utils/size";
 import { forwardRef, useImperativeHandle, useRef, useState } from "react"
 import { useTranslation } from "react-i18next";
@@ -22,7 +22,7 @@ export const UpdateNickNameModal = forwardRef((props: {
     theme: 'light' | 'dark'
 }, ref) => {
     const maxLength = 150
-    const { t } = useTranslation('screens')
+    const { t } = useTranslation('default')
     const [loading, setLoading] = useState<boolean>(false)
     const onFinishRef = useRef<(v: string) => void>()
     const screenModalRef = useRef<ScreenModalType>(null);
@@ -47,7 +47,7 @@ export const UpdateNickNameModal = forwardRef((props: {
         },
     }));
 
-    return <ScreenModal theme={props.theme} ref={screenModalRef} title="更新昵称" style={{ flex: 1 }} >
+    return <ScreenModal theme={props.theme} ref={screenModalRef} title={t('Nickname')} style={{ flex: 1 }} >
         <View style={{
             padding: s(14),
             flex: 1,
@@ -58,14 +58,6 @@ export const UpdateNickNameModal = forwardRef((props: {
                 flexDirection: 'column',
                 alignItems: 'center',
             }}>
-                <Text style={{
-                    color: themeColor.title,
-                    fontSize: s(28),
-                    fontWeight: '500',
-                    alignSelf: 'flex-start'
-                }}>
-                    {t('profile.title_nickname')}
-                </Text>
                 <View style={{
                     width: '100%',
                     display: 'flex',
@@ -74,7 +66,7 @@ export const UpdateNickNameModal = forwardRef((props: {
                     marginTop: s(22)
                 }}>
                     <TextInput
-                        placeholder={t('profile.placeholder_nickname')}
+                        placeholder={t('Set Nickname')}
                         //placeholderTextColor={themeColor.border}
                         maxLength={maxLength}
 
@@ -101,22 +93,6 @@ export const UpdateNickNameModal = forwardRef((props: {
 
                 </View>
 
-                <View style={{
-                    marginTop: s(32),
-                    display: 'flex',
-                    flexDirection: 'row',
-                    alignItems: 'stretch',
-                    padding: s(12),
-                }}>
-
-                    <Text style={{
-                        ...styles.paragraph,
-                        color: themeColor.secondaryText
-                    }}>
-                        * {t('profile.paragraph_nickname_1')}
-                    </Text>
-
-                </View>
 
                 <View style={{
                     display: 'flex',
@@ -129,23 +105,7 @@ export const UpdateNickNameModal = forwardRef((props: {
                         ...styles.paragraph,
                         color: themeColor.secondaryText
                     }}>
-                        * {t('profile.paragraph_nickname_2')}
-                    </Text>
-
-                </View>
-
-                <View style={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    alignItems: 'stretch',
-                    padding: s(12)
-                }}>
-
-                    <Text style={{
-                        ...styles.paragraph,
-                        color: themeColor.secondaryText
-                    }}>
-                        * {t('profile.paragraph_nickname_3')}
+                        * 提示词
                     </Text>
 
                 </View>
@@ -157,7 +117,7 @@ export const UpdateNickNameModal = forwardRef((props: {
 
             <Button
                 size="large"
-                label={t('common.btn_submit')}
+                label={t('Submit')}
                 theme={props.theme}
                 fullRounded
                 type="primary"

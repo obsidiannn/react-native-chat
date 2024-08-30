@@ -7,7 +7,6 @@ import { FormLine } from "app/components/FormLine";
 import { useRecoilValue } from "recoil";
 import { ColorsState } from "app/stores/system";
 import { IUser } from "drizzle/schema";
-import BaseModal from "app/components/base-modal";
 import { UserChatUIContext } from "../UserChat/context";
 import { colors } from "app/theme";
 import friendService from "app/services/friend.service";
@@ -17,6 +16,7 @@ import { LocalUserService } from "app/services/LocalUserService";
 import eventUtil from "app/utils/event-util";
 import UserComplainModal from "./UserComplainModal";
 import { useTranslation } from "react-i18next";
+import { ScreenModal, ScreenModalType } from "app/components/ScreenModal";
 
 export interface UserConfigModalType {
     open: (userId: number) => void
@@ -24,8 +24,8 @@ export interface UserConfigModalType {
 
 export default forwardRef((props: {
     friend: IUser | null
+    theme: 'light' | 'dark'
 }, ref) => {
-    const [visible, setVisible] = useState(false)
     const themeColor = useRecoilValue(ColorsState)
     const confirmModalRef = useRef<ConfirmModalType>(null);
     const [editing, setEditing] = useState(false)
@@ -33,7 +33,7 @@ export default forwardRef((props: {
     const [friendAlias, setFriendAlias] = useState('')
     const userComplainModalRef = useRef<UserConfigModalType>(null)
 
-    const { t } = useTranslation('screens')
+    const { t } = useTranslation('default')
 
     const isEditable = (): boolean => {
         return editing && props.friend !== null && ((props.friend.isFriend ?? 0) > 0)
@@ -89,21 +89,17 @@ export default forwardRef((props: {
         }
         return null
     }
-    const onClose = () => {
-        setFriendAlias(props.friend?.friendAlias ?? props.friend?.nickName ?? '')
-        setVisible(false)
-    }
 
     useImperativeHandle(ref, () => {
         return {
             open: () => {
                 setFriendAlias(props.friend?.friendAlias ?? props.friend?.nickName ?? '')
-                setVisible(true)
+                screenModalRef.current?.open();
             }
         }
     })
-
-    return <BaseModal visible={visible} onClose={onClose} styles={{ flex: 1, }} >
+    const screenModalRef = useRef<ScreenModalType>(null)
+    return <ScreenModal theme={props.theme} ref={screenModalRef}>
         <View style={{
             flex: 1,
             backgroundColor: themeColor.background,
@@ -148,7 +144,7 @@ export default forwardRef((props: {
                     paddingVertical: s(12)
                 }}>
                     <IconFont name="pencil" color={themeColor.text} size={24} />
-                    <Text style={{ color: themeColor.text, }}>{t('userInfo.btn_share_card')}</Text>
+                    <Text style={{ color: themeColor.text, }}>{t('Share Card')}</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
@@ -164,7 +160,7 @@ export default forwardRef((props: {
                         paddingVertical: s(12)
                     }}>
                     <IconFont name="pencil" color={themeColor.text} size={24} />
-                    <Text style={{ color: themeColor.text, }}>{t('userInfo.btn_complain')}</Text>
+                    <Text style={{ color: themeColor.text, }}>{t('Complain')}</Text>
                 </TouchableOpacity>
 
             </View>
@@ -177,7 +173,7 @@ export default forwardRef((props: {
                 borderTopColor: themeColor.border,
                 paddingVertical: s(12)
             }}>
-                <FormLine title={t('userInfo.label_block')}
+                <FormLine title={t('Add to blacklist')}
                     textStyle={{
                         color: colors.palette.red500
                     }}
@@ -186,8 +182,8 @@ export default forwardRef((props: {
                     }
                     onPress={() => {
                         confirmModalRef.current?.open({
-                            title: t('userInfo.label_block'),
-                            content: t('userInfo.label_block_desc'),
+                            title: t('Add to blacklist'),
+                            content: t('Confirm to add blacklist?'),
                             onSubmit: async () => {
                                 console.log(props.friend);
 
@@ -210,7 +206,7 @@ export default forwardRef((props: {
             <View style={{
                 marginTop: s(36),
             }}>
-                <FormLine title={t('userInfo.btn_remove_friend')}
+                <FormLine title={t('Delete Friend')}
                     textStyle={{
                         color: colors.palette.red500
                     }}
@@ -219,9 +215,9 @@ export default forwardRef((props: {
                     }
                     onPress={() => {
                         confirmModalRef.current?.open({
-                            title: t('userInfo.btn_remove_friend'),
-                            content: t('userInfo.btn_remove_friend_desc'),
-                            onSubmit: () => {
+                            title: t('Delete Friend'),
+                            content: t('Confirm to delete friend? Chat history cannot be recovered.'),
+                            onSubmit: async () => {
                                 friendService.remove(props.friend?.friendId ?? 0).then((chatId) => {
                                     if (chatId) {
                                         eventUtil.sendClearMsgEvent(chatId)
@@ -237,7 +233,7 @@ export default forwardRef((props: {
             </View>
 
         </View>
-        <ConfirmModal ref={confirmModalRef} />
-        <UserComplainModal ref={userComplainModalRef} />
-    </BaseModal>
+        <ConfirmModal theme={props.theme} ref={confirmModalRef} />
+        <UserComplainModal theme={props.theme} ref={userComplainModalRef} />
+    </ScreenModal>
 })

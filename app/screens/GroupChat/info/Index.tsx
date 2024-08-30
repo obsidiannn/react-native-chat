@@ -5,7 +5,7 @@ import QRcodeModal, { QRcodeModalRef } from "./QrcodeModal";
 import ApplyListModal, { ApplyListModalRef } from "./ApplyListModal";
 import { ConfirmModal, ConfirmModalType } from "app/components/ConfirmModal";
 import GoodManager, { GroupManagerModalRef } from "./GroupManagerModal";
-import { forwardRef, useContext, useImperativeHandle, useMemo, useRef, useState } from "react";
+import { forwardRef, useContext, useImperativeHandle, useMemo, useRef } from "react";
 import SelectMemberModal, { SelectMemberModalType } from "app/components/SelectMemberModal/Index"
 import groupService from "app/services/group.service";
 import { GroupChatUiContext } from "../context";
@@ -14,7 +14,6 @@ import { IModel } from "@repo/enums";
 import toast from "app/utils/toast";
 import { s } from "app/utils/size";
 import messageSendService from "app/services/message-send.service";
-import BaseModal from "app/components/base-modal";
 import { useRecoilValue } from "recoil";
 import { ColorsState } from "app/stores/system"
 import { colors } from "app/theme";
@@ -25,15 +24,17 @@ import chatApi from "app/api/chat/chat";
 import { IconFont } from "app/components/IconFont/IconFont";
 import eventUtil from "app/utils/event-util";
 import ChatHistoryModal, { ChatHistoryModalType } from "app/components/ChatHistory/ChatHistoryModal";
+import { ScreenModal, ScreenModalType } from "app/components/ScreenModal";
 
 export interface GroupInfoModalType {
     open: () => void
 }
 
-export default forwardRef((_, ref) => {
+export default forwardRef((props: {
+    theme: 'light' | 'dark'
+}, ref) => {
 
     const groupContext = useContext(GroupChatUiContext)
-    const [visible, setVisible] = useState(false)
     const themeColor = useRecoilValue(ColorsState)
 
     const qrcodeModalRef = useRef<QRcodeModalRef>(null);
@@ -75,16 +76,11 @@ export default forwardRef((_, ref) => {
 
     useImperativeHandle(ref, () => ({
         open: () => {
-            setVisible(true)
+            screenModalRef.current?.open()
         }
     }));
-
-
-    return <BaseModal visible={visible} onClose={() => { setVisible(false) }} title="群设置" styles={{
-        backgroundColor: themeColor.secondaryBackground,
-        paddingTop: s(24),
-        flex: 1
-    }}>
+    const screenModalRef = useRef<ScreenModalType>(null);
+    return <ScreenModal ref={screenModalRef} title="群设置" theme={props.theme}>
         <ScrollView style={{
             flex: 1,
             borderTopLeftRadius: s(24),
@@ -229,7 +225,7 @@ export default forwardRef((_, ref) => {
                                 confirmModalRef.current?.open({
                                     title: t('groupChat.title_drop_message'),
                                     content: t('groupChat.title_drop_message_desc'),
-                                    onSubmit: () => {
+                                    onSubmit: async () => {
                                         groupService.clearGroupMessages([groupContext.group.id], [groupContext.group?.chatId]).then(() => {
                                             eventUtil.sendClearMsgEvent(groupContext.group.chatId)
                                         })
@@ -284,11 +280,11 @@ export default forwardRef((_, ref) => {
 
             {
                 (groupContext.selfMember && groupContext.selfMember.role === IModel.IGroup.IGroupMemberRoleEnum.OWNER) ?
-                    <Button onPress={() => {
+                    <Button theme={props.theme} onPress={() => {
                         confirmModalRef.current?.open({
                             title: t('groupChat.title_drop_group'),
                             content: t('groupChat.title_drop_group_desc'),
-                            onSubmit: () => {
+                            onSubmit: async () => {
                                 console.log('解散羣聊');
                             }
                         });
@@ -304,8 +300,8 @@ export default forwardRef((_, ref) => {
         </ScrollView>
 
 
-        <QRcodeModal ref={qrcodeModalRef} />
-        <ApplyListModal onCheck={(item) => {
+        <QRcodeModal theme={props.theme} ref={qrcodeModalRef} />
+        <ApplyListModal theme={props.theme} onCheck={(item) => {
             console.log('查看用戶', item);
             // applyInfoModalRef.current?.open(item);
         }} ref={applyListModalRef} />
@@ -317,10 +313,10 @@ export default forwardRef((_, ref) => {
         <GoodManager ref={groupManagerModalRef} onCheck={() => {
             console.log("打開羣管理");
         }} />
-        <GroupDetailModal ref={groupDetailModalRef} />
-        <ChatHistoryModal ref={chatHistoryModalRef} />
-        <SelectMemberModal ref={selectMemberModalRef} />
-    </BaseModal>
+        <GroupDetailModal theme={props.theme} ref={groupDetailModalRef} />
+        <ChatHistoryModal theme={props.theme} ref={chatHistoryModalRef} />
+        <SelectMemberModal theme={props.theme} ref={selectMemberModalRef} />
+    </ScreenModal>
 })
 
 

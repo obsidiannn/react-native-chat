@@ -82,7 +82,7 @@ const VersionListItem = (props: {
 }) => {
   const $colors = useRecoilValue(ColorsState);
   const { item } = props;
-  const { t } = useTranslation('screens')
+  const { t } = useTranslation('default')
 
   return <Card rounded>
     <View style={{
@@ -96,7 +96,7 @@ const VersionListItem = (props: {
         fontWeight: "600",
         color: $colors.text
       }}>{item.versionName}</Text>
-      <Button onPress={() => Linking.openURL(item.downloadUrl)} label={t('common.btn_download')} />
+      <Button onPress={() => Linking.openURL(item.downloadUrl)} label={t('Download')} />
     </View>
     <View style={{
       width: "100%",
@@ -135,8 +135,9 @@ export const UpgradeModal = forwardRef((props:{
     },
     close: async () => screenModalRef.current?.close()
   }));
+  const { t } = useTranslation('default')
   return (
-    <ScreenModal theme={props.theme} title="版本更新" ref={screenModalRef} >
+    <ScreenModal theme={props.theme} title={t('Version Update')} ref={screenModalRef} >
       <View style={{
         flex: 1,
         width: s(375),

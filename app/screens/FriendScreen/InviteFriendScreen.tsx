@@ -18,7 +18,7 @@ export const InviteFriendScreen = ({ navigation, route }: Props) => {
     const [remark, setRemark] = useState('');
     const $theme = useRecoilValue(ThemeState)
     const [state, setState] = useState(false)
-    const { t } = useTranslation('screens')
+    const { t } = useTranslation('default')
     useEffect(() => {
         // 監聽頁面獲取焦點
         const unsubscribe = navigation.addListener('focus', () => {
@@ -26,7 +26,7 @@ export const InviteFriendScreen = ({ navigation, route }: Props) => {
         });
         return unsubscribe;
     }, [navigation])
-    return <ScreenX title={t('friend.title_invite_info')} theme={$theme}>
+    return <ScreenX title={t('Invitation information')} theme={$theme}>
         <View>
             <View style={[
                 styles.inputContainer,
@@ -39,7 +39,7 @@ export const InviteFriendScreen = ({ navigation, route }: Props) => {
                             color: $theme === 'light'? $colors.slate700 : $colors.slate200,
                         }
                     ]}
-                    placeholder={t('friend.placeholder_remark')}
+                    placeholder={t('Please enter the remark')}
                     onChangeText={text => setRemark(text)}
                     defaultValue={remark}
                     multiline={true}
@@ -48,12 +48,12 @@ export const InviteFriendScreen = ({ navigation, route }: Props) => {
                 />
             </View>
             <View style={styles.buttonContainer}>
-                <Button theme={$theme} size="large" fullWidth fullRounded label={t('friend.btn_send_invite')} onPress={() => {
+                <Button theme={$theme} size="large" fullWidth fullRounded label={t('Send invitation')} onPress={() => {
                     setState(true);
                     if (userId) {
                         friendApplyService.create(userId, remark).then(res => {
                             toast(
-                                t('friend.success_send_invite')
+                                t('Invitation success')
                             );
                             setTimeout(() => {
                                 navigation.goBack();

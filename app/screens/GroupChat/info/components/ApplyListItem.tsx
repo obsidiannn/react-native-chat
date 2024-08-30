@@ -15,7 +15,7 @@ export default (props: {
     themeColor: IColors
 }) => {
     const { item, isLast } = props;
-    const { t } = useTranslation('screens')
+    const { t } = useTranslation('default')
     const styles = style({ themeColor: props.themeColor })
     return <TouchableOpacity onPress={() => {
         props.onCheck();
@@ -34,9 +34,9 @@ export default (props: {
                     ...styles.statusText,
                     color: item.status === IModel.IGroup.IGroupMemberStatus.PENDING ? '#009B0F' : props.themeColor.text,
                 }}>
-                    {item.status === IModel.IGroup.IGroupMemberStatus.PENDING ? t('groupChat.group_status_pending') : null}
-                    {item.status === IModel.IGroup.IGroupMemberStatus.NORMAL ? t('groupChat.group_status_added') : null}
-                    {item.status === IModel.IGroup.IGroupMemberStatus.REJECTED ? t('groupChat.group_status_rejected') : null}
+                    {item.status === IModel.IGroup.IGroupMemberStatus.PENDING ? t('Waiting verification') : null}
+                    {item.status === IModel.IGroup.IGroupMemberStatus.NORMAL ? t('Added') : null}
+                    {item.status === IModel.IGroup.IGroupMemberStatus.REJECTED ? t('Rejected') : null}
                 </Text>
             </View>
         </View>

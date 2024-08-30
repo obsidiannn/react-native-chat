@@ -1,4 +1,3 @@
-import { StackScreenProps } from "@react-navigation/stack";
 import { Button } from "app/components";
 import { ScreenX } from "app/components/ScreenX";
 import { ColorsState, ThemeState } from "app/stores/system";
@@ -7,13 +6,11 @@ import { useState } from "react";
 import { ScrollView, Text, View } from "react-native";
 import { useTranslation } from "react-i18next";
 import { useRecoilValue } from "recoil";
-import { App } from "types/app";
 
-type Props = StackScreenProps<App.StackParamList, 'DonateScreen'>;
-export const DonateScreen = (props: Props) => {
+export const DonateScreen = () => {
     const themeColor = useRecoilValue(ColorsState)
     const [chooseIdx, setChooseIdx] = useState(0)
-    const { t } = useTranslation("screens")
+    const { t } = useTranslation("default")
     const btnStyle = (idx: number,) => {
         if (idx === chooseIdx) {
             return {
@@ -28,9 +25,8 @@ export const DonateScreen = (props: Props) => {
 
     }
     const $theme = useRecoilValue(ThemeState)
-    return <ScreenX title={t('donate.title')} theme={$theme}>
+    return <ScreenX title={t('Donation')} theme={$theme}>
         <ScrollView style={{ flex: 1, paddingVertical: s(20) }}>
-
             <View style={{
                 alignItems: 'center',
                 display: 'flex',
@@ -56,53 +52,39 @@ export const DonateScreen = (props: Props) => {
                         alignItems: 'center',
                         justifyContent: 'center',
                     }}>
-                        <Button label="$5"
+                        <Button theme={$theme} label="$5"
                             onPress={() => {
                                 setChooseIdx(0)
                             }}
-                            textStyle={{ ...btnStyle(0), }}
                             containerStyle={{
-                                ...btnStyle(0),
                                 marginRight: s(12),
-                                height: s(36)
                             }} />
 
-                        <Button label="$10"
+                        <Button theme={$theme}  label="$10"
                             onPress={() => {
                                 setChooseIdx(1)
                             }}
-                            textStyle={{ ...btnStyle(1), }}
                             containerStyle={{
-                                ...btnStyle(1),
                                 marginRight: s(12),
-                                height: s(36)
                             }} />
-                        <Button label="$15"
+                        <Button theme={$theme} label="$15"
                             onPress={() => {
                                 setChooseIdx(2)
                             }}
                             textStyle={{ ...btnStyle(2), }}
                             containerStyle={{
-                                ...btnStyle(2),
                                 marginRight: s(12),
-                                height: s(36)
                             }} />
-                        <Button label="$100"
+                        <Button theme={$theme} label="$100"
                             onPress={() => {
                                 setChooseIdx(3)
-                            }}
-                            textStyle={{ ...btnStyle(3), }}
-                            containerStyle={{
-                                ...btnStyle(3),
-                                height: s(36)
-                            }} />
+                            }}/>
                     </View>
                 </View>
 
-                <Button label={t('donate.btnPayment')} size="large"
+                <Button theme={$theme} label={t('Pay')} size="large"
                     fullRounded
                     containerStyle={{
-                        backgroundColor: themeColor.primary,
                         marginTop: s(24),
                         width: '100%'
                     }} />
@@ -123,13 +105,13 @@ export const DonateScreen = (props: Props) => {
                     fontSize: s(18),
                     marginVertical: s(12)
                 }}>
-                    {t('donate.donateCoin')}
+                    {t('Donation Crypto')}
                 </Text>
                 <Text style={{
                     fontSize: s(14),
                     color: themeColor.text,
                 }}>
-                    {t('donate.donateCoinDesc')}
+                    {t('We accept donations of cryptocurrencies such as usdt, usdc, bit coin, eth, sol, etc.')}
                 </Text>
 
                 <View style={{
@@ -155,16 +137,14 @@ export const DonateScreen = (props: Props) => {
                                 fontSize: s(16),
                                 color: themeColor.text,
 
-                            }}>以太坊地址</Text>
+                            }}>{t('ETH Address')}</Text>
                             <Text style={{
                                 color: themeColor.secondaryText,
                                 fontSize: s(12), marginTop: s(4),
                                 flexWrap: 'wrap'
                             }}>0x6D85d7Ea27fF9e243724c2133BD7F8CD149Be98A</Text>
                         </View>
-                        <Button label="复制" containerStyle={{
-                            backgroundColor: themeColor.primary,
-                        }} />
+                        <Button label={t('Copy')} type="primary" theme={$theme} />
 
                     </View>
                     <View style={{
@@ -185,16 +165,14 @@ export const DonateScreen = (props: Props) => {
                             <Text style={{
                                 color: themeColor.text,
                                 fontSize: s(16)
-                            }}>以太坊地址</Text>
+                            }}>{t('ETH Address')}</Text>
                             <Text style={{
                                 color: themeColor.secondaryText,
                                 fontSize: s(12), marginTop: s(4),
                                 flexWrap: 'wrap'
                             }}>0x6D85d7Ea27fF9e243724c2133BD7F8CD149Be98A</Text>
                         </View>
-                        <Button label="复制" containerStyle={{
-                            backgroundColor: themeColor.primary,
-                        }} />
+                        <Button label={t('Copy')} type="primary" theme={$theme} />
 
                     </View>
                     <View style={{
@@ -215,16 +193,14 @@ export const DonateScreen = (props: Props) => {
                             <Text style={{
                                 color: themeColor.text,
                                 fontSize: s(16)
-                            }}>以太坊地址</Text>
+                            }}>{t('ETH Address')}</Text>
                             <Text style={{
                                 color: themeColor.secondaryText,
                                 fontSize: s(12), marginTop: s(4),
                                 flexWrap: 'wrap'
                             }}>0x6D85d7Ea27fF9e243724c2133BD7F8CD149Be98A</Text>
                         </View>
-                        <Button label="复制" containerStyle={{
-                            backgroundColor: themeColor.primary,
-                        }} />
+                        <Button label={t('Copy')} type="primary" theme={$theme} />
 
                     </View>
                     <View style={{
@@ -245,23 +221,17 @@ export const DonateScreen = (props: Props) => {
                             <Text style={{
                                 color: themeColor.text,
                                 fontSize: s(16)
-                            }}>以太坊地址</Text>
+                            }}>{t('ETH Address')}</Text>
                             <Text style={{
                                 color: themeColor.secondaryText,
                                 fontSize: s(12), marginTop: s(4),
                                 flexWrap: 'wrap'
                             }}>0x6D85d7Ea27fF9e243724c2133BD7F8CD149Be98A</Text>
                         </View>
-                        <Button label="复制" containerStyle={{
-                            backgroundColor: themeColor.primary,
-                        }} />
-
+                        <Button label={t('Copy')} type="primary" theme={$theme} />
                     </View>
-
                 </View>
-
             </View>
         </ScrollView>
-
     </ScreenX>
 }

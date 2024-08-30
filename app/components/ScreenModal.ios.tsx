@@ -12,6 +12,7 @@ export const ScreenModal = forwardRef((props: {
     title?: string
     children?: React.ReactNode;
     theme: "light" | "dark";
+    renderRight?: React.ReactNode;
 }, ref) => {
     const [visible, setVisible] = useState(false);
     const onSwipeEnd = (event: GestureStateChangeEvent<PanGestureHandlerEventPayload>) => {

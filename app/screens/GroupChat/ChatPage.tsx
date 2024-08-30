@@ -21,7 +21,7 @@ import { IModel } from "@repo/enums";
 import { AuthUser } from "app/stores/auth";
 import quickCrypto from "app/utils/quick-crypto";
 import generateUtil from "app/utils/generateUtil";
-import { GestureResponderEvent, Platform, TouchableOpacity, Text, View } from "react-native"
+import { GestureResponderEvent, Platform, TouchableOpacity, Text } from "react-native"
 import { ThemeState } from "app/stores/system";
 import chatService from "app/services/chat.service";
 import eventUtil from "app/utils/event-util";
@@ -48,7 +48,9 @@ export interface GroupChatPageRef {
     ) => void;
     close: () => void;
 }
-export default forwardRef((_, ref) => {
+export default forwardRef((props: {
+    theme: 'light' | 'dark'
+}, ref) => {
     const [messages, setMessages] = useState<MessageType.Any[]>([])
     const chatItemRef = useRef<ChatDetailItem>()
     const author = useRecoilValue(AuthUser)
@@ -609,8 +611,8 @@ export default forwardRef((_, ref) => {
                     longPressHandle(false, msgId)
                 }} />
 
-            <SelectMemberModal ref={selectMemberModalRef} />
-            <UserInfoModal ref={userInfoModalRef} />
+            <SelectMemberModal theme={props.theme} ref={selectMemberModalRef} />
+            <UserInfoModal theme={props.theme} ref={userInfoModalRef} />
         </>
     )
 });

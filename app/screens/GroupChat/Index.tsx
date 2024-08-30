@@ -9,7 +9,6 @@ import ChatPage, { GroupChatPageRef } from './ChatPage';
 import { GroupChatUiContext } from "./context";
 import { useRecoilValue } from "recoil";
 import { IUser } from "drizzle/schema";
-import { useTranslation } from 'react-i18next';
 import { App } from "types/app";
 import { AuthUser } from "app/stores/auth";
 import NetInfo from '@react-native-community/netinfo'
@@ -37,7 +36,6 @@ export const GroupChatScreen = ({ navigation, route }: Props) => {
     const [selfMember, setSelfMember] = useState<GroupMemberItemVO>()
     const $theme = useRecoilValue(ThemeState)
     const themeColor = useRecoilValue(ColorsState)
-    const { t } = useTranslation('screens')
 
     // TODO: 這裏是根據uid變化而部分請求接口的函數
     const refreshMember = useCallback(async (groupId: number, uids: number[]) => {
@@ -118,16 +116,12 @@ export const GroupChatScreen = ({ navigation, route }: Props) => {
     }, [])
 
     const reloadChat = (chat: ChatDetailItem) => {
-        chatService.changeChat(chat).then(() => {
-            console.log('[group]reload', chat);
-            setChatItem(chat)
-        })
+        chatService.changeChat(chat).then(() => setChatItem(chat))
         // chatItemRef.current = chat
     }
 
     const init = useCallback(async () => {
 
-        console.log("初始化group聊天")
         const chatId = route.params.chatId
         if (!globalThis.wallet) {
             navigation.goBack();
@@ -147,9 +141,7 @@ export const GroupChatScreen = ({ navigation, route }: Props) => {
             }
         } else {
             localUser = await loadLocalMembers(chatResult.sourceId)
-            console.log('goon', localUser);
         }
-        console.log('chatItem = ', chatResult);
         if (chatResult === null) {
             return
         }
@@ -160,8 +152,6 @@ export const GroupChatScreen = ({ navigation, route }: Props) => {
         } else {
             loadGroup(groupId)
         }
-        console.log('loadgroup=', g);
-
         if (!g) {
             navigation.goBack();
             return
@@ -172,7 +162,6 @@ export const GroupChatScreen = ({ navigation, route }: Props) => {
 
     }, [])
     useEffect(() => {
-        // 監聽頁面獲取焦點
         const focusEvent = navigation.addListener('focus', () => {
             init();
         });
@@ -232,8 +221,8 @@ export const GroupChatScreen = ({ navigation, route }: Props) => {
                 reloadGroup: loadGroup,
                 reloadChat: reloadChat
             }}>
-                <ChatPage ref={chatPageRef} />
-                <GroupInfoModal ref={groupInfoModalRef} />
+                <ChatPage theme={$theme} ref={chatPageRef} />
+                <GroupInfoModal theme={$theme} ref={groupInfoModalRef} />
             </GroupChatUiContext.Provider>
         </FullScreen>
     )

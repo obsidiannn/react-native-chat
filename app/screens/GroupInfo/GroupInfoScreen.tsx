@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { Text, View } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
 import { useEffect, useRef, useState } from "react";
 import { GroupDetailItem, GroupMemberResp } from "@repo/types";
@@ -7,7 +7,6 @@ import ApplyJoinModal, { ApplyJoinModalRef } from "app/components/ApplyJoinModal
 import groupService from "app/services/group.service";
 import userService from "app/services/user.service";
 import { App } from "types/app";
-import Navbar from "app/components/Navbar";
 import { s } from "app/utils/size";
 import { Image } from "expo-image";
 import { Button } from "app/components";
@@ -60,8 +59,7 @@ export const GroupInfoScreen = ({ navigation, route }: Props) => {
     }, [navigation])
 
     return (
-
-        <ScreenX title="羣聊詳情" onLeftPress={() => {
+        <ScreenX title={t('Group Info')} onLeftPress={() => {
             if (route.params.outside) {
                 navigation.replace('TabStack')
             } else {
@@ -136,7 +134,7 @@ export const GroupInfoScreen = ({ navigation, route }: Props) => {
                                 borderRadius: s(15),
                                 padding: s(4),
                                 backgroundColor: themeColor.primary
-                            }} label={((group?.role ?? -1) > 0) ? "進入" : "加入"}
+                            }} label={((group?.role ?? -1) > 0) ? t('Enter') : t('Join')}
                             textStyle={{ color: themeColor.textChoosed }} />
 
                     </View>
@@ -164,7 +162,7 @@ export const GroupInfoScreen = ({ navigation, route }: Props) => {
                             marginLeft: s(8),
                             fontSize: s(14),
                             fontWeight: '400',
-                        }}>{groupMemberPage?.total ?? 0}{t('groupChat.group_member_joined')}</Text>
+                        }}>{groupMemberPage?.total ?? 0}{t('Submit')}</Text>
                     </View>
 
                 </View>
@@ -173,11 +171,3 @@ export const GroupInfoScreen = ({ navigation, route }: Props) => {
         </ScreenX>
     );
 };
-
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: 'white',
-    },
-});

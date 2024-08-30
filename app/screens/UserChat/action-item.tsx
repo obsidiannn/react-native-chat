@@ -33,9 +33,6 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
-        // borderWidth: 1,
-        // borderColor: '#F4F4F4',
-        // backgroundColor: '#F8F8F8',
     },
     text: {
         flex: 1,

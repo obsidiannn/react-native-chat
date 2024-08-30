@@ -1,9 +1,7 @@
 import Navbar from "app/components/Navbar";
-import { colors } from "app/theme";
 import { s } from "app/utils/size";
-import { useSafeAreaInsetsStyle } from "app/utils/useSafeAreaInsetsStyle";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { TouchableOpacity, View } from "react-native";
 import ChatPage, { ChatUIPageRef } from "./ChatPage";
 import { ChatDetailItem, ChatTypingEvent } from "@repo/types";
 import { IUser } from "drizzle/schema";
@@ -30,7 +28,6 @@ import { FullScreen } from "app/components/ScreenX";
 type Props = StackScreenProps<App.StackParamList, 'UserChatScreen'>;
 
 export const UserChatScreen = ({ navigation, route }: Props) => {
-    const $topContainerInsets = useSafeAreaInsetsStyle(["top"])
 
     const [chatItem, setChatItem] = useState<ChatDetailItem>()
     const userChatInfoModalRef = useRef<UserChatInfoModalRef>(null)
@@ -39,7 +36,6 @@ export const UserChatScreen = ({ navigation, route }: Props) => {
     const themeColor = useRecoilValue(ColorsState)
     const currentUser = useRecoilValue(AuthUser)
     const [typing, setTyping] = useState(false)
-    const $theme = useRecoilValue(ThemeState)
     const loadLocalChat = useCallback(async (chatId: string): Promise<ChatDetailItem | null> => {
         const localChat = await LocalChatService.findById(chatId);
         if (localChat) {
@@ -69,7 +65,6 @@ export const UserChatScreen = ({ navigation, route }: Props) => {
     }, [])
 
     const init = useCallback(async () => {
-        console.log("初始化聊天页面")
         const chatId = route.params.chatId
         if (!globalThis.wallet) {
             navigation.goBack();
@@ -198,48 +193,8 @@ export const UserChatScreen = ({ navigation, route }: Props) => {
                     </View>
                 }} />
 
-            <ChatPage ref={chatPageRef} />
-            <UserChatInfoModal ref={userChatInfoModalRef} />
+            <ChatPage theme={$theme} ref={chatPageRef} />
+            <UserChatInfoModal theme={$theme} ref={userChatInfoModalRef} />
         </UserChatUIContext.Provider>
     </FullScreen>
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        display: 'flex',
-        flexDirection: 'column',
-    },
-    topContainer: {
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'center',
-        padding: s(18),
-        paddingLeft: 0
-    },
-    tabButton: {
-        fontSize: s(10),
-        marginRight: s(18),
-        padding: 0,
-        paddingVertical: s(8),
-        display: 'flex',
-        flexDirection: 'row',
-        minHeight: 0
-    },
-    tabDefault: {
-        backgroundColor: colors.palette.gray200,
-        color: colors.palette.primary,
-        borderColor: colors.palette.gray200,
-    },
-    tabChecked: {
-        backgroundColor: colors.palette.primary,
-        color: colors.palette.gray200,
-        borderColor: colors.palette.primary,
-    },
-    textDefault: {
-        color: colors.palette.primary,
-    },
-    textChecked: {
-        color: colors.palette.gray200
-    },
-})

@@ -1,10 +1,9 @@
 import { forwardRef, useImperativeHandle, useRef, useState } from "react";
-import BaseModal from "../base-modal";
 import { Text, View } from "react-native";
 import { useRecoilValue } from "recoil";
 import { ColorsState } from "app/stores/system";
 import { StyleSheet } from "react-native";
-import { ms, s } from "app/utils/size";
+import {  s } from "app/utils/size";
 import { SearchInput } from "./SearchInput";
 import { FlashList } from "@shopify/flash-list";
 import { MessageType } from "../chat-ui";
@@ -16,6 +15,7 @@ import AvatarX from "../AvatarX";
 import fileService from "app/services/file.service";
 import dateUtil from "app/utils/dateUtil";
 import ImageRecordModal, { ImageRecordModalType } from "./ImageRecordModal";
+import { ScreenModal, ScreenModalType } from "../ScreenModal";
 
 /**
  * 聊天记录查找
@@ -25,26 +25,23 @@ export interface ChatHistoryModalType {
     open: (chatId: string) => void
 }
 
-export default forwardRef((_, ref) => {
+export default forwardRef((props:{
+    theme: 'light' | 'dark'
+}, ref) => {
 
     const [chatId, setChatId] = useState<string | null>(null)
-    const [visible, setVisible] = useState<boolean>(false)
     const themeColor = useRecoilValue(ColorsState)
     const [keyword, setKeyword] = useState<string>('')
     const [msgs, setMsgs] = useState<MessageType.Any[]>([])
 
     const imageRecordModalRef = useRef<ImageRecordModalType>(null)
 
-    const onClose = () => {
-        setChatId(null)
-        setVisible(false)
-    }
     const style = styles({ themeColor })
 
     useImperativeHandle(ref, () => ({
         open: (_chatId: string) => {
             setChatId(_chatId)
-            setVisible(true)
+            screenModalRef.current?.open()
         }
     }));
 
@@ -125,10 +122,8 @@ export default forwardRef((_, ref) => {
             typeof part === 'string' ? <Text key={index}>{part}</Text> : part
         );
     }
-    return <BaseModal visible={visible} onClose={onClose} styles={{
-        flex: 1,
-        backgroundColor: themeColor.secondaryBackground
-    }} >
+    const screenModalRef = useRef<ScreenModalType>(null)
+    return <ScreenModal ref={screenModalRef} theme={props.theme}>
         <View style={style.container}>
             <SearchInput onSearch={onSearch} color={themeColor} />
             <View style={{
@@ -142,8 +137,8 @@ export default forwardRef((_, ref) => {
                 />
             </View>
         </View>
-        <ImageRecordModal ref={imageRecordModalRef} images={msgs as MessageType.Image[]} />
-    </BaseModal>
+        <ImageRecordModal theme={props.theme} ref={imageRecordModalRef} images={msgs as MessageType.Image[]} />
+    </ScreenModal>
 })
 
 const styles = ({ themeColor }: { themeColor: IColors }) => StyleSheet.create({

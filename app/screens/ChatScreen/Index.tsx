@@ -32,7 +32,7 @@ export const ChatScreen = ({ navigation }: Props) => {
     const [chatStore, setChatsStore] = useRecoilState(ChatsStore)
     const [friends, setFriends] = useState<IUser[]>([])
     const [groups, setGroups] = useState<GroupDetailItem[]>([])
-    const { t } = useTranslation('screens')
+    const { t } = useTranslation('default')
     const $theme = useRecoilValue(ThemeState);
     const changeTab = (idx: number) => {
         pagerViewRef.current?.setPage(idx);
@@ -214,15 +214,15 @@ export const ChatScreen = ({ navigation }: Props) => {
                 navigation.navigate('DiscoverScreen')
             }} />
             <View style={styles.topContainer} >
-                <Button label={t('chat.btn_recent')} onPress={() => changeTab(0)} containerStyle={btnStyle(0)}
+                <Button label={t('Recent')} onPress={() => changeTab(0)} containerStyle={btnStyle(0)}
                     // style={[styles.tabButton]}
                     textStyle={btnTextStyle(0)}
                 />
-                <Button label={t('chat.btn_group')} onPress={() => changeTab(1)} containerStyle={btnStyle(1)}
+                <Button label={t('Group')} onPress={() => changeTab(1)} containerStyle={btnStyle(1)}
                     // style={[styles.tabButton, btnStyle(1)]}
                     textStyle={btnTextStyle(1)}
                 />
-                <Button label={t('chat.btn_contract')} onPress={() => changeTab(2)} containerStyle={btnStyle(2)}
+                <Button label={t('Contacts')} onPress={() => changeTab(2)} containerStyle={btnStyle(2)}
                     // style={[styles.tabButton, btnStyle(2)]}
                     textStyle={btnTextStyle(2)}
                 />

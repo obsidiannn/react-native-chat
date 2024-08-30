@@ -6,7 +6,9 @@ export interface LoadingModalType {
     open: (title?: string) => void;
     close: () => void;
 }
-export default forwardRef((_,ref) => {
+export default forwardRef((props: {
+    theme: 'light' | 'dark'
+},ref) => {
     const [visible, setVisible] = useState(false);
     const [title, setTitle] = useState('');
     useImperativeHandle(ref, () => ({

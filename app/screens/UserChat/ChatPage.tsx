@@ -37,14 +37,15 @@ import VoicePhoneModal, { VoicePhoneModalType } from "app/components/VoicePhoneM
 import { LocalCollectDetailService } from "app/services/LocalCollectDetailService"
 import SelectMemberModal, { SelectMemberModalType, SelectMemberOption } from "app/components/SelectMemberModal/Index"
 import friendService from "app/services/friend.service"
-import { ms } from "app/utils/size"
 export interface ChatUIPageRef {
     init: (chatItem: ChatDetailItem, friend: IUser) => void
     refreshSequence: (firstSeq: number, lastSeq: number) => void
     close: () => void
 }
 
-const ChatPage = forwardRef((_, ref) => {
+const ChatPage = forwardRef((props:{
+    theme: 'light' | 'dark'
+}, ref) => {
     const firstSeq = useRef<number>(0)
     const lastSeq = useRef<number>(0)
     const [messages, setMessages] = useState<MessageType.Any[]>([])
@@ -170,7 +171,7 @@ const ChatPage = forwardRef((_, ref) => {
     const loadingModalRef = useRef<LoadingModalType>(null)
     const voicePhoneModalRef = useRef<VoicePhoneModalType>(null)
     const selectMemberModalRef = useRef<SelectMemberModalType>(null);
-    const { t } = useTranslation('screens')
+    const { t } = useTranslation('default')
 
 
     const updateMessage = async (message: MessageType.Any) => {
@@ -306,7 +307,7 @@ const ChatPage = forwardRef((_, ref) => {
                 MessageSendService.captureCamera(author).then(addMessage);
                 break
             case 'video':
-                loadingModalRef.current?.open(t('common.loading'))
+                loadingModalRef.current?.open(t('loading'))
                 MessageSendService.captureVideo(author).then(addMessage).finally(() => {
                     loadingModalRef.current?.close()
                 })
@@ -338,7 +339,7 @@ const ChatPage = forwardRef((_, ref) => {
                         } as SelectMemberOption
                     });
                 selectMemberModalRef.current?.open({
-                    title: '選擇好友',
+                    title: t('Select friends'),
                     options,
                     max: 1,
                     callback: async (ops: SelectMemberOption[]) => {
@@ -447,7 +448,7 @@ const ChatPage = forwardRef((_, ref) => {
             >
                 <Text style={{
                     color: colors.palette.primary
-                }}>取消</Text>
+                }}>{t('Cancel')}</Text>
             </TouchableOpacity>
             } />
         }
@@ -468,7 +469,7 @@ const ChatPage = forwardRef((_, ref) => {
                         setCheckedIdList([])
                         setMulti(false)
                         setReplyMsg(null)
-                        toast('操作成功')
+                        toast(t('Operation success'))
                     }
                 } else {
                     const _chatItem = userContext.chatItem
@@ -482,7 +483,7 @@ const ChatPage = forwardRef((_, ref) => {
                                 setCheckedIdList([])
                                 setMulti(false)
                                 setReplyMsg(null)
-                                toast('操作成功')
+                                toast(t('Operation success'))
                             }
                         }
                     }
@@ -534,7 +535,7 @@ const ChatPage = forwardRef((_, ref) => {
         />
         <VideoPlayModal ref={encVideoPreviewRef} />
         <FilePreviewModal ref={fileModalRef} />
-        <LoadingModal ref={loadingModalRef} />
+        <LoadingModal theme={props.theme} ref={loadingModalRef} />
         <VoicePhoneModal ref={voicePhoneModalRef} />
         <LongPressModal ref={longPressModalRef}
             onCollect={(msg) => {
@@ -544,7 +545,7 @@ const ChatPage = forwardRef((_, ref) => {
                             setCheckedIdList([])
                             setMulti(false)
                             setReplyMsg(null)
-                            toast('操作成功')
+                            toast(t('Operation success'))
                         }
                     })
             }}
@@ -567,7 +568,7 @@ const ChatPage = forwardRef((_, ref) => {
             onClose={(msgId: string) => {
                 longPressHandle(false, msgId)
             }} />
-        <SelectMemberModal ref={selectMemberModalRef} />
+        <SelectMemberModal theme={props.theme} ref={selectMemberModalRef} />
     </>
 })
 

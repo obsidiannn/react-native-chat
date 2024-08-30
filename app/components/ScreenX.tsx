@@ -12,7 +12,7 @@ export interface FullScreenProps {
 export interface ScreenXProps extends FullScreenProps {
   title: string;
   onLeftPress?: () => void;
-  renderRight?: () => React.ReactNode;
+  renderRight?: React.ReactNode;
 }
 
 export const FullScreen = (props: FullScreenProps) => {

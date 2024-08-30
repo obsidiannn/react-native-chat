@@ -9,7 +9,7 @@ import { IModel } from "@repo/enums";
 import { s } from "app/utils/size";
 import AvatarComponent from "app/components/Avatar";
 import { useRecoilValue } from "recoil";
-import { ColorsState, ThemeState } from "app/stores/system"
+import { ColorsState } from "app/stores/system"
 import { IconFont } from "app/components/IconFont/IconFont";
 import { colors } from "app/theme";
 
@@ -22,11 +22,9 @@ export default forwardRef((props: {
 }, ref) => {
   const [visible, setVisible] = useState(false);
   const [groupId, setGroupId] = useState<number>();
-  const maxManager = 3;
   const selectMemberModalRef = useRef<SelectMemberModalType>(null)
   const themeColor = useRecoilValue(ColorsState)
   const { t } = useTranslation('screens')
-  const $theme = useRecoilValue(ThemeState);
   const managerDescribe = [
     t('groupChat.label_manager_1'),
     t('groupChat.label_manager_2'),

@@ -1,5 +1,4 @@
 import { StyleSheet, View } from "react-native";
-import { CollectItem } from "../Index";
 import { s } from "app/utils/size";
 import { Text } from "app/components";
 import { MessageType, formatBytes } from "app/components/chat-ui";

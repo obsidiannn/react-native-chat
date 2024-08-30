@@ -15,12 +15,12 @@ export const CameraPermissionView = (props: CameraPermissionViewProps) => {
                 console.log("requestPermission")
                 props.requestPermission()
             // }} type="primary" label={t('Request camera permission')} />
-            }} type="primary" label={t('common.btnRequireCameraPermission')} />
+            }} type="primary" label={t('Please request camera permission')} />
         </View>
         {/*<Text style={[$tipsText]}>{t('We need to open the camera permission')}</Text>*/}
         <Text style={[$tipsText, {
-            color: $colors.text
-        }]}>{t('common.btnRequireCameraPermissionDesc')}</Text>
+            color: props.theme == "dark" ? $colors.white : $colors.black
+        }]}>{t('We need you to enable camera permissions.')}</Text>
     </View>
 }
 const $container: ViewStyle = {

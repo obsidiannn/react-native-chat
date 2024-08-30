@@ -1,6 +1,6 @@
 import { Button } from "app/components";
 import { IconFont } from "app/components/IconFont/IconFont";
-import BaseModal from "app/components/base-modal";
+import { ScreenModal, ScreenModalType } from "app/components/ScreenModal";
 import LoadingModal, { LoadingModalType } from "app/components/loading-modal";
 import { AuthService } from "app/services/auth.service";
 import fileService from "app/services/file.service";
@@ -10,6 +10,7 @@ import { s } from "app/utils/size";
 import toast from "app/utils/toast";
 import { Image } from "expo-image";
 import { forwardRef, useImperativeHandle, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { StyleSheet } from "react-native";
 import { View, Text, TouchableOpacity } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
@@ -22,40 +23,35 @@ export interface ComplainModalType {
 /**
  * 用户投诉
  */
-export default forwardRef((_, ref) => {
+export default forwardRef((props:{
+    theme: 'light' | 'dark'
+}, ref) => {
     const maxImage: number = 9
     const maxWords: number = 200
     const [images, setImages] = useState<string[]>([])
     const [complains, setComplains] = useState<string>('')
 
-    const [visible, setVisible] = useState<boolean>(false)
     const [userId, setUserId] = useState<number>(0)
     const themeColor = useRecoilValue(ColorsState)
     const loadingModalRef = useRef<LoadingModalType>(null)
-    const renderLeftButton = () => {
-        return <TouchableOpacity onPress={onClose}>
-            <IconFont name="close" color={themeColor.text} />
-        </TouchableOpacity>
-    }
-
     useImperativeHandle(ref, () => ({
         open: (paramUserId: number) => {
             if (paramUserId <= 0) { return }
-            setVisible(true)
             setUserId(paramUserId)
             setImages([])
+            screenModalRef.current?.open()
         }
     }));
 
     const onClose = () => {
-        setVisible(false)
+        screenModalRef.current?.close()
         setUserId(0)
         setImages([])
         setComplains('')
     }
 
     const _style = styles({ themeColor })
-
+    const { t } = useTranslation('default')
     const doSubmit = async () => {
         loadingModalRef.current?.open()
         try {
@@ -78,7 +74,7 @@ export default forwardRef((_, ref) => {
             }
             const id = await AuthService.doComplain(urls, userId, complains)
             if (id) {
-                toast('操作成功')
+                toast(t('Complain success'))
                 onClose()
             }
         } catch (error) {
@@ -89,11 +85,9 @@ export default forwardRef((_, ref) => {
 
 
     }
-
-    return <BaseModal visible={visible} onClose={onClose} styles={{
-        flex: 1,
-        backgroundColor: themeColor.secondaryBackground
-    }}>
+    const screenModalRef = useRef<ScreenModalType>(null)
+    
+    return <ScreenModal theme={props.theme} ref={screenModalRef}>
         <View style={_style.container}>
 
             <View style={{
@@ -101,7 +95,7 @@ export default forwardRef((_, ref) => {
                 <TextInput value={complains}
                     numberOfLines={3}
                     textAlignVertical="top"
-                    placeholder="投诉原因..."
+                    placeholder={t('Reason')}
                     maxLength={maxWords}
                     placeholderTextColor={themeColor.secondaryText}
                     style={{
@@ -144,11 +138,11 @@ export default forwardRef((_, ref) => {
                     <IconFont name="plus" color={themeColor.secondaryText} />
                     <Text style={{
                         color: themeColor.secondaryText
-                    }}>照片 ({images.length}/{maxImage})</Text>
+                    }}>{t('Photo')} ({images.length}/{maxImage})</Text>
                 </TouchableOpacity>
             </View>
 
-            <Button fullRounded fullWidth label="提交" size="large"
+            <Button fullRounded fullWidth label={t('Submit')} size="large"
                 onPress={doSubmit}
                 textStyle={{
                     color: themeColor.textChoosed
@@ -159,8 +153,8 @@ export default forwardRef((_, ref) => {
                 }} />
         </View>
 
-        <LoadingModal ref={loadingModalRef} />
-    </BaseModal>
+        <LoadingModal theme={props.theme} ref={loadingModalRef} />
+    </ScreenModal>
 })
 
 

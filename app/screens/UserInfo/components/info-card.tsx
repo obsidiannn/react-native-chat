@@ -10,8 +10,6 @@ import strUtil from "app/utils/str-util";
 import { IconFont } from "app/components/IconFont/IconFont";
 import fileService from "app/services/file.service";
 import AvatarX from "app/components/AvatarX";
-import { useRecoilValue } from "recoil";
-import { ColorsState } from "app/stores/system";
 import { $colors } from "app/Colors";
 
 export default (props: {
@@ -19,12 +17,10 @@ export default (props: {
     theme: 'dark' | 'light';
 }) => {
     const { user } = props;
-    const { t } = useTranslation('screens')
-    const themeColor = useRecoilValue(ColorsState)
-    const styles = style({ themeColor })
+    const { t } = useTranslation('default')
     return <View style={{
         ...styles.container,
-        backgroundColor: themeColor.background
+        backgroundColor: props.theme == 'dark' ? $colors.slate900 : $colors.white,
     }}>
         <View style={styles.infoBox}>
             <View style={{
@@ -39,7 +35,7 @@ export default (props: {
                 {
                     user.gender !== IModel.IUser.Gender.UNKNOWN ?
                         (
-                            <IconFont name={user.gender === IModel.IUser.Gender.MALE ? "men" : "women"} color={themeColor.text} />
+                            <IconFont name={user.gender === IModel.IUser.Gender.MALE ? "men" : "women"} color={props.theme == 'dark' ? $colors.white : $colors.gray400} />
                         ) : null
                 }
 
@@ -47,7 +43,7 @@ export default (props: {
 
             <TouchableOpacity style={styles.infoContainer} onPress={async () => {
                 await clipboard.setStringAsync(user.userName ?? '');
-                toast(t('userInfo.success_copied'));
+                toast(t('Copy success'));
             }}>
                 <Text style={[
                     styles.signText,
@@ -68,12 +64,12 @@ export default (props: {
                 ...styles.signText,
                 color: $colors.gray500,
                 paddingVertical: s(12)
-            }}>{!user.sign ? t('userInfo.label_empty') : user.sign}</Text>
+            }}>{!user.sign ? t('(empty)') : user.sign}</Text>
         </View>
     </View>
 };
 
-const style = ({ themeColor }: { themeColor: IColors }) => StyleSheet.create({
+const styles =  StyleSheet.create({
     container: {
         borderRadius: s(16),
         padding: s(16),
@@ -93,7 +89,6 @@ const style = ({ themeColor }: { themeColor: IColors }) => StyleSheet.create({
     nameText: {
         fontSize: s(30),
         fontWeight: '500',
-        color: themeColor.text
     },
     infoContainer: {
         display: 'flex',
@@ -124,7 +119,6 @@ const style = ({ themeColor }: { themeColor: IColors }) => StyleSheet.create({
         fontSize: s(16),
         fontWeight: '400',
         flexWrap: 'wrap',
-        color: themeColor.secondaryText,
         marginRight: s(4)
     }
 });

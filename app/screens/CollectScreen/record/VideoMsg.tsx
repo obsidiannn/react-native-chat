@@ -1,6 +1,5 @@
 import { ImageBackground, StyleSheet, View } from "react-native";
 import { s } from "app/utils/size";
-import { Text } from "app/components";
 import { MessageType } from "app/components/chat-ui";
 import fileService from "app/services/file.service";
 import { IconFont } from "app/components/IconFont/IconFont";
